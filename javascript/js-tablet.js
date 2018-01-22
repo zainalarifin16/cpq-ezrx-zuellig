@@ -301,49 +301,55 @@ $(document).ready(function() {
 						
 						// START UPDATE 19-01-2018
 						// START SLIDER CONTENT
+
 						$("#swipe-sidebar-content").css("display", "block");
-						$("#swipe-sidebar-content").html("");						
-						setTimeout(function() {
+						$("#swipe-sidebar-content").html("");					
+						function reposition_content(){
+							// $('#jg-overlay').show();
+							setTimeout(function() {
 
-							var elementToMove = $(".ui-collapsible-inset");
-							
-							$( $(elementToMove[1]) ).appendTo("#swipe-sidebar-content");
-							$( $(elementToMove[2]) ).appendTo("#swipe-sidebar-content");
-							$( $(elementToMove[3]) ).appendTo("#swipe-sidebar-content");
-							
-							$("#swipe-sidebar-content").find(".ui-collapsible-heading-toggle").each(function(index, data){
-								$(data).css({ "background-color": "#afc008","border-radius": "0","color": "#fff", "border-color": "transparent"});
-							});
-							
-							$("#swipe-sidebar-content").siblings(".sidebar-handle").show();	
-
-							//set width Material Description COLOUMN
-							$("#attribute-materialDescription").css("width", "300px");
-							$("#attribute-materialAndDesc").css("width", "300px");
-							$("#attribute-additionalMaterialDescription").css("width", "300px");
-
-							//set width QTY Coloumn
-							$("#attribute-qty_text").css("width", "30px");
-							$("#attribute-additionalMaterialQty").css("width", "30px");
-							
-							// Type, Material, Bonus and price
-							$("#attribute-type").css("width", "60px");
-							$("#attribute-overridePrice").css("width", "50px");
-							$("#attribute-totalPrice").css("width", "50px");
-							$("#attribute-price").css("width", "50px");
-							$("#attribute-material").css("width", "80px");
-							$("#attribute-overrideBonusQty").css("width", "70px");
-							
-						}, 2000);
-
-						// END SLIDER CONTENT
+								var elementToMove = $(".ui-collapsible-inset");
+								
+								$( $(elementToMove[1]) ).appendTo("#swipe-sidebar-content");
+								$( $(elementToMove[2]) ).appendTo("#swipe-sidebar-content");
+								$( $(elementToMove[3]) ).appendTo("#swipe-sidebar-content");
+								
+								$("#swipe-sidebar-content").find(".ui-collapsible-heading-toggle").each(function(index, data){
+									$(data).css({ "background-color": "#afc008","border-radius": "0","color": "#fff", "border-color": "transparent"});
+								});
+								
+								$("#swipe-sidebar-content").siblings(".sidebar-handle").show();	
+								// END SLIDER CONTENT
+	
+								//set width Material Description COLOUMN
+								$("#attribute-materialDescription").css("width", "300px");
+								$("#attribute-materialAndDesc").css("width", "300px");
+								$("#attribute-additionalMaterialDescription").css("width", "300px");
+	
+								//set width QTY Coloumn
+								$("#attribute-qty_text").css("width", "30px");
+								$("#attribute-additionalMaterialQty").css("width", "30px");
+								
+								// Type, Material, Bonus and price
+								$("#attribute-type").css("width", "60px");
+								$("#attribute-overridePrice").css("width", "50px");
+								$("#attribute-totalPrice").css("width", "50px");
+								$("#attribute-price").css("width", "50px");
+								$("#attribute-material").css("width", "80px");
+								$("#attribute-overrideBonusQty").css("width", "70px");
+								// $('#jg-overlay').hide();
+								if($("#swipe-sidebar-content").html().length == 0){
+									reposition_content();
+								}
+							}, 500);
+						}
+						
+						reposition_content();
 
 						//set align center for text input in coloumn QTY
 						$("input[name='qty_text']").css({"text-align": "center", "font-size":"14px"});
 						$("input[name='additionalMaterialQty']").css("text-align", "center");
 						$("input[name='overridePrice']").css({"text-align": "center", "font-size":"14px"});
-
-						//set button override bonus QTY
 
 						// Make all table header is center
 						var stylingHeaderTable = "text-align:center;font-weight:900;font-size:14px!important;";

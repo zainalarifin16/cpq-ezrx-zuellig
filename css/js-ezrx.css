@@ -957,10 +957,10 @@ html .ui-field-contain>label+.ui-flipswitch, html .ui-popup .ui-field-contain>la
     border: 1px;
 }
 
-.ui-checkbox input{
-    position: inherit;
-    left: 0px;
-    margin: 5px auto 0px auto;
+.ui-checkbox input, .ui-radio input, .image-menu-display .ui-btn input{
+    position: unset!important;
+    left: 0px!important;
+    margin: 5px 0px 0px 0px!important;
 }
 
 /* TOP 10 FREQUENTLY ORDERED ITEMS */
