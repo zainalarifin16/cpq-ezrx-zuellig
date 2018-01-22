@@ -1,0 +1,10 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:int="http://xmlns.oracle.com/zuelligpharma/INT003_CreateOrder/INT003_CreateOrder">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <int:getTransaction>
+            <int:transactionID>{{TRANSACTION_ID}}</int:transactionID>
+            <!--Optional:-->
+            <int:salesOrg/>
+        </int:getTransaction>
+    </soapenv:Body>
+</soapenv:Envelope>

@@ -1,0 +1,4 @@
+/* Hide the Product Line listing in Home page */
+#product-nav-zuelligPharmaProducts{
+	display:none;
+}

@@ -1,0 +1,7 @@
+.sc-no-stock { color:#f00000 !important;}
+.sc-no-stock .input{ color:#f00000; }
+.sc-no-stock .span{ color:#f00000; }
+.sc-zero-stock { color:#f00000 !important;}
+.sc-zero-stock .input{ color:#f00000; }
+.sc-zero-stock .span{ color:#f00000; }
+.column.label-left .form-label .sc-red-po-ref{color:red; !important;}

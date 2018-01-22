@@ -1,0 +1,103 @@
+@media only screen and (max-width: 767px) and (max-device-width: 767px) {
+    .jg-mobilelayout #login-form {
+        width: 75%!important;
+    }
+}
+
+@media only screen and (min-width: 768px) and (min-device-width: 768px) {
+    .jg-mobilelayout #login-form {
+        width: 360px!important;
+    }
+}
+
+.jg-mobilelayout .ui-page {
+	width: 100%;
+}
+
+.jg-mobilelayout #login-form {
+    padding: 40px 20px 60px; float: right; margin: 0 30px !important;  box-shadow: none; background-image: linear-gradient(-180deg, #4F9FA2 0%, #274E56 100%)!important; box-shadow: 0 14px 33px 0 rgba(0,0,0,0.40); border-radius: 60px; box-sizing: border-box;
+}
+
+.jg-mobilelayout .login-content,
+.jg-mobilelayout .form-input,
+.jg-mobilelayout .guest-access div.login-fields {
+	width: 100%!important;
+}
+
+.jg-mobilelayout .jg-login-logo {
+    margin: 0 auto!important;
+    width: 150px;
+    float: none;
+}
+.jg-mobilelayout .jg-login-welcome {
+	font-size: 26px;
+    color: #e8ff00!important;
+    text-align: center!important;
+    margin-top: 20px !important;
+}
+
+.jg-mobilelayout .guest-access div.login-fields {
+	background-color: transparent;
+	padding: 0!important;
+}
+.jg-mobilelayout #login-form label {
+	display: none;
+}
+.jg-mobilelayout #forgotpassword {
+	width: 100%;
+	float: left;
+	text-align: right;
+	position: relative;
+	top: -80px;
+	z-index: 1;
+}
+.jg-mobilelayout #forgotpassword a {
+	color: #e8ff00;
+	text-decoration: underline;
+}
+.jg-mobilelayout .ui-corner-all,
+.jg-mobilelayout #login-form input {
+	background-color: rgb(250, 255, 189);
+}
+.jg-mobilelayout #login-form .form-input {
+	margin: 0 0 10px;
+	border-radius: 6px;
+	font-size: 16px;
+	background-color: rgb(250, 255, 189);
+}
+.jg-mobilelayout table {
+	background: none;
+}
+.jg-mobilelayout #login-form-head {
+	margin-bottom: 40px;
+}
+.jg-mobilelayout #login-form button[type="submit"],
+.jg-mobilelayout #change-pw-form button[type="submit"] {
+	width: 220px;
+    height: auto;
+    margin: 20px auto;
+    line-height: 50px;
+    text-transform: capitalize;
+    font-weight: bold !important;
+    color: #00555C;
+    border: 0;
+    border-radius: 30px;
+    background: #B8C942!important;
+    float: none!important;
+    position: relative;
+    top: 60px;
+}
+
+
+.jg-mobilelayout a#log_in {
+	width: 220px;
+    height: auto;
+    margin-top: 20px;
+    line-height: 50px;
+    text-transform: capitalize;
+    font-weight: bold !important;
+    color: #00555C;
+    border: 0;
+    border-radius: 30px;
+    background: #B8C942!important;
+}

@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+ <soapenv:Header>
+  <bm:category xmlns:bm="urn:soap.bigmachines.com">Security</bm:category>
+  <bm:xsdInfo xmlns:bm="urn:soap.bigmachines.com">
+   <bm:schemaLocation>https://{{COMPANY_NAME}}.bigmachines.com/bmfsweb/{{COMPANY_NAME}}/schema/v1_0/security/Security.xsd</bm:schemaLocation>
+  </bm:xsdInfo>
+ </soapenv:Header>
+ <soapenv:Body>
+  <bm:login xmlns:bm="urn:soap.bigmachines.com">
+   <bm:userInfo>
+    <bm:username>{{USER_NAME}}</bm:username>
+    <bm:password>{{PASS_WORD}}</bm:password>
+    <bm:sessionCurrency/>
+   </bm:userInfo>
+  </bm:login>
+ </soapenv:Body>
+</soapenv:Envelope>

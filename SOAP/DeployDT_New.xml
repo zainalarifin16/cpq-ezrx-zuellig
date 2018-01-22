@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+<soapenv:Header>
+	<bm:userInfo xmlns:bm="urn:soap.bigmachines.com">
+	  <bm:sessionId>sessionVar</bm:sessionId>
+	</bm:userInfo>
+	<bm:category xmlns:bm="urn:soap.bigmachines.com">Data Tables</bm:category>
+	<bm:xsdInfo xmlns:bm="urn:soap.bigmachines.com">
+	  <bm:schemaLocation>https://instanceName.bigmachines.com/bmfsweb/instanceName/schema/v1_0/datatables/Customer_Fav.xsd</bm:schemaLocation>
+	</bm:xsdInfo>
+</soapenv:Header>
+<soapenv:Body>
+	<bm:deploy xmlns:bm="urn:soap.bigmachines.com">
+		<bm:DataTables bm:table_name="Customer_Fav"/>
+	</bm:deploy>
+</soapenv:Body>
+</soapenv:Envelope>
