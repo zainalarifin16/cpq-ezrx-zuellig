@@ -317,19 +317,31 @@ $(document).ready(function() {
 							
 							$("#swipe-sidebar-content").siblings(".sidebar-handle").show();	
 
-							//set width QTY COLOUMN
+							//set width Material Description COLOUMN
 							$("#attribute-materialDescription").css("width", "300px");
 							$("#attribute-materialAndDesc").css("width", "300px");
 							$("#attribute-additionalMaterialDescription").css("width", "300px");
+
+							//set width QTY Coloumn
+							$("#attribute-qty_text").css("width", "30px");
+							$("#attribute-additionalMaterialQty").css("width", "30px");
 							
-						}, 1000);
+							// Type, Material, Bonus and price
+							$("#attribute-type").css("width", "60px");
+							$("#attribute-overridePrice").css("width", "50px");
+							$("#attribute-totalPrice").css("width", "50px");
+							$("#attribute-price").css("width", "50px");
+							$("#attribute-material").css("width", "80px");
+							$("#attribute-overrideBonusQty").css("width", "70px");
+							
+						}, 2000);
 
 						// END SLIDER CONTENT
 
 						//set align center for text input in coloumn QTY
-						$("input[name='qty_text']").css("text-align", "center");
+						$("input[name='qty_text']").css({"text-align": "center", "font-size":"14px"});
 						$("input[name='additionalMaterialQty']").css("text-align", "center");
-						$("input[name='overridePrice']").css("text-align", "center");
+						$("input[name='overridePrice']").css({"text-align": "center", "font-size":"14px"});
 
 						//set button override bonus QTY
 

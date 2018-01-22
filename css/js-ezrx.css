@@ -890,6 +890,14 @@ and (orientation : landscape) {
 	
 }
 
+/* 
+    CREATED BY : ZAINAL ARIFIN
+    CREATED DATE : 18-01-2018
+    LAST EDIT : 22-01-2018
+    PURPOSE : Restyling Material Page
+    -- START --
+*/
+
 .ui-flipswitch.ui-flipswitch-active{
 	background-color: #007077!important;
 }
@@ -936,6 +944,34 @@ html .ui-field-contain>label+.ui-flipswitch, html .ui-popup .ui-field-contain>la
 	font-size: 14px!important;
 	height: 100%;
 }
+
+/* TOP 10 FREQUENTLY ORDERED ITEMS */
+
+#PastOrders table th{
+    background-color: #007077;
+}
+
+.jg-mobilelayout #attribute-currentCustFav #CurrentCustFav tr th, .jg-mobilelayout #attribute-pastOrders #PastOrders tr th{
+    background-color: #007077;
+    color: #fff;
+    border: 1px;
+}
+
+.ui-checkbox input{
+    position: inherit;
+    left: 0px;
+    margin: 5px auto 0px auto;
+}
+
+/* TOP 10 FREQUENTLY ORDERED ITEMS */
+
+/* 
+    CREATED BY : ZAINAL ARIFIN
+    CREATED DATE : 18-01-2018
+    LAST EDIT : 22-01-2018
+    PURPOSE : Restyling Material Page
+    -- END --
+*/
 
 /* change font size on table shopping cart */
 .config-array th, .config-array td .ui-controlgroup-controls .read-only .form-field, .rec-item-table.sidebar-table td{
