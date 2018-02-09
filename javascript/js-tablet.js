@@ -1,6 +1,7 @@
 console.log("js-tablet1");
 $(document).ready(function() {
 	console.log("js-tablet2");
+	
 	var alignMatArraySet = function(){
 		setTimeout(function() {
 			//$(".array-index").hide();//hide index column in the arrayset
@@ -48,7 +49,7 @@ $(document).ready(function() {
 				$(".config-array .array-index").css("width", "2px");
 				
 				//$(".config-array #attribute-type").css("width", "50px");
-				//$(".config-array #attribute-materialDescription").css("width", "200px");
+				//$(".config-array #attribute-materialDescription").css("width", "300px");
 				$(".config-array #attribute-materialAndDesc").css("width", "120px");
 				$(".config-array #attribute-inStock").css("width", "40px");
 				$(".config-array #attribute-price").css("width", "40px");
@@ -171,21 +172,31 @@ $(document).ready(function() {
 				 }
 				 
 				 if(pageTitle == "model configuration"){
-						 console.log("js-tablet111");
-						 console.log("=========="+$("#button-bar .button-update").length);
-						
-						if($("#button-bar .button-update").length == 0){						
-							if( $("#duplicatefooter").length == 0){
-								$( "#config footer" ).append( "<div id='duplicatefooter'><button class='updateButton ui-btn ui-btn-inline'>Update</button><button class='cancelButton ui-btn ui-btn-inline'>Cancel</button></div>" );
+						 console.log("js-tablet model configuration ====>>>> ");						 
+						 var isPageError = false;						
+					
+						setTimeout(function() {
+							 if($("#config").hasClass("constrained")){
+								isPageError = true;
+							}
+							$("#attribute-enableOldMaterialSearch").hide();
+							console.log("======1213===="+isPageError);
+							//if($("#button-bar .button-update").length == 0){//#config.constrained #error-messages .constraint-messages	
+							if(isPageError){						
+								if( $("#duplicatefooter").length == 0){
+									$( "#config footer" ).append( "<div id='duplicatefooter'><button class='updateButton ui-btn ui-btn-inline'>Update</button><button class='cancelButton ui-btn ui-btn-inline'>Cancel</button><button id='showFavdetails' class='ui-btn ui-btn-inline'>Show Fav Items</button><button id='showMaterialSearch' class='ui-btn ui-btn-inline' style='display:none'>Show Material Search</button></div>" );
+									
+								}
+								if($("#duplicatefooter").length > 0){
+									$("#button-bar").hide();
+								}
+								$("#button-bar #more-btns").hide();
 								
+							}else{
+								$( "#config footer" ).append( "<div id='duplicatefooter'><button id='showFavdetails' class='ui-btn ui-btn-inline'>Show Fav Items</button><button id='showMaterialSearch' class='ui-btn ui-btn-inline' style='display:none'>Show Material Search</button></div>" );
+								$("#button-bar #more-btns").hide();
 							}
-							if($("#duplicatefooter").length > 0){
-								$("#button-bar").hide();
-							}
-							
-						}else{
-							$("#button-bar #more-btns").hide();
-						}
+						},500);
 						$("body").on("click touchend","#duplicatefooter .updateButton",function(e){		
 							//console.log("clicked on custom create transaction");
 							e.preventDefault();			
@@ -198,6 +209,25 @@ $(document).ready(function() {
 								$("#button-bar .button-update").trigger('click');
 							}
 
+						});
+						$("body").on("click touchend","#showFavdetails",function(e){
+									e.preventDefault();								
+									$(".sidebar-handle-icon").trigger("swipeleft");
+						});
+						$("body").on("click touchend","#showMaterialSearch",function(e){
+									e.preventDefault();								
+									$(".sidebar-handle-icon").trigger("swiperight");
+						});
+						$("body").on("click tochend swipeleft swiperight","#swipe-sidebar",function(e){
+								if($(this).hasClass("sidebar-state-1")){
+									$("#showFavdetails").hide();
+									$("#showMaterialSearch").show();
+									//$("#attribute-currentCustFav").addClass("myFavMobile");
+									$('#attribute-currentCustFav').attr('style', 'height: 400px !important');
+								}else{
+									$("#showFavdetails").show();
+									$("#showMaterialSearch").hide();
+								}
 						});
 						$("body").on("click touchend","#duplicatefooter .cancelButton",function(e){
 						
@@ -260,11 +290,11 @@ $(document).ready(function() {
 							 $(".table-tooltip").remove();
 						 });
 						 
-						
-						alignMatArraySet();
-						showDetailedView();						
-						alignAddtnlArraySet();
-						
+						setTimeout(function() {
+							alignMatArraySet();
+							showDetailedView();						
+							alignAddtnlArraySet();
+						},500);
 						$("body").on("click tochend swipeleft swiperight","#materialArrayset .config-array thead",function(e){
 							 console.log("=======+++++=============2");
 							//if($("#showDetailedView").val() == "false"){
@@ -303,11 +333,13 @@ $(document).ready(function() {
 						// START SLIDER CONTENT
 
 						$("#swipe-sidebar-content").css("display", "block");
-						$("#swipe-sidebar-content").html("");					
+						//$("#swipe-sidebar-content").html("");					
 						function reposition_content(){
 							// $('#jg-overlay').show();
 							setTimeout(function() {
-
+								$("#price-section").hide();
+								$("#recommended-parts").hide();
+								
 								var elementToMove = $(".ui-collapsible-inset");
 								
 								$( $(elementToMove[1]) ).appendTo("#swipe-sidebar-content");
@@ -321,7 +353,7 @@ $(document).ready(function() {
 								$("#swipe-sidebar-content").siblings(".sidebar-handle").show();	
 								// END SLIDER CONTENT
 	
-								//set width Material Description COLOUMN
+								/*//set width Material Description COLOUMN
 								$("#attribute-materialDescription").css("width", "300px");
 								$("#attribute-materialAndDesc").css("width", "300px");
 								$("#attribute-additionalMaterialDescription").css("width", "300px");
@@ -337,39 +369,41 @@ $(document).ready(function() {
 								$("#attribute-price").css("width", "50px");
 								$("#attribute-material").css("width", "80px");
 								$("#attribute-overrideBonusQty").css("width", "70px");
+								*/
 								// $('#jg-overlay').hide();
 								if($("#swipe-sidebar-content").html().length == 0){
 									reposition_content();
 								}
-							}, 500);
+							}, 1000);
 						}
 						
 						reposition_content();
 
 						//set align center for text input in coloumn QTY
 						$("input[name='qty_text']").css({"text-align": "center", "font-size":"14px"});
-						$("input[name='additionalMaterialQty']").css("text-align", "center");
+						$("input[name='additionalMaterialQty']").css({"text-align": "center", "font-size":"14px"});
 						$("input[name='overridePrice']").css({"text-align": "center", "font-size":"14px"});
 
 						// Make all table header is center
-						var stylingHeaderTable = "text-align:center;font-weight:900;font-size:14px!important;";
+						//var stylingHeaderTable = "text-align:center;font-weight:900;font-size:14px!important;";
+						var stylingHeaderTable = "text-align:center;";
 
 						$(".array-attribute").attr( "style", stylingHeaderTable );
 
-						$("#materialArrayset > .ui-flipswitch").attr("style", "font-size:15px !important;");
+						//$("#materialArrayset > .ui-flipswitch").attr("style", "font-size:15px !important;");
 						
 						// END UPDATE 19-01-2018
 
 
 						
-				 }else if(pageTitle == "order page"){
-						var isPageError = false;
+				}else if(pageTitle == "order page"){
+						 var isPageError = false;
 						 var exitingDataItems = $("#line-item-grid").attr('data-properties');
 						 var linesObj = JSON.parse(exitingDataItems);
 						 var noOfLines  = parseInt(linesObj.numRows);
-						$("#sticky-actions .more-btns").hide();
-						$("#lig-sticky-actions .more-btns").hide();
-						$("#sticky-actions .more-btns").attr("executed","yes");
+						 $("#sticky-actions .more-btns").hide();
+						 $("#lig-sticky-actions .more-btns").hide();
+						 $("#sticky-actions .more-btns").attr("executed","yes");
 						 if(noOfLines > 0){
 							 $('#sticky-actions button.action-type-add-from-catalog[data-properties*="43393148"]').hide();
 							 $('#sticky-actions button.action-type-add-from-catalog[data-properties*="36393235"]').hide();
@@ -431,8 +465,9 @@ $(document).ready(function() {
 								window.location.href = url;
 						});
 						$("body").on("click touchend","#order-showshoppingcart",function(e){
-								e.preventDefault();								
-								$(".sidebar-handle-icon").trigger("swipeleft");
+								e.preventDefault();		
+								$(".sidebar-handle").trigger("click");		
+								//$(".sidebar-handle-icon").trigger("swipeleft");
 						});
 						$("body").on("click touchend","#order-neworder",function(e){
 								e.preventDefault();
@@ -442,10 +477,12 @@ $(document).ready(function() {
 								window.location.href=url;
 								showLoadingDialog();
 						});
-						if(isPageError){
+						/*if(isPageError){
 							$("#duplicatefooterlig").append("<button id='order-showorderdetails' class='ui-btn ui-btn-inline ui-shadow ui-corner-all' style='display:none'>Show Customer Info</button>");
-						}
+						}*/
+						console.log(" JS-TABLET 485  =======add show customer 111 start======");
 						$("#lig-sticky-actions").append("<div><button id='order-showorderdetails' class='ui-btn ui-btn-inline ui-shadow ui-corner-all' style='display:none'>Show Customer Info</button></div>");
+						console.log(" JS-TABLET 487  =======add show customer 111 end ======");
 						//if(noOfLines == 0){
 							$("body").on("click tochend swipeleft swiperight","#swipe-sidebar",function(e){
 								if($(this).hasClass("sidebar-state-1")){
@@ -464,19 +501,27 @@ $(document).ready(function() {
 											
 										});
 										
-										console.log("======isPageError======="+buttonHTML);
+										console.log("JS-TABLET 504 ======isPageError======="+buttonHTML);
 										if( $("#duplicatefooterlig").length == 0 && buttonHTML != ""){
 											$( "#commerce footer" ).append( "<div id='duplicatefooterlig'>"+buttonHTML+"</div>" );
 											
 										}
+										console.log("JS-TABLET 509  ======Show Customer Info add 22 start =======");
+										if($('#order-showorderdetails').length){
+										  console.log("JS-TABLET 513  ======Show Customer Info 22 PRESENT =======");
+										}else{
+										  $("#duplicatefooterlig").append("<button id='order-showorderdetails' class='ui-btn ui-btn-inline ui-shadow ui-corner-all'>Show Customer Info</button>");
+									    }										
+										console.log("JS-TABLET 511  ======Show Customer Info add 22 end =======");
+										
 										if($("#duplicatefooterlig").length > 0){
 											$("#button-bar").hide();
 										}
 										$("body").on("click touchend","#duplicatefooterlig button",function(e){
 											e.preventDefault();
 											var sourceBtn = $(this).text().trim();
-											console.log("sourceBtn===="+sourceBtn);
-											console.log("sourceBtn====#commerce #popup-moreBtns-popup .popup-nested-inner li a.ui-btn:contains('"+sourceBtn+"')");
+											console.log("JS-TABLET 516  sourceBtn===="+sourceBtn);
+											console.log("JS-TABLET 517 sourceBtn====#commerce #popup-moreBtns-popup .popup-nested-inner li a.ui-btn:contains('"+sourceBtn+"')");
 											$("#commerce #popup-moreBtns-popup .popup-nested-inner li a.ui-btn:contains('"+sourceBtn+"')").trigger("tap");
 										});
 										if(noOfLines > 0){
@@ -512,18 +557,20 @@ $(document).ready(function() {
 							//$("#lig-sticky-actions").append("<button id='order-showorderdetails' class='ui-btn ui-btn-inline ui-shadow ui-corner-all'>Show Order Details</button>");
 							
 						//}
-						if(noOfLines > 0){
+						/*if(noOfLines > 0){
 							$("button:contains('Add Material')").hide();
 						}else{
 							$("button:contains('Add Material')").show();
-						}
+						}*/
 						$("body").on("click touchend","#order-showorderdetails",function(e){
-									e.preventDefault();								
-									$(".sidebar-handle-icon").trigger("swiperight");
+									e.preventDefault();			
+									$(".sidebar-handle").trigger("click");		
+									//$(".sidebar-handle-icon").trigger("swiperight");
 						});
 						
 				 }
 				
 			 }
+			 
 	}, 2500);
 });

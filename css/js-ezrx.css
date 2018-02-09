@@ -977,7 +977,9 @@ html .ui-field-contain>label+.ui-flipswitch, html .ui-popup .ui-field-contain>la
 .config-array th, .config-array td .ui-controlgroup-controls .read-only .form-field, .rec-item-table.sidebar-table td{
 	font-size: 0.9rem !important;
 }
-
+.myFavMobile{
+	height:400px !important;
+}
 /* change font size on table shopping cart */
 
 /*end mobile confi array set - suresh yagnam*/
