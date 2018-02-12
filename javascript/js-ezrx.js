@@ -10,7 +10,7 @@
         @pagetitle  : get page title of CPQ page.
         @rootFolder : set root folder for CPQ test or production
     */
-    var url, pagetitle, rootFolder;
+    var url, pagetitle, rootFolder,currentModelNumber;
 	var isMobileVersion = false;
     /*
         End   : -
@@ -218,6 +218,7 @@
                 navigator.userAgent.match(/Windows Phone/i)
             ) {
 				isMobileVersion = true;
+				currentModelNumber = 2;
                 mobile_newlayout();
                 hide_navigation('Tablet');
                 mobile_incomplete_order_status_pageload();
@@ -1243,9 +1244,12 @@
                 material_column.splice(3, 0, {title: "EINA"}); 
             }
         }
+		
 		var pageLen = 10;
+		var lenMenu = [ 10, 25, 50, 75, 100];
 		if(isMobileVersion){//added for mobile version
 			pageLen = 5;
+			lenMenu = [3,5, 10, 25, 50, 75, 100];
 		}
         var materialList = $('#resultsTable').DataTable({
             scrollY: "400px",
@@ -1253,6 +1257,7 @@
             data: dataSet,
             deferRender: true,
 			pageLength:pageLen,
+			lengthMenu: lenMenu,
             order: [
                 [1, 'asc']
             ],
@@ -1997,14 +2002,20 @@
     */
     var mobile_checkItemOnCart = function() {
         console.log('mobile_checkItemOnCart');
-        $('.action-type-reconfigure').on('click', function() {
+		$("#line-item-grid table tr.parent").find("input[name=_line_item_list]").prop("checked",true);
+        $('.action-type-reconfigure').on('click', function(e) {
+			e.preventDefault();
             if ($('.lig-side-scroller table .content tr').length > 1) {
-                $($('.lig-side-scroller table .content tr')[0]).find('td.lig-select input').prop('checked', true);
+                //$($('.lig-side-scroller table .content tr')[0]).find('td.lig-select input').prop('checked', true);
 
                 $('.lig-row.child').each(function() {
                     $(this).find('input[name=_line_item_list]').prop('checked', false);
                 });
             }
+			var bs_id = $("#cmdata_id").val();
+			var destURL = "https://"+instanceName +".bigmachines.com/commerce/buyside/reconfig_form.jsp?action_id=36245411&doc_number=1&document_id=36244074&id="+bs_id+"&proxy_submit_url=%2Fcommerce%2Fnew_equipment%2Fproducts%2Fmodel_configs.jsp&_line_item_list="+currentModelNumber;
+			console.log("destURL === "+destURL);
+			window.location = destURL;
         });
 
         if ($('.lig-side-scroller table .content tr') !== '') {
@@ -2019,7 +2030,7 @@
                 */
                 if ($('.lig-side-scroller table .content tr').length > 1) {
                     // console.log('more than 1 tr');
-                    $($('.lig-side-scroller table .content tr')[0]).find('td.lig-select input').prop('checked', true);
+                    //$($('.lig-side-scroller table .content tr')[0]).find('td.lig-select input').prop('checked', true);
                     $('.action-type-add-from-catalog').hide();
                 }
                 /*
@@ -2036,10 +2047,23 @@
                     File Location : $BASE_PATH$/image/javascript/js-ezrx.js
                     Layout : Tablet
                 */
-                if ($('.lig-side-scroller table .content tr.lig-row.child').length > 0) {
+                /*if ($('.lig-side-scroller table .content tr.lig-row.child').length > 0) {
                     // console.log('more than 1 tr');
-                    $('.lig-side-scroller table .content tr:first-child').find('td.lig-select input').prop('checked', true);
-                }
+					function checkOnlyTheKey(){
+						
+						setTimeout(function(){
+							var $theKey = $("input[name='_line_item_list'][value='2']");
+							if($theKey.length > 0){
+								$theKey.prop("checked", true);
+							}else{
+								checkOnlyTheKey();								
+							}
+						}, 500);
+						
+					}
+					checkOnlyTheKey();
+
+                }*/
                 /*
                     End : 01 Nov 2017
                     Task  : Hide check box in line item grid in order page
@@ -2396,7 +2420,7 @@
         }
 
 
-        mobile_hide_unwanted_arrow();
+        //mobile_hide_unwanted_arrow();
         materialAddItem();
     };
     var mobile_topCustomerList = function(customerDetails) {
@@ -4775,6 +4799,97 @@
         File Location : $BASE_PATH$/image/javascript/js-ezrx.js
         Layout : BOTH
     */
+
+    /*
+        Start : 09 Feb 2018
+        Task  :  Restyling table shopping cart if it loaded
+        Page  : Global
+        File Location : $BASE_PATH$/image/javascript/js-ezrx.js
+        Layout : BOTH
+    */
+
+    function style_shoppingcart_table(){
+        console.log("======STYLE SHOPPING CART TABLE======");
+
+        //hide material and description
+        setTimeout(function(){
+            $("#attribute-materialAndDesc").hide();
+            $(".cell-materialAndDesc").hide();
+        }, 1000);
+
+        $("#attribute-materialDescription").css("width", "200px");
+		$(".config-array #attribute-materialAndDesc").hide();
+        //$("#attribute-materialAndDesc").css("width", "275px");
+        $("#attribute-additionalMaterialDescription").css("width", "275px");
+        $("#attribute-pPAApprovalNo").css("width","50px");
+
+        //set width QTY Coloumn
+        $("#attribute-qty_text").css("width", "30px");
+        $("#attribute-additionalMaterialQty").css("width", "30px");
+        
+        // Type, Material, Bonus and price
+        $("#attribute-type").css("width", "60px");
+        $("#attribute-overridePrice").css("width", "50px");
+        $("#attribute-totalPrice").css("width", "50px");	
+        $("#attribute-price").css("width", "50px");
+        $("#attribute-material").css("width", "80px");
+        $("#attribute-overrideBonusQty").css("width", "70px");
+		$("#attribute-contractBonus").css("width", "125px");
+		$("#attribute-promotion").css("width", "100px");
+
+        $("input[name='qty_text']").css({"text-align": "center", "font-size":"14px"});
+        $("input[name='additionalMaterialQty']").css({"text-align": "center", "font-size":"14px"});
+        $("input[name='overridePrice']").css({"text-align": "center", "font-size":"14px"});
+		$("#attribute-totalPrice [class*=array-attribute]").each(function(){//enable all columns in the arrayset
+					$(this).removeClass("hidden");
+				});
+
+    }
+
+    function hide_detail_coloumn(){
+        console.log("======HIDE COLOUMN SHOPPING CART TABLE======");
+        $(".cell-type").hide();
+        $("#attribute-type").hide();
+        $("#attribute-material").hide();            
+        $("#attribute-materialDescription").hide();
+		$(".config-array #attribute-materialAndDesc").hide();
+        $(".cell-material").hide();
+        $(".cell-materialDescription").hide();
+        $(".config-array td, .config-array th ,.config-array td  .ui-controlgroup-controls .read-only .form-field, .rec-item-table.sidebar-table td, .rec-item-table.sidebar-table th").css("font-size","0.70rem");
+        $(".config-array tr.messages.constrained td ul li h3").css("line-height","5px");    
+        $(".config-array tr.messages.constrained td ul li h3").css("font-size","0.70rem");  
+        $("#materialArrayset .ui-flipswitch a").css("font-size","0.70rem"); 
+        $("#materialArrayset  .ui-flipswitch span").css("font-size","0.70rem"); 
+        $("#attribute-overrideBonusQty div:contains('Override Bonus Qty')").html("Overr. Bonus Qty");
+        $(".config-array .attr-right-arrow").hide();
+        $("#materialArrayset [class*=array-attribute]").each(function(){//enable all columns in the arrayset
+            $(this).removeClass("hidden");
+        });
+        
+        $("#attribute-promotion").hide();
+        $(".cell-promotion").hide();
+        $("#attribute-contractBonus").hide();
+        $(".cell-contractBonus").hide();
+        $("#attribute-comments").hide();
+        $(".cell-comments").hide();
+        $("#attribute-stockQty").hide();
+        $(".cell-stockQty").hide(); 
+
+        $(".config-array .array-index").css("width", "2px");
+        
+        //$(".config-array #attribute-materialAndDesc").css("width", "120px");
+        $(".config-array #attribute-inStock").css("width", "40px");
+        $(".config-array #attribute-price").css("width", "40px");
+    }
+
+    /*
+        Start : 09 Feb 2018
+        Task  :  Restyling table shopping cart if it loaded
+        Page  : Global
+        File Location : $BASE_PATH$/image/javascript/js-ezrx.js
+        Layout : BOTH
+    */
+
     function mobile_newlayout() {
 
         /* get url string */
@@ -4969,23 +5084,39 @@
                 }
             } else if (filterPage.search("config") != -1) {
                 console.log(' ====>>>> config page');
+				
+				/* replace messages on top table shopping cart */
+				//$("#attribute-showDetailedView").html("<div id='detailMessages' style=color:darkred;float:left;width:100%;margin-top:-10px;margin-bottom:10px;'>Please swipe to see additional details in the shopping cart</div>");
+				
+				//$("#detailMessages").css({"color:darkred;float:left;width:100%;margin-top:4px;margin-bottom:4px;"});
+				
+				
+				
                 //* quantity color change on focus START*//
                 textColorQty();
 
                 //* quantity color change on focus END*//
                 //**//
                 // material page.
-                mobile_materialpage();
-                mobile_materialSearch();
-                mobile_adjust_tooltip();
-                mobile_pricingChange();
-                mobile_onChangeUpdateMsg();
-                mobile_shoppingCart_msg();
-                //mobile_hide_unwanted_arrow();
-                mobile_customerSearch();
+               setTimeout(function(){					
+					textColorQty();
+					// material page.
+					mobile_materialpage();
+					mobile_materialSearch();
+					mobile_adjust_tooltip();
+					mobile_pricingChange();
+					mobile_onChangeUpdateMsg();
+					mobile_shoppingCart_msg();
+					//mobile_hide_unwanted_arrow();
+					mobile_customerSearch();
+				}, 2000);
+				
+				$("body").on("click touchend",".pagination .ui-radio",function(e){
+					waitUntilTableDataLoad();
+				});
 				
 				//checking with timeOut 500ms if load data table is done.
-                function waitUntilDoneLoadData(){
+                function waitUntilTableDataLoad(){
                     setTimeout(function(){
                         if($('#jg-overlay').css("display") == "none"){
                             
@@ -4995,66 +5126,57 @@
 							mobile_pricingChange();
 							mobile_onChangeUpdateMsg();
                             //re-assign listen touch pagination on mobile
-                            listen_touch_pagination();
+                           // listen_touch_pagination();
 							
-							setTimeout(function(){
-							 //re-styling when table changes page
-							 var errorMsgTdColSpan = $("#materialArrayset table.config-array thead").find("tr:first th").length;
-								if($("#showDetailedView").val() == "false" ){
-									
-									$(".cell-type").hide();
-									$("#attribute-type").hide();
-									$("#attribute-material").hide();            
-									$("#attribute-materialDescription").hide();
-									$(".cell-material").hide();
-									$(".cell-materialDescription").hide();
-									$(".config-array td, .config-array th ,.config-array td  .ui-controlgroup-controls .read-only .form-field, .rec-item-table.sidebar-table td, .rec-item-table.sidebar-table th").css("font-size","0.70rem");
-									$(".config-array tr.messages.constrained td ul li h3").css("line-height","5px");    
-									$(".config-array tr.messages.constrained td ul li h3").css("font-size","0.70rem");  
-									$("#materialArrayset .ui-flipswitch a").css("font-size","0.70rem"); 
-									$("#materialArrayset  .ui-flipswitch span").css("font-size","0.70rem"); 
-									$("#attribute-overrideBonusQty div:contains('Override Bonus Qty')").html("Overr. Bonus Qty");
-									$(".config-array .attr-right-arrow").hide();
-									$("#materialArrayset [class*=array-attribute]").each(function(){//enable all columns in the arrayset
-										$(this).removeClass("hidden");
-									});
-									
-									$("#attribute-promotion").hide();
-									$(".cell-promotion").hide();
-									$("#attribute-contractBonus").hide();
-									$(".cell-contractBonus").hide();
-									$("#attribute-comments").hide();
-									$(".cell-comments").hide();
-									$("#attribute-stockQty").hide();
-									$(".cell-stockQty").hide(); 
+							/*setTimeout(function(){
+							    //re-styling when table changes page
+    							if($("#showDetailedView").val() == "false" ){
+    								
+                                    hide_detail_coloumn();
+    							}
 
-									$(".config-array .array-index").css("width", "2px");
-									
-									$(".config-array #attribute-materialAndDesc").css("width", "120px");
-									$(".config-array #attribute-inStock").css("width", "40px");
-									$(".config-array #attribute-price").css("width", "40px");
-									errorMsgTdColSpan = errorMsgTdColSpan - 6;
-								}else{
-									errorMsgTdColSpan = errorMsgTdColSpan - 2;
-								}
-							}, 600);
+                                style_shoppingcart_table();
+
+							}, 1000);*/
                         }else{
                             //recursive checking table has load data
-                            waitUntilDoneLoadData();
+                            waitUntilTableDataLoad();
                         }
-                    }, 500);
+                    }, 1000);
                 }
                 
-                var listen_touch_pagination = function(){
+               /* function listen_touch_pagination(){
                     //listen shopping chart changing page.
-					$(".pagination").find(".ui-radio").off();
-                    $(".pagination").find(".ui-radio").bind("click touchstart touchend", function(){
-                        console.log("Change Page on table 1");
-                        waitUntilDoneLoadData();
-                    });
+                    console.log("Start listen touch pagination");
+					setTimeout(function(){
+						$(".pagination").find(".ui-radio").off();
+						$(".pagination").find(".ui-radio").bind("click touchstart touchend", function(){
+							console.log("Change Page on table 1");
+							waitUntilTableDataLoad();
+						});
+					}, 500);
                 }
 
-                listen_touch_pagination();
+                var waitUntilPageLoad = function(){
+                    setTimeout(function(){
+                        
+                        if($('#jg-overlay').css("display") == "none"){
+                            style_shoppingcart_table();
+                            setTimeout(function(){
+                                listen_touch_pagination();
+                            }, 500);
+                        }else{
+                            waitUntilPageLoad();
+                        }
+
+                    }, 500);
+                }*/
+				
+				$(window).on("orientationchange", function(){
+					waitUntilTableDataLoad();
+				});
+
+                //waitUntilPageLoad();
 
                 $("body").on("click touchend", ".button-save", function(e) {
                     e.preventDefault();
@@ -5543,7 +5665,87 @@
 		 Page  : Order Page
 		 Author: Pratap Rudra
 		*/
+        var documentNumber2 = "";
+
+        //checking with timeOut 500ms if load data table is done.
+        function waitShoppingCartLoad(){
+            setTimeout(function(){
+				 console.log("documentNumber2====");
+                if( $('.ui-loader').css("display") == "none"){
+                    console.log(documentNumber2);
+                   // setTimeout(function(){
+                        var currentPage = $(".pagination").find(".ui-btn.current").html().trim();
+                        if(currentPage != "1"){
+                            $(".content").prepend($(documentNumber2));
+                        }
+                        
+                        mobile_checkItemOnCart();
+                        order_page_stock_color();
+                        mobile_rowBgColor();
+                       // listen_pagination_shopingcart();
+                        $('#jg-overlay').css("display", "none");
+                        // $("#lig-sticky-actions").find(".action-type-reconfigure").prop("disabled", false);
+                    //}, 2000);
+                }else{
+                    //recursive checking table has load data
+                    waitShoppingCartLoad();
+                }
+				var docNum = $("#line-item-grid table tr.parent").find("input[name=_line_item_list]").val();
+				if(docNum != undefined){
+					currentModelNumber = docNum;
+				}
+				$("#line-item-grid table tr.parent").find("input[name=_line_item_list]").hide();
+				console.log("docNum===="+currentModelNumber+"----"+docNum);
+            }, 1000);
+        }
+
+        /*var listen_pagination_shopingcart = function(){
+            //listen shopping chart changing page.
+            console.log("listen to change page on table");
+            $(".pagination").find(".ui-btn").off();
+            $(".pagination").find(".ui-btn").bind("click touchstart touchend", function(){
+                console.log("Change Page on table");
+                $('#jg-overlay').css("display", "block");
+                // $("#lig-sticky-actions").find(".action-type-reconfigure").prop("disabled", true);
+                waitShoppingCartLoad();
+            });
+        }*/
 		console.log("======Replace MutationObserver CLICK 111 =======");
+		$("body").on("click tochend","#tab-pricing",function(e){
+			setTimeout(function(){
+				mobile_pricingChange();
+				//mobile_checkItemOnCart();
+				$("label[for='customerPORef_t']").css("color", "red");
+			},1000);
+			
+		});
+		 $("body").on("click touchend","#line-item-grid .pagination a.page",function(e){
+			   $('#jg-overlay').css("display", "block");
+			 waitShoppingCartLoad();
+		 });
+		$("body").on("click tochend swipeleft swiperight","#swipe-sidebar",function(e){
+			console.log("======Replace MutationObserver CLICK 222=======");
+			var isLineGirdOpen = $(this).hasClass("sidebar-state-1");
+			
+			setTimeout(function(){
+				console.log(">>>>"+isLineGirdOpen);
+				if(isLineGirdOpen){
+					//if( $("#line-item-grid table tr.parent").legth > 0){
+						//documentNumber2 = $("#line-item-grid table tr.parent").clone();//$("tr[data-document-number='2']").clone();
+						currentModelNumber = $("#line-item-grid table tr.parent").find("input[name=_line_item_list]").val();
+						$("#line-item-grid table tr.parent").find("input[name=_line_item_list]").hide();
+						console.log(">>>>"+currentModelNumber);
+					//}
+					mobile_checkItemOnCart();
+					order_page_stock_color();
+					mobile_rowBgColor();
+					// Delete Line Item Action
+					mobile_deleteLineItem();
+					mobile_redirect_materialpage();
+				}
+			},1500);
+		});
+		/*console.log("======Replace MutationObserver CLICK 111 =======");
 		$("body").on("click tochend swipeleft swiperight","#swipe-sidebar",function(e){
 			console.log("======Replace MutationObserver CLICK 222=======");
 			if($(this).hasClass("sidebar-state-1")){
@@ -5562,34 +5764,10 @@
 								mobile_deleteLineItem();
 								mobile_redirect_materialpage();
 								
+								if( $("#line-item-grid table tr.parent").legth > 0){
+									documentNumber2 = $("#line-item-grid table tr.parent").clone();//$("tr[data-document-number='2']").clone();
+								}
 								
-								var documentNumber2 = $("tr[data-document-number='2']").clone();
-								//checking with timeOut 500ms if load data table is done.
-								function waitShoppingCartLoad(){
-									setTimeout(function(){
-										if($('#jg-overlay').css("display") == "none"){
-											setTimeout(function(){
-												$(".content").prepend($(documentNumber2));
-												mobile_checkItemOnCart();
-												order_page_stock_color();
-												mobile_rowBgColor();
-												listen_pagination_shopingcart();
-											}, 2000);
-										}else{
-											//recursive checking table has load data
-											waitShoppingCartLoad();
-										}
-									}, 1000);
-								}
-
-								var listen_pagination_shopingcart = function(){
-									//listen shopping chart changing page.
-									$(".pagination").find(".ui-btn").off();
-									$(".pagination").find(".ui-btn").bind("click touchstart touchend", function(){
-										console.log("Change Page on table");
-										waitShoppingCartLoad();
-									});
-								}
 
 								listen_pagination_shopingcart();
 
@@ -5611,7 +5789,7 @@
 				});
 				console.log("======Replace MutationObserver LAST 333.111=======");
 			}
-		});
+		});*/
 
         /*var $div = $("html").addClass('ui-loading');
         var hasExecute = false;
@@ -5687,8 +5865,9 @@
 		  mobile_checkItemOnCart();
 		  $("label[for='customerPORef_t']").css("color", "red");*/
 
-		  $("body").on("click touchend","a.ui-btn-inline",function(e){
+		  /*$("body").on("click touchend","a.ui-btn-inline",function(e){
 			 console.log("======= PAGE NUMBER CLICKED JS-EZRX 111 ========");
+            // listen_pagination_shopingcart();
 			 mobile_checkItemOnCart();
 			 order_page_stock_color();
 			 mobile_rowBgColor();
@@ -5696,7 +5875,7 @@
 			 mobile_deleteLineItem();
 			 mobile_redirect_materialpage();
 			 mobile_itemCheckBonus($(this));
-			});
+			});*/
 			
 		  
         /*
@@ -5908,9 +6087,12 @@
     */
     function materialPageText(){
         console.count('materialPageText');
-        $('#attribute-showDetailedView .ui-flipswitch').css('margin-right','10px').after('<span id="usermsg1" style="color:darkred">Please select "Yes" to see detailed view. Swipe the screen to see additional details.</span>');
-
-        $('#resultsTable_filter').after('<div id="usermsg2" style="color:darkred;float:left;width:100%;margin-top:-10px;margin-bottom:10px;">Please scroll down to see the selected material</div>');
+		if($("#usermsg1").length == 0){
+			 $('#attribute-showDetailedView .ui-flipswitch').css('margin-right','10px').after('<span id="usermsg1" style="color:darkred">Please select "Yes" to see detailed view. Swipe the screen to see additional details.</span>');
+		}
+       	if($("#usermsg2").length == 0){
+			$('#resultsTable_filter').after('<div id="usermsg2" style="color:darkred;float:left;width:100%;margin-top:-10px;margin-bottom:10px;">Please scroll down to see the selected material</div>');
+		}
     }
     
         /*
