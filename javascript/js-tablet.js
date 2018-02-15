@@ -1,6 +1,25 @@
 console.log("js-tablet1");
 $(document).ready(function() {
 	console.log("js-tablet2");
+	function applyOrderPageChanges(){
+		setTimeout(function(){
+			if($('#jg-overlay').css("display") == "none"){
+				 var exitingDataItems = $("#line-item-grid").attr('data-properties');
+				 var linesObj = JSON.parse(exitingDataItems);
+				 var noOfLines  = parseInt(linesObj.numRows);
+				if(noOfLines > 0){
+					$("button:contains('Add Material')").hide();
+				}else{
+					$("button:contains('Add Material')").show();
+				}
+				
+			}else{
+				//recursive checking table has load data
+				applyOrderPageChanges();
+			}
+			
+		}, 1000);
+	}
 	function applyTableChanges(){
 		setTimeout(function(){
 			if($('#jg-overlay').css("display") == "none"){
@@ -77,6 +96,8 @@ $(document).ready(function() {
 				$(".config-array td, .config-array th ,.config-array td  .ui-controlgroup-controls .read-only .form-field, .rec-item-table.sidebar-table td, .rec-item-table.sidebar-table th").css("font-size","0.70rem");
 				$(".config-array tr.messages.constrained td ul li h3").css("line-height","5px");	
 				$(".config-array tr.messages.constrained td ul li h3").css("font-size","0.70rem");	
+				//$("#materialArrayset .ui-flipswitch").css({"width":"4.875em"});	
+				
 				$("#materialArrayset .ui-flipswitch a").css("font-size","0.60rem");	
 				$("#materialArrayset  .ui-flipswitch span").css("font-size","0.60rem");	
 				$("input[name='qty_text']").css({"text-align": "center", "font-size":"14px"});
@@ -140,7 +161,11 @@ $(document).ready(function() {
 				$("input[name='additionalMaterialQty']").css({"text-align": "center", "font-size":"14px"});
 				$("input[name='overridePrice']").css({"text-align": "center", "font-size":"14px"});
 				$("input[name='comments']").css({"text-align": "center", "font-size":"14px"});
-				
+				/*if($("#attribute-material").hasClass("hidden")){
+					$("#attribute-material").removeClass("hidden");			
+					$(".cell-material").removeClass("hidden");	
+				}*/
+
 				//$(".config-array .attr-right-arrow").show();
 				errorMsgTdColSpan = errorMsgTdColSpan - 2;
 							//width adjustment
@@ -271,6 +296,12 @@ $(document).ready(function() {
 							}
 
 						});
+						$("body").on("click touchend",".array-remove",function(e){	
+							setTimeout(function() {
+								$("#config-form").submit();
+							},2000);
+						});
+						
 						$("body").on("click touchend","#showFavdetails",function(e){
 									e.preventDefault();		
 									$("#swipe-sidebar-content").css("display", "block");									
@@ -470,6 +501,7 @@ $(document).ready(function() {
 						 $("#sticky-actions .more-btns").hide();
 						 $("#lig-sticky-actions .more-btns").hide();
 						 $("#sticky-actions .more-btns").attr("executed","yes");
+						 applyOrderPageChanges();
 						 if(noOfLines > 0){
 							 $('#sticky-actions button.action-type-add-from-catalog[data-properties*="43393148"]').hide();
 							 $('#sticky-actions button.action-type-add-from-catalog[data-properties*="36393235"]').hide();
@@ -588,7 +620,7 @@ $(document).ready(function() {
 											var sourceBtn = $(this).text().trim();
 											console.log("JS-TABLET 516  sourceBtn===="+sourceBtn);
 											console.log("JS-TABLET 517 sourceBtn====#commerce #popup-moreBtns-popup .popup-nested-inner li a.ui-btn:contains('"+sourceBtn+"')");
-											$("#commerce #popup-moreBtns-popup .popup-nested-inner li a.ui-btn:contains('"+sourceBtn+"')").trigger("tap");
+											$("#commerce #popup-moreBtns-lig .popup-nested-inner li a.ui-btn:contains('"+sourceBtn+"')").trigger("tap");
 										});
 										if(noOfLines > 0){
 											$("button:contains('Add Material')").hide();

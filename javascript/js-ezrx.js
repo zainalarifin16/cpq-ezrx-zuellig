@@ -5670,8 +5670,9 @@
         //checking with timeOut 500ms if load data table is done.
         function waitShoppingCartLoad(){
             setTimeout(function(){
-				 console.log("documentNumber2====");
+				
                 if( $('.ui-loader').css("display") == "none"){
+					 console.log("documentNumber2=*********===");
                     console.log(documentNumber2);
                    // setTimeout(function(){
                         var currentPage = $(".pagination").find(".ui-btn.current").html().trim();
@@ -5684,6 +5685,11 @@
                         mobile_rowBgColor();
                        // listen_pagination_shopingcart();
                         $('#jg-overlay').css("display", "none");
+						
+						mobile_pricingChange();
+						//mobile_checkItemOnCart();
+						$("label[for='customerPORef_t']").css("color", "red");
+
                         // $("#lig-sticky-actions").find(".action-type-reconfigure").prop("disabled", false);
                     //}, 2000);
                 }else{
@@ -5698,7 +5704,20 @@
 				console.log("docNum===="+currentModelNumber+"----"+docNum);
             }, 1000);
         }
-
+		function tabPricingChanges(){
+            setTimeout(function(){				
+               if( $('.ui-loader').css("display") == "none"){		
+					console.log("======Replace MutationO*******bserver CLICK 111 =======");				
+						mobile_pricingChange();
+						$("label[for='customerPORef_t']").css("color", "red");
+						
+                }else{
+                    //recursive checking table has load data
+                    tabPricingChanges();
+               }
+				
+            }, 1000);
+        }
         /*var listen_pagination_shopingcart = function(){
             //listen shopping chart changing page.
             console.log("listen to change page on table");
@@ -5710,13 +5729,10 @@
                 waitShoppingCartLoad();
             });
         }*/
-		console.log("======Replace MutationObserver CLICK 111 =======");
-		$("body").on("click tochend","#tab-pricing",function(e){
-			setTimeout(function(){
-				mobile_pricingChange();
-				//mobile_checkItemOnCart();
-				$("label[for='customerPORef_t']").css("color", "red");
-			},1000);
+		tabPricingChanges();
+		$("body").on("click touchend","#tab-pricing",function(e){
+			console.log("======Replace MutationObserver CLICK 111 =======");
+			tabPricingChanges();
 			
 		});
 		 $("body").on("click touchend","#line-item-grid .pagination a.page",function(e){
