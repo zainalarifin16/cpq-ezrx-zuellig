@@ -40,12 +40,20 @@ $(document).ready(function(){
     */
 
     //copy to correct row.
-    // var element_column_layout = $("#attr_wrapper_1_soldToAddress_html_t").closest(".column-layout");
-    // $("#attr_wrapper_1__soldTo_t_company_name").closest(".column-layout").before( element_column_layout.clone() ); //move cloned a row Label to correct row
-    // $("#attr_wrapper_1_soldToAddress_html_t")[0].remove(); //remove first element Sold To Address
-    // $("#attr_wrapper_1_soldToAddress_html_t").closest(".column-layout").children()[0].remove(); //remove element Draft order detail on cloned
-    // $("#attr_wrapper_1_soldToAddress_html_t").closest(".column-layout").prepend( $($(".spacer-column")[0]).clone() ); //clone spacer to element
-    // $("#attr_wrapper_1_soldToAddress_html_t").closest(".column").children()[0].remove(); //remove label Ship To Address
+
+    var element_column_layout = $("#attr_wrapper_1_soldToAddress_html_t").closest(".column-layout");
+    $("#attr_wrapper_1_customerShipToId_t").closest(".column-layout").before( element_column_layout.clone() ); //move cloned a row Label to correct row
+    $("#attr_wrapper_1_shipToAddress_html_t").remove(); //remove first element Ship To Address
+
+    $("#attr_wrapper_1_customerSoldToId_New").closest(".column-layout").children()[0].remove(); //remove spacer from element
+
+    $("#attr_wrapper_1_shipToAddress_html_t").closest(".column-layout").children()[0].remove(); //remove element Draft order detail on cloned
+    $("#attr_wrapper_1_shipToAddress_html_t").closest(".column-layout").prepend( $($(".spacer-column")[0]).clone() ); //clone spacer to element
+    $("#attr_wrapper_1_shipToAddress_html_t").closest(".column").children()[0].remove(); //remove label Ship To Address
+
+    $("#field_wrapper_1_customerShipToId_t").closest(".column-layout").prepend( $($(".spacer-column")[0]).clone() ); //clone spacer to element
+
+
     /* 
       Created By    :- Created By Zainal Arifin, Date : 16 Feb 2018
       Task          :- TW-07 Address set layout correction.
