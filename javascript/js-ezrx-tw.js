@@ -32,7 +32,7 @@ $(document).ready(function(){
     */
 
     /* 
-      Created By    :- Created By Zainal Arifin, Date : 16 Feb 2018
+      Created By    :- Created By Zainal Arifin, Date : 19 Feb 2018
       Task          :- TW-07 Address set layout correction.
       Page          :- Global
       File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
@@ -51,11 +51,24 @@ $(document).ready(function(){
     $("#attr_wrapper_1_shipToAddress_html_t").closest(".column-layout").prepend( $($(".spacer-column")[0]).clone() ); //clone spacer to element
     $("#attr_wrapper_1_shipToAddress_html_t").closest(".column").children()[0].remove(); //remove label Ship To Address
 
-    $("#field_wrapper_1_customerShipToId_t").closest(".column-layout").prepend( $($(".spacer-column")[0]).clone() ); //clone spacer to element
+    var check_field_address_ready = function(){
+      setTimeout(function(){
+
+        if($("#jg-overlay").css("display") == "none"){
+          $($("#field_wrapper_1_customerShipToId_t").closest(".column-layout").children()[0]).css("display", "block"); //clone spacer to element
+        }else{
+          check_field_address_ready();
+        }
+
+      }, 1000);
+    }
+
+    check_field_address_ready();
+
 
 
     /* 
-      Created By    :- Created By Zainal Arifin, Date : 16 Feb 2018
+      Created By    :- Created By Zainal Arifin, Date : 19 Feb 2018
       Task          :- TW-07 Address set layout correction.
       Page          :- Global
       File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js

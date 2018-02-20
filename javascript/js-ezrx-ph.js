@@ -56,6 +56,52 @@ $(document).ready(function(){
             File Location : $BASE_PATH$/javascript/js-ezrx.js
             Layout : Both
         */
+
+        /* 
+          Created By    :- Created By Zainal Arifin, Date : 19 Feb 2018
+          Task          :- TW-07 Address set layout correction.
+          Page          :- Global
+          File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
+          Layout        :- Both (Desktop/Mobile)
+        */
+
+        //copy to correct row.
+
+        var element_column_layout = $("#attr_wrapper_1_soldToAddress_html_t").closest(".column-layout");
+        $("#attr_wrapper_1_customerShipToId_t").closest(".column-layout").before( element_column_layout.clone() ); //move cloned a row Label to correct row
+        $("#attr_wrapper_1_shipToAddress_html_t").remove(); //remove first element Ship To Address
+
+        $("#attr_wrapper_1_customerSoldToId_New").closest(".column-layout").children()[0].remove(); //remove spacer from element
+
+        $("#attr_wrapper_1_shipToAddress_html_t").closest(".column-layout").children()[0].remove(); //remove element Draft order detail on cloned
+        $("#attr_wrapper_1_shipToAddress_html_t").closest(".column-layout").prepend( $($(".spacer-column")[0]).clone() ); //clone spacer to element
+        $("#attr_wrapper_1_shipToAddress_html_t").closest(".column").children()[0].remove(); //remove label Ship To Address
+
+        var check_field_address_ready = function(){
+          setTimeout(function(){
+
+            if($("#jg-overlay").css("display") == "none"){
+              
+              $("#attr_wrapper_1_customerSoldToId_New").closest(".column").css("margin-left", "0px");
+              $($("#field_wrapper_1_customerShipToId_t").closest(".column-layout").children()[0]).css("display", "block"); //clone spacer to element
+            
+            }else{
+              check_field_address_ready();
+            }
+
+          }, 1000);
+        }
+
+        check_field_address_ready();
+
+        /* 
+          Created By    :- Created By Zainal Arifin, Date : 19 Feb 2018
+          Task          :- TW-07 Address set layout correction.
+          Page          :- Global
+          File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
+          Layout        :- Both (Desktop/Mobile)
+        */
+
         if (navigator.userAgent.match(/Android/i) ||
             navigator.userAgent.match(/webOS/i) ||
             navigator.userAgent.match(/iPhone/i) ||
