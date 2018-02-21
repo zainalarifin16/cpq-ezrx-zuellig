@@ -86,6 +86,7 @@
             var wasFloating = null;
             scrollHandler = function() {
                 //console.log('eeeee');
+                console.log("===SCROLLTOP===");
                 var pageTop = $(window).scrollTop();
                 var floating = (stickyTop - pageTop < 0);
                 if (floating != wasFloating) {
@@ -1166,13 +1167,19 @@
         var userCountryMS = null;
             userCountryMS = 'TW'; 
         }
-        var customerDetails = $("#actualMasterString").html();
-        var custArr = customerDetails.split("##");
+		var customerDetails = null;
+		var custArr = null;
+		var userType = $('input[name="zPUserType"]').val();
+		if (userType !== 'CSTeam'){
+			customerDetails = $("#actualMasterString").html();
+            custArr = customerDetails.split("##");
+		}
+        
         var totalRecs = custArr.length;
         var fromIndex = 0;
         var toIndex = totalRecs;
         var dataSet = [];
-        var userType = $('input[name="zPUserType"]').val();
+        
         // Added loading message in data table
         var loading = '<p class="loader-material" style="text-align: center; margin: 10px 0; display: none;">Loading...</p>';
 		var enableOldMaterialSearch = "false";
