@@ -86,7 +86,6 @@
             var wasFloating = null;
             scrollHandler = function() {
                 //console.log('eeeee');
-                console.log("===SCROLLTOP===");
                 var pageTop = $(window).scrollTop();
                 var floating = (stickyTop - pageTop < 0);
                 if (floating != wasFloating) {

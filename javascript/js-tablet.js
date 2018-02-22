@@ -254,6 +254,29 @@ $(document).ready(function() {
 				 }
 				 if($("#line-item-grid").length > 0){
 					 pageTitle = "order page";
+
+					 /* 
+				       Created By    :- Created By Zainal Arifin, Date : 21 Feb 2018
+				       Task          :- SG-04 In Tablet when typing on the Ordering requst Number field, cursor moves out sometine automatically
+				       Page          :- Order Page
+				       File Location :- $BASE_PATH$/javascript/js-tablet.js
+				       Layout        :- Mobile
+				     */
+
+					 $(".form-field").on("blur", function(){
+						var cur_pos = $(window).scrollTop();
+						setTimeout(function(){
+							window.scrollTo(0, cur_pos);
+						}, 500);
+					});
+
+					/* 
+				       Created By    :- Created By Zainal Arifin, Date : 21 Feb 2018
+				       Task          :- SG-04 In Tablet when typing on the Ordering requst Number field, cursor moves out sometine automatically
+				       Page          :- Order Page
+				       File Location :- $BASE_PATH$/javascript/js-tablet.js
+				       Layout        :- Mobile
+				     */
 				 }
 				 
 				 if(pageTitle == "model configuration"){

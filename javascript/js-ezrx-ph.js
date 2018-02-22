@@ -8,14 +8,21 @@ $(document).ready(function(){
         Layout : Both
     */
     var userCountry = null;
+    var countryCode = null;
     //userCountry = 'PH';
     var countryEle = document.getElementById('userSalesOrg_t');
 
+    if(countryEle == null){ //this is for material page.
+        countryEle = $('input[name="userSalesOrg_PL"]').val();
+        countryCode = countryEle;
+    }else{
+        countryCode = parseInt(countryEle.value);
+    }
+
     if(countryEle !== null){
-        var countryCode = parseInt(countryEle.value);
         console.log('countryCode - ',countryCode);
 
-        if(countryCode === 2500){
+        if(countryCode == 2500){
             userCountry = 'PH';
         } else {}
         
@@ -57,50 +64,79 @@ $(document).ready(function(){
             Layout : Both
         */
 
-        /* 
-          Created By    :- Created By Zainal Arifin, Date : 19 Feb 2018
-          Task          :- TW-07 Address set layout correction.
-          Page          :- Global
-          File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
-          Layout        :- Both (Desktop/Mobile)
-        */
+        var check_if_page_isready = function(){
+            setTimeout(function(){
+                console.log("TITLE", $('title').text().toLowerCase());
+                if($("#jg-overlay").css("display") == "none"){
 
-        //copy to correct row.
+                    if($('title').text().toLowerCase() == "shopping cart"){
 
-        var element_column_layout = $("#attr_wrapper_1_soldToAddress_html_t").closest(".column-layout");
-        $("#attr_wrapper_1_customerShipToId_t").closest(".column-layout").before( element_column_layout.clone() ); //move cloned a row Label to correct row
-        $("#attr_wrapper_1_shipToAddress_html_t").remove(); //remove first element Ship To Address
+                        /* 
+                          Created By    :- Created By Zainal Arifin, Date : 19 Feb 2018
+                          Task          :- TW-07 Address set layout correction.
+                          Page          :- Global
+                          File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
+                          Layout        :- Desktop
+                        */
 
-        $("#attr_wrapper_1_customerSoldToId_New").closest(".column-layout").children()[0].remove(); //remove spacer from element
+                        //copy to correct row.
+                        var element_column_layout = $("#attr_wrapper_1_soldToAddress_html_t").closest(".column-layout");
+                        $("#attr_wrapper_1_customerShipToId_t").closest(".column-layout").before( element_column_layout.clone() ); //move cloned a row Label to correct row
+                        $("#attr_wrapper_1_shipToAddress_html_t").remove(); //remove first element Ship To Address
 
-        $("#attr_wrapper_1_shipToAddress_html_t").closest(".column-layout").children()[0].remove(); //remove element Draft order detail on cloned
-        $("#attr_wrapper_1_shipToAddress_html_t").closest(".column-layout").prepend( $($(".spacer-column")[0]).clone() ); //clone spacer to element
-        $("#attr_wrapper_1_shipToAddress_html_t").closest(".column").children()[0].remove(); //remove label Ship To Address
+                        $("#attr_wrapper_1_customerSoldToId_New").closest(".column-layout").children()[0].remove(); //remove spacer from element
 
-        var check_field_address_ready = function(){
-          setTimeout(function(){
+                        $("#attr_wrapper_1_shipToAddress_html_t").closest(".column-layout").children()[0].remove(); //remove element Draft order detail on cloned
+                        $("#attr_wrapper_1_shipToAddress_html_t").closest(".column-layout").prepend( $($(".spacer-column")[0]).clone() ); //clone spacer to element
+                        $("#attr_wrapper_1_shipToAddress_html_t").closest(".column").children()[0].remove(); //remove label Ship To Address
 
-            if($("#jg-overlay").css("display") == "none"){
-              
-              $("#attr_wrapper_1_customerSoldToId_New").closest(".column").css("margin-left", "0px");
-              $($("#field_wrapper_1_customerShipToId_t").closest(".column-layout").children()[0]).css("display", "block"); //clone spacer to element
-            
-            }else{
-              check_field_address_ready();
-            }
+                        $("#attr_wrapper_1_customerSoldToId_New").closest(".column").css("margin-left", "0px");
+                        $($("#field_wrapper_1_customerShipToId_t").closest(".column-layout").children()[0]).css("display", "block"); //clone spacer to element
 
-          }, 1000);
+                        /* 
+                          Created By    :- Created By Zainal Arifin, Date : 19 Feb 2018
+                          Task          :- TW-07 Address set layout correction.
+                          Page          :- Global
+                          File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
+                          Layout        :- Desktop
+                        */
+                    }
+
+                    if($('title').text().toLowerCase() == "model configuration"){
+                        /* 
+                          Created By    :- Created By Zainal Arifin, Date : 21 Feb 2018
+                          Task          :- remove existing bonus item in Bonus select
+                          Page          :- Global
+                          File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
+                          Layout        :- Desktop
+                        */
+                        $('#resultsTable').on('click', 'input[type="radio"]', function() {
+                            $("#materialArrayset").find("input[name='type']").map(function(index, data){
+                              if($(data).val().toLowerCase() == "bonus"){
+                                var id = $(data).attr("id").replace("type-","");
+                                var code_material = $("#material-"+id).val();
+                                $("select[name='itemBonus']").find("option[value='"+code_material+"']").remove();
+                              }
+                            }); 
+                          
+                        });
+                        /* 
+                          Created By    :- Created By Zainal Arifin, Date : 21 Feb 2018
+                          Task          :- remove existing bonus item in Bonus select
+                          Page          :- Global
+                          File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
+                          Layout        :- Desktop
+                        */   
+                    }
+
+                }else{
+                    check_if_page_isready();
+                }
+            }, 1000);
         }
 
-        check_field_address_ready();
+        check_if_page_isready();
 
-        /* 
-          Created By    :- Created By Zainal Arifin, Date : 19 Feb 2018
-          Task          :- TW-07 Address set layout correction.
-          Page          :- Global
-          File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
-          Layout        :- Both (Desktop/Mobile)
-        */
 
         if (navigator.userAgent.match(/Android/i) ||
             navigator.userAgent.match(/webOS/i) ||

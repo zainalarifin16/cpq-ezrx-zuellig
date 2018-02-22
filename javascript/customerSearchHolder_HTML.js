@@ -24,9 +24,11 @@ $(document).ready(function(js2){
 			if(window.location.href.indexOf("copy_processing.jsp")!= -1 && $('#edit_shopping_cart').length >0){
 				$("#edit_shopping_cart").click();
 			}
+			
 		}, 1000);
 
 	});
+
 	$('input[name="customerPORef_t"], textarea[name="orderingRequestNoMoreThan90Characters_t"], input[name*="comment_l"]').bind('change', function(){
 		$('input[name="saveQuoteRequired_t"]').val('Yes');
 		console.log('saveQuoteRequired_t');
@@ -83,11 +85,11 @@ $(document).ready(function(js2){
 			if( $('#customerMasterString_t').length ){
 				//var customerDetails = $("#actualMasterString").html();
 				var customerDetails = $("#customerMasterString_t").val();
-
-				if(customerDetails === "") {
+                 //console.log('customerDetails  PR 1.0  =====>>>>>>> ', customerDetails);
+				if(customerDetails === "" && $('#fileAttachmentBSID_t').val() == "") {
 					return true;
 				} else {
-
+						
 					//var transactionId = $("input[name='id']","form[name='bmDocForm']").val();
 					//setCookie(transactionId+"custData",customerDetails);
 					//var custData = getCookie(transactionId+"custData");
@@ -98,9 +100,38 @@ $(document).ready(function(js2){
 					//$("#customerMasterString_t").val("");
 
 					// searchCustomerList();
-					searchCustList(customerDetails, seachCustomer);
-					searchCustomerList(seachCustomer);
 
+					searchCustList(customerDetails, seachCustomer);
+				    searchCustomerList(seachCustomer);
+					/*if($('#fileAttachmentBSID_t').length > 0){
+						if($('#fileAttachmentBSID_t').val() != ""){
+							$.ajax({
+								
+								type: "GET",
+								url: "/rest/v1/commerceProcesses/oraclecpqo/transactions/"+$('#fileAttachmentBSID_t').val()+"/attachments/importMaterials?docId=36244074&docNum=1",
+								dataType: "text"
+								
+							}).done(function(response) {
+								//$("#customerMasterString_t").val(data);
+								//$("#document-form").append("<div id ='ajaxdata'>"+data+"</div>");
+								customerDetails = response;
+								console.log("--------executed-----------"+response);
+							}).always(function(response){
+								searchCustList(customerDetails, seachCustomer);
+								searchCustomerList(seachCustomer);
+
+							});
+						}else{
+							searchCustList(customerDetails, seachCustomer);
+							searchCustomerList(seachCustomer);
+						}
+						
+					}else{
+							searchCustList(customerDetails, seachCustomer);
+							searchCustomerList(seachCustomer);
+					}*/
+					
+					
 					$('.search-cust_wrapper').hide();
 					// console.log('customerDetails', customerDetails);
 				}
@@ -114,6 +145,7 @@ $(document).ready(function(js2){
 
 		if( $('#frequentlyAccessedCustomers_t').length ) {
 			var customerDetails = $("#frequentlyAccessedCustomers_t").val();
+			//console.log('frequentlyAccessedCustomers_t customerDetails  PR 1.0  =====>>>>>>> ', customerDetails);
 			if(customerDetails == ""){
 				return true;
 			} else {
@@ -140,7 +172,7 @@ var userDetectFunc = function(){
 
 	if(countryEle !== null){
 		var countryCode = parseInt(countryEle.value);
-		console.log('=== countryCode =====>>>> ',countryCode);
+		//console.log('=== userDetectFunc countryCode =====>>>> ',countryCode);
 
 		if(countryCode === 2500){
 			userCountry = 'PH';
@@ -149,7 +181,7 @@ var userDetectFunc = function(){
 			userCountry = 'TW';
 		}
 				
-		console.log('=== userCountry ===>>>> ',userCountry);
+		//console.log('=== userCountry ===>>>> ',userCountry);
 
 		return userCountry;
 		
@@ -176,7 +208,9 @@ var userCountry =  userDetectFunc();
 
 var changeCust = function(){
 	newCustId = sessionStorage.getItem('selectedCustShipID');
-	if(newCustId!="null"){
+	//console.error(newCustId);
+	//console.warn(typeof newCustId);
+	if((newCustId != null) ){
 		//document.cookie = "selectedCustShipID="+null;	
 		sessionStorage.setItem('selectedCustShipID', null);
 		$("#selectedCustomerDetail").val(newCustId);
@@ -188,7 +222,7 @@ var changeCust = function(){
 };
 var delete_line_item_func = function(selectedCustShipID){
 
-	console.error('userDetectFunc',userDetectFunc());
+	//console.error('userDetectFunc',userDetectFunc());
 
 	if(userDetectFunc() === 'TW'){
 		var selectedCustShipID_TW = selectedCustShipID;
@@ -200,8 +234,8 @@ var delete_line_item_func = function(selectedCustShipID){
 	//parseInt($("span[id*=customerSoldToId_t]").text())
 	var currentCust = parseInt($("span[id*=customerShipToId]").text());
 	var line_items_no = $('input[type="checkbox"][name="_line_item_list"]').length;
-	console.log('selectedCustShipID',selectedCustShipID);
-	console.log('currentCust',currentCust);
+	//console.log('selectedCustShipID',selectedCustShipID);
+	//console.log('currentCust',currentCust);
 	if(userDetectFunc() === 'TW'){
 		console.log('selectedCustShipID_TW',selectedCustShipID_TW);
 		//return false;
@@ -217,7 +251,7 @@ var delete_line_item_func = function(selectedCustShipID){
 			}
 			$('input[type="checkbox"][name="_line_item_list"]').prop("checked","checked");
 			$('#delete_line_items').on("click",function(){
-				console.info('delete_line_items clicked 2');
+				//console.info('delete_line_items clicked 2');
 			}).click();
 		}
 
@@ -262,17 +296,25 @@ var loadAjax = function() {
 		ajaxUrl = "https://"+sub+".bigmachines.com/rest/v3/customCustomer_Master_2800";
 	}
 	//NEW AJAX URL FOR TAIWAN CSTEAM END
-	
+	var param = 'q={"custmasterstring":{$regex:"/' + encodeURIComponent($("#searchCustomerInput").val()) + '/i"}}&orderby=customer_name:asc';
+	var ua = window.navigator.userAgent;
+   //	console.log("ua====="+ua);
+    if (ua.indexOf("MSIE") > 0 || ua.indexOf("Trident") > 0){ // If Internet Explorer, return version number
+		
+		param = 'q={%22custmasterstring%22:{$regex:%22/' + encodeURIComponent($("#searchCustomerInput").val()) + '/i%22}}&orderby=customer_name:asc';
+	}
+	//console.log("param====="+param);
 	$.ajax({
 	   //url: 'https://zuelligpharmatest1.bigmachines.com/rest/v3/customCustomer_Master?q={"contact_firstname":"Biomedical Science Institutes"}',
 		url: ajaxUrl,
-		data:'q={"custmasterstring":{$regex:"/' + encodeURIComponent($("#searchCustomerInput").val()) + '/i"}}&orderby=customer_name:asc'
+		data:param
+		//data:'q={"custmasterstring":{$regex:"/' + encodeURIComponent($("#searchCustomerInput").val()) + '/i"}}&orderby=customer_name:asc'
 	  //data:"q={'custmasterstring':{$regex:'/" + encodeURIComponent($('#searchCustomerInput').val()) + "/i'}}&orderby=customer_name:asc"		
 //		data:"q={'custmasterstring':{$regex:'/^"+$('#searchCustomerInput').val()+"$/i'}}"
 	}).done(function( response ) {
 
 			var data = response.items;
-			console.log('data', data);
+			//console.log('data', data);
 			$.each(data, function(i, item) {
 				var subDataSet = [ "", item.customer_soldto_id, item.customer_shipto_id, item.customer_name, item.customer_corp_group, item.cust_shpto_add1, item.cust_shpto_addr2, item.customer_ship_phone, item.customer_shpto_pcode ];
 
@@ -280,7 +322,7 @@ var loadAjax = function() {
 					 subDataSet = [ "", item.customer_soldto_id, item.customer_name, item.customer_corp_group, item.cust_shpto_add1, item.cust_shpto_addr2, item.customer_ship_phone, item.customer_shpto_pcode];
 				}*/
 				if(userCountry === 'TW'){
-					console.log(item);
+					//console.log(item);
 					subDataSet = [ "", item.customer_sold_to_id , item.customer_name, item.customer_shipto_id, item.cust_name_shipto, item.customer_bill_to_id, item.cust_name_billto];
 				}
 
@@ -300,10 +342,12 @@ var searchCustList = function(dataSet, seachCustomer) {
 		var zPUserType = js2('#zPUserType').val();
 
 		var userCountry =  userDetectFunc();
-
+		
 		if (zPUserType !== 'CSTeam') {
 			// console.log('split table');
+			dataSet = dataSet.replace("null","");
 			var custArr = dataSet.split("##");
+			
 			var totalRecs = custArr.length;
 			var fromIndex = 0;
 			var toIndex = totalRecs;
@@ -311,7 +355,7 @@ var searchCustList = function(dataSet, seachCustomer) {
 
 			for(var i = fromIndex; i< toIndex;i++){
 				colArr = custArr[i].split("$$");
-				//console.log(' colArr value=====>>>>>> ', colArr)
+				//console.log(' colArr value 2.0 colArr[14] =====>>>>>> ', colArr[14])
 				//console.dir(colArr);
 				var subDataSet = null;
 				if(userCountry === 'TW'){
@@ -320,7 +364,7 @@ var searchCustList = function(dataSet, seachCustomer) {
 						subDataSet.splice(1,1)
 					}
 				}else if(userCountry === 'PH'){
-					subDataSet = ['', colArr[0], colArr[1], colArr[2], colArr[3], colArr[4], colArr[5], colArr[6], colArr[7],colArr[15]];
+					subDataSet = ['', colArr[0], colArr[1], colArr[2], colArr[3], colArr[4], colArr[5], colArr[6], colArr[7],colArr[14]];
 				}
 				else{
 					subDataSet = ['', colArr[0], colArr[1], colArr[2], colArr[3], colArr[4], colArr[5], colArr[6], colArr[7]];
@@ -387,7 +431,7 @@ var searchCustList = function(dataSet, seachCustomer) {
 		}
 			
 		
-		console.error(userCountry);
+		//console.error(userCountry);
 		/*if(userCountry === 'PH'){
 			console.log('removed ship to id');
 			userColumn.splice(2,1);
@@ -420,7 +464,8 @@ var searchCustList = function(dataSet, seachCustomer) {
 						else if(userCountry === 'TW'){
 							//alert(' 222 =====>>>> TW TW', full[2]+ '$$' + full[4] + '$$' +full[6]);
 							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2]+ '$$' + full[4] + '$$' +full[6] +'">';
-							
+						
+							//data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1]+ '$$' + full[2] + '$$' +full[15] +'">';
 							if (zPUserType !== 'Principal') {
 								data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1]+ '$$' + full[3] + '$$' +full[5] +'">';
 							}
@@ -437,11 +482,20 @@ var searchCustList = function(dataSet, seachCustomer) {
 		
 		"fnDrawCallback": function (oSettings) {
 			if(userCountry === 'PH'){
-				$('#searchCustomer tr').each(function(){
+				$('.dataTables_scrollHeadInner').css('width','125%').find('table.dataTable').css('width','100%').find('th').css('text-align','left');
+				$('.dataTables_scrollBody').css('width','125%');
+				$('#searchCustomer tr').each(function(){					
 					if($(this).find('td:eq(0) input[type="radio"]').prop('disabled')){
 						$(this).css('background-color','#DCDCDC');
 					} 
 				});
+			} else if(userCountry === 'TW'){
+				$('.dataTables_scrollHeadInner').css('width','125%').find('table.dataTable').css('width','100%').find('th').css('text-align','left');
+				$('.dataTables_scrollBody').css('width','125%');
+				if (zPUserType == 'Principal') {
+					$('.dataTables_scrollHeadInner').css('width','140%').find('table.dataTable').css('width','100%').css('text-align','left');
+					$('.dataTables_scrollBody').css('width','140%');
+				}
 			}
 		},
 		columns: userColumn
@@ -449,7 +503,7 @@ var searchCustList = function(dataSet, seachCustomer) {
 	});
 
 	js2('#searchCustomer_wrapper').on('click', 'input[name="searchCust"]', function() {
-		   console.log('777 ===>>> ',$(this).val());
+		   //console.log('777 ===>>> ',$(this).val());
 			delete_line_item_func($(this).val());
 	});
 	//var searchCust99 = seachCustomer.column(3).search($('#searchCustomerInput').val(),true,true).order([3, 'asc']).draw();
@@ -459,7 +513,7 @@ var searchCustList = function(dataSet, seachCustomer) {
 	var info = searchCust99.page.info();
 	//console.dir(info.recordsDisplay);//recordsTotal
 	if(info.recordsDisplay===0){
-		console.error('zero result');
+		//console.error('zero result');
 		//var allsearch = seachCustomer.destroy().search($('#searchCustomerInput').val()).draw();
 		//$('.search-cust_wrapper').show();
 		//console.info(allsearch);
@@ -487,10 +541,15 @@ var searchCustList = function(dataSet, seachCustomer) {
 							if(full[9]=='Y'){
 								disabled = 'disabled';
 							}
-							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1] + '" '+disabled+'>';
+							//data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1] + '" '+disabled+'>';
+							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1] + '" data-suspended="' + full[9] + '" '+disabled+'>';
 						}else if(userCountry === 'TW'){
 							 //console.log(' 88 TW ======>>>> ',full[2]+ '$$' + full[4] + '$$' +full[6]);
-							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2]+ '$$' + full[4] + '$$' +full[6] +'">';							
+							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2]+ '$$' + full[4] + '$$' +full[6] +'">';	
+							//data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1]+ '$$' + full[2] + '$$' +full[15] +'">';								
+							if (zPUserType !== 'Principal') {
+								data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1]+ '$$' + full[3] + '$$' +full[5] +'">';
+							}							
 						}else{
 							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '">';
 						}
@@ -505,7 +564,7 @@ var searchCustList = function(dataSet, seachCustomer) {
 	});
 		//changeCust();
 		$("input[name='searchCust']").on('click', function() {
-             console.log('777.111111 ===>>> ',$(this).val());
+             //console.log('777.111111 ===>>> ',$(this).val());
 			delete_line_item_func($(this).val());
 			
 		});
@@ -527,7 +586,7 @@ var searchCustomerList = function(seachCustomer) {
 	$("#searchCustomerInput").click(function() {
 		var inputLength = $('#searchCustomerInput').val().length;
 		if( inputLength === 3 || inputLength > 3 ) {
-			console.log('click');
+			//console.log('click');
 			$('.search-cust_wrapper').show();
 
 		}
@@ -551,7 +610,7 @@ var searchCustomerList = function(seachCustomer) {
 					// seachCustomer.search($(this).val()).draw();
 
 				} else {
-					console.log('hide table');
+					//console.log('hide table');
 					$('.search-cust_wrapper').hide();
 
 				}
@@ -584,16 +643,41 @@ var showCustomerList = function(customerDetails) {
 
 	for(var i = fromIndex; i< toIndex;i++){
 		colArr = custArr[i].split("$$");
+		//console.dir(colArr);
 		var subDataSet;
 		if(custArr.length > 2){
-			subDataSet = ['', colArr[2], colArr[0],colArr[1], colArr[3]];
+			//console.log("  IF part 2222 ====>>>>> ", dataSet);
+			if(userDetectFunc() === 'TW'){
+				subDataSet = ['', colArr[0], colArr[1],colArr[2], colArr[3]];
+			}else{
+				subDataSet = ['', colArr[2], colArr[0], colArr[1], colArr[3]];
+			}
 		}else{
+			//console.log("  else part 333====>>>>> ", dataSet);
 			subDataSet = ['', colArr[0], colArr[1],"",""];
 		}
 		
 		dataSet.push(subDataSet);
 	}
-	console.log(dataSet);
+	//console.log(dataSet);
+	var columnTopCustList = [
+		{title: "" },
+		{ title: "Sold to ID" },
+		{ title: "Ship to ID" },
+		{ title: "Customer Name" },
+		{ title: "Address1" }
+	];
+
+	if(userDetectFunc() === 'TW'){
+		columnTopCustList = [
+			{title: "" },
+			{ title: "Sold to ID" },
+			{ title: "Sold to Name" },
+			{ title: "Ship to ID" },
+			{ title: "Ship to Name" }
+		];
+	}
+
 	var topCustomerList =  js2('#topCustomerList').DataTable({
 		//scrollY: "400px",
 		//scrollCollapse: true,
@@ -610,28 +694,25 @@ var showCustomerList = function(customerDetails) {
 					 if(type === 'display'){
 
 						var userCountry =  userDetectFunc();
-						//data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '">';
-						
+
+						////////////
 						if(userCountry === 'PH'){
-							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1] + '">';
+							data = '<input type="radio" name="topCust" id= "topCust" value="' + full[1] + '>';
 						}else if(userCountry === 'TW'){
-							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2]+ '$$' + full[4] + '$$' +full[6] +'">';							
-						} else{
-							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '">';
+							 //console.log(' 88 TW ======>>>> ',full[2]+ '$$' + full[4] + '$$' +full[6]);
+							data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2]+ '$$' + full[4] + '$$' +full[6] +'">';			
+														
+						}else{
+							data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '">';
 						}
+						////////////
 					 }
 
 					 return data;
 				}
 			}
 		],
-		columns: [
-			{title: "" },
-			{ title: "Sold to ID" },
-			{ title: "Ship to ID" },
-			{ title: "Customer Name" },
-			{ title: "Address1" }
-		]
+		columns: columnTopCustList
 
 	});
 	/*
