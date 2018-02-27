@@ -4715,29 +4715,73 @@
         File Location : $BASE_PATH$/image/javascript/js-ezrx.js
         Layout : BOTH
     */
+
+    function getQueryVariableUrl(variable)
+    {
+           var query = window.location.search.substring(1);
+           var vars = query.split("&");
+           for (var i=0;i<vars.length;i++) {
+                   var pair = vars[i].split("=");
+                   if(pair[0] == variable){return pair[1];}
+           }
+           return(false);
+    }
+
     var hide_navigation = function(layout){
         console.log('hide_navigation');
         var siteUrl = window.location.href;
         console.warn(siteUrl);
         layout = layout || 'Desktop';//Tablet
         console.log('layout',layout);
-        
 
-        if((siteUrl.indexOf('flag=rightnow')!== -1) || !(window.self == window.top)){
+        if( getQueryVariableUrl("flag") == "rightnow" ){
+            console.log("LOCALSTORAGE DONE");
+            localStorage.setItem("flag", "rightnow");
+        }
+        var flag = localStorage.getItem("flag");
+
+        if( flag == "rightnow" ){
             //debugger;
-            
            console.log('URL parameter flag=rightnow ,  EXIST');
            var desktopMenu =  document.querySelector('.jg-box-sidenav');
            if(desktopMenu !== null){
               desktopMenu.style.display = "none";
            }
            if(layout == 'Desktop'){
+
+            $("#close").closest(".button-middle").show();
+
+            $("#close").on("click", function(){
+                localStorage.removeItem("flag");
+                window.close();
+            });
+
              var jg_box_mainarea = document.querySelector('.jg-box-mainarea');
              if(jg_box_mainarea !== null){
                 jg_box_mainarea.style.paddingLeft = 0;
              }
            }
            if(layout == 'Tablet'){
+                if($($(".action.action-type-modify")[1]).text().trim().toLowerCase() == "close"){
+
+                    $( $(".action.action-type-modify")[1] ).on("click", function(){
+                        localStorage.removeItem("flag");
+                        window.close();
+                    });
+
+                }else{
+
+                    $($(".action.action-type-modify")[2]).show();
+
+                    $( $(".action.action-type-modify")[2] ).on("click", function(){
+                        localStorage.removeItem("flag");
+                        window.close();
+                    });
+
+                }
+
+
+
                 var menu_mobile = document.querySelector('#menu_mobile');
                 if(menu_mobile !== null){
                     menu_mobile.style.display = "none";

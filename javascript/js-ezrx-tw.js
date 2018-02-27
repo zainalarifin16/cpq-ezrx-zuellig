@@ -9,6 +9,8 @@ $(document).ready(function(){
     console.log(' <===== Loded TW =====>');  
     
 
+    $("#zPUserType").prop("disabled", true).parent().css({"background":"transparent", "border": "0px"});
+
     /* 
       Created By    :- Created By Zainal Arifin, Date : 16 Feb 2018
       Task          :- TW-01 & TW-02 Persist Payment term selection
