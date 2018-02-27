@@ -1168,13 +1168,14 @@
         }
 		var customerDetails = null;
 		var custArr = null;
+		var totalRecs = null;
 		var userType = $('input[name="zPUserType"]').val();
 		if (userType !== 'CSTeam'){
 			customerDetails = $("#actualMasterString").html();
             custArr = customerDetails.split("##");
+			totalRecs = custArr.length;
 		}
-        
-        var totalRecs = custArr.length;
+                
         var fromIndex = 0;
         var toIndex = totalRecs;
         var dataSet = [];

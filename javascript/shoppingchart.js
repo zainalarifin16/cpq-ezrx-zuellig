@@ -29,6 +29,7 @@
         if (pagetitle.toLowerCase() == 'shopping cart' || pagetitle.toLowerCase() == 'model configuration') {
             materialWarning();
             hideVisualProgress();
+            submitOrderSoldToAddress();
         }
         if (pagetitle.toLowerCase() == 'transaction') {
             refPORed();
@@ -236,6 +237,20 @@
 
     function deleteRow(){
         //$("#materialArrayset").find(".array-remove").click;
+    }
+
+    function submitOrderSoldToAddress(){
+
+        /* OFFSET ALIGNMENT submitted order detail */
+        // sold to address
+        $("#readonly_1__soldTo_t_address").css({ "word-wrap":"break-word", "white-space": "normal" });
+        $("#readonly_1__soldTo_t_address_2").css({ "word-wrap":"break-word", "white-space": "normal" });
+        $("#readonly_1_soldToAddress3").css({ "word-wrap":"break-word", "white-space": "normal" });
+        $("#readonly_1_soldToAddress4").css({ "word-wrap":"break-word", "white-space": "normal" });
+        //ship to address
+        $("#readonly_1__shipTo_t_address_2").css({ "word-wrap":"break-word", "white-space": "normal" });
+        $("#readonly_1_customerAddressLine4").css({ "word-wrap":"break-word", "white-space": "normal" });
+        /* OFFSET ALIGNMENT submitted order detail */
     }
 
     $(document).ready(function(){

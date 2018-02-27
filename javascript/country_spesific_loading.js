@@ -10,32 +10,35 @@ $(document).ready(function() {
     }
 
     if(countryEle !== null){
-        console.log('Loded Taiwan (TW) countryCode - ',countryCode);
-        var url_script = "";
-        console.log(url_script_tw);
-        console.log(url_script_ph);
+        
+        var url_script;
+
+        console.log(countryCode);
         if(countryCode == 2800){
-            url_script = url_script_tw;
+            url_script = script_spesific_tw;
         }
         if(countryCode == 2500){
-            url_script = url_script_ph;
+            url_script = script_spesific_ph;
         }
 
-        console.log(url_script);
+        var isEmpty = (url_script == "");
+        var isUndefined = (typeof url_script == "undefined");
 
-        if(url_script!== ""){
+        if( !isEmpty || !isUndefined ){
           //we call script
-          $.ajax({
-            url: url_script,
-            dataType: "script",
-            async: false,
-            success: function( data, textStatus, jqxhr ) {
-                console.log( data ); // Data returned
-                console.log( textStatus ); // Success
-                console.log( jqxhr.status ); // 200
-                console.log( "Script TW / PH was performed." );
-            }//end of success aja response.
-          });//end of ajax function
+          url_script.forEach(function(dataUrl, index){
+            $.ajax({
+                url: dataUrl,
+                dataType: "script",
+                async: false,
+                success: function( data, textStatus, jqxhr ) {
+                    console.log( data ); // Data returned
+                    console.log( textStatus ); // Success
+                    console.log( jqxhr.status ); // 200
+                    console.log( "Script TW / PH was performed." );
+                }//end of success aja response.
+              });//end of ajax function
+          });//end of foreach script
         }
 
     }//end of if countryEle

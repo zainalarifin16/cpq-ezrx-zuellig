@@ -100,6 +100,7 @@ $(document).ready(function(){
                           File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
                           Layout        :- Desktop
                         */
+
                     }
 
                     if($('title').text().toLowerCase() == "model configuration"){

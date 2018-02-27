@@ -332,17 +332,17 @@ var loadAjax = function() {
 				if(userCountry == "TW"){
 					subDataSet = [
 									"", //number
-									item.customer_sold_to_id, 	//SOLD TO ID
-									item.customer_name, 		//SOLD TO NAME
-									item.address_1, 			//ADDRESS 1 - SOLD TO
-									item.address_2, 			//ADDRESS 2 - SOLD TO
-									item.address_4, 			//DISTRICT - SOLD TO
-									item.city, 					//CITY - SOLD TO
-									item.postal_code, 			//POSTAL CODE - SOLD TO
-									item.customer_shipto_id, 	//SHIP TO ID
-									item.cust_name_shipto, 		//SHIP TO NAME
-									item.customer_bill_to_id, 	//BILL TO ID
-									item.cust_name_billto, 		//BILL TO NAME
+									item.customer_sold_to_id, 	//1 SOLD TO ID
+									item.customer_name, 		//2 SOLD TO NAME
+									item.customer_shipto_id,	//3 SHIP TO ID
+									item.cust_name_shipto,		//4 SHIP TO NAME
+									item.address_1_shipto,		//5 SHIP TO ADDRESS 1
+									item.address_2_shipto,		//6 SHIP TO ADDRESS 2
+									item.address_4_shipto,		//7 SHIP TO DISTRICT
+									item.city_shipto,			//8 SHIP TO CITY
+									item.postalcode_shipto,		//9 SHIP TO POSTAL Code
+									item.customer_bill_to_id,	//10 BILL TO ID
+									item.cust_name_billto,		//11 BILL TO NAME
 								];
 				}else if(userCountry == "PH"){
 					subDataSet = [
@@ -401,86 +401,90 @@ var searchCustList = function(dataSet, seachCustomer) {
 
 			for(var i = fromIndex; i< toIndex;i++){
 				colArr = custArr[i].split("$$");
-				//console.log(' colArr value 2.0 colArr[14] =====>>>>>> ', colArr[14])
-				//console.dir(colArr);
-				var subDataSet = null;
-
-				if(userCountry == "TW"){
-					if( zPUserType.toLowerCase() == "principal" ){
-						subDataSet = [ 	'',
-										colArr[0],  //PRINCIPAL COST CODE
-										colArr[1],  //SOLD TO ID
-										colArr[3],  //SOLD TO NAME
-										colArr[5],  //ADDRESS 1 - SOLD TO
-										colArr[6],  //ADDRESS 2 - SOLD TO
-										colArr[10], //DISTRICT - SOLD TO
-										colArr[11], //CITY - SOLD TO
-										colArr[8],  //POSTAL CODE - SOLD TO
-										colArr[2],  //SHIP TO ID
-										colArr[14], // SHIP TO NAME
-										colArr[15], // BILL TO ID
-										colArr[16], // BIILL TO NAME
-									];
-					}
-					if( zPUserType.toLowerCase() == "salesrep" ){
-						subDataSet = [ 	'',
-										colArr[0],  //SOLD TO ID
-										colArr[2],  //SOLD TO NAME
-										colArr[4],  //ADDRESS 1 - SOLD TO
-										colArr[5],  //ADDRESS 2 - SOLD TO
-										colArr[9],  //DISTRICT - SOLD TO
-										colArr[10], //CITY - SOLD TO
-										colArr[7],  //POSTAL CODE - SOLD TO
-										colArr[1],  //SHIP TO ID
-										colArr[13], // SHIP TO NAME
-										colArr[14], // BILL TO ID
-										colArr[15], // BIILL TO NAME
-									];
-					}
-				} else if(userCountry == "PH"){
-					// console.log(colArr);
-					subDataSet = [ 	'',
-										colArr[0],  //SOLD TO ID
-										colArr[1],  //SHIP TO ID
-										colArr[2],  //CUSTOMER NAME
-										colArr[3],  //CORP.NAME
-										colArr[4],  //SOLD TO ADDRESS1
-										colArr[5],  //SOLD TO ADDRESS2
-										colArr[6],  //SOLD TO PHONE
-										colArr[7],  //SOLD TO POSTAL CODE
-										colArr[15], //SHIP TO ADDRESS1
-										colArr[16], //SHIP TO ADDRESS2
-										'', //SHIP TO PHONE
-										colArr[19],  //SHIP TO POSTAL CODE
-										colArr[14],
-									];
-				}else{
-					subDataSet = [
-									'', 
-									colArr[0], 
-									colArr[1], 
-									colArr[2], 
-									colArr[3], 
-									colArr[4], 
-									colArr[5], 
-									colArr[6], 
-									colArr[7]
-								];
-				}
-
-				/*if(userCountry === 'TW'){
-					subDataSet = ['', colArr[0], colArr[1], colArr[3], colArr[2], colArr[14], colArr[15], colArr[16]];
-					if (zPUserType !== 'Principal') {
-						subDataSet.splice(1,1)
-					}
-				}else if(userCountry === 'PH'){
-					subDataSet = ['', colArr[0], colArr[1], colArr[2], colArr[3], colArr[4], colArr[5], colArr[6], colArr[7],colArr[14]];
-				}
-				else{
-					subDataSet = ['', colArr[0], colArr[1], colArr[2], colArr[3], colArr[4], colArr[5], colArr[6], colArr[7]];
-				}*/
 				
-				dataSet.push(subDataSet);
+				if(typeof colArr != 'undefined' ){
+					//console.log(' colArr value 2.0 colArr[14] =====>>>>>> ', colArr[14])
+					//console.dir(colArr);
+					var subDataSet = null;
+
+					if(userCountry == "TW"){
+						if( zPUserType.toLowerCase() == "principal" ){
+							subDataSet = [ 	'',
+											colArr[0],  //1 PRINCIPAL CUST CODE
+											colArr[1],  //2 SOLD TO ID
+											colArr[3],  //3 SOLD TO NAME
+											colArr[2],  //4 SHIP TO ID
+											colArr[14], //5 SHIP TO NAME
+											colArr[18], //6 SHIP TO ADDRESS 1
+											colArr[19], //7 SHIP TO ADDRESS 2
+											colArr[21], //8 SHIP TO DISTRICT
+											colArr[23], //9 SHIP TO CITY
+											colArr[22], //10 SHIP TO POSTAL CODE
+											colArr[15], //11 BILL TO ID
+											colArr[16], //12 BIILL TO NAME
+										];
+						}
+						if( zPUserType.toLowerCase() == "salesrep" ){
+							subDataSet = [ 	'',
+											colArr[0],  //1 SOLD TO ID
+											colArr[2],  //2 SOLD TO NAME
+											colArr[1],  //3 SHIP TO ID
+											colArr[13], //4 SHIP TO NAME
+											colArr[17], //5 SHIP TO ADDRESS 1
+											colArr[18], //6 SHIP TO ADDRESS 2
+											colArr[20], //7 SHIP TO DISTRICT
+											colArr[22], //8 SHIP TO CITY
+											colArr[21], //9 SHIP TO POSTAL CODE
+											colArr[14], //10 BILL TO ID
+											colArr[15], //11 BIILL TO NAME
+										];
+						}
+					} else if(userCountry == "PH"){
+						// console.log(colArr);
+						subDataSet = [ 	'',
+											colArr[0],  //SOLD TO ID
+											colArr[1],  //SHIP TO ID
+											colArr[2],  //CUSTOMER NAME
+											colArr[3],  //CORP.NAME
+											colArr[4],  //SOLD TO ADDRESS1
+											colArr[5],  //SOLD TO ADDRESS2
+											colArr[6],  //SOLD TO PHONE
+											colArr[7],  //SOLD TO POSTAL CODE
+											colArr[15], //SHIP TO ADDRESS1
+											colArr[16], //SHIP TO ADDRESS2
+											'', //SHIP TO PHONE
+											colArr[19],  //SHIP TO POSTAL CODE
+											colArr[14],
+										];
+					}else{
+						subDataSet = [
+										'', 
+										colArr[0], 
+										colArr[1], 
+										colArr[2], 
+										colArr[3], 
+										colArr[4], 
+										colArr[5], 
+										colArr[6], 
+										colArr[7]
+									];
+					}
+
+					/*if(userCountry === 'TW'){
+						subDataSet = ['', colArr[0], colArr[1], colArr[3], colArr[2], colArr[14], colArr[15], colArr[16]];
+						if (zPUserType !== 'Principal') {
+							subDataSet.splice(1,1)
+						}
+					}else if(userCountry === 'PH'){
+						subDataSet = ['', colArr[0], colArr[1], colArr[2], colArr[3], colArr[4], colArr[5], colArr[6], colArr[7],colArr[14]];
+					}
+					else{
+						subDataSet = ['', colArr[0], colArr[1], colArr[2], colArr[3], colArr[4], colArr[5], colArr[6], colArr[7]];
+					}*/
+					
+					dataSet.push(subDataSet);
+				}
+
 			}
 		}
 		var userColumn = [];
@@ -572,15 +576,15 @@ var searchCustList = function(dataSet, seachCustomer) {
 							if(full[13] == "Y"){
 								disabled = "disabled";
 							}
-							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1] + '" data-suspended="' + full[9] + '" '+disabled+'>';
+							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '" data-suspended="' + full[13] + '" '+disabled+'>';
 						} 
 						else if(userCountry === 'TW'){
-							//alert(' 222 =====>>>> TW TW', full[2]+ '$$' + full[4] + '$$' +full[6]);
+
 							//FORMAT soldtoid$$shiptoid$$billtoid
 							if( zPUserType == "Principal" ){
-								data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2]+ '$$' + full[9] + '$$' +full[11] +'">';
+								data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2]+ '$$' + full[4] + '$$' +full[11] +'">';
 							}else{
-								data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1]+ '$$' + full[8] + '$$' +full[10] +'">';
+								data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1]+ '$$' + full[3] + '$$' +full[10] +'">';
 							}
 							//data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1]+ '$$' + full[2] + '$$' +full[15] +'">';
 							// if (zPUserType !== 'Principal') {
@@ -712,9 +716,9 @@ var searchCustList = function(dataSet, seachCustomer) {
 								//alert(' 222 =====>>>> TW TW', full[2]+ '$$' + full[4] + '$$' +full[6]);
 								//FORMAT soldtoid$$shiptoid$$billtoid
 								if( zPUserType == "Principal" ){
-									data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2]+ '$$' + full[9] + '$$' +full[11] +'">';
+									data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2]+ '$$' + full[4] + '$$' +full[11] +'">';
 								}else{
-									data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1]+ '$$' + full[8] + '$$' +full[10] +'">';
+									data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1]+ '$$' + full[3] + '$$' +full[10] +'">';
 								}
 								//data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1]+ '$$' + full[2] + '$$' +full[15] +'">';
 								// if (zPUserType !== 'Principal') {
@@ -814,7 +818,7 @@ var showCustomerList = function(customerDetails) {
 
 	for(var i = fromIndex; i< toIndex;i++){
 		colArr = custArr[i].split("$$");
-		//console.dir(colArr);
+		console.dir(colArr);
 		var subDataSet;
 		if(custArr.length > 2){
 			//console.log("  IF part 2222 ====>>>>> ", dataSet);
@@ -868,13 +872,15 @@ var showCustomerList = function(customerDetails) {
 
 						////////////
 						if(userCountry === 'PH'){
-							data = '<input type="radio" name="topCust" id= "topCust" value="' + full[1] + '>';
+							console.log("PH - topCust");
+							data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '" >';
 						}else if(userCountry === 'TW'){
 							 //console.log(' 88 TW ======>>>> ',full[2]+ '$$' + full[4] + '$$' +full[6]);
-							data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2]+ '$$' + full[4] + '$$' +full[6] +'">';			
+								//FORMAT soldtoid$$shiptoid$$billtoid
+							data = '<input type="radio" name="topCust" id= "topCust" value="' + full[1]+ '$$' + full[3] + '$$' +full[6] +'" >';			
 														
 						}else{
-							data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '">';
+							data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '" >';
 						}
 						////////////
 					 }
