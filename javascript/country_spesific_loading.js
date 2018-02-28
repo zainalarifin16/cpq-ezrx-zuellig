@@ -23,8 +23,7 @@ $(document).ready(function() {
 
         var isEmpty = (url_script == "");
         var isUndefined = (typeof url_script == "undefined");
-
-        if( !isEmpty || !isUndefined ){
+        // if( !isEmpty == false || !isUndefined == false ){
           //we call script
           url_script.forEach(function(dataUrl, index){
             $.ajax({
@@ -39,7 +38,7 @@ $(document).ready(function() {
                 }//end of success aja response.
               });//end of ajax function
           });//end of foreach script
-        }
+        // }
 
     }//end of if countryEle
 

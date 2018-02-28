@@ -829,7 +829,12 @@ var showCustomerList = function(customerDetails) {
 			}
 		}else{
 			//console.log("  else part 333====>>>>> ", dataSet);
-			subDataSet = ['', colArr[0], colArr[1],"",""];
+			if(userDetectFunc() == 'PH')
+			{
+				subDataSet = ['', colArr[2], colArr[0], colArr[1], colArr[3]];
+			}else{
+				subDataSet = ['', colArr[0], colArr[1],"",""];
+			}
 		}
 		
 		dataSet.push(subDataSet);

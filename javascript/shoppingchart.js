@@ -241,16 +241,24 @@
 
     function submitOrderSoldToAddress(){
 
-        /* OFFSET ALIGNMENT submitted order detail */
         // sold to address
-        $("#readonly_1__soldTo_t_address").css({ "word-wrap":"break-word", "white-space": "normal" });
-        $("#readonly_1__soldTo_t_address_2").css({ "word-wrap":"break-word", "white-space": "normal" });
-        $("#readonly_1_soldToAddress3").css({ "word-wrap":"break-word", "white-space": "normal" });
-        $("#readonly_1_soldToAddress4").css({ "word-wrap":"break-word", "white-space": "normal" });
-        //ship to address
-        $("#readonly_1__shipTo_t_address_2").css({ "word-wrap":"break-word", "white-space": "normal" });
-        $("#readonly_1_customerAddressLine4").css({ "word-wrap":"break-word", "white-space": "normal" });
-        /* OFFSET ALIGNMENT submitted order detail */
+        setTimeout(function(){
+            if($("#jg-overlay").css("display") == "none"){
+                /* OFFSET ALIGNMENT submitted order detail */
+                $("#readonly_1__shipTo_t_company_name").css({ "white-space": "normal" });
+                $("#readonly_1__soldTo_t_address").css({ "white-space": "normal" });
+                $("#readonly_1__soldTo_t_address_2").css({ "white-space": "normal" });
+                $("#readonly_1_soldToAddress3").css({ "white-space": "normal" });
+                $("#readonly_1_soldToAddress4").css({ "white-space": "normal" });
+                //ship to address
+                $("#readonly_1__shipTo_t_address_2").css({ "white-space": "normal" });
+                $("#readonly_1_customerAddressLine4").css({ "white-space": "normal" });
+                /* OFFSET ALIGNMENT submitted order detail */
+            }else{
+                submitOrderSoldToAddress();
+            }
+
+        })
     }
 
     $(document).ready(function(){
