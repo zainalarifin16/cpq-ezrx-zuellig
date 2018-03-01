@@ -29,6 +29,44 @@ $(document).ready(function(){
         console.log('userCountry - ',userCountry);
         
     }
+
+     /* TW-05 and TW-13 Override Invoice Price */
+    function override_redcolor(){
+        var redColor = "rgb(255, 0, 0)";
+        
+        $(".cell-netPriceDiscount").find(".text-field").map(function(index, data){
+            if( $(data).val() != "0.0" ){
+                $(data).css("color", redColor);
+            }
+        });
+
+
+        $(".cell-netPriceDiscount").find(".text-field").on("keyup click", function(){
+            
+            $(this).css("color", redColor);
+            
+        });
+
+        $(".cell-netPriceDiscount").find(".text-field").blur( function(){
+            
+            if( $(this).val() == "0.0" ){
+                $(this).css("color", "#000000");
+            }
+
+        });
+
+        $("td.cell-overridePrice").map(function(index, data){
+            var overridePrice = $(data).find(".text-field");
+            overridePrice.css("color", redColor);
+            console.log( $(overridePrice).val().length );
+            if($(overridePrice).val().length > 0){
+              var rowMaterial = $(overridePrice).attr("id").replace("overridePrice-", "");
+              $( "#qty_text-"+rowMaterial ).css("color", redColor);
+            }
+        });
+
+    }
+
     /*
         End   : -
         Task  : - Detect User
@@ -165,6 +203,14 @@ $(document).ready(function(){
         }
 
         check_if_page_isready();
+
+        /* TW-05 and TW-13 Override Invoice Price */
+        override_redcolor();
+        /* TW-05 and TW-13 Override Invoice Price */
+
+        /* TW-03 Price hover table columns to be corrected for TW - Quantity, Invoice Price, Unit Price.  */
+        tw_tooltip_modelconfiguration();
+        /* TW-03 Price hover table columns to be corrected for TW - Quantity, Invoice Price, Unit Price. */
 
 
         if (navigator.userAgent.match(/Android/i) ||
