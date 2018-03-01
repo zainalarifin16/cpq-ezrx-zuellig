@@ -6281,61 +6281,75 @@
     /* monic's script */
     function adjust_tooltip() {
         /* prepare tooltip for cell-promotion */
-        $('td.cell-promotion').attr('tooltip', function() {
-            var button_helper;
-            var valueOfPromotion = $(this).find('input[name=promotion]').val();
 
-            if (valueOfPromotion != '') {
-                button_helper = '<i class="material-lens" aria-hidden="true" ></i>';
-                $(this).find('input[name=promotion]').attr('type', 'text');
-                $(this).find('input[name=promotion]').css('display', 'block !important');
-            } else {
-                button_helper = '-';
-            }
-            // $(this).children('.attribute-field-container').children('span').html(button_helper);
-            $($(this).children().children()).hide();
-            $($(this).children().children()).parent().append(button_helper);
-            return valueOfPromotion;
-        }).mouseenter(function() {
-            /*
-                if mouse hover on element promotion (lens icon) then showing table of Ordered Quantity and contract price
-            */
+        if(countryEle == null){ //this is for material page.
+            countryEle = $('input[name="userSalesOrg_PL"]').val();
+            countryCode = countryEle;
+        }else{
+            var countryCode = parseInt(countryEle.value);
+        }
 
-            var table = '<table style="text-align:center;width:100%;border-collapse: collapse;"><thead style="padding:5px;font-weight:bold"><tr style="background-color:#EEE;"><th style="border: 1px solid #999;padding:5px;">Ordered Quantity</th><th style="border: 1px solid #999;padding:5px;">Contract Price</th></tr></thead>';
+        if(countryCode != 2800){
+            //NON TW
 
-            var x = $(this).attr('tooltip').trim();
-            if (x != "") {
-                var col = x.trim().split(",");
-                if (col.length > 0) {
-                    table += "<tbody>";
-                    col.forEach(function(row) {
-                        table += '<tr>';
-                        //row = row.trim().split('#@#');
-                        row = row.trim().split('**');
-                        if (row.length > 0) {
-                            row.forEach(function(item) {
-                                table = table + '<td style="border: 1px solid #999;padding:5px;">' + item + '</td>';
-                            });
-                        }
-                        table += '</tr>';
-                    });
-                    table += '</tbody>';
+            $('td.cell-promotion').attr('tooltip', function() {
+                var button_helper;
+                var valueOfPromotion = $(this).find('input[name=promotion]').val();
 
+                if (valueOfPromotion != '') {
+                    button_helper = '<i class="material-lens" aria-hidden="true" ></i>';
+                    $(this).find('input[name=promotion]').attr('type', 'text');
+                    $(this).find('input[name=promotion]').css('display', 'block !important');
+                } else {
+                    button_helper = '-';
                 }
-            }
-            table += '</table>';
-            /*
-                showing element if the content is not null
-            */
+                // $(this).children('.attribute-field-container').children('span').html(button_helper);
+                $($(this).children().children()).hide();
+                $($(this).children().children()).parent().append(button_helper);
+                return valueOfPromotion;
+            }).mouseenter(function() {
+                /*
+                    if mouse hover on element promotion (lens icon) then showing table of Ordered Quantity and contract price
+                */
 
-            if ($(this).attr('tooltip').trim() != '') {
-                $('#myModal').addClass('hover-modal-content').html(table);
-                $('#myModal').css("display", "block");
-            }
-            $('.cell-promotion').mouseleave(function() {
-                $('#myModal').css("display", "none");
+                var table = '<table style="text-align:center;width:100%;border-collapse: collapse;"><thead style="padding:5px;font-weight:bold"><tr style="background-color:#EEE;"><th style="border: 1px solid #999;padding:5px;">Ordered Quantity</th><th style="border: 1px solid #999;padding:5px;">Contract Price</th></tr></thead>';
+
+                var x = $(this).attr('tooltip').trim();
+                if (x != "") {
+                    var col = x.trim().split(",");
+                    if (col.length > 0) {
+                        table += "<tbody>";
+                        col.forEach(function(row) {
+                            table += '<tr>';
+                            //row = row.trim().split('#@#');
+                            row = row.trim().split('**');
+                            if (row.length > 0) {
+                                row.forEach(function(item) {
+                                    table = table + '<td style="border: 1px solid #999;padding:5px;">' + item + '</td>';
+                                });
+                            }
+                            table += '</tr>';
+                        });
+                        table += '</tbody>';
+
+                    }
+                }
+                table += '</table>';
+                /*
+                    showing element if the content is not null
+                */
+
+                if ($(this).attr('tooltip').trim() != '') {
+                    $('#myModal').addClass('hover-modal-content').html(table);
+                    $('#myModal').css("display", "block");
+                }
+                $('.cell-promotion').mouseleave(function() {
+                    $('#myModal').css("display", "none");
+                });
             });
-        });
+
+        }
+
 
 
         /* create tootip for contract bonus */

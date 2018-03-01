@@ -103,29 +103,9 @@ $(document).ready(function(){
 
           if($('title').text().toLowerCase() == "model configuration"){
             /* 
-              Created By    :- Created By Zainal Arifin, Date : 21 Feb 2018
-              Task          :- remove existing bonus item in Bonus select
-              Page          :- Global
-              File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
-              Layout        :- Desktop
-            */
-            $('#resultsTable').on('click', 'input[type="radio"]', function() {
-                $("#materialArrayset").find("input[name='type']").map(function(index, data){
-                  if($(data).val().toLowerCase() == "bonus"){
-                    var id = $(data).attr("id").replace("type-","");
-                    var code_material = $("#material-"+id).val();
-                    $("select[name='itemBonus']").find("option[value='"+code_material+"']").remove();
-                  }
-                }); 
-              
-            });
-            /* 
-              Created By    :- Created By Zainal Arifin, Date : 21 Feb 2018
-              Task          :- remove existing bonus item in Bonus select
-              Page          :- Global
-              File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
-              Layout        :- Desktop
+              Remove Existing Bonus Material.
             */  
+            remove_exisiting_bonus();
 
             /* 
               Created By    :- Created By Zainal Arifin, Date : 27 Feb 2018
@@ -144,6 +124,14 @@ $(document).ready(function(){
               File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
               Layout        :- Desktop
             */
+
+            /* TW-05 and TW-13 Override Invoice Price */
+            override_redcolor();
+            /* TW-05 and TW-13 Override Invoice Price */
+
+            /* TW-03 Price hover table columns to be corrected for TW - Quantity, Invoice Price, Unit Price.  */
+            tw_tooltip_modelconfiguration();
+            /* TW-03 Price hover table columns to be corrected for TW - Quantity, Invoice Price, Unit Price. */
 
           }
 
@@ -219,4 +207,115 @@ $(document).ready(function(){
     } else {
        
     }
+
+
+    /* 
+      Created By    :- Created By Zainal Arifin, Date : 21 Feb 2018
+      Task          :- remove existing bonus item in Bonus select
+      Page          :- Global
+      File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
+      Layout        :- Desktop
+    */
+    function remove_exisiting_bonus(){
+      $('#resultsTable').on('click', 'input[type="radio"]', function() {
+          $("#materialArrayset").find("input[name='type']").map(function(index, data){
+            if($(data).val().toLowerCase() == "bonus"){
+              var id = $(data).attr("id").replace("type-","");
+              var code_material = $("#material-"+id).val();
+              $("select[name='itemBonus']").find("option[value='"+code_material+"']").remove();
+            }
+          }); 
+        
+      });
+    }
+    /* TW-05 and TW-13 Override Invoice Price */
+    function override_redcolor(){
+      var redColor = "rgb(255, 0, 0)";
+      $("td.cell-overrideInvoicePrice ").map(function(index, data){
+        var overrideInvoicePrice = $(data).find(".text-field");
+        overrideInvoicePrice.css("color", redColor);
+        if($(data).find(".text-field").val().length > 0){
+          var rowMaterial = $(overrideInvoicePrice).data("value-attr").replace("overrideInvoicePrice-", "");
+          $( "#overridePrice-"+rowMaterial ).css("color", redColor);
+          $( "#qty_text-"+rowMaterial ).css("color", redColor);
+        }
+      });
+    }
+
+    /* TW-03 Price hover table columns to be corrected for TW - Quantity, Invoice Price, Unit Price.  */
+    function tw_tooltip_modelconfiguration(){
+
+      $('td.cell-promotion').attr('tooltip', function() {
+          var button_helper;
+          var valueOfPromotion = $(this).find('input[name=promotion]').val();
+
+          if (valueOfPromotion != '') {
+              button_helper = '<i class="material-lens" aria-hidden="true" ></i>';
+              $(this).find('input[name=promotion]').attr('type', 'text');
+              $(this).find('input[name=promotion]').css('display', 'block !important');
+          } else {
+              button_helper = '-';
+          }
+          // $(this).children('.attribute-field-container').children('span').html(button_helper);
+          $($(this).children().children()).hide();
+          $($(this).children().children()).parent().append(button_helper);
+          return valueOfPromotion;
+      }).mouseenter(function() {
+          /*
+              if mouse hover on element promotion (lens icon) then showing table of Ordered Quantity and contract price
+          */
+
+          var table = '<table style="text-align:center;width:100%;border-collapse: collapse;">\
+                          <thead style="padding:5px;font-weight:bold">\
+                            <tr style="background-color:#EEE;">\
+                              <th style="border: 1px solid #999;padding:5px;">Quantity</th>\
+                              <th style="border: 1px solid #999;padding:5px;">Invoice Price</th>\
+                              <th style="border: 1px solid #999;padding:5px;">Unit Price</th>\
+                            </tr>\
+                          </thead>';
+
+          var x = $(this).attr('tooltip').trim();
+          if (x != "") {
+              var col = x.trim().split(",");
+              if (col.length > 0) {
+                  table += "<tbody>";
+                  col.forEach(function(row) {
+                      table += '<tr>';
+                      //row = row.trim().split('#@#');
+                      row = row.trim().split('**');
+                      if (row.length > 0) {
+                          row.forEach(function(item) {
+                              table = table + '<td style="border: 1px solid #999;padding:5px;">' + item + '</td>';
+                          });
+                      }
+                      table += '</tr>';
+                  });
+                  table += '</tbody>';
+
+              }
+          }
+          table += '</table>';
+          /*
+              showing element if the content is not null
+          */
+
+          if ($(this).attr('tooltip').trim() != '') {
+              $('#myModal').addClass('hover-modal-content').html(table);
+              $('#myModal').css("display", "block");
+          }
+          $('.cell-promotion').mouseleave(function() {
+              $('#myModal').css("display", "none");
+          });
+      });
+
+      $('td.cell-promotion')
+        .hover(function(e) {
+            e.preventDefault();
+        })
+        .mousemove(function(e) {
+            $('#myModal').css('top', e.pageY - $(document).scrollTop() + 10 + 'px').css('left', e.pageX - $(document).scrollLeft() + 10 + 'px');
+        });
+
+    }
+
 });
