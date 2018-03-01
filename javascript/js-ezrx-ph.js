@@ -40,7 +40,6 @@ $(document).ready(function(){
             }
         });
 
-
         $(".cell-netPriceDiscount").find(".text-field").on("keyup click", function(){
             
             $(this).css("color", redColor);
@@ -66,6 +65,92 @@ $(document).ready(function(){
         });
 
     }
+
+    function disabled_btn_save_show_alert()
+    {
+      if( $("#update-alert").length == 0 ){
+          var updateMsg = "<div id='update-alert' class='updateMsg'>Please click 'update' to proceed.</div>";
+          $('#materialArrayset').after(updateMsg);
+          $("#update-alert").css("padding-bottom", "30px");
+          $("#btn-cart-save").attr("disabled", true).css({ "background-color": "grey"});
+      }
+    }
+
+    function enabled_btn_save_remove_alert()
+    {
+      $("#update-alert").remove();
+      $("#btn-cart-save").attr("disabled", false).css({ "background-color": "#0C727A" });
+    }
+
+    /*
+        SUMMARY : Listen user change the value of QTY, OVerride Invoice and Override Price,
+                  Show Alert if the value has been changed
+    */
+
+    function check_user_change_value(){
+        var listEditedField = {};
+
+        $("td.cell-netPriceDiscount, td.cell-qty_text, td.cell-overridePrice").find(".text-field").on("click focus", function(){
+
+          var id = "";
+          if( $(this).closest(".cell-qty_text").length > 0 ){
+            id = "qty_"+$(this).attr("id").replace("qty_text-", "");
+          }
+
+          if( $(this).closest(".cell-overridePrice").length > 0){
+            id = "op_"+$(this).attr("id").replace("overridePrice-", "");
+          }
+
+          if( $(this).closest(".cell-netPriceDiscount").length > 0 ){
+            id = "oip_"+$(this).attr("id").replace("netPriceDiscount-", "");
+          }
+
+          if(!listEditedField.hasOwnProperty(id))
+          {
+              listEditedField[id] = { before : $(this).val() };
+          }
+
+        });
+
+        $("td.cell-netPriceDiscount, td.cell-qty_text, td.cell-overridePrice").find(".text-field").blur(function(){
+          
+          var id = "";
+          if( $(this).closest(".cell-qty_text").length > 0 ){
+            id = "qty_"+$(this).attr("id").replace("qty_text-", "");
+          }
+
+          if( $(this).closest(".cell-overridePrice").length > 0){
+            id = "op_"+$(this).attr("id").replace("overridePrice-", "");
+          }
+
+          if( $(this).closest(".cell-netPriceDiscount").length > 0 ){
+            id = "oip_"+$(this).attr("id").replace("netPriceDiscount-", "");
+          }
+
+          listEditedField[id]["after"] = $(this).val();
+
+          var isShowMessage = false;
+          $.each(listEditedField, function(index, data){
+            if(!isShowMessage){
+              if(data.before != data.after){
+                isShowMessage = true;
+              }
+            }else{
+              return false;
+            }
+          });
+
+          if(isShowMessage){
+            disabled_btn_save_show_alert();
+          }else{
+            enabled_btn_save_remove_alert();
+          }
+
+        });
+
+    }
+
+    check_user_change_value();
 
     /*
         End   : -
