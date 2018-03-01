@@ -823,7 +823,7 @@ var showCustomerList = function(customerDetails) {
 		if(custArr.length > 2){
 			//console.log("  IF part 2222 ====>>>>> ", dataSet);
 			if(userDetectFunc() === 'TW'){
-				subDataSet = ['', colArr[0], colArr[1],colArr[2], colArr[3]];
+				subDataSet = ['', colArr[0], colArr[1],colArr[2], colArr[3], colArr[4]];
 			}else{
 				subDataSet = ['', colArr[2], colArr[0], colArr[1], colArr[3]];
 			}
@@ -854,7 +854,8 @@ var showCustomerList = function(customerDetails) {
 			{ title: "Sold to ID" },
 			{ title: "Sold to Name" },
 			{ title: "Ship to ID" },
-			{ title: "Ship to Name" }
+			{ title: "Ship to Name" },
+			{ title: "Bill to ID" }
 		];
 	}
 

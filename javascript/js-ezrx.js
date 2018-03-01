@@ -1248,7 +1248,7 @@
             }];
 
             if(userType == 'Principal'){
-                material_column.splice(3, 0, {title: "EINA"}); 
+                material_column.splice(3, 0, {title: "Principal Material Code"}); 
             }
         }
 		
