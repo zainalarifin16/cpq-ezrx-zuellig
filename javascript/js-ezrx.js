@@ -1571,7 +1571,7 @@
             });
         }
         var userColumn = [{
-            title: ""
+                title: ""
             },
             {
                 title: "Sold To ID"

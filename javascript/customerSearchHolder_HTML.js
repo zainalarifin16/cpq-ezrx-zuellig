@@ -635,6 +635,18 @@ var searchCustList = function(dataSet, seachCustomer) {
 
 		});
 
+		seachCustomer.on( 'draw', function () {
+
+			console.log("draw dt");
+			$("input[name='searchCust']").off();
+		    $("input[name='searchCust']").on('click', function() {
+	             //console.log('777.111111 ===>>> ',$(this).val());
+				delete_line_item_func($(this).val());
+				
+			});
+
+		} );
+
 		js2('#searchCustomerInput').keyup(function(){
 			var inputLength = js2('#searchCustomerInput').val().length;
 			if( inputLength === 3 || inputLength > 3 ) {
@@ -668,10 +680,10 @@ var searchCustList = function(dataSet, seachCustomer) {
 			}
 		});
 
-		js2('#searchCustomer_wrapper').on('click', 'input[name="searchCust"]', function() {
+		/*js2('#searchCustomer_wrapper').on('click', 'input[name="searchCust"]', function() {
 			   //console.log('777 ===>>> ',$(this).val());
 				delete_line_item_func($(this).val());
-		});
+		});*/
 		//var searchCust99 = seachCustomer.column(3).search($('#searchCustomerInput').val(),true,true).order([3, 'asc']).draw();
 
 		// var searchCust99 = seachCustomer.column(3).search($('#searchCustomerInput').val(),true,true).order([3, 'asc']).draw();
@@ -738,11 +750,11 @@ var searchCustList = function(dataSet, seachCustomer) {
 
 		});
 			//changeCust();
-			$("input[name='searchCust']").on('click', function() {
+			/*$("input[name='searchCust']").on('click', function() {
 	             //console.log('777.111111 ===>>> ',$(this).val());
 				delete_line_item_func($(this).val());
 				
-			});
+			});*/
 		}
 		//console.warn(searchCust99.data().count());
 		/*if(searchCust99.data().count()>0){
