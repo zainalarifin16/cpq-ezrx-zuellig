@@ -871,6 +871,15 @@ var showCustomerList = function(customerDetails) {
 		];
 	}
 
+	if(userDetectFunc() === 'PH'){
+		columnTopCustList = [
+			{title: "" },
+			{ title: "Sold to ID" },
+			{ title: "Ship to ID" },
+			{ title: "Customer Name" }
+		];
+	}
+
 	var topCustomerList =  js2('#topCustomerList').DataTable({
 		//scrollY: "400px",
 		//scrollCollapse: true,
