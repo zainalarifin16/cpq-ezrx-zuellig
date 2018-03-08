@@ -201,7 +201,10 @@ $(document).ready(function(){
 
     }
 
-    check_user_change_value();
+    function hide_recommended_material(){
+      var tabelFavFreqReq = $("#attribute-pastOrders").parent().parent().parent().parent().parent().parent('.column-1');
+      $(tabelFavFreqReq.children()[1]).hide();
+    }
 
     $("#zPUserType").prop("disabled", true).parent().css({"background":"transparent", "border": "0px"});
 
@@ -326,6 +329,10 @@ $(document).ready(function(){
             /* TW-03 Price hover table columns to be corrected for TW - Quantity, Invoice Price, Unit Price.  */
             tw_tooltip_modelconfiguration();
             /* TW-03 Price hover table columns to be corrected for TW - Quantity, Invoice Price, Unit Price. */
+
+            check_user_change_value();
+
+            hide_recommended_material();
 
           }
 

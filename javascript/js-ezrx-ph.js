@@ -33,35 +33,65 @@ $(document).ready(function(){
      /* TW-05 and TW-13 Override Invoice Price */
     function override_redcolor(){
         var redColor = "rgb(255, 0, 0)";
+        var blackColor = "#000000";
         
+        $(".cell-netPriceDiscount").find(".text-field").off();        
         $(".cell-netPriceDiscount").find(".text-field").map(function(index, data){
             if( $(data).val() != "0.0" ){
-                $(data).css("color", redColor);
+                // $(data).css("color", redColor); //remove logic for Highlight QTY in case of PH. 7 March 2018
             }
         });
 
         $(".cell-netPriceDiscount").find(".text-field").on("keyup click", function(){
             
-            $(this).css("color", redColor);
+            // $(this).css("color", redColor); //remove logic for Highlight QTY in case of PH. 7 March 2018
             
         });
 
         $(".cell-netPriceDiscount").find(".text-field").blur( function(){
             
             if( $(this).val() == "0.0" ){
-                $(this).css("color", "#000000");
+                $(this).css("color", blackColor);
             }
 
         });
 
         $("td.cell-overridePrice").map(function(index, data){
             var overridePrice = $(data).find(".text-field");
-            overridePrice.css("color", redColor);
-            console.log( $(overridePrice).val().length );
-            if($(overridePrice).val().length > 0){
-              var rowMaterial = $(overridePrice).attr("id").replace("overridePrice-", "");
-              $( "#qty_text-"+rowMaterial ).css("color", redColor);
+
+            if( $(overridePrice).length > 0  ){
+
+              if($(overridePrice).val().length > 0){
+                overridePrice.css("color", redColor);
+                $(data).attr("style", "color: "+redColor+" !important;");
+                var rowMaterial = $(overridePrice).attr("id").replace("overridePrice-", "");
+                // $( "#qty_text-"+rowMaterial ).css("color", redColor); //remove logic for Highlight QTY in case of PH. 7 March 2018
+              }
+              
             }
+        });
+
+        $("input[name='overrideBonusQty'][type='checkbox']").map(function(index, data){
+          isChecked = (typeof $(this).attr("checked") == 'undefined') ? false : true;
+          var rowMaterial = $(this).val();
+          if( isChecked ){
+            $( "#qty_text-"+rowMaterial ).css("color", redColor);
+          }else{
+            $( "#qty_text-"+rowMaterial ).css("color", blackColor);
+          }
+
+        });        
+
+        $("input[name='overrideBonusQty'][type='checkbox']").on("change", function(){
+          
+          isChecked = (typeof $(this).attr("checked") == 'undefined') ? false : true;
+          var rowMaterial = $(this).val();
+          if( isChecked ){
+            $( "#qty_text-"+rowMaterial ).css("color", redColor);
+          }else{
+            $( "#qty_text-"+rowMaterial ).css("color", blackColor);
+          }
+
         });
 
     }
@@ -112,7 +142,7 @@ $(document).ready(function(){
 
         });
 
-        $("td.cell-netPriceDiscount, td.cell-qty_text, td.cell-overridePrice").find(".text-field").blur(function(){
+        $("td.cell-netPriceDiscount, td.cell-qty_text, td.cell-overridePrice").find(".text-field").on("keyup blur", function(){
           
           var id = "";
           if( $(this).closest(".cell-qty_text").length > 0 ){
@@ -150,7 +180,10 @@ $(document).ready(function(){
 
     }
 
-    check_user_change_value();
+    function hide_recommended_material(){
+      var tabelFavFreqReq = $("#attribute-pastOrders").parent().parent().parent().parent().parent().parent('.column-1');
+      $(tabelFavFreqReq.children()[1]).hide();
+    }
 
     /*
         End   : -
@@ -260,7 +293,7 @@ $(document).ready(function(){
                           Created By    :- Created By Zainal Arifin, Date : 27 Feb 2018
                           Task          :- Hide Feature "Enable Old Material"
                           Page          :- Model Configuration
-                          File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
+                          File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
                           Layout        :- Desktop
                         */
 
@@ -270,9 +303,33 @@ $(document).ready(function(){
                           Created By    :- Created By Zainal Arifin, Date : 27 Feb 2018
                           Task          :- Hide Feature "Enable Old Material"
                           Page          :- Model Configuration
-                          File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
+                          File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
                           Layout        :- Desktop
                         */
+
+                        /* TW-05 and TW-13 Override Invoice Price */
+                        override_redcolor();
+                        /* TW-05 and TW-13 Override Invoice Price */
+
+                        check_user_change_value();
+
+
+                        /* 
+                          Created By    :- Created By Zainal Arifin, Date : 7 Mar 2018
+                          Task          :- Hide Feature Recomended Material
+                          Page          :- Model Configuration
+                          File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
+                          Layout        :- Desktop
+                        */
+                        hide_recommended_material();
+                        /* 
+                          Created By    :- Created By Zainal Arifin, Date : 7 Mar 2018
+                          Task          :- Hide Feature Recomended Material
+                          Page          :- Model Configuration
+                          File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
+                          Layout        :- Desktop
+                        */
+
 
                     }
 
@@ -283,10 +340,6 @@ $(document).ready(function(){
         }
 
         check_if_page_isready();
-
-        /* TW-05 and TW-13 Override Invoice Price */
-        override_redcolor();
-        /* TW-05 and TW-13 Override Invoice Price */
 
         /* TW-03 Price hover table columns to be corrected for TW - Quantity, Invoice Price, Unit Price.  */
         tw_tooltip_modelconfiguration();
