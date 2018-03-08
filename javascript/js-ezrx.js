@@ -1940,6 +1940,17 @@
         $('footer').prepend(updateMsg);
 		console.log(' === mobile_updateMsg ===>>>');
     };
+	
+	/*
+	  @pratap Production Issue : Rename Button
+	*/
+	var mobile_renameButton = function() {
+		console.log(' === mobile_renameButton ===>>>'); 
+		$("#button-bar .button-invoke-add").text('Add to Order');
+		$("#button-bar .button-invoke-return").text('Cancel Shopping');
+		
+    };
+	
     var mobile_onChangeUpdateMsg = function() {
 		$('input[name="overridePrice"], input[name="qty_text"], input[name="comments"], input[name="additionalMaterialQty"]').off();
 		//var ovrrideprice = $('input[name="overridePrice"]').val();
@@ -2111,14 +2122,26 @@
             var $child = $(this).children('td');
             var $stock = $child.find('input[name*="inStock_l"]');
             var stockval = $stock.val();
-            if (stockval === 'No') {
+            
+            var $qty_text = $child.find('input[name*="qty_l"]');
+
+            if (stockval == 'No') {
                 $child.eq(5).css('color', 'red');
                 // $child.eq(6).css('color','red');
                 $stock.parent().parent().parent().css('color', 'red');
+                $qty_text.parent().parent().parent().css('color', 'red');
             }
-            var $overridePrice = $child.find('input[name$="isPriceOverride"]');
+
+            var $overridePrice = $child.find('input[name*="isPriceOverride"]');
+
             if ($overridePrice.val() == 'true') {
                 $child.eq(6).css('color', 'red');
+            }
+
+            var $overrideBonusQty = $child.find('input[name*="bonusOverideFlag_l"]');
+            if( $overrideBonusQty.val() == "true" ){
+                // Qty Text in row of bonus
+                $qty_text.parent().parent().parent().css('color', 'red');
             }
 
         });
@@ -6254,6 +6277,7 @@
             mobile_incomplete_order();
             //incomplete order function end
             materialPageText();
+			mobile_renameButton();
         }, 2000);
 
         $("input[name = _line_item_list]").change(function() {
