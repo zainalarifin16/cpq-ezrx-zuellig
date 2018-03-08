@@ -2897,6 +2897,7 @@
                     File Location : $BASE_PATH$/image/javascript/js-ezrx.js
                     Layout : Desktop
                 */
+
             }
         }
 
@@ -5028,6 +5029,32 @@
                     console.log('zuellig pharma products');
                 } else if (pagetitle == 'zuellig pharma order process') {
                     console.log('zuellig pharma order process');
+                } else if (pagetitle == "my profile"){
+                    /* 
+                      Created By    :- Created By Zainal Arifin, Date : 08-03-2018
+                      Task          :- Restyling Profile Page
+                      Page          :- Profile Page
+                      File Location :- $BASE_PATH$/javascript/js-ezrx.js
+                      Layout        :- Desktop
+                    */
+                    // Remove Width 100% on class .jg-mobilelayout .form-input
+                    $(".jg-mobilelayout .form-input").attr("style", "width:auto!important;");
+                    // Give Padding
+                    $("table.dashed-table").find("td").map(function(index, data){
+                        $(data).css("padding", "5px 15px 5px 20px");
+                    });
+                    // Give 100% width in every Input and Select
+                    $("input.form-input, select.form-input").css("width", "100%");
+                    // give text align center for checkbox label
+                    $("input[type='checkbox'].form-input").parent().css("text-align","center");
+
+                    /* 
+                      Created By    :- Created By Zainal Arifin, Date : 08-03-2018
+                      Task          :- Restyling Profile Page
+                      Page          :- Profile Page
+                      File Location :- $BASE_PATH$/javascript/js-ezrx.js
+                      Layout        :- Desktop
+                    */
                 }
 
                 mobile_adjustcontenttop();
@@ -5717,6 +5744,34 @@
 
         */
 
+        /* 
+          Created By    :- Created By Zainal Arifin, Date : 08-03-2018
+          Task          :- Hide My Templates Button from Commerce Management
+          Page          :- Commerce Management
+          File Location :- $BASE_PATH$/javascript/js-ezrx.js
+          Layout        :- Mobile
+        */
+
+        $(".jg-list-tool").children().map(function(index,data){
+            var isExist = ( $(data).find(".default").length > 0 )? true : false;
+            if(isExist){
+                var currentBtn = $(data).find(".default");
+                var btnString = $(currentBtn).html();
+                if(btnString.toLowerCase() == "my templates"){
+                    $(currentBtn).hide();
+                }
+            }
+        });
+
+        /* 
+          Created By    :- Created By Zainal Arifin, Date : 08-03-2018
+          Task          :- Hide My Templates Button from Commerce Management
+          Page          :- Commerce Management
+          File Location :- $BASE_PATH$/javascript/js-ezrx.js
+          Layout        :- Mobile
+        */
+
+
     }
 
     function mobile_orderpage() {
@@ -5763,6 +5818,10 @@
 						mobile_pricingChange();
 						//mobile_checkItemOnCart();
 						$("label[for='customerPORef_t']").css("color", "red");
+                        
+                        /* 8-03-2017 | add red color on submitted and In Process Order */
+                        $("#attribute-customerPORef_t").find("legend").css("color", "red");
+                        /* 8-03-2017 | add red color on submitted and In Process Order */
 
                         // $("#lig-sticky-actions").find(".action-type-reconfigure").prop("disabled", false);
                     //}, 2000);
