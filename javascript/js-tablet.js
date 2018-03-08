@@ -470,6 +470,10 @@ $(document).ready(function() {
 									$(data).css({ "background-color": "#afc008","border-radius": "0","color": "#fff", "border-color": "transparent"});
 								});
 								
+								/* 8-03-2018 move button add and delete in My Favourite */
+								$("#AddCustFav").closest("span").css({"position":"fixed", "bottom": "15%"});
+								/* 8-03-2018 move button add and delete in My Favourite */
+
 								$("#swipe-sidebar-content").siblings(".sidebar-handle").show();	
 								// END SLIDER CONTENT
 	
@@ -688,6 +692,37 @@ $(document).ready(function() {
 									$(".sidebar-handle").trigger("click");		
 									//$(".sidebar-handle-icon").trigger("swiperight");
 						});
+						
+						$("body").on("click touchend","#tab-orderAudit",function(e){
+							
+
+							/* 8-03-2018 | restyling Audit Table */
+							function auditTableTab(){
+
+								setTimeout(function(){
+
+									if( $(".ui-loader.ui-corner-all").css("display") == "none" ){
+
+										$( $("#auditTable table").closest(".ui-corner-all") ).children()[0].remove();
+										$($( $("#auditTable table").closest(".ui-corner-all") ).children()[0]).css("width", "100%");
+										$('#auditTable table').attr("style","width: 98%;");
+
+									}else{
+
+										auditTableTab();
+
+									}
+				
+								}, 1000);
+								
+							}
+
+							auditTableTab();
+							
+							/* 8-03-2018 | restyling Audit Table */
+
+						});
+						
 						
 				 }
 				
