@@ -50,7 +50,7 @@ $(document).ready(function(){
 
           if (valueOfPromotion != '') {
               button_helper = '<i class="material-lens" aria-hidden="true" ></i>';
-              $(this).find('input[name=promotion]').attr('type', 'text');
+              $(this).find('input[name=promotion]').prop('type', 'text');
               $(this).find('input[name=promotion]').css('display', 'block !important');
           } else {
               button_helper = '-';
@@ -163,7 +163,7 @@ $(document).ready(function(){
 
         });
 
-        $("td.cell-overrideInvoicePrice, td.cell-qty_text, td.cell-overridePrice").find(".text-field").blur(function(){
+        $("td.cell-overrideInvoicePrice, td.cell-qty_text, td.cell-overridePrice").find(".text-field").on("keyup blur", function(){
           
           var id = "";
           if( $(this).closest(".cell-qty_text").length > 0 ){
