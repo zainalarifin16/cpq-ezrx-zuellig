@@ -61,7 +61,7 @@ $(document).ready(function(){
 
             if( $(overridePrice).length > 0  ){
 
-              if($(overridePrice).val().length > 0){
+              if($(overridePrice).val() != "0.0"){
                 overridePrice.css("color", redColor);
                 $(data).attr("style", "color: "+redColor+" !important;");
                 var rowMaterial = $(overridePrice).attr("id").replace("overridePrice-", "");
