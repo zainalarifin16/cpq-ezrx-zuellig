@@ -3972,9 +3972,9 @@
             /* add button Start over when add material page has element start_over */
             /* add button add to order when add material page has element start over */
             $('.jg-list-tool')
-                .append($("<li class='jg-item-tool'>")
-                    .append($("<button id='btn-cart-startover' class='jg-btn jg-btn-icon cart-startover'>Start Over</button>"))
-                )
+                // .append($("<li class='jg-item-tool'>")
+                //     .append($("<button id='btn-cart-startover' class='jg-btn jg-btn-icon cart-startover'>Start Over</button>"))
+                // )
                 .append($("<li class='jg-item-tool'>")
                     .append($("<button id='btn-cart-addtoorder' class='jg-btn jg-btn-icon cart-addtoorder'>Add to Order</button>"))
                 );
