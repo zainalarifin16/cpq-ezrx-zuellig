@@ -261,6 +261,9 @@ $(document).ready(function(){
                         $("#readonly_1__shipTo_t_address_2").css({ "white-space": "normal" });
                         $("#readonly_1_customerAddressLine4").css({ "white-space": "normal" });
 
+                        //remove duplicate of saveQuoteRequired_t
+                        $($("input[name='saveQuoteRequired_t']")[1]).remove();
+
                     }
 
                     if($('title').text().toLowerCase() == "model configuration"){

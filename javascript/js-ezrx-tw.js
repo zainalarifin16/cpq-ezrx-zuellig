@@ -270,6 +270,9 @@ $(document).ready(function(){
 
             $("#readonly_1_paymentTerm_TW_t").find("select").css("max-width", "190px");
 
+            //remove duplicate of saveQuoteRequired_t
+            $($("input[name='saveQuoteRequired_t']")[1]).remove();
+
             /* OFFSET ALIGNMENT submitted order detail */
 
             var api_url_search_customer = "https://oc-129-150-115-223.compute.oraclecloud.com/CPQ_To_DB_Connector/restservices/searchdb/search/name/";
