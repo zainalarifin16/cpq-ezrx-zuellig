@@ -75,6 +75,23 @@ $(document).ready(function(js2){
 
 		$("#attr_wrapper_1_customerSearchHolder_HTML").html(topCustomerWrapper);
 
+		/* 
+			Created By    :- Created By Zainal Arifin, Date : 14 March 2018
+			Task          :- remove rule-hide for search customer
+			Page          :- Global
+			File Location :- $BASE_PATH$/javascript/customerSearchHolder_HTML.js
+			Layout        :- Desktop
+		*/
+		$("#attr_wrapper_1_customerSearchHolder_HTML").removeClass("rule-hide");
+		$("#attr_wrapper_1_customerSearchHolder_HTML").parent().removeClass("rule-hide");
+		/* 
+			Created By    :- Created By Zainal Arifin, Date : 14 March 2018
+			Task          :- remove rule-hide for search customer
+			Page          :- Global
+			File Location :- $BASE_PATH$/javascript/customerSearchHolder_HTML.js
+			Layout        :- Desktop
+		*/
+
 		var zPUserType = $('#zPUserType').val();
 		if (zPUserType === 'CSTeam') {
 			//loadAjax();
@@ -212,7 +229,21 @@ var changeCust = function(){
 	//console.warn(typeof newCustId);
 	if((newCustId != null) ){
 		//document.cookie = "selectedCustShipID="+null;	
-		sessionStorage.setItem('selectedCustShipID', null);
+		/* 
+			Created By    :- Created By Zainal Arifin, Date : 14 March 2018
+			Task          :- remove localStorage for checking
+			Page          :- Global
+			File Location :- $BASE_PATH$/javascript/customerSearchHolder_HTML.js
+			Layout        :- Desktop
+		*/
+		sessionStorage.removeItem('selectedCustShipID');
+		/* 
+			Created By    :- Created By Zainal Arifin, Date : 14 March 2018
+			Task          :- remove localStorage for checking
+			Page          :- Global
+			File Location :- $BASE_PATH$/javascript/customerSearchHolder_HTML.js
+			Layout        :- Desktop
+		*/
 		$("#selectedCustomerDetail").val(newCustId);
 		$("#customerMasterString_t").val("");
 		setTimeout(function(){
