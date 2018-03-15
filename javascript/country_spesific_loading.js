@@ -1,7 +1,6 @@
 $(document).ready(function() {
     console.log("SCRIPT FOOTER");
     var countryEle = document.getElementById('userSalesOrg_t');
-
     if(countryEle == null){ //this is for material page.
         countryEle = $('input[name="userSalesOrg_PL"]').val();
         countryCode = countryEle;

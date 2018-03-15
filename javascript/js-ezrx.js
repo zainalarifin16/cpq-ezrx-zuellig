@@ -34,6 +34,22 @@
     //userCountry = 'PH';
     var countryEle = document.getElementById('userSalesOrg_t');
 
+    var check_nationality = function(nationality){
+        var countryEle = document.getElementById('userSalesOrg_t');
+        if (countryEle == null) { //this is for material page.
+            countryEle = $('input[name="userSalesOrg_PL"]').val();
+            countryCode = countryEle;
+        } else {
+            var countryCode = parseInt(countryEle.value);
+        }
+        var valid = false;
+        if(nationality == countryCode){
+            valid = true;
+        }
+
+        return valid;
+    }
+
     if(countryEle !== null){
         var countryCode = parseInt(countryEle.value);
         console.log('ezrx file ===>>> countryCode --->> ',countryCode);
@@ -4600,6 +4616,26 @@
         }, "slow");
         adjust_tooltip();
 
+        /* 
+            Created By    :- Created By Zainal Arifin, Date : 15 March 2018
+            Task          :- highlight on QTY material in additional bonus for SG
+            Page          :- Model Configuration
+            File Location :- $BASE_PATH$/javascript/js-ezrx.js
+            Layout        :- Desktop
+        */
+        if(check_nationality(2600)){
+            $(".cell-additionalMaterialQty").find(".text-field").css("color", "red");
+        }
+
+        /* 
+            Created By    :- Created By Zainal Arifin, Date : 15 March 2018
+            Task          :- highlight on QTY material in additional bonus for SG
+            Page          :- Model Configuration
+            File Location :- $BASE_PATH$/javascript/js-ezrx.js
+            Layout        :- Desktop
+        */
+
+        //END OF transfrom_config
     }
 
     function transform_reportpage() {
