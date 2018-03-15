@@ -1981,11 +1981,12 @@
         });
     };
     var mobile_pricingChange = function() {
-		$('input[name="customerPORef_t"], textarea[name="orderingRequestNoMoreThan90Characters_t"], input[name*="comment_l"]').off();
-        $('input[name="customerPORef_t"], textarea[name="orderingRequestNoMoreThan90Characters_t"], input[name*="comment_l"]').bind('change', function() {
-            $('input[name="saveQuoteRequired_t"]').val('Yes');
-            console.log('saveQuoteRequired_t change');
-        });
+  //   	$("#orderingRequestNoMoreThan90Characters_t").off();
+		// $('input[name="customerPORef_t"], textarea[name="orderingRequestNoMoreThan90Characters_t"], input[name*="comment_l"]').off();
+  //       $('input[name="customerPORef_t"], textarea[name="orderingRequestNoMoreThan90Characters_t"], input[name*="comment_l"]').bind('change', function() {
+  //           $('input[name="saveQuoteRequired_t"]').val('Yes');
+  //           console.log('saveQuoteRequired_t change');
+  //       });
     };
     /*
         Start : 05 Nov 2017

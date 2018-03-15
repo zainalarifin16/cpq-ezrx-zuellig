@@ -29,11 +29,12 @@ $(document).ready(function(js2){
 
 	});
 
-	$('input[name="customerPORef_t"], textarea[name="orderingRequestNoMoreThan90Characters_t"], input[name*="comment_l"]').bind('change', function(){
-		$('input[name="saveQuoteRequired_t"]').val('Yes');
-		console.log('saveQuoteRequired_t');
+	// $("#orderingRequestNoMoreThan90Characters_t").off();
+	// $('input[name="customerPORef_t"], textarea[name="orderingRequestNoMoreThan90Characters_t"], input[name*="comment_l"]').bind('change', function(){
+	// 	$('input[name="saveQuoteRequired_t"]').val('Yes');
+	// 	console.log('saveQuoteRequired_t');
 
-	});
+	// });
 	if(pagetitle == "commerce management"){//validation message for duplicate customer
 		console.log("duplicate customer");
 		if($("ul.error-text").length > 0){
