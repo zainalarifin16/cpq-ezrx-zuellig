@@ -1,6 +1,23 @@
 console.log("js-tablet1");
 $(document).ready(function() {
 	console.log("js-tablet2");
+
+	var check_nationality = function (nationality) {
+		var countryEle = document.getElementById('userSalesOrg_t');
+		if (countryEle == null) { //this is for material page.
+			countryEle = $('input[name="userSalesOrg_PL"]').val();
+			countryCode = countryEle;
+		} else {
+			var countryCode = parseInt(countryEle.value);
+		}
+		var valid = false;
+		if (nationality == countryCode) {
+			valid = true;
+		}
+
+		return valid;
+	}
+
 	function applyOrderPageChanges(){
 		setTimeout(function(){
 			if($('#jg-overlay').css("display") == "none"){
@@ -518,6 +535,36 @@ $(document).ready(function() {
 						
 						// END UPDATE 19-01-2018
 
+					 /* 
+						Created By    :- Created By Zainal Arifin, Date : 15 March 2018
+						Task          :- highlight on QTY material in additional bonus for SG
+						Page          :- Model Configuration
+						File Location :- $BASE_PATH$/javascript/js-ezrx.js
+						Layout        :- Desktop
+					*/
+					
+					 var userSalesOrg_t = (($("#userSalesOrg_t").length == 0)? false : true);
+					 var userSalesOrg_PL = (($('input[name="userSalesOrg_PL"]').length == 0)? false : true);
+					
+					 var sg_nationalty = false;
+					if(!userSalesOrg_t && !userSalesOrg_PL){
+						//if it's from SG check validy true
+						sg_nationalty = true;
+					}else{
+						sg_nationalty = check_nationality(2600)
+					}
+
+					if (sg_nationalty) {
+						 $(".cell-additionalMaterialQty").find(".form-field").css("color", "red");
+					}
+
+					/* 
+						Created By    :- Created By Zainal Arifin, Date : 15 March 2018
+						Task          :- highlight on QTY material in additional bonus for SG
+						Page          :- Model Configuration
+						File Location :- $BASE_PATH$/javascript/js-ezrx.js
+						Layout        :- Desktop
+					*/
 
 						
 				}else if(pageTitle == "order page"){

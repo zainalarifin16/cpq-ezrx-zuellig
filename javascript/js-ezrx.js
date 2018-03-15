@@ -5406,7 +5406,8 @@
                     $('#attribute-currentCustFav').parent().parent().parent().removeClass('ui-collapsible-collapsed');
                 }
 				//commented by suresh as the all materials should be expanded always for mobile version
-                /*if (allMaterialState ==='collapsed') {
+				// uncommented by pratap as per sakthi requirement that for mobile also it will colapse 
+                if (allMaterialState ==='collapsed') {
                     console.log('collapse material', $('#attribute-materialSearch').parent().parent());
                     $('#attribute-materialSearch').parent().parent().addClass('ui-collapsible-content-collapsed');
                     $('#attribute-materialSearch').parent().parent().prev().addClass('ui-collapsible-heading-collapsed');
@@ -5417,7 +5418,7 @@
                     $('#attribute-materialSearch').parent().parent().prev().removeClass('ui-collapsible-heading-collapsed');
                     $('#attribute-materialSearch').parent().parent().prev().children().removeClass('ui-icon-plus').addClass('ui-icon-minus');
                     $('#attribute-materialSearch').parent().parent().parent().removeClass('ui-collapsible-collapsed');
-                }*/
+                }
 				//end
                 /*if ($('.jg-mobilelayout #error-messages ul.constraint-messages').is(':visible')) {
                     $("#config footer").append("<div id='duplicatefooter'><button class='updateButton'>Update</button><button class='saveButton'>Save</button></div>");
