@@ -281,8 +281,27 @@ $(document).ready(function(){
 
             $("#readonly_1_paymentTerm_TW_t").find("select").css("max-width", "190px");
 
+            /* 
+              Created By    :- Created By Zainal Arifin, Date : 15 March 2018
+              Task          :- Remove Duplicate input field
+              Page          :- Global
+              File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
+              Layout        :- Desktop
+            */
+
+            //remove duplicate of frequentlyAccessedCustomers_t
+            $("textarea[name='frequentlyAccessedCustomers_t']")[1].remove();
+
             //remove duplicate of saveQuoteRequired_t
             $($("input[name='saveQuoteRequired_t']")[1]).remove();
+
+            /* 
+              Created By    :- Created By Zainal Arifin, Date : 15 March 2018
+              Task          :- Remove Duplicate input field
+              Page          :- Global
+              File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
+              Layout        :- Desktop
+            */
 
             /* OFFSET ALIGNMENT submitted order detail */
 

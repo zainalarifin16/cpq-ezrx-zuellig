@@ -261,8 +261,27 @@ $(document).ready(function(){
                         $("#readonly_1__shipTo_t_address_2").css({ "white-space": "normal" });
                         $("#readonly_1_customerAddressLine4").css({ "white-space": "normal" });
 
+                        /* 
+                          Created By    :- Created By Zainal Arifin, Date : 15 March 2018
+                          Task          :- Remove Duplicate input field
+                          Page          :- Global
+                          File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
+                          Layout        :- Desktop
+                        */
+
+                        //remove duplicate of frequentlyAccessedCustomers_t
+                        $("textarea[name='frequentlyAccessedCustomers_t']")[1].remove();
+
                         //remove duplicate of saveQuoteRequired_t
                         $($("input[name='saveQuoteRequired_t']")[1]).remove();
+
+                        /* 
+                          Created By    :- Created By Zainal Arifin, Date : 15 March 2018
+                          Task          :- Remove Duplicate input field
+                          Page          :- Global
+                          File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
+                          Layout        :- Desktop
+                        */
 
                     }
 
