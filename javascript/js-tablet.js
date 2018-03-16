@@ -555,7 +555,36 @@ $(document).ready(function() {
 					}
 
 					if (sg_nationalty) {
-						 $(".cell-additionalMaterialQty").find(".form-field").css("color", "red");
+						var redColor = "rgb(255, 0, 0)";
+						var blackColor = "#000000";
+						var listEditedField = {};
+
+						$("input[name='additionalMaterialQty']").on("click focus starttouch", function () {
+
+							var id = $(this).attr("id").replace("additionalMaterialQty", "");
+							if (!listEditedField.hasOwnProperty(id)) {
+								listEditedField[id] = { before: $(this).val(), after : 0 };
+							}
+
+						});
+
+						$("input[name='additionalMaterialQty']").on("keyup blur change", function () {
+
+							var id = $(this).attr("id").replace("additionalMaterialQty", "");
+							listEditedField[id]["after"] = $(this).val();
+
+							var isShowMessage = false;
+							$.each(listEditedField, function (index, data) {
+								if (!isShowMessage) {
+									if (data.before != data.after) {
+										$("#additionalMaterialQty" + index).css("color", redColor);
+									}else{
+										$("#additionalMaterialQty" + index).css("color", blackColor);
+									}
+								}
+							});
+
+						});
 					}
 
 					/* 

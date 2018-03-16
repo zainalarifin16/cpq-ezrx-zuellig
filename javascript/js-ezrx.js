@@ -4625,7 +4625,36 @@
             Layout        :- Desktop
         */
         if(check_nationality(2600)){
-            $(".cell-additionalMaterialQty").find(".text-field").css("color", "red");
+
+            var redColor = "rgb(255, 0, 0)";            
+            var listEditedField = {};
+
+            $("input[name='additionalMaterialQty']").on("click focus", function () {
+
+                var id = $(this).attr("id").replace("additionalMaterialQty","");
+                if (!listEditedField.hasOwnProperty(id)) {
+                    listEditedField[id] = { before: $(this).val() };
+                }
+
+            });
+
+            $("input[name='additionalMaterialQty']").on("keyup blur", function () {
+                
+                var id = $(this).attr("id").replace("additionalMaterialQty", "");
+                listEditedField[id]["after"] = $(this).val();
+
+                var isShowMessage = false;
+                $.each(listEditedField, function (index, data) {
+                    if (!isShowMessage) {
+                        if (data.before != data.after) {
+                            $("#additionalMaterialQty" + index).css("color", redColor);                            
+                        }else{
+                            $("#additionalMaterialQty" + index).css("color", blackColor);
+                        }
+                    }
+                });
+
+            });
         }
 
         /* 
