@@ -364,7 +364,7 @@ $(document).ready(function(){
         check_if_page_isready();
 
         /* TW-03 Price hover table columns to be corrected for TW - Quantity, Invoice Price, Unit Price.  */
-        tw_tooltip_modelconfiguration();
+        // tw_tooltip_modelconfiguration();
         /* TW-03 Price hover table columns to be corrected for TW - Quantity, Invoice Price, Unit Price. */
 
 

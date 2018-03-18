@@ -1187,7 +1187,23 @@
 		var totalRecs = null;
 		var userType = $('input[name="zPUserType"]').val();
 		if (userType !== 'CSTeam'){
-			customerDetails = $("#actualMasterString").html();
+
+            var isPHCountry = check_nationality(2500);
+
+            if (isPHCountry) {
+                var fileAttachmentBSID_t = localStorage.getItem("fileAttachmentBSID_t");
+                $.ajax({
+                    type: "GET",
+                    url: "/rest/v1/commerceProcesses/oraclecpqo/transactions/" + fileAttachmentBSID_t + "/attachments/importMaterials?docId=36244074&docNum=1",
+                    dataType: "text",
+                    success: function (actualMasterString) {
+                        customerDetails = actualMasterString;
+                    }
+                });
+            } else {
+                customerDetails = $("#actualMasterString").html();
+            }
+
             custArr = customerDetails.split("##");
 			totalRecs = custArr.length;
 		}

@@ -4,6 +4,21 @@ var pagetitle;
  
 $(document).ready(function(js2){
 
+	var check_nationality = function (nationality) {
+		var countryEle = document.getElementById('userSalesOrg_t');
+		if (countryEle == null) { //this is for material page.
+			countryEle = $('input[name="userSalesOrg_PL"]').val();
+			countryCode = countryEle;
+		} else {
+			var countryCode = parseInt(countryEle.value);
+		}
+		var valid = false;
+		if (nationality == countryCode) {
+			valid = true;
+		}
+
+		return valid;
+	}
 
 	// debugger;
 	// $.noConflict();
@@ -100,61 +115,54 @@ $(document).ready(function(js2){
 
 		} else {
 
-			if( $('#customerMasterString_t').length ){
-				//var customerDetails = $("#actualMasterString").html();
-				var customerDetails = $("#customerMasterString_t").val();
-                 //console.log('customerDetails  PR 1.0  =====>>>>>>> ', customerDetails);
-				if(customerDetails === "" && $('#fileAttachmentBSID_t').val() == "") {
-					return true;
-				} else {
-						
-					//var transactionId = $("input[name='id']","form[name='bmDocForm']").val();
-					//setCookie(transactionId+"custData",customerDetails);
-					//var custData = getCookie(transactionId+"custData");
-					//if(custData !=undefined || custData !=null || custData != ""){
-					//}
-					var seachCustomer;
-					customer_master_string = customerDetails;
-					//$("#customerMasterString_t").val("");
+			/* 
+				Created By    :- Created By Zainal Arifin, Date : 18 March 2018
+				Task          :- Search Customer from customerDetails.txt From URL
+				Page          :- Shopping Cart
+				File Location :- $BASE_PATH$/javascript/customerSearchHolder_HTML.js
+				Layout        :- Global
+			*/
 
-					// searchCustomerList();
+			var isPHCountry = check_nationality(2500);
 
-					searchCustList(customerDetails, seachCustomer);
-				    searchCustomerList(seachCustomer);
-					/*if($('#fileAttachmentBSID_t').length > 0){
-						if($('#fileAttachmentBSID_t').val() != ""){
-							$.ajax({
-								
-								type: "GET",
-								url: "/rest/v1/commerceProcesses/oraclecpqo/transactions/"+$('#fileAttachmentBSID_t').val()+"/attachments/importMaterials?docId=36244074&docNum=1",
-								dataType: "text"
-								
-							}).done(function(response) {
-								//$("#customerMasterString_t").val(data);
-								//$("#document-form").append("<div id ='ajaxdata'>"+data+"</div>");
-								customerDetails = response;
-								console.log("--------executed-----------"+response);
-							}).always(function(response){
-								searchCustList(customerDetails, seachCustomer);
-								searchCustomerList(seachCustomer);
+			if(isPHCountry){
+				var fileAttachmentBSID_t = $('#fileAttachmentBSID_t').val();
+				localStorage.setItem("fileAttachmentBSID_t", fileAttachmentBSID_t);
+				$.ajax({
+					type: "GET",
+					url: "/rest/v1/commerceProcesses/oraclecpqo/transactions/" + fileAttachmentBSID_t + "/attachments/importMaterials?docId=36244074&docNum=1",
+					dataType: "text",
+					success: function (customerDetails) {
+						// console.log(response);
+						searchCustList(customerDetails, seachCustomer);
+						searchCustomerList(seachCustomer);
+					}
+				});
+			}else{
+				if ($('#customerMasterString_t').length) {
+					var customerDetails = $("#customerMasterString_t").val();
+					if (customerDetails === "" && $('#fileAttachmentBSID_t').val() == "") {
+						return true;
+					} else {
+						var seachCustomer;
+						customer_master_string = customerDetails;
+						searchCustList(customerDetails, seachCustomer);
+						searchCustomerList(seachCustomer);
 
-							});
-						}else{
-							searchCustList(customerDetails, seachCustomer);
-							searchCustomerList(seachCustomer);
-						}
-						
-					}else{
-							searchCustList(customerDetails, seachCustomer);
-							searchCustomerList(seachCustomer);
-					}*/
-					
-					
-					$('.search-cust_wrapper').hide();
-					// console.log('customerDetails', customerDetails);
+						$('.search-cust_wrapper').hide();
+					}
+
 				}
-
 			}
+
+			/* 
+				Created By    :- Created By Zainal Arifin, Date : 18 March 2018
+				Task          :- Search Customer from customerDetails.txt From URL
+				Page          :- Shopping Cart
+				File Location :- $BASE_PATH$/javascript/customerSearchHolder_HTML.js
+				Layout        :- Global
+			*/
+
 		}
 
 
