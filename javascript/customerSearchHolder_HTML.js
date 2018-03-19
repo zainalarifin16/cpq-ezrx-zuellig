@@ -124,6 +124,8 @@ $(document).ready(function(js2){
 			*/
 
 			var isPHCountry = check_nationality(2500);
+			var usernameGetCustomer = "CPQAPIUser";
+			var passwordGetCustomer = "csC(#15^14";
 
 			if(isPHCountry){
 				var fileAttachmentBSID_t = $('#fileAttachmentBSID_t').val();
@@ -136,12 +138,16 @@ $(document).ready(function(js2){
 						// console.log(response);
 						searchCustList(customerDetails, seachCustomer);
 						searchCustomerList(seachCustomer);
+					},
+					beforeSend: function (xhr) {
+						xhr.setRequestHeader("Authorization", "Basic " + btoa(usernameGetCustomer + ":" + passwordGetCustomer));
 					}
 				});
 			}else{
-				if ($('#customerMasterString_t').length) {
+				if ($('#customerMasterString_t').length > 0) {
 					var customerDetails = $("#customerMasterString_t").val();
-					if (customerDetails === "" && $('#fileAttachmentBSID_t').val() == "") {
+					// if (customerDetails === "" && $('#fileAttachmentBSID_t').val() == "") {
+					if (customerDetails === "") {
 						return true;
 					} else {
 						var seachCustomer;

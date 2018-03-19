@@ -1189,6 +1189,8 @@
 		if (userType !== 'CSTeam'){
 
             var isPHCountry = check_nationality(2500);
+            var usernameGetCustomer = "CPQAPIUser";
+            var passwordGetCustomer = "csC(#15^14";
 
             if (isPHCountry) {
                 var fileAttachmentBSID_t = localStorage.getItem("fileAttachmentBSID_t");
@@ -1198,6 +1200,9 @@
                     dataType: "text",
                     success: function (actualMasterString) {
                         customerDetails = actualMasterString;
+                    },
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("Authorization", "Basic " + btoa(usernameGetCustomer + ":" + passwordGetCustomer));
                     }
                 });
             } else {
