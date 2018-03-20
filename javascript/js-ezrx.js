@@ -2199,6 +2199,7 @@
 
             if ($overridePrice.val() == 'true') {
                 $child.eq(6).css('color', 'red');
+                $($child.find("input[name*=_overridePrice_l]").siblings()[0]).css('color', 'red');
             }
 
             var $overrideBonusQty = $child.find('input[name*="bonusOverideFlag_l"]');
