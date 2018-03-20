@@ -480,7 +480,38 @@ $(document).ready(function() {
 								var elementToMove = $(".ui-collapsible-inset");
 								
 								$( $(elementToMove[1]) ).appendTo("#swipe-sidebar-content");
-								$( $(elementToMove[2]) ).appendTo("#swipe-sidebar-content");
+
+								/* 
+									Created By    :- Created By Zainal Arifin, Date : 19 March 2018
+									Task          :- Hide Recomended Material in SG
+									Page          :- Global
+									File Location :- $BASE_PATH$/javascript/js-tablet.js
+									Layout        :- Desktop
+								*/
+								var userSalesOrg_t = (($("#userSalesOrg_t").length == 0) ? false : true);
+								var userSalesOrg_PL = (($('input[name="userSalesOrg_PL"]').length == 0) ? false : true);
+
+								var sg_nationalty = false;
+								if (!userSalesOrg_t && !userSalesOrg_PL) {
+									//if it's from SG check validy true
+									sg_nationalty = true;
+								} else {
+									sg_nationalty = check_nationality(2600)
+								}
+
+								if (sg_nationalty) {
+									$(elementToMove[2]).hide();
+								}else{
+									$( $(elementToMove[2]) ).appendTo("#swipe-sidebar-content");
+								}
+								/* 
+									Created By    :- Created By Zainal Arifin, Date : 19 March 2018
+									Task          :- Hide Recomended Material in SG
+									Page          :- Global
+									File Location :- $BASE_PATH$/javascript/js-tablet.js
+									Layout        :- Desktop
+								*/
+
 								$( $(elementToMove[3]) ).appendTo("#swipe-sidebar-content");
 								
 								$("#swipe-sidebar-content").find(".ui-collapsible-heading-toggle").each(function(index, data){
@@ -493,25 +524,32 @@ $(document).ready(function() {
 
 								$("#swipe-sidebar-content").siblings(".sidebar-handle").show();	
 								// END SLIDER CONTENT
-	
-								/*//set width Material Description COLOUMN
-								$("#attribute-materialDescription").css("width", "300px");
-								$("#attribute-materialAndDesc").css("width", "300px");
-								$("#attribute-additionalMaterialDescription").css("width", "300px");
-	
-								//set width QTY Coloumn
-								$("#attribute-qty_text").css("width", "30px");
-								$("#attribute-additionalMaterialQty").css("width", "30px");
 								
-								// Type, Material, Bonus and price
-								$("#attribute-type").css("width", "60px");
-								$("#attribute-overridePrice").css("width", "50px");
-								$("#attribute-totalPrice").css("width", "50px");
-								$("#attribute-price").css("width", "50px");
-								$("#attribute-material").css("width", "80px");
-								$("#attribute-overrideBonusQty").css("width", "70px");
+								/* 
+									Created By    :- Created By Zainal Arifin, Date : 19 March 2018
+									Task          :- Hide button bar if slide shown up
+									Page          :- Global
+									File Location :- $BASE_PATH$/javascript/js-tablet.js
+									Layout        :- Desktop
 								*/
-								// $('#jg-overlay').hide();
+
+								$(".sidebar-handle").on("click", function(){
+									var isSliderShow = $("#swipe-sidebar").hasClass("sidebar-state-1");
+									if (isSliderShow){
+										$("#button-bar").show();
+									}else{
+										$("#button-bar").hide();
+									}
+								});
+
+								/* 
+									Created By    :- Created By Zainal Arifin, Date : 19 March 2018
+									Task          :- Hide button bar if slide shown up
+									Page          :- Global
+									File Location :- $BASE_PATH$/javascript/js-tablet.js
+									Layout        :- Desktop
+								*/
+								
 								if($("#swipe-sidebar-content").html().length == 0){
 									reposition_content();
 								}

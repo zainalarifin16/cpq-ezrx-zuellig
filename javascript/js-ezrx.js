@@ -4500,6 +4500,27 @@
             Layout : Desktop
         */
 
+        /* 
+            Created By    :- Created By Zainal Arifin, Date : 19 March 2018
+            Task          :- Hide recommended section in shipping cart for both desktop and Mobile UI for SG
+            Page          :- Global
+            File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
+            Layout        :- Both Dekstop
+        */
+
+        if(check_nationality(2600)){
+            var FavRecFreqSection = $("#attribute-pastOrders").parent().parent().parent().parent().parent().parent('.column-1');
+            $(FavRecFreqSection.children()[1]).hide();
+        }
+
+        /* 
+            Created By    :- Created By Zainal Arifin, Date : 19 March 2018
+            Task          :- Hide recommended section in shipping cart for both desktop and Mobile UI for SG
+            Page          :- Global
+            File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
+            Layout        :- Both Dekstop
+        */
+
         /*  Start : 1 April 2017
             Task  : Change style of content material search
             Page  : Add Material Page
