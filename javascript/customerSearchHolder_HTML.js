@@ -123,26 +123,49 @@ $(document).ready(function(js2){
 				Layout        :- Global
 			*/
 
-			var isPHCountry = check_nationality(2500);
+			// var isPHCountry = check_nationality(2500);
+			var isSGCountry = check_nationality(2600);
 			var usernameGetCustomer = "CPQAPIUser";
 			var passwordGetCustomer = "csC(#15^14";
 
-			if(isPHCountry){
-				var fileAttachmentBSID_t = $('#fileAttachmentBSID_t').val();
-				localStorage.setItem("fileAttachmentBSID_t", fileAttachmentBSID_t);
-				$.ajax({
-					type: "GET",
-					url: "/rest/v1/commerceProcesses/oraclecpqo/transactions/" + fileAttachmentBSID_t + "/attachments/importMaterials?docId=36244074&docNum=1",
-					dataType: "text",
-					success: function (customerDetails) {
-						// console.log(response);
-						searchCustList(customerDetails, seachCustomer);
-						searchCustomerList(seachCustomer);
-					},
-					beforeSend: function (xhr) {
-						xhr.setRequestHeader("Authorization", "Basic " + btoa(usernameGetCustomer + ":" + passwordGetCustomer));
+			if (isSGCountry){
+
+				var isCPQAPIUSER = (window._BM_USER_LOGIN == "CPQAPIUser")? true : false;
+
+				if (isCPQAPIUSER){
+					var fileAttachmentBSID_t = $('#fileAttachmentBSID_t').val();
+					localStorage.setItem("fileAttachmentBSID_t", fileAttachmentBSID_t);
+					$.ajax({
+						type: "GET",
+						url: "/rest/v1/commerceProcesses/oraclecpqo/transactions/" + fileAttachmentBSID_t + "/attachments/importMaterials?docId=36244074&docNum=1",
+						dataType: "text",
+						success: function (customerDetails) {
+							// console.log(response);
+							searchCustList(customerDetails, seachCustomer);
+							searchCustomerList(seachCustomer);
+						},
+						beforeSend: function (xhr) {
+							xhr.setRequestHeader("Authorization", "Basic " + btoa(usernameGetCustomer + ":" + passwordGetCustomer));
+						}
+					});
+				}else{
+					if ($('#customerMasterString_t').length > 0) {
+						var customerDetails = $("#customerMasterString_t").val();
+						// if (customerDetails === "" && $('#fileAttachmentBSID_t').val() == "") {
+						if (customerDetails === "") {
+							return true;
+						} else {
+							var seachCustomer;
+							customer_master_string = customerDetails;
+							searchCustList(customerDetails, seachCustomer);
+							searchCustomerList(seachCustomer);
+
+							$('.search-cust_wrapper').hide();
+						}
+
 					}
-				});
+				}
+
 			}else{
 				if ($('#customerMasterString_t').length > 0) {
 					var customerDetails = $("#customerMasterString_t").val();
