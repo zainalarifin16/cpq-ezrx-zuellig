@@ -272,28 +272,6 @@ $(document).ready(function() {
 				 if($("#line-item-grid").length > 0){
 					 pageTitle = "order page";
 
-					 /* 
-				       Created By    :- Created By Zainal Arifin, Date : 21 Feb 2018
-				       Task          :- SG-04 In Tablet when typing on the Ordering requst Number field, cursor moves out sometine automatically
-				       Page          :- Order Page
-				       File Location :- $BASE_PATH$/javascript/js-tablet.js
-				       Layout        :- Mobile
-				     */
-
-					 $(".form-field").on("blur", function(){
-						var cur_pos = $(window).scrollTop();
-						setTimeout(function(){
-							window.scrollTo(0, cur_pos);
-						}, 500);
-					});
-
-					/* 
-				       Created By    :- Created By Zainal Arifin, Date : 21 Feb 2018
-				       Task          :- SG-04 In Tablet when typing on the Ordering requst Number field, cursor moves out sometine automatically
-				       Page          :- Order Page
-				       File Location :- $BASE_PATH$/javascript/js-tablet.js
-				       Layout        :- Mobile
-				     */
 				 }
 				 
 				 if(pageTitle == "model configuration"){
@@ -470,6 +448,7 @@ $(document).ready(function() {
 						// START SLIDER CONTENT
 
 						$("#swipe-sidebar-content").css("display", "block");
+
 						//$("#swipe-sidebar-content").html("");					
 						function reposition_content(){
 							// $('#jg-overlay').show();
@@ -519,7 +498,9 @@ $(document).ready(function() {
 								});
 								
 								/* 8-03-2018 move button add and delete in My Favourite */
-								$("#AddCustFav").closest("span").css({"position":"fixed", "bottom": "15%"});
+								$("#AddCustFav").closest("span").css({"position":"fixed","bottom": "9%"});
+								var parent = $("#AddCustFav").closest(".ui-field-contain");
+								$("#AddCustFav").closest("span").appendTo( $(parent).find(".messages") );
 								/* 8-03-2018 move button add and delete in My Favourite */
 
 								$("#swipe-sidebar-content").siblings(".sidebar-handle").show();	
