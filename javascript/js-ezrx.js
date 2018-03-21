@@ -2189,8 +2189,9 @@
             var $qty_text = $child.find('input[name*="qty_l"]');
 
             if (stockval == 'No') {
-                $child.eq(5).css('color', 'red');
+                // $child.eq(5).css('color', 'red');
                 // $child.eq(6).css('color','red');
+                $($qty_text.siblings()[0] ).css("color", "red");
                 $stock.parent().parent().parent().css('color', 'red');
                 $qty_text.parent().parent().parent().css('color', 'red');
             }
@@ -2198,8 +2199,8 @@
             var $overridePrice = $child.find('input[name*="isPriceOverride"]');
 
             if ($overridePrice.val() == 'true') {
-                $child.eq(6).css('color', 'red');
-                $($child.find("input[name*=_overridePrice_l]").siblings()[0]).css('color', 'red');
+                // $child.eq(6).css('color', 'red');
+                $($child.find("input[name*=_unitPrice_l]").siblings()[0]).css('color', 'red');
             }
 
             var $overrideBonusQty = $child.find('input[name*="bonusOverideFlag_l"]');
@@ -3657,6 +3658,34 @@
 
             $('#export').click();
         });
+
+        /* 
+            Created By    :- Created By Zainal Arifin, Date : 08-03-2018
+            Task          :- Hide My Templates Button from Commerce Management
+            Page          :- Commerce Management
+            File Location :- $BASE_PATH$/javascript/js-ezrx.js
+            Layout        :- Desktop
+        */
+
+        $(".jg-list-tool").children().map(function (index, data) {
+            var isExist = ($(data).find(".default").length > 0) ? true : false;
+            if (isExist) {
+                var currentBtn = $(data).find(".default");
+                var btnString = $(currentBtn).html();
+                if (btnString.toLowerCase() == "my templates") {
+                    $(currentBtn).hide();
+                }
+            }
+        });
+
+        /* 
+            Created By    :- Created By Zainal Arifin, Date : 08-03-2018
+            Task          :- Hide My Templates Button from Commerce Management
+            Page          :- Commerce Management
+            File Location :- $BASE_PATH$/javascript/js-ezrx.js
+            Layout        :- Desktop
+        */
+
     }
 
     function transform_newcopypage() {
