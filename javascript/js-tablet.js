@@ -18,6 +18,10 @@ $(document).ready(function() {
 		return valid;
 	}
 
+	var isLoadingDone = function(){
+		return $("#jg-overlay").css("display") == "none"? true : false;
+	}
+
 	function applyOrderPageChanges(){
 		setTimeout(function(){
 			if($('#jg-overlay').css("display") == "none"){
@@ -558,14 +562,16 @@ $(document).ready(function() {
 						Created By    :- Created By Zainal Arifin, Date : 15 March 2018
 						Task          :- highlight on QTY material in additional bonus for SG
 						Page          :- Model Configuration
-						File Location :- $BASE_PATH$/javascript/js-ezrx.js
+						File Location :- $BASE_PATH$/javascript/js-tablet.js
 						Layout        :- Desktop
 					*/
 					
 					 var userSalesOrg_t = (($("#userSalesOrg_t").length == 0)? false : true);
 					 var userSalesOrg_PL = (($('input[name="userSalesOrg_PL"]').length == 0)? false : true);
-					
+					 var redColor = "rgb(255, 0, 0)";
+					 var blackColor = "#000000";
 					 var sg_nationalty = false;
+
 					if(!userSalesOrg_t && !userSalesOrg_PL){
 						//if it's from SG check validy true
 						sg_nationalty = true;
@@ -574,15 +580,26 @@ $(document).ready(function() {
 					}
 
 					if (sg_nationalty) {
-						var redColor = "rgb(255, 0, 0)";
-						var blackColor = "#000000";
 						var listEditedField = {};
+
+						$("input[name='additionalMaterialQty']:not(input[type='hidden'])").map(function (index, data) {
+							if( $(data).length > 0 ){
+								var id = $(data).attr("id").replace("additionalMaterialQty", "");
+								if ($(data).val() != 0) {
+									$("#additionalMaterialQty" + id).css("color", redColor);
+								}
+							}
+						});
 
 						$("input[name='additionalMaterialQty']").on("click focus starttouch", function () {
 
 							var id = $(this).attr("id").replace("additionalMaterialQty", "");
 							if (!listEditedField.hasOwnProperty(id)) {
 								listEditedField[id] = { before: $(this).val(), after : 0 };
+							}
+
+							if ($(this).val() != 0) {
+								$("#additionalMaterialQty" + id).css("color", redColor);
 							}
 
 						});
@@ -597,11 +614,13 @@ $(document).ready(function() {
 								if (!isShowMessage) {
 									if (data.before != data.after) {
 										$("#additionalMaterialQty" + index).css("color", redColor);
-									}else{
-										$("#additionalMaterialQty" + index).css("color", blackColor);
 									}
 								}
 							});
+
+							if (listEditedField[id]["after"] == 0) {
+								$("#additionalMaterialQty" + id).css("color", blackColor);
+							}
 
 						});
 					}
@@ -610,10 +629,50 @@ $(document).ready(function() {
 						Created By    :- Created By Zainal Arifin, Date : 15 March 2018
 						Task          :- highlight on QTY material in additional bonus for SG
 						Page          :- Model Configuration
-						File Location :- $BASE_PATH$/javascript/js-ezrx.js
+						File Location :- $BASE_PATH$/javascript/js-tablet.js
 						Layout        :- Desktop
 					*/
 
+					/* 
+						Created By    :- Created By Zainal Arifin, Date : 21 March 2018
+						Task          :- highlight on Override Price on Mobile Device
+						Page          :- Model Configuration
+						File Location :- $BASE_PATH$/javascript/js-tablet.js
+						Layout        :- Desktop
+					*/
+
+					function setListenOverridePrice(){
+						setTimeout(function(){
+							if (isLoadingDone()){
+								console.log("LISTEN OVERRIDE PRICE");
+								$("input[name='overridePrice']").on("click focus", function () {
+
+									$(this).css("color", redColor);
+
+								});
+
+								$("input[name='overridePrice']").on("blur", function () {
+
+									if ($(this).val() == "0.0") {
+										$(this).css("color", blackColor);
+									}
+
+								});
+							}else{
+								setListenOverridePrice();
+							}
+						}, 1000)
+					}
+
+					 setListenOverridePrice();
+
+					 /* 
+						Created By    :- Created By Zainal Arifin, Date : 21 March 2018
+						Task          :- highlight on Override Price on Mobile Device
+						Page          :- Model Configuration
+						File Location :- $BASE_PATH$/javascript/js-tablet.js
+						Layout        :- Desktop
+					*/
 						
 				}else if(pageTitle == "order page"){
 						 var isPageError = false;

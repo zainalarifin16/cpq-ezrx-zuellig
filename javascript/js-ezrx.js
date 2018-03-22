@@ -4724,7 +4724,15 @@
         if(check_nationality(2600)){
 
             var redColor = "rgb(255, 0, 0)";            
+            var blackColor = "#000000";            
             var listEditedField = {};
+
+            $("input[name='additionalMaterialQty']:not(input[type='hidden'])").map(function (index, data) {
+                var id = $(data).attr("id").replace("additionalMaterialQty", "");
+                if ($(data).val() != 0) {
+                    $("#additionalMaterialQty" + id).css("color", redColor);
+                }
+            });
 
             $("input[name='additionalMaterialQty']").on("click focus", function () {
 
@@ -4745,11 +4753,14 @@
                     if (!isShowMessage) {
                         if (data.before != data.after) {
                             $("#additionalMaterialQty" + index).css("color", redColor);                            
-                        }else{
-                            $("#additionalMaterialQty" + index).css("color", blackColor);
                         }
                     }
+
                 });
+
+                if (listEditedField[id]["after"] == 0 ){
+                    $("#additionalMaterialQty" + id).css("color", blackColor);                    
+                }
 
             });
         }
