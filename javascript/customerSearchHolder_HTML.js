@@ -109,6 +109,9 @@ $(document).ready(function(js2){
 		*/
 
 		var zPUserType = $('#zPUserType').val();
+		var fileAttachmentBSID_t = $('#fileAttachmentBSID_t').val();
+		// localStorage.setItem("fileAttachmentBSID_t", fileAttachmentBSID_t);
+
 		if (zPUserType === 'CSTeam') {
 			//loadAjax();
 			searchCustomerList();
@@ -123,32 +126,36 @@ $(document).ready(function(js2){
 				Layout        :- Global
 			*/
 
-			// var isPHCountry = check_nationality(2500);
-			var isSGCountry = check_nationality(2600);
+			var isPHCountry = check_nationality(2500);
+			// var isSGCountry = check_nationality(2600);
 			var usernameGetCustomer = "CPQAPIUser";
 			var passwordGetCustomer = "csC(#15^14";
 
-			if (isSGCountry){
+			if (isPHCountry){
 
-				var isCPQAPIUSER = (window._BM_USER_LOGIN == "CPQAPIUser")? true : false;
+				// var isCPQAPIUSER = (window._BM_USER_LOGIN == "CPQAPIUser")? true : false;
 
-				if (isCPQAPIUSER){
-					var fileAttachmentBSID_t = $('#fileAttachmentBSID_t').val();
-					localStorage.setItem("fileAttachmentBSID_t", fileAttachmentBSID_t);
+				// if (isCPQAPIUSER){
+				setTimeout(function(){
 					$.ajax({
+						header: { "Authorization": "Basic " + btoa(usernameGetCustomer + ":" + passwordGetCustomer) },
 						type: "GET",
-						url: "/rest/v1/commerceProcesses/oraclecpqo/transactions/" + fileAttachmentBSID_t + "/attachments/importMaterials?docId=36244074&docNum=1",
+						url: "/rest/v1/commerceProcesses/oraclecpqo/transactions/" + fileAttachmentBSID_t + "/attachments/customerDetails?docId=36244074&docNum=1",
 						dataType: "text",
 						success: function (customerDetails) {
 							// console.log(response);
 							searchCustList(customerDetails, seachCustomer);
 							searchCustomerList(seachCustomer);
-						},
-						beforeSend: function (xhr) {
-							xhr.setRequestHeader("Authorization", "Basic " + btoa(usernameGetCustomer + ":" + passwordGetCustomer));
+							$('.search-cust_wrapper').hide();
+
 						}
+						// ,
+						// beforeSend: function (xhr) {
+						// 	xhr.setRequestHeader("Authorization", "Basic " + btoa(usernameGetCustomer + ":" + passwordGetCustomer));
+						// }
 					});
-				}else{
+				}, 5000);
+				/*}else{
 					if ($('#customerMasterString_t').length > 0) {
 						var customerDetails = $("#customerMasterString_t").val();
 						// if (customerDetails === "" && $('#fileAttachmentBSID_t').val() == "") {
@@ -164,7 +171,7 @@ $(document).ready(function(js2){
 						}
 
 					}
-				}
+				}*/
 
 			}else{
 				if ($('#customerMasterString_t').length > 0) {
