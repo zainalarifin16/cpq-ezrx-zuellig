@@ -70,7 +70,8 @@
                     var inStockSpan = tr.querySelector(".cell-inStock").querySelector('span');
                     var price = tr.querySelector(".cell-price").querySelector('input[name="price"]');
                     var overridePrice = tr.querySelector(".cell-overridePrice").querySelector('input[name="overridePrice"]');
-                    var stockQty = tr.querySelector(".cell-stockQty").querySelector('input[name="stockQty"]');
+                    // var stockQty = tr.querySelector(".cell-stockQty").querySelector('input[name="stockQty"]');
+                    var stockQty = $("#stockQty-"+i).val();
 
                     var typeInput = tr.querySelector(".cell-type").querySelector('input[name="type"]');
                     var typeSelect = tr.querySelector(".cell-type").querySelector('select[name="type"]');

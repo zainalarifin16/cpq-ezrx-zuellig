@@ -6303,19 +6303,19 @@
         Layout : Desktop
          */
         
-            var $overrideInvPrice = $('.cell-overrideInvoicePrice input[name="overrideInvoicePrice-display"]');
-			$overrideInvPrice.off();
-            $overrideInvPrice.bind('keydown keyup change focus',function(){
-                if($('input[name="userSalesOrg_PL"]').val()=="2800"){
-                    //parseFloat($('.cell-overrideInvoicePrice input[name="overrideInvoicePrice-display"]').val().replace(/\D/g,''));
-                    $ovp = parseFloat($(this).val().replace(/[^0-9.]/g, ''));
-                    if($ovp>0){
-                        $(this).css('color', '#ff0000');
-                    } else{
-                        $(this).css('color', 'inherit');
-                    }
+        var $overrideInvPrice = $('.cell-overrideInvoicePrice input[name="overrideInvoicePrice-display"]');
+        $overrideInvPrice.off();
+        $overrideInvPrice.bind('keydown keyup change focus',function(){
+            if($('input[name="userSalesOrg_PL"]').val()=="2800"){
+                //parseFloat($('.cell-overrideInvoicePrice input[name="overrideInvoicePrice-display"]').val().replace(/\D/g,''));
+                $ovp = parseFloat($(this).val().replace(/[^0-9.]/g, ''));
+                if($ovp>0){
+                    $(this).css('color', '#ff0000');
+                } else{
+                    $(this).css('color', 'inherit');
                 }
-            });
+            }
+        });
         
         /*
         End : 22 Jan 2018
@@ -6327,7 +6327,10 @@
 
         $outofstock = false;
 		
-		$qtySel.off();
+        $qtySel.off();
+        
+
+
         $qtySel.bind('focus keydown', function() {
 
             $(this).css('color', '#ff0000');
@@ -6389,7 +6392,14 @@
         function setListenOverridePrice() {
             setTimeout(function () {
                 if (isLoadingDone()) {
-                    console.log("LISTEN OVERRIDE PRICE");
+                    
+                    $('input[name="stockQty"]').map(function(index, data){
+                        if($(data).val() == 0){
+                            var id = $(data).attr("id").replace("stockQty-", "");
+                            $("#qty_text-"+id).css("color", redColor);
+                        }
+                    });
+
                     $("input[name='overridePrice']").on("click focus", function () {
 
                         $(this).css("color", redColor);
