@@ -177,7 +177,34 @@ $(document).ready(function() {
 				$(".config-array #attribute-addAdditionalMaterial").css("width", "initial");
 				*/
 			}else{
-				
+				/* 
+						Created By    :- Created By Zainal Arifin, Date : 26 March 2018
+						Task          :- SG-02 Show Material Desc next to Contract Bonus – After Swipe section
+						Page          :- Model Configuration
+						File Location :- $BASE_PATH$/javascript/js-tablet.js
+						Layout        :- Tablet
+					*/
+
+				if (sg_nationalty) {
+
+					if ($("#attribute-materialDescription").hasClass("hidden")){
+						$("#attribute-promotion").addClass("hidden");
+						$(".cell-promotion").addClass("hidden");
+					}else{
+						$("#attribute-promotion").removeClass("hidden");
+						$(".cell-promotion").removeClass("hidden");
+					}
+
+				}
+
+				/* 
+					Created By    :- Created By Zainal Arifin, Date : 26 March 2018
+					Task          :- SG-02 Show Material Desc next to Contract Bonus – After Swipe section
+					Page          :- Model Configuration
+					File Location :- $BASE_PATH$/javascript/js-tablet.js
+					Layout        :- Tablet
+				*/
+
 				$("input[name='qty_text']").css({"text-align": "center", "font-size":"14px"});
 				$("input[name='additionalMaterialQty']").css({"text-align": "center", "font-size":"14px"});
 				$("input[name='overridePrice']").css({"text-align": "center", "font-size":"14px"});
@@ -223,6 +250,23 @@ $(document).ready(function() {
 		
 		},500);
 	};
+
+	var moveDescriptionBeforeContractPrice = function(){
+		//move header after contractBonus
+		$("#attribute-materialDescription").insertAfter($("#attribute-contractBonus"));
+		$("#attribute-materialDescription").addClass("hidden");
+		//move coloumn 
+		$(".cell-materialDescription").map(function (index, data) {
+			var id = $(data).attr("id").replace("cell-materialDescription-", "");
+			$("#cell-materialDescription-" + id).insertAfter($("#cell-contractBonus-" + id));
+			$("#cell-materialDescription-" + id).addClass("hidden");
+		});
+
+		$("#attribute-promotion").addClass("hidden");
+		$(".cell-promotion").addClass("hidden");
+
+	}
+
 	var alignAddtnlArraySet = function(){
 		setTimeout(function() {
 			 $("#additionalMaterialArrayset [class*=array-attribute]").each(function(){//enable all columns in the arrayset
@@ -260,6 +304,20 @@ $(document).ready(function() {
 			
 		},500);
 	};
+
+	var userSalesOrg_t = (($("#userSalesOrg_t").length == 0) ? false : true);
+	var userSalesOrg_PL = (($('input[name="userSalesOrg_PL"]').length == 0) ? false : true);
+	var redColor = "rgb(255, 0, 0)";
+	var blackColor = "#000000";
+	var sg_nationalty = false;
+
+	if (!userSalesOrg_t && !userSalesOrg_PL) {
+		//if it's from SG check validy true
+		sg_nationalty = true;
+	} else {
+		sg_nationalty = check_nationality(2600)
+	}
+
 	 setTimeout(function() {
 		  if( navigator.userAgent.match(/Android/i)
              || navigator.userAgent.match(/webOS/i)
@@ -447,6 +505,9 @@ $(document).ready(function() {
 							
 						});
 
+					 	if (sg_nationalty) {
+							moveDescriptionBeforeContractPrice();
+						}						
 						
 						// START UPDATE 19-01-2018
 						// START SLIDER CONTENT
@@ -565,19 +626,6 @@ $(document).ready(function() {
 						File Location :- $BASE_PATH$/javascript/js-tablet.js
 						Layout        :- Desktop
 					*/
-					
-					 var userSalesOrg_t = (($("#userSalesOrg_t").length == 0)? false : true);
-					 var userSalesOrg_PL = (($('input[name="userSalesOrg_PL"]').length == 0)? false : true);
-					 var redColor = "rgb(255, 0, 0)";
-					 var blackColor = "#000000";
-					 var sg_nationalty = false;
-
-					if(!userSalesOrg_t && !userSalesOrg_PL){
-						//if it's from SG check validy true
-						sg_nationalty = true;
-					}else{
-						sg_nationalty = check_nationality(2600)
-					}
 
 					if (sg_nationalty) {
 						var listEditedField = {};
@@ -630,7 +678,7 @@ $(document).ready(function() {
 						Task          :- highlight on QTY material in additional bonus for SG
 						Page          :- Model Configuration
 						File Location :- $BASE_PATH$/javascript/js-tablet.js
-						Layout        :- Desktop
+						Layout        :- Tablet
 					*/
 
 					/* 
@@ -638,7 +686,7 @@ $(document).ready(function() {
 						Task          :- highlight on Override Price on Mobile Device
 						Page          :- Model Configuration
 						File Location :- $BASE_PATH$/javascript/js-tablet.js
-						Layout        :- Desktop
+						Layout        :- Tablet
 					*/
 
 					function setListenOverridePrice(){
