@@ -775,8 +775,16 @@ $(document).ready(function() {
 							});
 							$("button:contains('Pipeline Viewer')").hide();
 						}
-						
+					
+						var theMessage = "PopupMessage";
+						var htmlPopupMessage = '<div id="dialog" title="Popup Message">'+theMessage+'</div >';
+						$("body").prepend($(htmlPopupMessage));
+						$("#dialog").dialog({ autoOpen: false, modal: true, show: "blind", hide: "blind" });
 
+						$($(".action.action-type-modify:contains('Submit Order')")[0]).on("click", function (e) {
+							$("#dialog").dialog("open");
+							e.preventDefault();
+						});
 						
 						if(isPageError){
 							$("#duplicatefooter").append("<button class='ui-btn ui-btn-inline' id='order-allorders'>All Orders</button><button class='ui-btn ui-btn-inline' id='order-showshoppingcart'>Show Shopping Cart</button><button class='ui-btn ui-btn-inline' id='order-neworder'>New Order</button>");
