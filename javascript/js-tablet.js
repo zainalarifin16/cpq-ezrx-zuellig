@@ -381,6 +381,35 @@ $(document).ready(function() {
 								$("#config-form").submit();
 							},2000);
 						});
+
+					 /* 
+								 Created By    :- Created By Zainal Arifin, Date : 27 March 2018
+								 Task          :- Hide button bar if slide shown up
+								 Page          :- Global
+								 File Location :- $BASE_PATH$/javascript/js-tablet.js
+								 Layout        :- Desktop
+							 */
+
+					 var hideAndShowBtnBottom = function () {
+						 setTimeout(function () {
+							 var isSliderShow = $("#swipe-sidebar").hasClass("sidebar-state-1");
+							 if (!isSliderShow) {
+								 $("#button-bar").slideDown();
+								 $("#swipe-sidebar").css("height", "auto");
+							 } else {
+								 $("#button-bar").slideUp();
+								 $("#swipe-sidebar").css("height", "calc( 100% - 54px )");
+							 }
+						 }, 500);
+					 }
+
+					/* 
+						Created By    :- Created By Zainal Arifin, Date : 27 March 2018
+						Task          :- Hide button bar if slide shown up
+						Page          :- Global
+						File Location :- $BASE_PATH$/javascript/js-tablet.js
+						Layout        :- Desktop
+					*/
 						
 						$("body").on("click touchend","#showFavdetails",function(e){
 									e.preventDefault();		
@@ -401,6 +430,7 @@ $(document).ready(function() {
 									$("#showFavdetails").show();
 									$("#showMaterialSearch").hide();
 								}
+								hideAndShowBtnBottom();
 						});
 						$("body").on("click touchend","#duplicatefooter .cancelButton",function(e){
 						
@@ -586,31 +616,6 @@ $(document).ready(function() {
 
 								$("#swipe-sidebar-content").siblings(".sidebar-handle").show();	
 								// END SLIDER CONTENT
-								
-								/* 
-									Created By    :- Created By Zainal Arifin, Date : 19 March 2018
-									Task          :- Hide button bar if slide shown up
-									Page          :- Global
-									File Location :- $BASE_PATH$/javascript/js-tablet.js
-									Layout        :- Desktop
-								*/
-
-								$(".sidebar-handle").on("click", function(){
-									var isSliderShow = $("#swipe-sidebar").hasClass("sidebar-state-1");
-									if (isSliderShow){
-										$("#button-bar").show();
-									}else{
-										$("#button-bar").hide();
-									}
-								});
-
-								/* 
-									Created By    :- Created By Zainal Arifin, Date : 19 March 2018
-									Task          :- Hide button bar if slide shown up
-									Page          :- Global
-									File Location :- $BASE_PATH$/javascript/js-tablet.js
-									Layout        :- Desktop
-								*/
 								
 								if($("#swipe-sidebar-content").html().length == 0){
 									reposition_content();
