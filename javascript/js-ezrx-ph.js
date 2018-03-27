@@ -184,6 +184,29 @@ $(document).ready(function(){
       var tabelFavFreqReq = $("#attribute-pastOrders").parent().parent().parent().parent().parent().parent('.column-1');
       $(tabelFavFreqReq.children()[1]).hide();
     }
+    
+    /* 
+      Created By    :- Created By Zainal Arifin, Date : 27 March 2018
+      Task          :- Give Higlight red color if comment not empty
+      Page          :- Global
+      File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
+      Layout        :- Desktop
+    */
+    function redColorCommentOrder() {
+      $("input[name*='_comment_l']").map(function (index, data) {
+        if ($(this).val().length > 0) {
+          $(this).css("color", "red");
+        }
+      });
+    }
+
+    /* 
+      Created By    :- Created By Zainal Arifin, Date : 27 March 2018
+      Task          :- Give Higlight red color if comment not empty
+      Page          :- Global
+      File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
+      Layout        :- Desktop
+    */
 
     /*
         End   : -
@@ -282,6 +305,8 @@ $(document).ready(function(){
                           File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
                           Layout        :- Desktop
                         */
+
+                        redColorCommentOrder();
 
                     }
 
