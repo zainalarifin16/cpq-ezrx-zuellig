@@ -1,4 +1,5 @@
 console.log("js-tablet1");
+var js2 = jQuery.noConflict();
 $(document).ready(function() {
 	console.log("js-tablet2");
 
@@ -586,7 +587,29 @@ $(document).ready(function() {
 									Layout        :- Desktop
 								*/
 
+								/* 
+									Created By    :- Created By Zainal Arifin, Date : 27 March 2018
+									Task          :- Add paggination on favorite table
+									Page          :- Global
+									File Location :- $BASE_PATH$/javascript/js-tablet.js
+									Layout        :- Desktop
+								*/
+
 								$( $(elementToMove[3]) ).appendTo("#swipe-sidebar-content");
+
+								js2("#CurrentCustFav").DataTable({
+									"bLengthChange": false,
+									"searching": false,
+									"pageLength": 5,
+								});
+
+								/* 
+									Created By    :- Created By Zainal Arifin, Date : 27 March 2018
+									Task          :- Add paggination on favorite table
+									Page          :- Global
+									File Location :- $BASE_PATH$/javascript/js-tablet.js
+									Layout        :- Desktop
+								*/
 								
 								$("#swipe-sidebar-content").find(".ui-collapsible-heading-toggle").each(function(index, data){
 									$(data).css({ "background-color": "#afc008","border-radius": "0","color": "#fff", "border-color": "transparent"});
