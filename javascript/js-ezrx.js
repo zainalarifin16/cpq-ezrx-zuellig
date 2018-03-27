@@ -1087,8 +1087,12 @@
         var ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&orderby=material_desc:asc";
 
         if($('input[name="userSalesOrg_PL"]').val()=="2800"){
-            ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v3/customMaterial_Master";
-            var ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&orderby=material:asc";
+            // V3
+            /* ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v3/customMaterial_Master";
+            var ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&orderby=material:asc"; */
+            ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";
+            var ajaxData = "q=\{'sales_org':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&orderby=material:asc";
+
         }
         if (searchStr.slice(-1) === '%') {
             //console.log(searchStr);
@@ -1359,8 +1363,9 @@
             var ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";
             var ajaxData = "orderby=material_desc:asc";
             if($('input[name="userSalesOrg_PL"]').val()=="2800"){
-                ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v3/customMaterial_Master";
-                ajaxData = "orderby=material:asc";
+                // ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v3/customMaterial_Master";
+                ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";
+                ajaxData = "q=\{\"sales_org\":\"2800\"}&orderby=material:asc";
             }    
 
             $.ajax({
@@ -2785,6 +2790,61 @@
                     $('#jg-mainmenu-orders').addClass('active');
                     $('#jg-submenu-myorders').addClass('active');
                     transform_orderspage();
+
+                    var hideForMenuCreditControlUser = function(){
+                        $('#jg-overlay').show();                        
+                        var userName = window._BM_USER_LOGIN;
+
+                        var usernameGetCustomer = "CPQAPIUser";
+                        var passwordGetCustomer = "csC(#15^14";
+
+                        var fullUrl = window.location.host;
+                        var parts = fullUrl.split('.');
+                        var instanceName = parts[0];
+                        var identificationUser = "https://" + instanceName + ".bigmachines.com/rest/v4/customBU_Identification?q={%22login_id%22:%20%22" + userName + "%22}";
+                        $.ajax({
+                            url: identificationUser,
+                            headers: { 'Access-Control-Allow-Origin': '*' },
+                            contentType: "application/json; charset=utf-8",
+                            type: 'GET',
+                            data: "_bm_trail_refresh_=true",
+                            success: function (resultIdentification) {
+                                if(resultIdentification.items.length > 0){
+                                    var user = resultIdentification.items[0];
+                                    if(user.sales_org == "2800"){
+                                        var urlProfileUser = 'https://' + instanceName + '.bigmachines.com/rest/v4/customTW_User_Hierarchy?q={"user":"'+userName+'"}';
+                                        $.ajax({
+                                            url: urlProfileUser,
+                                            headers: { 'Access-Control-Allow-Origin': '*' },
+                                            contentType: "application/json; charset=utf-8",
+                                            type: 'GET',
+                                            success: function (resultProfileUser) {
+                                                if (resultProfileUser.items.length > 0 ){
+                                                    var detailUser = resultProfileUser.items[0];
+                                                    if (detailUser.role.toLowerCase() == "credit control rep"){
+                                                        $(".jg-linkbtn.new_order").hide();
+                                                        $(".jg-linkbtn.copy_order").hide();
+                                                    }
+                                                }
+                                                $('#jg-overlay').hide();
+                                            },
+                                            beforeSend: function (xhr) {
+                                                xhr.setRequestHeader("Authorization", "Basic " + btoa(usernameGetCustomer + ":" + passwordGetCustomer));
+                                            }
+                                        });
+                                    }
+                                }
+                                $('#jg-overlay').hide();                               
+                            },
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader("Authorization", "Basic " + btoa(usernameGetCustomer + ":" + passwordGetCustomer));
+                            }
+                        });
+                    }
+
+                    //hideMenuForCreditControlUser();
+                    
+
                 } else if (pagetitle == 'transaction') {
                     /*
                         if user access transaction page, set element id of readonly_1_visualWorkflow has child image to vi_shoppping_cart_ready_active.png
