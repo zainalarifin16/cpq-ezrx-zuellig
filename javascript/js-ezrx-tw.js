@@ -152,7 +152,7 @@ $(document).ready(function(){
     function check_user_change_value(){
         var listEditedField = {};
 
-        $("td.cell-overrideInvoicePrice, td.cell-qty_text, td.cell-overridePrice").find(".text-field").on("click focus", function(){
+      $("td.cell-overrideInvoicePrice, td.cell-qty_text, td.cell-overridePrice, td.cell-comments").find(".text-field").on("click focus", function(){
 
           var id = "";
           if( $(this).closest(".cell-qty_text").length > 0 ){
@@ -167,6 +167,10 @@ $(document).ready(function(){
             id = "oip_"+$(this).data("value-attr").replace("overrideInvoicePrice-", "");
           }
 
+          if ($(this).closest(".cell-comments").length > 0 ){
+            id = "comment_" + $(this).attr("id").replace("comments-", "");
+          }
+
           if(!listEditedField.hasOwnProperty(id))
           {
               listEditedField[id] = { before : $(this).val() };
@@ -174,7 +178,7 @@ $(document).ready(function(){
 
         });
 
-        $("td.cell-overrideInvoicePrice, td.cell-qty_text, td.cell-overridePrice").find(".text-field").on("keyup blur", function(){
+        $("td.cell-overrideInvoicePrice, td.cell-qty_text, td.cell-overridePrice, td.cell-comments").find(".text-field").on("keyup blur", function(){
           
           var id = "";
           if( $(this).closest(".cell-qty_text").length > 0 ){
@@ -187,6 +191,10 @@ $(document).ready(function(){
 
           if( $(this).closest(".cell-overrideInvoicePrice").length > 0 ){
             id = "oip_"+$(this).data("value-attr").replace("overrideInvoicePrice-", "");
+          }
+
+          if ($(this).closest(".cell-comments").length > 0) {
+            id = "comment_" + $(this).attr("id").replace("comments-", "");
           }
 
           listEditedField[id]["after"] = $(this).val();
