@@ -1206,7 +1206,7 @@
             var usernameGetCustomer = "CPQAPIUser";
             var passwordGetCustomer = "csC(#15^14";
 
-            if (isPHCountry) {
+            // if (isPHCountry) {
 
                 // var isCPQAPIUSER = (window._BM_USER_LOGIN == "CPQAPIUser") ? true : false;
 
@@ -1227,9 +1227,9 @@
                     customerDetails = $("#actualMasterString").html();
                 }*/
 
-            } else {
+            // } else {
                 customerDetails = $("#actualMasterString").html();
-            }
+            // }
 
             /* 
 				Created By    :- Created By Zainal Arifin, Date : 18 March 2018
@@ -2298,65 +2298,82 @@
         var urlarr = url.split('/');
         var filterPage = urlarr[urlarr.length - 1];
         if (filterPage.search("copy_processing.jsp") != -1) {
+            var autoSwipeIfLoadingDone = function(){
+                setTimeout(function(){
+                    if(isLoadingDone()){
 
-            var timeInterval = setInterval(function() {
-                if ($("#swipe-sidebar").hasClass("sidebar-state-0")) {
-                    $('.sidebar-handle').click();
-                    redirectConfigPage();
-                }
-            }, 100);
-
-            function redirectConfigPage() {
-                //   alert('redirectConfigPage');
-                if ($("#swipe-sidebar").hasClass("sidebar-state-1")) {
-                    clearInterval(timeInterval);
-
-                    // if have item on cart
-                    var sliderOut = setInterval(function() {
-                        if ($('.sidebar-state-1').attr('style').includes('right: 0px;')) {
-                            clearInterval(sliderOut);
-
-                            setTimeout(function() {
-                                if ($('#swipe-sidebar .lig-row').hasClass('parent')) {
-                                    //    alert('have checkbox');
-                                    var checkbox = $('.lig-row.parent td.lig-select .ui-checkbox input[name="_line_item_list"]');
-                                    var ebtn = $('#button-bar #lig-sticky-actions button:contains("Edit Shopping Cart")');
-                                    var ebtn2 = $('#popup-moreBtns-lig-popup li a.ui-btn:contains("Edit Shopping Cart")');
-                                    checkbox.prop('checked', true);
-
-                                    var checkboxInterval = setInterval(function() {
-
-                                        var checkFirstChild = checkbox.is(':checked');
-                                        //    alert(checkbox.is(':checked'));
-                                        if (checkFirstChild === true) {
-                                            clearInterval(checkboxInterval);
-
-                                            if (ebtn.length == 1) {
-                                                //    alert('click ebtn');
-                                                ebtn.click();
-                                            } else {
-                                                // alert('click ebtn2');
-                                                ebtn2.click();
-                                            }
-
-                                        }
-
-                                    }, 100);
-
-                                } else {
-
-                                    $('#lig-sticky-actions button:visible').click();
-
-                                }
-                            }, 1000);
+                        if ($("#swipe-sidebar").hasClass("sidebar-state-0")){
+                            $('.sidebar-handle').click();                            
+                            autoSwipeIfLoadingDone();
+                        }else{
+                            redirectConfigPage();
                         }
-                    }, 100);
+
+                        /* var timeInterval = setInterval(function () {
+                            if ($("#swipe-sidebar").hasClass("sidebar-state-0")) {
+                                $('.sidebar-handle').click();
+                                redirectConfigPage();
+                            }
+                        }, 100); */
+
+                        function redirectConfigPage() {
+                            //   alert('redirectConfigPage');
+                            if ($("#swipe-sidebar").hasClass("sidebar-state-1")) {
+                                // clearInterval(timeInterval);
+
+                                // if have item on cart
+                                var sliderOut = setInterval(function () {
+                                    if ($('.sidebar-state-1').attr('style').includes('right: 0px;')) {
+                                        clearInterval(sliderOut);
+
+                                        setTimeout(function () {
+                                            if ($('#swipe-sidebar .lig-row').hasClass('parent')) {
+                                                //    alert('have checkbox');
+                                                var checkbox = $('.lig-row.parent td.lig-select .ui-checkbox input[name="_line_item_list"]');
+                                                var ebtn = $('#button-bar #lig-sticky-actions button:contains("Edit Shopping Cart")');
+                                                var ebtn2 = $('#popup-moreBtns-lig-popup li a.ui-btn:contains("Edit Shopping Cart")');
+                                                checkbox.prop('checked', true);
+
+                                                var checkboxInterval = setInterval(function () {
+
+                                                    var checkFirstChild = checkbox.is(':checked');
+                                                    //    alert(checkbox.is(':checked'));
+                                                    if (checkFirstChild === true) {
+                                                        clearInterval(checkboxInterval);
+
+                                                        if (ebtn.length == 1) {
+                                                            //    alert('click ebtn');
+                                                            ebtn.click();
+                                                        } else {
+                                                            // alert('click ebtn2');
+                                                            ebtn2.click();
+                                                        }
+
+                                                    }
+
+                                                }, 100);
+
+                                            } else {
+
+                                                $('#lig-sticky-actions button:visible').click();
+
+                                            }
+                                        }, 1000);
+                                    }
+                                }, 100);
 
 
-                    //
+                                //
 
-                }
+                            }
+                        }
+                    }else{
+                        autoSwipeIfLoadingDone();
+                    }
+                }, 500);
             }
+
+            autoSwipeIfLoadingDone();
         }
 
     }
@@ -5245,7 +5262,7 @@
             var filterPage = urlarr[urlarr.length - 1];
             /* if filterPage contains with commerce */
             console.log('filterPage', filterPage);
-			if($("#line-item-grid").length > 0){
+            if ($("#line-item-grid").length > 0 && filterPage.search("copy_processing.jsp") == -1 ){
 				filterPage = "commerce";
 			}
 			if($("#materialArrayset").length > 0){

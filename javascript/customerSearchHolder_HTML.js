@@ -131,7 +131,7 @@ $(document).ready(function(js2){
 			var usernameGetCustomer = "CPQAPIUser";
 			var passwordGetCustomer = "csC(#15^14";
 
-			if (isPHCountry){
+			/* if (isPHCountry){
 
 				// var isCPQAPIUSER = (window._BM_USER_LOGIN == "CPQAPIUser")? true : false;
 
@@ -155,25 +155,8 @@ $(document).ready(function(js2){
 						// }
 					});
 				}, 5000);
-				/*}else{
-					if ($('#customerMasterString_t').length > 0) {
-						var customerDetails = $("#customerMasterString_t").val();
-						// if (customerDetails === "" && $('#fileAttachmentBSID_t').val() == "") {
-						if (customerDetails === "") {
-							return true;
-						} else {
-							var seachCustomer;
-							customer_master_string = customerDetails;
-							searchCustList(customerDetails, seachCustomer);
-							searchCustomerList(seachCustomer);
 
-							$('.search-cust_wrapper').hide();
-						}
-
-					}
-				}*/
-
-			}else{
+			}else{ */
 				if ($('#customerMasterString_t').length > 0) {
 					var customerDetails = $("#customerMasterString_t").val();
 					// if (customerDetails === "" && $('#fileAttachmentBSID_t').val() == "") {
@@ -189,7 +172,7 @@ $(document).ready(function(js2){
 					}
 
 				}
-			}
+			// }
 
 			/* 
 				Created By    :- Created By Zainal Arifin, Date : 18 March 2018
