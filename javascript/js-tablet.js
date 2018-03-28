@@ -556,6 +556,13 @@ $(document).ready(function() {
 								
 								$( $(elementToMove[1]) ).appendTo("#swipe-sidebar-content");
 
+								js2("#PastOrders").DataTable({
+									"bLengthChange": false,
+									"searching": false,
+									"bPaginate": false,
+									"bInfo": false,
+								});
+
 								/* 
 									Created By    :- Created By Zainal Arifin, Date : 19 March 2018
 									Task          :- Hide Recomended Material in SG
