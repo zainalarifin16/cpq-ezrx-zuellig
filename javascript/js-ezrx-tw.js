@@ -32,21 +32,25 @@ $(document).ready(function(){
       var redColor = "rgb(255, 0, 0)";
       $("td.cell-overrideInvoicePrice ").map(function(index, data){
         var overrideInvoicePrice = $(data).find(".text-field");
-        if($(data).find(".text-field").val().length > 0){
-          overrideInvoicePrice.css("color", redColor);
-          var rowMaterial = $(overrideInvoicePrice).data("value-attr").replace("overrideInvoicePrice-", "");
-          $( "#overridePrice-"+rowMaterial ).css("color", redColor);
-          $( "#qty_text-"+rowMaterial ).css("color", redColor);
+        if ($(data).find(".text-field").length > 0 ){
+          if($(data).find(".text-field").val().length > 0){
+            overrideInvoicePrice.css("color", redColor);
+            var rowMaterial = $(overrideInvoicePrice).data("value-attr").replace("overrideInvoicePrice-", "");
+            $( "#overridePrice-"+rowMaterial ).css("color", redColor);
+            $( "#qty_text-"+rowMaterial ).css("color", redColor);
+          }
         }
       });
 
       $("td.cell-overridePrice").map(function (index, data) {
         var overridePrice = $(data).find(".text-field");
-        if ($(data).find(".text-field").val() != "0.0") {
-          overridePrice.css("color", redColor);
-          var rowMaterial = $(overridePrice).attr("id").replace("overridePrice-", "");
-          $("#overrideInvoicePrice-" + rowMaterial).css("color", redColor);
-          $("#qty_text-" + rowMaterial).css("color", redColor);
+        if ($(data).find(".text-field").length > 0 ){
+          if ($(data).find(".text-field").val() != "0.0") {
+            overridePrice.css("color", redColor);
+            var rowMaterial = $(overridePrice).attr("id").replace("overridePrice-", "");
+            $("#overrideInvoicePrice-" + rowMaterial).css("color", redColor);
+            $("#qty_text-" + rowMaterial).css("color", redColor);
+          }
         }
       });
 
