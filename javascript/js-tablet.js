@@ -977,7 +977,19 @@ $(document).ready(function() {
 
 						});
 						
+
+					 	$("#attribute-orderingRequestNoMoreThan90Characters_t").closest(".group-content").css({
+						 "margin-top": "30px",
+						 "padding-top": "30px",
+						 "border-top": "solid 2px #ddd"
+						});
 						
+						var parent = $("#attribute-orderingRequestNoMoreThan90Characters_t").closest(".ui-collapsible-content");
+						 
+						$("#attribute-orderingRequestNoMoreThan90Characters_t").prependTo(parent);
+
+					 	$("#attribute-customerPORef_t").prependTo(parent);
+
 				 }
 				
 			 }
