@@ -1091,7 +1091,7 @@
             /* ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v3/customMaterial_Master";
             var ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&orderby=material:asc"; */
             ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";
-            var ajaxData = "q=\{'masterstring':{'sales_org':'2800', $regex:'/" + encodeURIComponent(searchStr) + "/i'}}&orderby=material:asc";
+            var ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&orderby=material:asc";
 
         }
         if (searchStr.slice(-1) === '%') {
