@@ -36,26 +36,27 @@ $(document).ready(function(){
     var var_overrideprice = ($("td.cell-overridePrice").length > 0) ? "td.cell-overridePrice" : "td.cell-overridePrice_currency";
     var var_comments = ($("td.cell-comments").length > 0) ? "td.cell-comments" : "td.cell-comments";
     var var_qtyBonus = ($("td.cell-additionalMaterialQty").length > 0) ? "td.cell-additionalMaterialQty" : "td.cell-additionalMaterialQty";
+    var var_bonusOverride = ($("td.cell-overrideBonusQty").length > 0) ? "td.cell-overrideBonusQty" : "td.cell-overrideBonusQty";
 
      /* TW-05 and TW-13 Override Invoice Price */
-    function override_redcolor(){
+    /* function override_redcolor(){
         var redColor = "rgb(255, 0, 0)";
         var blackColor = "#000000";
         
-        $(".cell-netPriceDiscount").find(".text-field").off();        
-        $(".cell-netPriceDiscount").find(".text-field").map(function(index, data){
+        $(var_netpricedisc.replace("td", "")).find(".text-field").off();        
+        $(var_netpricedisc.replace("td", "")).find(".text-field").map(function(index, data){
             if( $(data).val() != "0.0" ){
                 // $(data).css("color", redColor); //remove logic for Highlight QTY in case of PH. 7 March 2018
             }
         });
 
-        $(".cell-netPriceDiscount").find(".text-field").on("keyup click", function(){
+        $(var_netpricedisc.replace("td", "")).find(".text-field").on("keyup click", function(){
             
             // $(this).css("color", redColor); //remove logic for Highlight QTY in case of PH. 7 March 2018
             
         });
 
-        $(".cell-netPriceDiscount").find(".text-field").blur( function(){
+        $(var_netpricedisc.replace("td", "")).find(".text-field").blur( function(){
             
             if( $(this).val() == "0.0" ){
                 $(this).css("color", blackColor);
@@ -63,7 +64,7 @@ $(document).ready(function(){
 
         });
 
-        $("td.cell-overridePrice").map(function(index, data){
+        $( var_overrideprice.replace("td", "") ).map(function(index, data){
             var overridePrice = $(data).find(".text-field");
 
             if( $(overridePrice).length > 0  ){
@@ -78,7 +79,7 @@ $(document).ready(function(){
             }
         });
 
-        $("input[name='overrideBonusQty'][type='checkbox']").map(function(index, data){
+        $("input[name='"+var_bonusOverride.replace("td.cell-")+"'][type='checkbox']").map(function(index, data){
           isChecked = (typeof $(this).attr("checked") == 'undefined') ? false : true;
           var rowMaterial = $(this).val();
           if( isChecked ){
@@ -89,7 +90,7 @@ $(document).ready(function(){
 
         });        
 
-        $("input[name='overrideBonusQty'][type='checkbox']").on("change", function(){
+        $("input[name='"+var_bonusOverride.replace("td.cell-")+"'][type='checkbox']").on("change", function(){
           
           isChecked = (typeof $(this).attr("checked") == 'undefined') ? false : true;
           var rowMaterial = $(this).val();
@@ -101,7 +102,7 @@ $(document).ready(function(){
 
         });
 
-    }
+    } */
 
     function disabled_btn_save_show_alert()
     {
@@ -131,32 +132,43 @@ $(document).ready(function(){
         SUMMARY : Listen user change the value of QTY, OVerride Invoice and Override Price,
                   Show Alert if the value has been changed
     */
+    var redColor = "rgb(255, 0, 0)";
+    var blackColor = "rgb(255, 255, 0)";
 
-    function check_user_change_value(){
+    function check_user_change_value(isMobile){
         var listEditedField = {};
 
-        $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_comments + ", " + var_qtyBonus).find(".text-field").on("click focus", function(){
+        var var_find_text = (isMobile) ? ".form-field" : ".text-field";
+
+        $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).on("click focus", function(){
 
           var id = "";
           if ($(this).closest(var_qty.replace("td", "")).length > 0 ){
             id = "qty_" + $(this).attr("id").replace(var_qty.replace("td.cell-", "")+"-", "");
+            $(this).css("color", redColor);
           }
 
           if ($(this).closest( var_overrideprice.replace("td", "") ).length > 0){
             id = "op_" + $(this).attr("data-value-attr").replace(var_overrideprice.replace("td.cell-", "")+ "-", "");
+            $(this).css("color", redColor);            
           }
 
           if( $(this).closest( var_netpricedisc.replace("td", "") ).length > 0 ){
             id = "oip_" + $(this).attr("id").replace(var_netpricedisc.replace("td.cell-", "")+"-", "");
+            $(this).css("color", redColor);            
           }
           
           if ($(this).closest(var_comments.replace("td", "") ).length > 0 ){
             id = "cmt_" + $(this).attr("id").replace(var_comments.replace("td.cell-", "")+"-", "");
+            $(this).css("color", redColor);                        
           }
 
           if ($(this).closest(var_qtyBonus.replace("td", "") ).length > 0 ){
             id = "cmt_" + $(this).attr("id").replace(var_qtyBonus.replace("td.cell-", "")+"-", "");
+            $(this).css("color", redColor);                        
           }
+
+
 
           if(!listEditedField.hasOwnProperty(id))
           {
@@ -165,7 +177,7 @@ $(document).ready(function(){
 
         });
 
-        $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_comments + ", " + var_qtyBonus).find(".text-field").on("keyup blur", function(){
+        $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).on("keyup blur", function(){
           
           var id = "";
           if ($(this).closest(var_qty.replace("td", "")).length > 0) {
@@ -197,6 +209,7 @@ $(document).ready(function(){
                 isShowMessage = true;
               }
             }else{
+              $(this).css("color", blackColor);                          
               return false;
             }
           });
@@ -410,10 +423,10 @@ $(document).ready(function(){
                         */
 
                         /* TW-05 and TW-13 Override Invoice Price */
-                        override_redcolor();
+                        // override_redcolor();
                         /* TW-05 and TW-13 Override Invoice Price */
 
-                        check_user_change_value();
+                        check_user_change_value(false);
 
 
                         /* 
@@ -467,6 +480,8 @@ $(document).ready(function(){
 
           if(pageTitle == "order page"){
             reAlignSoldShipAddressSection();
+          }else{
+            check_user_change_value(true);            
           }
 
         } else {
