@@ -610,6 +610,8 @@ $(document).ready(function() {
 									"pageLength": 5,
 								});
 
+								$("#CurrentCustFav").css({"height":"auto"});
+
 								/* 
 									Created By    :- Created By Zainal Arifin, Date : 27 March 2018
 									Task          :- Add paggination on favorite table
