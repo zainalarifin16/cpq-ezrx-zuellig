@@ -2560,7 +2560,33 @@
 
             dataSet.push(subDataSet);
         }
-        // console.log('mobile_topCustomerList', dataSet);
+
+        if ( check_nationality(2500) ){
+            columnTopCustList = [
+                { title: "" },
+                { title: "Sold to ID" },
+                { title: "Ship to ID" },
+                { title: "Customer Name" }
+            ];
+        }else{
+            var columnTopCustList = [{
+                                        title: ""
+                                    },
+                                    {
+                                        title: "Sold to ID"
+                                    },
+                                    {
+                                        title: "Ship to ID"
+                                    },
+                                    {
+                                        title: "Customer Name"
+                                    },
+                                    {
+                                        title: "Address1"
+                                    }];
+        }
+
+        
         var topCustomerList = $('#topCustomerList').DataTable({
             scrollY: "400px",
             scrollCollapse: true,
@@ -2577,7 +2603,7 @@
                     // console.log('full', full[1]);
                     if (type === 'display') {
                        // data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '">';
-                       if(userCountry === 'PH'){
+                        if (check_nationality(2500) ){
                         data = '<input type="radio" name="topCust" id= "topCust" value="' + full[1] + '">';
                         } else{
                             data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '">';
@@ -2587,22 +2613,7 @@
                     return data;
                 }
             }],
-            columns: [{
-                    title: ""
-                },
-                {
-                    title: "Sold to ID"
-                },
-                {
-                    title: "Ship to ID"
-                },
-                {
-                    title: "Customer Name"
-                },
-                {
-                    title: "Address1"
-                }
-            ]
+            columns: columnTopCustList
 
         });
 
