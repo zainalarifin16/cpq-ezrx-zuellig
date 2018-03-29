@@ -239,6 +239,29 @@ $(document).ready(function(){
       Layout        :- Desktop
     */
 
+    /* 
+      Created By    :- Created By Zainal Arifin, Date : 29 March 2018
+      Task          :- Mobile Align Sold to address and Ship to address section
+      Page          :- Mobile
+      File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
+      Layout        :- Desktop
+    */
+
+    function reAlignSoldShipAddressSection(){
+      $("#attribute-customerSoldToId_t").css({"width":"100%"});
+      $("#attribute-customerShipToId_t").css({ "width": "100%" });
+      var parent_group = $("#attribute-customerSoldToId_t").closest(".group-content");
+      $("#attribute-customerSoldToId_t").prependTo(parent_group);
+    }
+
+    /* 
+      Created By    :- Created By Zainal Arifin, Date : 29 March 2018
+      Task          :- Mobile Align Sold to address and Ship to address section
+      Page          :- Mobile
+      File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
+      Layout        :- Desktop
+    */
+    
     /*
         End   : -
         Task  : - Detect User
@@ -246,6 +269,7 @@ $(document).ready(function(){
         File Location : $BASE_PATH$/javascript/js-ezrx.js
         Layout : Both
     */
+
     if(userCountry === 'PH'){
         /*
             Start : 03 Jan 2018
@@ -256,9 +280,9 @@ $(document).ready(function(){
         */
 
         var sold_to_address = function(){
-			$('#attr_wrapper_1__soldTo_t_address_2').parent().before('<div id="soldToAddress88"><span style="padding-right: 1px;width: 100%;">Sold To Address</span></div>');
-			$('#attr_wrapper_1__soldTo_t_address').parent().attr("style","margin-left: 30%; width: 40%;");
-			$('#attr_wrapper_1__soldTo_t_zip').parent().attr("style","margin-left: 0%; width: 30%;");
+          $('#attr_wrapper_1__soldTo_t_address_2').parent().before('<div id="soldToAddress88"><span style="padding-right: 1px;width: 100%;">Sold To Address</span></div>');
+          $('#attr_wrapper_1__soldTo_t_address').parent().attr("style","margin-left: 30%; width: 40%;");
+          $('#attr_wrapper_1__soldTo_t_zip').parent().attr("style","margin-left: 0%; width: 30%;");
         }
 
         /*
@@ -432,7 +456,19 @@ $(document).ready(function(){
             navigator.userAgent.match(/BlackBerry/i) ||
             navigator.userAgent.match(/Windows Phone/i)
         ) {
-            
+
+          var pageTitle = "";
+          if ($("#materialArrayset").length > 0) {
+            pageTitle = "model configuration";
+          }
+          if ($("#line-item-grid").length > 0) {
+            pageTitle = "order page";
+          }
+
+          if(pageTitle == "order page"){
+            reAlignSoldShipAddressSection();
+          }
+
         } else {
             /*
                 Start : 03 Jan 2018
