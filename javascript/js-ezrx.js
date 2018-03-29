@@ -1590,16 +1590,26 @@
         var parts = fullUrl.split('.');
         var sub = parts[0];
         var dataSet = [];
+
+        var ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master";
+
+        if(check_nationality(2500)){
+            ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master_2500";
+        }
+
         $.ajax({
             //url: 'https://zuelligpharmatest1.bigmachines.com/rest/v3/customCustomer_Master?q={"contact_firstname":"Biomedical Science Institutes"}',
-            url: "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master",
+            url: ajaxUrl,
           //data: "q={'custmasterstring':{$regex:'/" + encodeURIComponent($('#searchCustomerInput').val()) + "/i'}}&orderby=customer_name:asc"
             data: 'q={"custmasterstring":{$regex:"/' + encodeURIComponent($("#searchCustomerInput").val()) + '/i"}}&orderby=customer_name:asc'
         }).done(function(response) {
             console.log('jquery done');
             var data = response.items;
             $.each(data, function(i, item) {
-                var subDataSet = ["", item.customer_soldto_id, item.customer_shipto_id, item.customer_name, item.customer_corp_group, item.cust_shpto_add1, item.cust_shpto_addr2, item.customer_ship_phone, item.customer_shpto_pcode];
+                var subDataSet = [
+                                    "", 
+                                    item.customer_soldto_id, item.customer_shipto_id, item.customer_name, item.customer_corp_group, item.cust_shpto_add1, item.cust_shpto_addr2, item.customer_ship_phone, item.customer_shpto_pcode
+                                ];
 
                 /*if(userCountry === 'PH'){
                     subDataSet = ["", item.customer_soldto_id, item.customer_name, item.customer_corp_group, item.cust_shpto_add1, item.cust_shpto_addr2, item.customer_ship_phone, item.customer_shpto_pcode];
@@ -1628,7 +1638,36 @@
 
             for (var i = fromIndex; i < toIndex; i++) {
                 colArr = custArr[i].split("$$");
-                var subDataSet = ['', colArr[0], colArr[1], colArr[2], colArr[3], colArr[4], colArr[5], colArr[6], colArr[7]];
+                var subDataSet = [];
+
+                if (check_nationality(2500)) {
+                    subDataSet = ['',
+                        colArr[0],  //SOLD TO ID
+                        colArr[1],  //SHIP TO ID
+                        colArr[2],  //CUSTOMER NAME
+                        colArr[3],  //CORP.NAME
+                        colArr[4],  //SOLD TO ADDRESS1
+                        colArr[5],  //SOLD TO ADDRESS2
+                        colArr[6],  //SOLD TO PHONE
+                        colArr[7],  //SOLD TO POSTAL CODE
+                        colArr[15], //SHIP TO ADDRESS1
+                        colArr[16], //SHIP TO ADDRESS2
+                        '', //SHIP TO PHONE
+                        colArr[19],  //SHIP TO POSTAL CODE
+                        colArr[14],
+                    ];
+                }else{
+                    subDataSet = [  '', 
+                                    colArr[0], 
+                                    colArr[1], 
+                                    colArr[2], 
+                                    colArr[3], 
+                                    colArr[4], 
+                                    colArr[5], 
+                                    colArr[6], 
+                                    colArr[7]
+                                ];
+                }
                 dataSet.push(subDataSet);
             }
 
@@ -1642,37 +1681,51 @@
                 }
             });
         }
-        var userColumn = [{
-                title: ""
-            },
-            {
-                title: "Sold To ID"
-            },
-            {
-                title: "Ship To ID"
-            },
-            {
-                title: "Customer Name"
-            },
-            {
-                title: "Corp. Group"
-            },
-            {
-                title: "Address1."
-            },
-            {
-                title: "Address2."
-            },
-            {
-                title: "Phone"
-            },
-            {
-                title: "Postal Code"
-            },
-        ];
-        /*if(userCountry === 'PH'){
-			userColumn.splice(2,1);
-        }*/
+
+        var userColumn = [];
+
+        if (check_nationality(2500)) {
+            
+            userColumn.push({ title: "" });
+
+            coloumn = $("#applicableColumnsForCustomerSearch").val().split("$$");
+
+            coloumn.forEach(function (nameColoumn, index) {
+                if (typeof nameColoumn != 'undefined') {
+                    userColumn.push({ title: nameColoumn });
+                }
+            });
+
+        }else{
+            userColumn = [{
+                    title: ""
+                },
+                {
+                    title: "Sold To ID"
+                },
+                {
+                    title: "Ship To ID"
+                },
+                {
+                    title: "Customer Name"
+                },
+                {
+                    title: "Corp. Group"
+                },
+                {
+                    title: "Address1."
+                },
+                {
+                    title: "Address2."
+                },
+                {
+                    title: "Phone"
+                },
+                {
+                    title: "Postal Code"
+                },
+            ];
+        }
 
         seachCustomer = $('#searchCustomer').DataTable({
             destroy: true,
@@ -1692,8 +1745,15 @@
                     // console.log('full', full[2]);
                     if (type === 'display') {
                         //data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '">';
-                        if(userCountry === 'PH'){
-							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1] + '">';
+                        if (check_nationality(2500)) {
+
+                            var disabled = '';
+
+                            if(full[13] == "Y"){
+                                disabled = "disabled";
+                            }
+
+							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1] + '" data-suspended="'+full[13]+'" '+disabled+' >';
 						} else{
 							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '">';
 						}
@@ -1702,8 +1762,23 @@
                     return data;
                 }
             }],
-            columns: userColumn
+            columns: userColumn,
+            "fnDrawCallback": function (oSettings) {
 
+                console.log("fnDrawCallback : #searchCustomer 1");
+
+                $($("#searchCustomer_wrapper").find(".dataTable")[0]).css({ "width": "100%" });
+
+                if ( check_nationality(2500) ) {
+                    $($("#searchCustomer").find("tbody").children("tr")).each(function (index, data) {
+                        var isDisabled = $(data).find("input[type='radio']").attr("disabled");
+                        if (isDisabled == "disabled") {
+                            $(data).css("background-color", "#C7C7C7");
+                        }
+                    });
+                }
+
+            },
         });
 
         $("#searchCustomer").on('click',"input[name='searchCust']", function() {
@@ -1750,8 +1825,15 @@
                         // console.log('full', full[2]);
                         if (type === 'display') {
                            // data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '">';
-                           if(userCountry === 'PH'){
-							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1] + '">';
+                            if (check_nationality(2500)) {
+
+                                var disabled = '';
+
+                                if(full[13] == "Y"){
+                                    disabled = "disabled";
+                                }
+
+                                data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1] + '" data-suspended="' + full[13] + '" ' + disabled +' >';
                             } else{
                                 data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '">';
                             }
@@ -1760,7 +1842,22 @@
                         return data;
                     }
                 }],
-                columns: userColumn
+                columns: userColumn,
+                "fnDrawCallback": function (oSettings) {
+
+                    console.log("fnDrawCallback : #searchCustomer 2");
+
+                    $($("#searchCustomer_wrapper").find(".dataTable")[0]).css("table-layout", "fixed");
+
+                    if (userCountry == "PH") {
+                        $($("#searchCustomer").find("tbody").children("tr")).each(function (index, data) {
+                            var isDisabled = $(data).find("input[type='radio']").attr("disabled");
+                            if (isDisabled == "disabled") {
+                                $(data).css("background-color", "#C7C7C7");
+                            }
+                        });
+                    }
+                }
 
             });
             $("input[name='searchCust']").on('click', function() {
@@ -2663,7 +2760,7 @@
 
                     var seachCustomer;
                     customer_master_string = customerDetails;
-                    $("#customerMasterString_t").val("");
+                    // $("#customerMasterString_t").val("");
 
                     searchCustList(customerDetails, seachCustomer);
                     searchCustomerList(seachCustomer);
