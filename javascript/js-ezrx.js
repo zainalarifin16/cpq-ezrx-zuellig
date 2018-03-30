@@ -7194,6 +7194,9 @@
 
                replace css for displaying material description, this need word wrap view text.
             */
+            if (i == 0) {
+                continue;
+            }
             $(data).css("white-space", "normal");
             /* add css white-space then give value normal */
             /* Start : 17 March 2017 */
@@ -7478,6 +7481,9 @@
 
                replace css for displaying material description, this need word wrap view text.
             */
+           if(i == 0){
+               continue;
+           }
             $(data).css("white-space", "normal");
             /* add css white-space then give value normal */
             /* Start : 17 March 2017 */
