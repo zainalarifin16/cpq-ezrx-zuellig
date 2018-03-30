@@ -3815,12 +3815,18 @@
 
         // manage
         /* custom search and refine list order. */
-        $('.commerce-sidebar-item').each(function(i, sbitem) {
-            if ($(sbitem).text().toLowerCase().indexOf('manage') != -1) {
+        $('.commerce-sidebar-item').each(function (i, sbitem) {
+
+            if ($(sbitem).attr("href").indexOf('displayViewManager') != -1) {
+                $('#jg-tool-manage').attr('href', $(sbitem).attr('href'));
+            }else if ($(sbitem).text().toLowerCase().indexOf('refine') != -1) {
+                $('#jg-tool-refine').attr('href', $(sbitem).attr('href'));
+            }
+            /* if ($(sbitem).text().toLowerCase().indexOf('manage') != -1) {
                 $('#jg-tool-manage').attr('href', $(sbitem).attr('href'));
             } else if ($(sbitem).text().toLowerCase().indexOf('refine') != -1) {
                 $('#jg-tool-refine').attr('href', $(sbitem).attr('href'));
-            }
+            }*/
         });
 
         // folders
