@@ -54,6 +54,17 @@
         return $("#jg-overlay").css("display") == "none" ? true : false;
     }
 
+    var isMobile = function(){
+        return (navigator.userAgent.match(/Android/i) ||
+            navigator.userAgent.match(/webOS/i) ||
+            navigator.userAgent.match(/iPhone/i) ||
+            navigator.userAgent.match(/iPad/i) ||
+            navigator.userAgent.match(/iPod/i) ||
+            navigator.userAgent.match(/BlackBerry/i) ||
+            navigator.userAgent.match(/Windows Phone/i)) ? true : false;
+        
+    }
+
     if(countryEle !== null){
         var countryCode = parseInt(countryEle.value);
         console.log('ezrx file ===>>> countryCode --->> ',countryCode);
@@ -6465,6 +6476,171 @@
     */
     function textColorQty() {
         console.log('textColorQty');
+
+        /* 
+            Created By    :- Created By Zainal Arifin, Date : 30 March 2018
+            Task          :- highlight on Shopping Cart
+            Page          :- Shopping Cart
+            File Location :- $BASE_PATH$/javascript/js-ezrx.js
+            Layout        :- Global
+        */
+
+        var var_qty = ($("td.cell-qty_text").length > 0) ? "td.cell-qty_text" : "td.cell-qty";
+        var var_netpricedisc = ($("td.cell-netPriceDiscount").length > 0) ? "td.cell-netPriceDiscount" : "td.cell-netPriceDiscount";
+        var var_overrideprice = ($("td.cell-overridePrice").length > 0) ? "td.cell-overridePrice" : "td.cell-overridePrice_currency";
+        var var_comments = ($("td.cell-comments").length > 0) ? "td.cell-comments" : "td.cell-comments";
+        var var_qtyBonus = ($("td.cell-additionalMaterialQty").length > 0) ? "td.cell-additionalMaterialQty" : "td.cell-additionalMaterialQty";
+        var var_bonusOverride = ($("td.cell-overrideBonusQty").length > 0) ? "td.cell-overrideBonusQty" : "td.cell-overrideBonusQty";
+
+        var redColor = "rgb(255, 0, 0)";
+        var blackColor = "rgb(0, 0, 0)";
+
+        var listEditedField = {};
+        console.log("APPLY check_user_change_value");
+        var var_find_text = (isMobile()) ? ".form-field" : ".text-field";
+
+        $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).map(function(index, data){
+            
+            /* if ($(this).closest(var_qty.replace("td", "")).length > 0) {
+                
+            } */
+
+            if (isMobile()) {
+                if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
+                    id = "op_" + $(this).attr("id").replace(var_overrideprice.replace("td.cell-", ""), "").replace("0-display", "");
+                }
+            }
+            else {
+                if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
+                    id = "op_" + $(this).attr("data-value-attr").replace(var_overrideprice.replace("td.cell-", ""), "");
+                }
+            }
+
+            if ($(this).closest(var_netpricedisc.replace("td", "")).length > 0) {
+                id = "oip_" + $(this).attr("id").replace(var_netpricedisc.replace("td.cell-", ""), "");
+                $(this).css("color", redColor);
+            }
+
+            if ($(this).closest(var_comments.replace("td", "")).length > 0) {
+                id = "cmt_" + $(this).attr("id").replace(var_comments.replace("td.cell-", ""), "");
+                $(this).css("color", redColor);
+            }
+
+            if ($(this).closest(var_qtyBonus.replace("td", "")).length > 0) {
+                id = "qtyb_" + $(this).attr("id").replace(var_qtyBonus.replace("td.cell-", ""), "");
+                $(this).css("color", redColor);
+            }
+
+        });
+
+        $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).on("click focus", function () {
+
+            var id = "";
+            if ($(this).closest(var_qty.replace("td", "")).length > 0) {
+                id = "qty_" + $(this).attr("id").replace(var_qty.replace("td.cell-", ""), "");
+                $(this).css("color", redColor);
+            }
+
+            if (isMobile()) {
+                if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
+                    id = "op_" + $(this).attr("id").replace(var_overrideprice.replace("td.cell-", ""), "").replace("0-display", "");
+                }
+            }
+            else {
+                if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
+                    id = "op_" + $(this).attr("data-value-attr").replace(var_overrideprice.replace("td.cell-", ""), "");
+                }
+            }
+
+            if ($(this).closest(var_netpricedisc.replace("td", "")).length > 0) {
+                id = "oip_" + $(this).attr("id").replace(var_netpricedisc.replace("td.cell-", ""), "");
+                $(this).css("color", redColor);
+            }
+
+            if ($(this).closest(var_comments.replace("td", "")).length > 0) {
+                id = "cmt_" + $(this).attr("id").replace(var_comments.replace("td.cell-", ""), "");
+                $(this).css("color", redColor);
+            }
+
+            if ($(this).closest(var_qtyBonus.replace("td", "")).length > 0) {
+                id = "qtyb_" + $(this).attr("id").replace(var_qtyBonus.replace("td.cell-", ""), "");
+                $(this).css("color", redColor);
+            }
+
+
+
+            if (!listEditedField.hasOwnProperty(id)) {
+                listEditedField[id] = { before: $(this).val() };
+            }
+
+        });
+
+        $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).on("keyup blur", function () {
+
+            var id = "";
+            if ($(this).closest(var_qty.replace("td", "")).length > 0) {
+                id = "qty_" + $(this).attr("id").replace(var_qty.replace("td.cell-", ""), "");
+            }
+
+            if(isMobile()){
+                if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
+                    id = "op_" + $(this).attr("id").replace(var_overrideprice.replace("td.cell-", ""), "").replace("0-display", "");
+                }
+            }
+            else{
+                if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
+                    id = "op_" + $(this).attr("data-value-attr").replace(var_overrideprice.replace("td.cell-", ""), "");
+                }
+            }
+
+            if ($(this).closest(var_netpricedisc.replace("td", "")).length > 0) {
+                id = "oip_" + $(this).attr("id").replace(var_netpricedisc.replace("td.cell-", ""), "");
+            }
+
+            if ($(this).closest(var_comments.replace("td", "")).length > 0) {
+                id = "cmt_" + $(this).attr("id").replace(var_comments.replace("td.cell-", ""), "");
+            }
+
+            if ($(this).closest(var_qtyBonus.replace("td", "")).length > 0) {
+                id = "qtyb_" + $(this).attr("id").replace(var_qtyBonus.replace("td.cell-", ""), "");                
+            }
+
+            listEditedField[id]["after"] = $(this).val();
+            var currentObject = $(this);
+            // var isShowMessage = false;
+            $.each(listEditedField, function (index, data) {
+                
+                if(index == id){
+                    if(data.before == data.after){
+                        $(currentObject).css("color", blackColor);
+                    }
+                }
+
+                /* if (!isShowMessage) {
+                    if (data.before != data.after) {
+                        isShowMessage = true;
+                    }
+                } else {
+                    return false;
+                } */
+            });
+
+            /* if (isShowMessage) {
+                disabled_btn_save_show_alert();
+            } else {
+                enabled_btn_save_remove_alert();
+            } */
+
+        });
+
+        /* 
+            Created By    :- Created By Zainal Arifin, Date : 30 March 2018
+            Task          :- highlight on Shopping Cart
+            Page          :- Shopping Cart
+            File Location :- $BASE_PATH$/javascript/js-ezrx.js
+            Layout        :- Global
+        */
+
         $qtySel = $('.cell-qty_text input[name="qty_text"] , .cell-overridePrice input[name="overridePrice"]');
 
 
@@ -6559,7 +6735,7 @@
             Layout        :- Desktop
         */
 
-        var redColor = "rgb(255, 0, 0)";
+        /* var redColor = "rgb(255, 0, 0)";
         var blackColor = "#000000";
 
         function setListenOverridePrice() {
@@ -6594,7 +6770,7 @@
             }, 1000)
         }
 
-        setListenOverridePrice();
+        setListenOverridePrice(); */
 
         /* 
             Created By    :- Created By Zainal Arifin, Date : 21 March 2018
