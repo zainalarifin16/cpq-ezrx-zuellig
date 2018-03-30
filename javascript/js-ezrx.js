@@ -2326,6 +2326,12 @@
 
         });
 
+        $("input[name*='_comment_l']").map(function (index, data) {
+            if ($(this).val().length > 0) {
+                $(this).css("color", "red");
+            }
+        });
+
     }
     /*
         End : 07 Nov 2017
@@ -6501,13 +6507,18 @@
 
         $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).map(function(index, data){
             
-            /* if ($(this).closest(var_qty.replace("td", "")).length > 0) {
-                
-            } */
+            if (!isMobile()){
+                if ($(this).closest(var_qty.replace("td", "")).length > 0) {
+                    id = "qty_" + $(this).attr("id").replace(var_qty.replace("td.cell-", ""), "");
+                    if ($(this).val() > $("#stockQty-" + id).val()) {
+                        $(this).css("color", redColor);
+                    }
+                }
+            }
 
-            if (isMobile()) {
+            /* if (isMobile()) {
                 if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
-                    id = "op_" + $(this).attr("id").replace(var_overrideprice.replace("td.cell-", ""), "").replace("0-display", "");
+                    $(this).val()
                 }
             }
             else {
@@ -6529,11 +6540,11 @@
             if ($(this).closest(var_qtyBonus.replace("td", "")).length > 0) {
                 id = "qtyb_" + $(this).attr("id").replace(var_qtyBonus.replace("td.cell-", ""), "");
                 $(this).css("color", redColor);
-            }
+            } */
 
         });
 
-        $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).on("click focus", function () {
+        $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).on("click focus focusin", function () {
 
             var id = "";
             if ($(this).closest(var_qty.replace("td", "")).length > 0) {
