@@ -986,18 +986,47 @@ $(document).ready(function() {
 
 						});
 						
+						/* 
+							Created By    :- Created By Zainal Arifin, Date : 29 March 2018
+							Task          :- Move Field orderingRequestNoMoreThan90Characters_t and customerPORef_t
+							Page          :- Model Configuration
+							File Location :- $BASE_PATH$/javascript/js-tablet.js
+							Layout        :- Desktop
+						*/
+						var reposisitonFieldOrderingReq = function () {
 
-					 	$("#attribute-orderingRequestNoMoreThan90Characters_t").closest(".group-content").css({
-						 "margin-top": "30px",
-						 "padding-top": "30px",
-						 "border-top": "solid 2px #ddd"
-						});
-						
-						var parent = $("#attribute-orderingRequestNoMoreThan90Characters_t").closest(".ui-collapsible-content");
-						 
-						$("#attribute-orderingRequestNoMoreThan90Characters_t").prependTo(parent);
+							setTimeout(function () {
+								if (isLoadingDone()) {
+									$("#attribute-orderingRequestNoMoreThan90Characters_t").closest(".group-content").css({
+										"margin-top": "30px",
+										"padding-top": "30px",
+										"border-top": "solid 2px #ddd"
+									});
 
-					 	$("#attribute-customerPORef_t").prependTo(parent);
+									setTimeout(function () {
+										var parent = $("#attribute-orderingRequestNoMoreThan90Characters_t").closest(".ui-collapsible-content");
+
+										$("#attribute-orderingRequestNoMoreThan90Characters_t").prependTo(parent);
+
+										$("#attribute-customerPORef_t").prependTo(parent);
+									}, 2000);
+
+								} else {
+									reposisitonFieldOrderingReq();
+								}
+							}, 1000);
+
+						}
+
+						reposisitonFieldOrderingReq();
+
+						/* 
+							Created By    :- Created By Zainal Arifin, Date : 29 March 2018
+							Task          :- Move Field orderingRequestNoMoreThan90Characters_t and customerPORef_t
+							Page          :- Model Configuration
+							File Location :- $BASE_PATH$/javascript/js-tablet.js
+							Layout        :- Desktop
+						*/
 
 				 }
 				
