@@ -30,6 +30,10 @@ $(document).ready(function(){
         
     }
 
+    var isLoadingDone = function () {
+      return $("#jg-overlay").css("display") == "none" ? true : false;
+    }
+
     //config dynamic variable
     var var_qty = ($("td.cell-qty_text").length > 0) ? "td.cell-qty_text" : "td.cell-qty";
     var var_netpricedisc = ($("td.cell-netPriceDiscount").length > 0) ? "td.cell-netPriceDiscount" : "td.cell-netPriceDiscount";
@@ -137,9 +141,9 @@ $(document).ready(function(){
 
     function check_user_change_value(isMobile){
         var listEditedField = {};
-
+        console.log("APPLY check_user_change_value");
         var var_find_text = (isMobile) ? ".form-field" : ".text-field";
-
+        
         $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).on("click focus", function(){
 
           var id = "";
@@ -481,7 +485,18 @@ $(document).ready(function(){
           if(pageTitle == "order page"){
             reAlignSoldShipAddressSection();
           }else{
-            check_user_change_value(true);            
+            function loadShoppingCartScript(){
+              setTimeout(function(){
+                if (isLoadingDone) {
+                  check_user_change_value(true);
+                } else {
+                  loadShoppingCartScript();
+                }
+              }, 1000);
+            }
+
+            loadShoppingCartScript();
+                        
           }
 
         } else {
