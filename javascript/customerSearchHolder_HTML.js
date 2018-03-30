@@ -963,7 +963,8 @@ var showCustomerList = function(customerDetails) {
 						}else if(userCountry === 'TW'){
 							 //console.log(' 88 TW ======>>>> ',full[2]+ '$$' + full[4] + '$$' +full[6]);
 								//FORMAT soldtoid$$shiptoid$$billtoid
-							data = '<input type="radio" name="topCust" id= "topCust" value="' + full[1]+ '$$' + full[3] + '$$' +full[6] +'" >';			
+							console.log(full);
+							data = '<input type="radio" name="topCust" id= "topCust" value="' + full[1]+ '$$' + full[3] + '$$' +full[5] +'" >';			
 														
 						}else{
 							data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '" >';
