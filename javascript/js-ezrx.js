@@ -6517,6 +6517,7 @@
 
         var var_qty = ($("td.cell-qty_text").length > 0) ? "td.cell-qty_text" : "td.cell-qty";
         var var_netpricedisc = ($("td.cell-netPriceDiscount").length > 0) ? "td.cell-netPriceDiscount" : "td.cell-netPriceDiscount";
+        var var_Invoiceoverrideprice = ($("td.cell-overrideInvoicePrice").length > 0) ? "td.cell-overrideInvoicePrice" : "td.cell-overrideInvoicePrice";
         var var_overrideprice = ($("td.cell-overridePrice").length > 0) ? "td.cell-overridePrice" : "td.cell-overridePrice_currency";
         var var_comments = ($("td.cell-comments").length > 0) ? "td.cell-comments" : "td.cell-comments";
         var var_qtyBonus = ($("td.cell-additionalMaterialQty").length > 0) ? "td.cell-additionalMaterialQty" : "td.cell-additionalMaterialQty";
@@ -6529,46 +6530,34 @@
         console.log("APPLY check_user_change_value");
         var var_find_text = (isMobile()) ? ".form-field" : ".text-field";
 
-        $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).map(function(index, data){
+        $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_Invoiceoverrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).map(function(index, data){
             
             if (!isMobile()){
                 if ($(this).closest(var_qty.replace("td", "")).length > 0) {
-                    id = "qty_" + $(this).attr("id").replace(var_qty.replace("td.cell-", ""), "");
+                    id = $(this).attr("id").replace(var_qty.replace("td.cell-", ""), "");
                     if ($(this).val() > $("#stockQty-" + id).val()) {
                         $(this).css("color", redColor);
                     }
                 }
-            }
 
-            /* if (isMobile()) {
-                if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
-                    $(this).val()
+                var basic_value = "";
+                if (check_nationality(2800)) {
+                    basic_value = "NT$0.00";
                 }
-            }
-            else {
+
                 if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
-                    id = "op_" + $(this).attr("data-value-attr").replace(var_overrideprice.replace("td.cell-", ""), "");
+                    id = $(this).attr("id").replace(var_overrideprice.replace("td.cell-", "") + "-", "").replace("-display", "");
+                    if ($(this).val() != basic_value) {
+                        $(this).css("color", redColor);
+                        $("#qty-" + id).css("color", redColor);
+                    }
                 }
-            }
 
-            if ($(this).closest(var_netpricedisc.replace("td", "")).length > 0) {
-                id = "oip_" + $(this).attr("id").replace(var_netpricedisc.replace("td.cell-", ""), "");
-                $(this).css("color", redColor);
             }
-
-            if ($(this).closest(var_comments.replace("td", "")).length > 0) {
-                id = "cmt_" + $(this).attr("id").replace(var_comments.replace("td.cell-", ""), "");
-                $(this).css("color", redColor);
-            }
-
-            if ($(this).closest(var_qtyBonus.replace("td", "")).length > 0) {
-                id = "qtyb_" + $(this).attr("id").replace(var_qtyBonus.replace("td.cell-", ""), "");
-                $(this).css("color", redColor);
-            } */
 
         });
 
-        $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).on("click focus focusin", function () {
+        $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_Invoiceoverrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).on("click focus focusin", function () {
 
             var id = "";
             if ($(this).closest(var_qty.replace("td", "")).length > 0) {
@@ -6576,17 +6565,22 @@
                 $(this).css("color", redColor);
             }
 
-            if (isMobile()) {
-                if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
-                    id = "op_" + $(this).attr("id").replace(var_overrideprice.replace("td.cell-", ""), "").replace("0-display", "");
+            if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
+                if (isMobile()) {
+                    id = "op_" + $(this).attr("id").replace(var_overrideprice.replace("td.cell-", "") + "-" , "").replace("-display", "");
+                }else{
+                    id = "op_" + $(this).attr("id").replace(var_overrideprice.replace("td.cell-", "") + "-", "").replace("-display", "");
                 }
-            }
-            else {
-                if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
-                    id = "op_" + $(this).attr("data-value-attr").replace(var_overrideprice.replace("td.cell-", ""), "");
-                }
+
+                $("#qty-" + id.replace("op_", "") ).css("color", redColor);
+                $(this).css("color", redColor);                    
             }
 
+            if ($(this).closest(var_Invoiceoverrideprice.replace("td", "")).length > 0) {
+                id = "iop_" + $(this).attr("id").replace(var_Invoiceoverrideprice.replace("td.cell-", "") + "-", "").replace("-display", "");
+                $(this).css("color", redColor);
+            }
+            
             if ($(this).closest(var_netpricedisc.replace("td", "")).length > 0) {
                 id = "oip_" + $(this).attr("id").replace(var_netpricedisc.replace("td.cell-", ""), "");
                 $(this).css("color", redColor);
@@ -6610,7 +6604,7 @@
 
         });
 
-        $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).on("keyup blur", function () {
+        $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_Invoiceoverrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).on("keyup blur", function () {
 
             var id = "";
             if ($(this).closest(var_qty.replace("td", "")).length > 0) {
@@ -6619,13 +6613,17 @@
 
             if(isMobile()){
                 if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
-                    id = "op_" + $(this).attr("id").replace(var_overrideprice.replace("td.cell-", ""), "").replace("0-display", "");
+                    id = "op_" + $(this).attr("id").replace(var_overrideprice.replace("td.cell-", "") + "-", "").replace("-display", "");
                 }
             }
             else{
                 if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
-                    id = "op_" + $(this).attr("data-value-attr").replace(var_overrideprice.replace("td.cell-", ""), "");
+                    id = "op_" + $(this).attr("id").replace(var_overrideprice.replace("td.cell-", "") + "-", "").replace("-display", "");                    
                 }
+            }
+
+            if ($(this).closest(var_Invoiceoverrideprice.replace("td", "")).length > 0) {
+                id = "iop_" + $(this).attr("id").replace(var_Invoiceoverrideprice.replace("td.cell-", "") + "-", "").replace("-display", "");
             }
 
             if ($(this).closest(var_netpricedisc.replace("td", "")).length > 0) {
@@ -6643,11 +6641,20 @@
             listEditedField[id]["after"] = $(this).val();
             var currentObject = $(this);
             // var isShowMessage = false;
+            console.log(listEditedField);
             $.each(listEditedField, function (index, data) {
                 
                 if(index == id){
                     if(data.before == data.after){
                         $(currentObject).css("color", blackColor);
+                        if(id.indexOf("op_") != -1){
+                            $("#qty-" + id.replace("op_", "") ).css("color", blackColor);
+                        }
+                    }else{
+                        $(currentObject).css("color", redColor);
+                        if (id.indexOf("op_") != -1) {
+                            $("#qty-" + id.replace("op_", "") ).css("color", redColor);
+                        }
                     }
                 }
 
