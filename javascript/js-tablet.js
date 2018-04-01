@@ -783,6 +783,72 @@ $(document).ready(function() {
 						File Location :- $BASE_PATH$/javascript/js-tablet.js
 						Layout        :- Desktop
 					*/
+					
+					/* 
+						Created By    :- Created By Zainal Arifin, Date : 31 March 2018
+						Task          :- after adding materials focus should go to shopping cart table in shopping cart page
+						Page          :- Model Configuration
+						File Location :- $BASE_PATH$/javascript/js-tablet.js
+						Layout        :- Desktop
+					*/
+
+					 $("#addMaterialBtn").on("click", function(){
+						window.localStorage.setItem("scrollToShoppingCart", true);
+					 });
+
+					 function scrollWindowToShoppingCart(){
+						setTimeout(function(){
+							if (isLoadingDone()){
+								var isScrollToShoppingCart = window.localStorage.getItem("scrollToShoppingCart");
+								if(isScrollToShoppingCart){
+									window.localStorage.setItem("scrollToShoppingCart", false);
+									$('html, body').animate({
+										scrollTop: $("#materialArrayset").offset().top
+									}, 1000);
+								}
+							}else{
+								scrollWindowToShoppingCart();
+							}
+						},1000);
+					 }
+
+					 scrollWindowToShoppingCart();
+
+					/* 
+						Created By    :- Created By Zainal Arifin, Date : 31 March 2018
+						Task          :- after adding materials focus should go to shopping cart table in shopping cart page
+						Page          :- Model Configuration
+						File Location :- $BASE_PATH$/javascript/js-tablet.js
+						Layout        :- Desktop
+					*/
+
+					/* 
+						Created By    :- Created By Zainal Arifin, Date : 31 March 2018
+						Task          :- restyling table shopping cart in mobile
+						Page          :- Model Configuration
+						File Location :- $BASE_PATH$/javascript/js-tablet.js
+						Layout        :- Desktop
+					*/
+
+					function reStylingTableShoppingCart(){
+						setTimeout(function(){
+							if(isLoadingDone()){
+								$("#attribute-overridePrice_currency").css({"width":"10%"});
+							}else{
+								reStylingTableShoppingCart();
+							}
+						}, 1000);
+					}
+
+					reStylingTableShoppingCart();
+
+					/* 
+						Created By    :- Created By Zainal Arifin, Date : 31 March 2018
+						Task          :- restyling table shopping cart in mobile
+						Page          :- Model Configuration
+						File Location :- $BASE_PATH$/javascript/js-tablet.js
+						Layout        :- Desktop
+					*/
 						
 				}else if(pageTitle == "order page"){
 						 var isPageError = false;
