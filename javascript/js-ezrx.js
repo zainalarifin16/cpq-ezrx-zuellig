@@ -7210,7 +7210,7 @@
                replace css for displaying material description, this need word wrap view text.
             */
             if (i == 0) {
-                continue;
+                return true;
             }
             $(data).css("white-space", "normal");
             /* add css white-space then give value normal */
@@ -7234,9 +7234,13 @@
                     */
 
                     if($('input[name="userSalesOrg_PL"]').val()=="2800" || (document.getElementById('userSalesOrg_t').value == '2800')){
-                        var trNo = parseInt($(this).parent().parent().parent().parent().attr('data-sequence-number-field-index'));
-                        console.log(trNo);
-                        var chineseTxt = $('span[data-varname="chineseDescription_l"]').eq(trNo).text().trim();
+                        // var trNo = parseInt($(this).parent().parent().parent().parent().attr('data-sequence-number-field-index'));
+                        // console.log(trNo);
+                        // var chineseTxt = $('span[data-varname="chineseDescription_l"]').eq(trNo).text().trim();
+
+                        var parent = $(this).closest(".line-item");
+                        var chineseChild = $(parent).find("td[id*='_chineseDescription_l_']");
+                        chineseTxt = $(chineseChild).find('span[data-varname="chineseDescription_l"]').text().trim();
                         console.warn(chineseTxt.length);
                         if(chineseTxt.length > 0){
                             input_val = chineseTxt;
@@ -7496,9 +7500,7 @@
 
                replace css for displaying material description, this need word wrap view text.
             */
-           if(i == 0){
-               continue;
-           }
+           
             $(data).css("white-space", "normal");
             /* add css white-space then give value normal */
             /* Start : 17 March 2017 */
