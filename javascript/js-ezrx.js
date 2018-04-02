@@ -34,37 +34,6 @@
     //userCountry = 'PH';
     var countryEle = document.getElementById('userSalesOrg_t');
 
-    var check_nationality = function(nationality){
-        var countryEle = document.getElementById('userSalesOrg_t');
-        if (countryEle == null) { //this is for material page.
-            countryEle = $('input[name="userSalesOrg_PL"]').val();
-            countryCode = countryEle;
-        } else {
-            var countryCode = parseInt(countryEle.value);
-        }
-        var valid = false;
-        if(nationality == countryCode){
-            valid = true;
-        }
-
-        return valid;
-    }
-
-    var isLoadingDone = function () {
-        return $("#jg-overlay").css("display") == "none" ? true : false;
-    }
-
-    var isMobile = function(){
-        return (navigator.userAgent.match(/Android/i) ||
-            navigator.userAgent.match(/webOS/i) ||
-            navigator.userAgent.match(/iPhone/i) ||
-            navigator.userAgent.match(/iPad/i) ||
-            navigator.userAgent.match(/iPod/i) ||
-            navigator.userAgent.match(/BlackBerry/i) ||
-            navigator.userAgent.match(/Windows Phone/i)) ? true : false;
-        
-    }
-
     if(countryEle !== null){
         var countryCode = parseInt(countryEle.value);
         console.log('ezrx file ===>>> countryCode --->> ',countryCode);
@@ -96,6 +65,36 @@
 
     */
 
+    var check_nationality = function (nationality) {
+        var countryEle = document.getElementById('userSalesOrg_t');
+        if (countryEle == null) { //this is for material page.
+            countryEle = $('input[name="userSalesOrg_PL"]').val();
+            countryCode = countryEle;
+        } else {
+            var countryCode = parseInt(countryEle.value);
+        }
+        var valid = false;
+        if (nationality == countryCode) {
+            valid = true;
+        }
+
+        return valid;
+    }
+
+    var isLoadingDone = function () {
+        return $("#jg-overlay").css("display") == "none" ? true : false;
+    }
+
+    var isMobile = function () {
+        return (navigator.userAgent.match(/Android/i) ||
+            navigator.userAgent.match(/webOS/i) ||
+            navigator.userAgent.match(/iPhone/i) ||
+            navigator.userAgent.match(/iPad/i) ||
+            navigator.userAgent.match(/iPod/i) ||
+            navigator.userAgent.match(/BlackBerry/i) ||
+            navigator.userAgent.match(/Windows Phone/i)) ? true : false;
+
+    }
 
     var $stripParent;
     var resizeHandler = null,
@@ -382,7 +381,7 @@
                     bonusQtyTooltip($this);
                 });
 
-                $('.cell-overrideBonusQty input[type="checkbox"]').on('change', function() {
+                $('.cell-overrideBonusQty input[type="checkbox"]').on('click change', function() {
                     var $this = $(this);
                     bonusQtyOverride($this);
                 });
@@ -884,7 +883,6 @@
                 url: "https://" + instanceName + ".bigmachines.com/commerce/buyside/config_drafts_list.jsp",
                 type: 'GET',
                 data: "_bm_trail_refresh_=true",
-                data: "_bm_trail_refresh_=true",
                 dataType: "html",
                 success: function(respData) {
                     //   console.log('respData', respData);
@@ -948,14 +946,15 @@
     */
     var bonusQtyOverride = function($this) {
         // var $this = $(this);
-        var qtyField = $this.parent().parent().parent().parent().prev().find('input[name="qty_text"]');
+        var qtyField = $($this).closest('tr').find('input[name="qty_text"]');
 
-        // console.log( '$this', qtyField );
-        if ($this.prop("checked") === true) {
-            // console.log('checked');
+            console.log( '$this', qtyField );
+        if ($this.prop("checked") == true) {
+            console.log('checked');
+            qtyField.css("color", "red");
             qtyField.prop('readonly', false);
         } else {
-            // console.log('unchecked');
+            console.log('unchecked');
             qtyField.prop('readonly', true);
         }
     };
@@ -1099,21 +1098,18 @@
         ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";
         var ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&orderby=material_desc:asc";
         
-        if(typeof salesOrg != 'undefined'){
+        if (typeof salesOrg != 'undefined') {
             ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&salesorg=" + salesOrg + "&orderby=material:asc";
         }
 
-
         // var ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";
-        // var ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&salesorg=" + salesOrg + "&orderby=material:asc";        
+        // var ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&orderby=material_desc:asc";
 
         // if($('input[name="userSalesOrg_PL"]').val()=="2800"){
-            // V3
+            // ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";
+            // var ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&salesorg=" + salesOrg + "&orderby=material:asc";            
             /* ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v3/customMaterial_Master";
             var ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&orderby=material:asc"; */
-            // ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";
-            // var ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&orderby=material:asc";
-            // var ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&salesorg="+salesOrg+"&orderby=material:asc";
         // }
         if (searchStr.slice(-1) === '%') {
             //console.log(searchStr);
@@ -1389,12 +1385,13 @@
                 ajaxData = "q=\{\"sales_org\":\"" + salesOrg + "\"}&orderby=material:asc";
             }
 
-            /* var ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";
-            var ajaxData = "orderby=material_desc:asc"; */
+             // var ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";
+            // var ajaxData = "orderby=material_desc:asc";
             // if($('input[name="userSalesOrg_PL"]').val()=="2800"){
-                // ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v3/customMaterial_Master";
                 // ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";
                 // ajaxData = "q=\{\"sales_org\":\"2800\"}&orderby=material:asc";
+                /* ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v3/customMaterial_Master";
+                ajaxData = "orderby=material:asc"; */
             // }    
 
             $.ajax({
@@ -2317,15 +2314,16 @@
     */
     function order_page_stock_color() {
         console.log('order_page_stock_color');
-        $('#line-item-grid .lig-side-scroller>table tr.lig-row.child').each(function() {
+        $('#line-item-grid .lig-side-scroller>table tr.lig-row.child').each(function () {
             var $child = $(this).children('td');
             var $stock = $child.find('input[name*="inStock_l"]');
+            var $invoiceOverridePrice = $child.find('input[name*="invoicePrice_l"]');
             var stockval = $stock.val();
-            
+
             var $qty_text = $child.find('input[name*="qty_l"]');
 
             if (stockval == 'No') {
-                $($qty_text.siblings()[0] ).css("color", "red");
+                $($qty_text.siblings()[0]).css("color", "red");
                 $stock.parent().parent().parent().css('color', 'red');
                 $qty_text.parent().parent().parent().css('color', 'red');
             }
@@ -2336,18 +2334,17 @@
                 $($child.find("input[name*=_unitPrice_l]").siblings()[0]).css('color', 'red');
             }
 
+            var textInvoiceOverridePrice = $($invoiceOverridePrice).find("span[data-varname='invoicePrice_l']");
+            if ($(textInvoiceOverridePrice).text().trim() != "NT$0.00") {
+                $(textInvoiceOverridePrice).css("color", "red");
+            }
+
             var $overrideBonusQty = $child.find('input[name*="bonusOverideFlag_l"]');
-            if( $overrideBonusQty.val() == "true" ){
+            if ($overrideBonusQty.val() == "true") {
                 // Qty Text in row of bonus
                 $qty_text.parent().parent().parent().css('color', 'red');
             }
 
-        });
-
-        $("input[name*='_comment_l']").map(function (index, data) {
-            if ($(this).val().length > 0) {
-                $(this).css("color", "red");
-            }
         });
 
     }
@@ -3092,6 +3089,24 @@
                         */
 
                     }
+
+                    /* 
+                        Created By    :- Created By Zainal Arifin, Date : 2 April 2018
+                        Task          :- remove existing bonus item in Bonus select
+                        Page          :- Global
+                        File Location :- $BASE_PATH$/javascript/js-ezrx.js
+                        Layout        :- Desktop
+                    */
+                    
+                    $("#add_to_favourites").closest("a[name='_line_items']").hide();
+                    
+                    /* 
+                        Created By    :- Created By Zainal Arifin, Date : 2 April 2018
+                        Task          :- remove existing bonus item in Bonus select
+                        Page          :- Global
+                        File Location :- $BASE_PATH$/javascript/js-ezrx.js
+                        Layout        :- Desktop
+                    */
 
                     transform_newcopypage();
                 } else if (pagetitle == 'model configuration') {
