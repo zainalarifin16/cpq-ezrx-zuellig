@@ -903,6 +903,8 @@ var showCustomerList = function(customerDetails) {
 			if(userDetectFunc() == 'PH')
 			{
 				subDataSet = ['', colArr[2], colArr[0], colArr[1], colArr[3]];
+			}else if (userDetectFunc() === 'TW') {
+				subDataSet = ['', colArr[0], colArr[1], colArr[2], colArr[3], colArr[4]];
 			}else{
 				subDataSet = ['', colArr[0], colArr[1],"",""];
 			}
