@@ -6314,7 +6314,11 @@
                     //recursive checking table has load data
                     waitShoppingCartLoad();
                 }
-				var docNum = $("#line-item-grid table tr.parent").find("input[name=_line_item_list]").val();
+                if ($("#line-item-grid table tr.parent").length > 0){
+                    var docNum = $("#line-item-grid table tr.parent").find("input[name=_line_item_list]").val();
+                }else{
+                    var docNum = $("#line-item-grid table").find("input[name=_line_item_list]").val();
+                }
 				if(docNum != undefined){
 					currentModelNumber = docNum;
 				}
@@ -6365,8 +6369,12 @@
 				console.log(">>>>"+isLineGirdOpen);
 				if(isLineGirdOpen){
 					//if( $("#line-item-grid table tr.parent").legth > 0){
-						//documentNumber2 = $("#line-item-grid table tr.parent").clone();//$("tr[data-document-number='2']").clone();
+                        //documentNumber2 = $("#line-item-grid table tr.parent").clone();//$("tr[data-document-number='2']").clone();
+                    if ($("#line-item-grid table tr.parent").length > 0 ){
 						currentModelNumber = $("#line-item-grid table tr.parent").find("input[name=_line_item_list]").val();
+                    }else{
+						currentModelNumber = $("#line-item-grid table").find("input[name=_line_item_list]").val();
+                    }
 						$("#line-item-grid table tr.parent").find("input[name=_line_item_list]").hide();
 						console.log(">>>>"+currentModelNumber);
 					//}

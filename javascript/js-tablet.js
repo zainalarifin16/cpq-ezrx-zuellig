@@ -1017,24 +1017,6 @@ $(document).ready(function() {
 							$("button:contains('Add Material')").show();
 						}*/
 
-						/* 
-							Created By    :- Created By Zainal Arifin, Date : 2 April 2018
-							Task          :- Reorder button in order page
-							Page          :- Order Page
-							File Location :- $BASE_PATH$/javascript/js-ezrx.js
-							Layout        :- Desktop
-						*/
-
-					 	$("#sticky-actions").find(".action-type-modify:contains('Home')").appendTo("#sticky-actions");
-
-						/* 
-							Created By    :- Created By Zainal Arifin, Date : 2 April 2018
-							Task          :- Reorder button in order page
-							Page          :- Order Page
-							File Location :- $BASE_PATH$/javascript/js-ezrx.js
-							Layout        :- Desktop
-						*/
-
 					 	/* 
 							Created By    :- Created By Zainal Arifin, Date : 2 April 2018
 							Task          :- Hide All Order button on order page for non CSTeam users
@@ -1109,6 +1091,25 @@ $(document).ready(function() {
 									});
 
 									setTimeout(function () {
+
+									/* 
+										Created By    :- Created By Zainal Arifin, Date : 2 April 2018
+										Task          :- Reorder button in order page
+										Page          :- Order Page
+										File Location :- $BASE_PATH$/javascript/js-ezrx.js
+										Layout        :- Desktop
+									*/
+
+										$("#sticky-actions").find(".action-type-modify:contains('Home')").appendTo("#sticky-actions");
+
+									/* 
+										Created By    :- Created By Zainal Arifin, Date : 2 April 2018
+										Task          :- Reorder button in order page
+										Page          :- Order Page
+										File Location :- $BASE_PATH$/javascript/js-ezrx.js
+										Layout        :- Desktop
+									*/
+
 										var parent = $("#attribute-orderingRequestNoMoreThan90Characters_t").closest(".ui-collapsible-content");
 
 										$("#attribute-orderingRequestNoMoreThan90Characters_t").prependTo(parent);
