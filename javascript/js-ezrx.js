@@ -2899,6 +2899,15 @@
         File Location : $BASE_PATH$/image/javascript/js-ezrx.js
         Layout : Desktop
     */
+
+    function clearStorageOrderItem(){
+        for (var i = 0; i < localStorage.length; i++) {
+            if (localStorage.key(i).indexOf("orderItem_ZP") != -1) {
+                localStorage.removeItem(localStorage.key(i));
+            }
+        }
+    }
+
     function desktop_newlayout() {
         /* UI */
         /*
@@ -2971,7 +2980,7 @@
                     }
 
                     hideMenuForCreditControlUser();
-                    
+                    clearStorageOrderItem();
 
                 } else if (pagetitle == 'transaction') {
                     /*
@@ -3093,7 +3102,7 @@
                     /* 
                         Created By    :- Created By Zainal Arifin, Date : 2 April 2018
                         Task          :- remove existing bonus item in Bonus select
-                        Page          :- Global
+                        Page          :- Order Page
                         File Location :- $BASE_PATH$/javascript/js-ezrx.js
                         Layout        :- Desktop
                     */
@@ -3103,7 +3112,27 @@
                     /* 
                         Created By    :- Created By Zainal Arifin, Date : 2 April 2018
                         Task          :- remove existing bonus item in Bonus select
-                        Page          :- Global
+                        Page          :- Order Page
+                        File Location :- $BASE_PATH$/javascript/js-ezrx.js
+                        Layout        :- Desktop
+                    */
+
+                    /* 
+                        Created By    :- Created By Zainal Arifin, Date : 2 April 2018
+                        Task          :- Hide All Order button on order page for non CSTeam users
+                        Page          :- Order Page
+                        File Location :- $BASE_PATH$/javascript/js-ezrx.js
+                        Layout        :- Desktop
+                    */
+
+                    if ($("#zPUserType").val().toLowerCase() != "csteam"){
+                        $("#order-allorders").hide();
+                    }
+
+                    /* 
+                        Created By    :- Created By Zainal Arifin, Date : 2 April 2018
+                        Task          :- Hide All Order button on order page for non CSTeam users
+                        Page          :- Order Page
                         File Location :- $BASE_PATH$/javascript/js-ezrx.js
                         Layout        :- Desktop
                     */
@@ -4153,11 +4182,14 @@
             var refNo = $(this).attr("id").split("attr_wrapper");
             var object_span = $("#readonly" + refNo[1]);
             if (object_span.text() == "True") {
-                var line = $(this).parent();
-                var qty = $(line).find("td[id*='qty_l']");
-                var remove_attr = $(qty).attr("id").split("attr_wrapper");
-                var qty_span = $("#readonly" + remove_attr[1]);
-                qty_span.css("color", "red");
+                var idqty = $(object_span).attr("id").split("bonusOverideFlag_l");
+                var qty_span = $("#"+idqty+"qty");
+                $(qty_span).css("color", "red");
+                // var line = $(this).parent();
+                // var qty = $(line).find("td[id*='qty_l']");
+                // var remove_attr = $(qty).attr("id").split("attr_wrapper");
+                // var qty_span = $("#readonly" + remove_attr[1]);
+                // qty_span.css("color", "red");
             }
         });
         /*
@@ -4188,10 +4220,13 @@
                 var remove_attr = $(type).attr("id").split("attr_wrapper");
                 var type_span = $("#readonly" + remove_attr[1]);
                 if (type_span.text().toLowerCase() == 'comm') {
+
                     var qty = $(line).find("td[id*='qty_l']");
-                    var remove_attr = $(qty).attr("id").split("attr_wrapper");
-                    var qty_span = $("#readonly" + remove_attr[1]);
-                    qty_span.css("color", "red");
+                    if ( typeof $(qty).attr("id") != 'undefined' ){
+                        var remove_attr = $(qty).attr("id").split("attr_wrapper");
+                        var qty_span = $("#readonly" + remove_attr[1]);
+                        qty_span.css("color", "red");
+                    }
                 }
             }
         });
@@ -4270,6 +4305,36 @@
 
             $('#save').click();
         });
+
+        /* 
+            Created By    :- Created By Zainal Arifin, Date : 2 April 2018
+            Task          :- Open Shopping Cart after open order
+            Page          :- Order Page
+            File Location :- $BASE_PATH$/javascript/js-ezrx.js
+            Layout        :- Desktop
+        */
+        var trans_id = $("#readonly_1_transactionID_t").text();
+        var isUserHaveModifySC = localStorage.getItem("orderItem_" + trans_id );
+        if( typeof isUserHaveModifySC == 'undefined'){
+            isUserHaveModifySC = false;
+            localStorage.setItem("orderItem_" + trans_id, isUserHaveModifySC);
+        }
+        if ($("#zPUserType").val().toLowerCase() != "csteam") {
+            if ( $("#line-item-grid").find(".line-item-show:not(.parent-line-item)").length > 0 ){
+                if(!isUserHaveModifySC){
+                    $("#edit_shopping_cart").click();
+                }
+            }
+        }
+
+        /* 
+            Created By    :- Created By Zainal Arifin, Date : 2 April 2018
+            Task          :- Open Shopping Cart after open order
+            Page          :- Order Page
+            File Location :- $BASE_PATH$/javascript/js-ezrx.js
+            Layout        :- Desktop
+        */
+
     }
 
     function transform_modelconfig() {
@@ -5006,6 +5071,10 @@
             File Location :- $BASE_PATH$/javascript/js-ezrx.js
             Layout        :- Desktop
         */
+        trans_id = $("#orderNumber_ML").val();
+        $('.cart-addtoorder, .cart-save').on("click", function(){
+            localStorage.setItem("orderItem_" + trans_id, true);
+        });
 
         //END OF transfrom_config
     }

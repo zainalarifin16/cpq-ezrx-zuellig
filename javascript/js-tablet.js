@@ -1016,6 +1016,45 @@ $(document).ready(function() {
 						}else{
 							$("button:contains('Add Material')").show();
 						}*/
+
+						/* 
+							Created By    :- Created By Zainal Arifin, Date : 2 April 2018
+							Task          :- Reorder button in order page
+							Page          :- Order Page
+							File Location :- $BASE_PATH$/javascript/js-ezrx.js
+							Layout        :- Desktop
+						*/
+
+					 	$("#sticky-actions").find(".action-type-modify:contains('Home')").appendTo("#sticky-actions");
+
+						/* 
+							Created By    :- Created By Zainal Arifin, Date : 2 April 2018
+							Task          :- Reorder button in order page
+							Page          :- Order Page
+							File Location :- $BASE_PATH$/javascript/js-ezrx.js
+							Layout        :- Desktop
+						*/
+
+					 	/* 
+							Created By    :- Created By Zainal Arifin, Date : 2 April 2018
+							Task          :- Hide All Order button on order page for non CSTeam users
+							Page          :- Order Page
+							File Location :- $BASE_PATH$/javascript/js-ezrx.js
+							Layout        :- Desktop
+						*/
+
+						if ($("#zPUserType").val().toLowerCase() != "csteam") {
+							$("#order-allorders").hide();
+						}
+
+						/* 
+							Created By    :- Created By Zainal Arifin, Date : 2 April 2018
+							Task          :- Hide All Order button on order page for non CSTeam users
+							Page          :- Order Page
+							File Location :- $BASE_PATH$/javascript/js-ezrx.js
+							Layout        :- Desktop
+						*/
+
 						$("body").on("click touchend","#order-showorderdetails",function(e){
 									e.preventDefault();			
 									$(".sidebar-handle").trigger("click");		
