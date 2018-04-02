@@ -1098,7 +1098,8 @@
         ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";
         var ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&orderby=material_desc:asc";
         
-        if (typeof salesOrg != 'undefined') {
+        if (salesOrg != 2600) {
+        // if (typeof salesOrg != 'undefined') {
             ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&salesorg=" + salesOrg + "&orderby=material:asc";
         }
 
@@ -1381,7 +1382,8 @@
             ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";
             var ajaxData = "orderby=material_desc:asc";
 
-            if (typeof salesOrg != 'undefined') {
+            if (salesOrg != 2600) {
+            // if (typeof salesOrg != 'undefined') {
                 ajaxData = "q=\{\"sales_org\":\"" + salesOrg + "\"}&orderby=material:asc";
             }
 
