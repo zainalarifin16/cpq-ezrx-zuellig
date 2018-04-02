@@ -1095,10 +1095,11 @@
         var dataSet2 = [];
 
         var salesOrg = $('input[name="userSalesOrg_PL"]').val();
-        ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";
+        ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";
         var ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&orderby=material_desc:asc";
         
-        if (salesOrg != 2600) {
+        if (salesOrg != 2600 && typeof salesOrg != 'undefined' ) {
+            ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";            
         // if (typeof salesOrg != 'undefined') {
             ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&salesorg=" + salesOrg + "&orderby=material:asc";
         }
@@ -1379,10 +1380,11 @@
             //console.info('material search ajax call');
 
             var salesOrg = $('input[name="userSalesOrg_PL"]').val();
-            ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";
+            ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";
             var ajaxData = "orderby=material_desc:asc";
-
-            if (salesOrg != 2600) {
+            
+            if (salesOrg != 2600 && typeof salesOrg != 'undefined') {
+                ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";
             // if (typeof salesOrg != 'undefined') {
                 ajaxData = "q=\{\"sales_org\":\"" + salesOrg + "\"}&orderby=material:asc";
             }
@@ -3110,6 +3112,7 @@
                     */
                     
                     $("#add_to_favourites").closest("a[name='_line_items']").hide();
+                    $("#refresh_order_from_sap").closest("table").hide();                    
                     
                     /* 
                         Created By    :- Created By Zainal Arifin, Date : 2 April 2018
@@ -3127,8 +3130,10 @@
                         Layout        :- Desktop
                     */
 
-                    if ($("#zPUserType").val().toLowerCase() != "csteam"){
-                        $("#order-allorders").hide();
+                    if ($("#zPUserType").length > 0 ){
+                        if ($("#zPUserType").val().toLowerCase() != "csteam"){
+                            $("#order-allorders").hide();
+                        }
                     }
 
                     /* 
@@ -3157,7 +3162,7 @@
                         showLoadingDialog();
                     });
                     $('#jg-submenu-copyorder').parent().remove();
-
+                    $("#pipeline-viewer-opener").hide(); //hide pipeline-viewer-opener
                     transform_modelconfig();
                 } else if (pagetitle == "report manager") {
                     /*
