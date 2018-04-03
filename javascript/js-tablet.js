@@ -845,18 +845,30 @@ $(document).ready(function() {
 						Layout        :- Desktop
 					*/
 
-					/* 
-						Created By    :- Created By Zainal Arifin, Date : 31 March 2018
-						Task          :- restyling table shopping cart in mobile
-						Page          :- Model Configuration
-						File Location :- $BASE_PATH$/javascript/js-tablet.js
-						Layout        :- Desktop
-					*/
+					
 
 					function reStylingTableShoppingCart(){
 						setTimeout(function(){
 							if(isLoadingDone()){
+
+								/* 
+									Created By    :- Created By Zainal Arifin, Date : 31 March 2018
+									Task          :- restyling table shopping cart in mobile
+									Page          :- Model Configuration
+									File Location :- $BASE_PATH$/javascript/js-tablet.js
+									Layout        :- Desktop
+								*/
+
 								$("#attribute-overridePrice_currency").css({"width":"10%"});
+
+								/* 
+									Created By    :- Created By Zainal Arifin, Date : 31 March 2018
+									Task          :- restyling table shopping cart in mobile
+									Page          :- Model Configuration
+									File Location :- $BASE_PATH$/javascript/js-tablet.js
+									Layout        :- Desktop
+								*/
+
 							}else{
 								reStylingTableShoppingCart();
 							}
@@ -864,14 +876,6 @@ $(document).ready(function() {
 					}
 
 					reStylingTableShoppingCart();
-
-					/* 
-						Created By    :- Created By Zainal Arifin, Date : 31 March 2018
-						Task          :- restyling table shopping cart in mobile
-						Page          :- Model Configuration
-						File Location :- $BASE_PATH$/javascript/js-tablet.js
-						Layout        :- Desktop
-					*/
 						
 				}else if(pageTitle == "order page"){
 						 var isPageError = false;

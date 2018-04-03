@@ -2206,15 +2206,32 @@
             e.preventDefault();
             e.stopPropagation();
         });
+        
+        var var_qty = ($("td.cell-qty_text").length > 0) ? "td.cell-qty_text" : "td.cell-qty";
+
+        $('.cell-overrideBonusQty').has('div').find(".ui-flipswitch").on("swipe", function () {
+            var selectedOverrideBonus = $(this).find("select[name=overrideBonusQty]").val();
+            if ($qtyVal == 'false') {
+                $("#" + var_qty.replace("td.cell-", "") + $(selectedOverrideBonus).attr("id").replace("overrideBonusQty", "")).prop("readonly", "readonly").blur();
+                $('#overrideMsg').show(600);
+            } else {
+                $("#" + var_qty.replace("td.cell-", "") + $(selectedOverrideBonus).attr("id").replace("overrideBonusQty", "")).prop("readonly", "");
+                $('#overrideMsg').hide(600);
+            }
+        });
 
         $('.cell-overrideBonusQty').has('div').prev().find('input').on('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
 
-            $qtyVal = $(this).parent().parent().next().find('select[name=overrideBonusQty]').val();
+            var selectedOverrideBonus = $(this).parent().parent().next().find('select[name=overrideBonusQty]');
+            $qtyVal = $(selectedOverrideBonus).val();
+            
             if ($qtyVal == 'false') {
+                $("#" + var_qty.replace("td.cell-", "") + $(selectedOverrideBonus).attr("id").replace("overrideBonusQty", "")).prop("readonly", "readonly");
                 $('#overrideMsg').show(600);
             } else {
+                $("#" + var_qty.replace("td.cell-", "") + $(selectedOverrideBonus).attr("id").replace("overrideBonusQty", "")).prop("readonly", "");
                 $('#overrideMsg').hide(600);
             }
         });
