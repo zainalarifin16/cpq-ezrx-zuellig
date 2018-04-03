@@ -648,6 +648,29 @@ $(document).ready(function() {
 
 								$("#swipe-sidebar-content").siblings(".sidebar-handle").show();	
 								// END SLIDER CONTENT
+
+								/* 
+									Created By    :- Created By Zainal Arifin, Date : 2 April 2018
+									Task          :- Reorder button in order page
+									Page          :- Order Page
+									File Location :- $BASE_PATH$/javascript/js-ezrx.js
+									Layout        :- Desktop
+								*/
+
+								$("#tab-content").find(".ui-collapsible-heading-toggle").each(function (index, data) {
+									$(data).closest(".ui-collapsible-inset").removeClass("ui-collapsible-collapsed");
+									$(data).closest(".ui-collapsible-heading").removeClass("ui-collapsible-heading-collapsed");
+									var parent = $(data).closest(".ui-collapsible-inset");
+									$(parent).find(".ui-collapsible-content").removeClass("ui-collapsible-content-collapsed").attr("aria-hidden", "false");
+								});
+
+								/* 
+									Created By    :- Created By Zainal Arifin, Date : 2 April 2018
+									Task          :- Reorder button in order page
+									Page          :- Order Page
+									File Location :- $BASE_PATH$/javascript/js-ezrx.js
+									Layout        :- Desktop
+								*/
 								
 								if($("#swipe-sidebar-content").html().length == 0){
 									reposition_content();
@@ -1110,11 +1133,11 @@ $(document).ready(function() {
 										Layout        :- Desktop
 									*/
 
-										var parent = $("#attribute-orderingRequestNoMoreThan90Characters_t").closest(".ui-collapsible-content");
+									var parent = $("#attribute-orderingRequestNoMoreThan90Characters_t").closest(".ui-collapsible-content");
 
-										$("#attribute-orderingRequestNoMoreThan90Characters_t").prependTo(parent);
+									$("#attribute-orderingRequestNoMoreThan90Characters_t").prependTo(parent);
 
-										$("#attribute-customerPORef_t").prependTo(parent);
+									$("#attribute-customerPORef_t").prependTo(parent);
 									}, 2000);
 
 								} else {
