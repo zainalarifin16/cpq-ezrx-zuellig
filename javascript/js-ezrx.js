@@ -1782,8 +1782,8 @@
                             if(full[13] == "Y"){
                                 disabled = "disabled";
                             }
-
-							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1] + '" data-suspended="'+full[13]+'" '+disabled+' >';
+                            console.log(full);
+							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '" data-suspended="'+full[13]+'" '+disabled+' >';
 						} else{
 							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '">';
 						}
@@ -1806,6 +1806,10 @@
                             $(data).css("background-color", "#C7C7C7");
                         }
                     });
+                    $($("#searchCustomer").find(".ui-radio").each(function(index, data){
+                        $(data).removeClass("ui-radio");
+                        $(data).removeClass("ui-state-disabled");
+                    }));
                 }
 
             },
@@ -1863,7 +1867,7 @@
                                     disabled = "disabled";
                                 }
 
-                                data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1] + '" data-suspended="' + full[13] + '" ' + disabled +' >';
+                                data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '" data-suspended="' + full[13] + '" ' + disabled +' >';
                             } else{
                                 data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '">';
                             }
@@ -1886,6 +1890,10 @@
                                 $(data).css("background-color", "#C7C7C7");
                             }
                         });
+                        $($("#searchCustomer").find(".ui-radio").each(function (index, data) {
+                            $(data).removeClass("ui-radio");
+                            $(data).removeClass("ui-state-disabled");
+                        }));
                     }
                 }
 
@@ -2737,7 +2745,7 @@
                     if (type === 'display') {
                        // data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '">';
                         if (check_nationality(2500) ){
-                        data = '<input type="radio" name="topCust" id= "topCust" value="' + full[1] + '">';
+                        data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '">';
                         } else{
                             data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '">';
                         }
@@ -2787,16 +2795,16 @@
 
         } else {
 
-            if ($('#customerMasterString_t').length) {
+            if ( $('#customerMasterString_t').length > 0 ) {
                 var customerDetails = $("#customerMasterString_t").val();
-
+                $("#attribute-customerSearchHolder_HTML").removeClass("hidden");
                 if (customerDetails === "") {
                     return true;
                 } else {
 
                     var seachCustomer;
                     customer_master_string = customerDetails;
-                    // $("#customerMasterString_t").val("");
+                    $("#customerMasterString_t").val("");
 
                     searchCustList(customerDetails, seachCustomer);
                     searchCustomerList(seachCustomer);
@@ -5237,21 +5245,15 @@
     }
 
     var hide_navigation = function(layout){
-        console.log('hide_navigation');
         var siteUrl = window.location.href;
-        console.warn(siteUrl);
         layout = layout || 'Desktop';//Tablet
-        console.log('layout',layout);
 
         if( getQueryVariableUrl("flag") == "rightnow" ){
-            console.log("LOCALSTORAGE DONE");
             localStorage.setItem("flag", "rightnow");
         }
         var flag = localStorage.getItem("flag");
 
         if( flag == "rightnow" ){
-            //debugger;
-           console.log('URL parameter flag=rightnow ,  EXIST');
            var desktopMenu =  document.querySelector('.jg-box-sidenav');
            if(desktopMenu !== null){
               desktopMenu.style.display = "none";
