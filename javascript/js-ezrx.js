@@ -6641,6 +6641,20 @@
             Layout        :- Global
         */
 
+        function disabled_btn_save_show_alert() {
+            if ($("#update-alert").length == 0) {
+                var updateMsg = "<div id='update-alert' class='updateMsg'>Please click 'update' to proceed.</div>";
+                $('#materialArrayset').after(updateMsg);
+                $("#update-alert").css("padding-bottom", "30px");
+                $("#btn-cart-save").attr("disabled", true).css({ "background-color": "grey" });
+            }
+        }
+
+        function enabled_btn_save_remove_alert() {
+            $("#update-alert").remove();
+            $("#btn-cart-save").attr("disabled", false).css({ "background-color": "#0C727A" });
+        }
+
         var var_qty = ($("td.cell-qty_text").length > 0) ? "td.cell-qty_text" : "td.cell-qty";
         var var_netpricedisc = ($("td.cell-netPriceDiscount").length > 0) ? "td.cell-netPriceDiscount" : "td.cell-netPriceDiscount";
         var var_Invoiceoverrideprice = ($("td.cell-overrideInvoicePrice").length > 0) ? "td.cell-overrideInvoicePrice" : "td.cell-overrideInvoicePrice";
@@ -6784,20 +6798,24 @@
                     }
                 }
 
-                /* if (!isShowMessage) {
+            });
+
+            var isShowMessage = false;
+            $.each(listEditedField, function (index, data) {
+                if (!isShowMessage) {
                     if (data.before != data.after) {
                         isShowMessage = true;
                     }
                 } else {
                     return false;
-                } */
+                }
             });
 
-            /* if (isShowMessage) {
+            if (isShowMessage) {
                 disabled_btn_save_show_alert();
             } else {
                 enabled_btn_save_remove_alert();
-            } */
+            }
 
         });
 
