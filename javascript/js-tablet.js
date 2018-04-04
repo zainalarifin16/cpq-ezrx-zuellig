@@ -147,8 +147,8 @@ $(document).ready(function() {
 				
 				//$(".config-array #attribute-type").css("width", "50px");
 				//$(".config-array #attribute-materialDescription").css("width", "300px");
-				$(".config-array #attribute-materialAndDesc").css("width", "120px");
-				$(".config-array #attribute-inStock").css("width", "40px");
+				// $(".config-array #attribute-materialAndDesc").css("width", "120px");
+				// $(".config-array #attribute-inStock").css("width", "40px");
 				$(".config-array #attribute-price").css("width", "40px");
 				
 				/*$(".config-array #attribute-materialAndDesc").css("width", "200px");
@@ -554,6 +554,7 @@ $(document).ready(function() {
 								
 								var elementToMove = $(".ui-collapsible-inset");
 								
+								$(elementToMove[1]).show();								
 								$( $(elementToMove[1]) ).appendTo("#swipe-sidebar-content");
 
 								js2("#PastOrders").DataTable({
@@ -602,6 +603,7 @@ $(document).ready(function() {
 									Layout        :- Desktop
 								*/
 
+								$(elementToMove[3]).show();
 								$( $(elementToMove[3]) ).appendTo("#swipe-sidebar-content");
 
 								js2("#CurrentCustFav").DataTable({
@@ -662,6 +664,17 @@ $(document).ready(function() {
 									$(data).closest(".ui-collapsible-heading").removeClass("ui-collapsible-heading-collapsed");
 									var parent = $(data).closest(".ui-collapsible-inset");
 									$(parent).find(".ui-collapsible-content").removeClass("ui-collapsible-content-collapsed").attr("aria-hidden", "false");
+
+									if(  $(data).text().indexOf("All Materials") != -1  ){
+										var firstRow = $($(".cell-material").find("input[name='material']")[0]).val();
+										if(firstRow != ""){
+											$(data).closest(".ui-collapsible-inset").addClass("ui-collapsible-collapsed");
+											$(data).closest(".ui-collapsible-heading").addClass("ui-collapsible-heading-collapsed");
+											var parent = $(data).closest(".ui-collapsible-inset");
+											$(parent).find(".ui-collapsible-content").addClass("ui-collapsible-content-collapsed").attr("aria-hidden", "false");
+										}
+									}
+
 								});
 
 								/* 
@@ -672,7 +685,7 @@ $(document).ready(function() {
 									Layout        :- Desktop
 								*/
 								
-								if($("#swipe-sidebar-content").html().length == 0){
+								if ($("#swipe-sidebar-content").children(":not('.sidebar-content-inner')").length == 0){
 									reposition_content();
 								}
 							}, 1000);
@@ -815,16 +828,14 @@ $(document).ready(function() {
 						Layout        :- Desktop
 					*/
 
-					 $("#addMaterialBtn").on("click", function(){
-						window.localStorage.setItem("scrollToShoppingCart", true);
-					 });
-
 					 function scrollWindowToShoppingCart(){
 						setTimeout(function(){
 							if (isLoadingDone()){
 								var isScrollToShoppingCart = window.localStorage.getItem("scrollToShoppingCart");
-								if(isScrollToShoppingCart){
-									window.localStorage.setItem("scrollToShoppingCart", false);
+								console.log("status isScrollToShoppingCart : ", isScrollToShoppingCart);
+								if (isScrollToShoppingCart == "true") {
+									window.localStorage.setItem("scrollToShoppingCart", "false");
+									console.log("status isScrollToShoppingCart : ", window.localStorage.getItem("scrollToShoppingCart"));
 									$('html, body').animate({
 										scrollTop: $("#materialArrayset").offset().top
 									}, 1000);
@@ -859,7 +870,13 @@ $(document).ready(function() {
 									Layout        :- Desktop
 								*/
 
-								$("#attribute-overridePrice_currency").css({"width":"10%"});
+								$("#attribute-materialAndDesc").css({"width":"auto"});
+								$("#attribute-qty").css({"width":"10%"});
+								$("#attribute-overridePrice_currency").css({ "width":"15%"});
+								$("#attribute-price_Currency").css({"width":"11%"});
+								$("#attribute-totalPrice_currency").css({"width":"10%"});
+								$("#attribute-inStock").css({ "width": "10%" });
+								$("#attribute-addAdditionalMaterial").css({"width":"10%"});
 
 								/* 
 									Created By    :- Created By Zainal Arifin, Date : 31 March 2018
