@@ -5279,15 +5279,18 @@
         var flag = localStorage.getItem("flag");
 
         if( flag == "rightnow" ){
-           var desktopMenu =  document.querySelector('.jg-box-sidenav');
-           if(desktopMenu !== null){
-              desktopMenu.style.display = "none";
-           }
+            var desktopMenu =  document.querySelector('.jg-box-sidenav');
+            var target_button = "home";
+            if(desktopMenu !== null){
+                desktopMenu.style.display = "none";
+            }
            if(layout == 'Desktop'){
 
-            $("#close").closest(".button-middle").show();
-
-            $("#close").on("click", function(){
+            $("#"+target_button).off();
+            $("#home").closest("table").removeAttr("onclick").css("margin", "0px 10px");
+            $("#"+target_button).closest(".button-middle").show();
+            $("#"+target_button).on("click", function(e){
+                e.preventDefault();
                 localStorage.removeItem("flag");
                 window.close();
             });
@@ -5298,25 +5301,15 @@
              }
            }
            if(layout == 'Tablet'){
-                if($($(".action.action-type-modify")[1]).text().trim().toLowerCase() == "close"){
-
-                    $( $(".action.action-type-modify")[1] ).on("click", function(){
-                        localStorage.removeItem("flag");
-                        window.close();
-                    });
-
-                }else{
-
-                    $($(".action.action-type-modify")[2]).show();
-
-                    $( $(".action.action-type-modify")[2] ).on("click", function(){
-                        localStorage.removeItem("flag");
-                        window.close();
-                    });
-
-                }
-
-
+                
+                $(".action.action-type-modify").each(function (index, data) {
+                   if ($(data).text().trim().toLowerCase() == "home" ){
+                       $(data).on("click", function(){
+                           localStorage.removeItem("flag");
+                           window.close();
+                       });
+                   }
+                });
 
                 var menu_mobile = document.querySelector('#menu_mobile');
                 if(menu_mobile !== null){
