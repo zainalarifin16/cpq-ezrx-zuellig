@@ -584,9 +584,9 @@ div[name=materialAuditTableDiv] .audit-tab {
 }
 
 /* TABLET STLYLING FROM KEZ */
-.jg-mobilelayout .lig-side-scroller table .content tr:nth-child(1) input {
+/*.jg-mobilelayout .lig-side-scroller table .content tr:nth-child(1) input {
   display: none;
-}
+}*/
 .jg-mobilelayout #attribute-allMaterialsString, .jg-mobilelayout #popup-moreBtns .popup-nested-inner ul li a.button-pipeline, .jg-mobilelayout footer.ui-footer .ui-btn.action-type-pipeline-viewer, .jg-mobilelayout #popup-moreBtns .popup-nested-inner ul li.ui-first-child.ui-last-child a, .jg-mobilelayout #tabs ul li#tab-defaultTab, .jg-mobilelayout #goto-next-tab, .jg-mobilelayout #attribute-customerSearchMasterStringHolder  {
     display: none !important;
 }
@@ -881,9 +881,14 @@ and (orientation : landscape) {
 	width:1000px !important
 }*/
 #materialArrayset .config-array td, .config-array th ,.config-array td  .ui-controlgroup-controls .read-only .form-field, .rec-item-table.sidebar-table td, .rec-item-table.sidebar-table th{
-	font-size: 0.60rem !important;
+	font-size: 0.9rem !important;
 	
 }
+
+#materialArrayset .config-array td > .form-field{
+    text-align: center;
+}
+
 #materialArrayset tr.messages.constrained td ul li h3{	
 	line-height:5px !important;
 	font-size: 0.60rem !important;
@@ -923,14 +928,14 @@ html .ui-field-contain>label+.ui-flipswitch, html .ui-popup .ui-field-contain>la
 }
 
 #materialArrayset .ui-flipswitch{
-    font-size: 14px !important;
+    font-size: 13px !important;
     padding-bottom: 2px;
     padding-top: 2px;
     height: 25px;
 }
 
 .ui-flipswitch .ui-btn.ui-flipswitch-on{
-	font-size: 14px!important;
+	font-size: 13px!important;
 }
 
 #attribute-currentCustFav{
@@ -1007,3 +1012,18 @@ html .ui-field-contain>label+.ui-flipswitch, html .ui-popup .ui-field-contain>la
     margin-bottom: 13px;
 }
 /*VMLSINOZP 95 END*/
+#attribute-zPUserType{
+	display:none;
+}
+#attribute-enableOldMaterialSearch{
+	display:none;
+}
+#attribute-material_s{
+    display:none;
+}
+#attribute-materialDescription_s{
+	display:none;
+}
+#attribute-search_html{
+	display:none;
+}
