@@ -2172,12 +2172,12 @@
         });
     };
     var mobile_pricingChange = function() {
-  //   	$("#orderingRequestNoMoreThan90Characters_t").off();
-		// $('input[name="customerPORef_t"], textarea[name="orderingRequestNoMoreThan90Characters_t"], input[name*="comment_l"]').off();
-  //       $('input[name="customerPORef_t"], textarea[name="orderingRequestNoMoreThan90Characters_t"], input[name*="comment_l"]').bind('change', function() {
-  //           $('input[name="saveQuoteRequired_t"]').val('Yes');
-  //           console.log('saveQuoteRequired_t change');
-  //       });
+    	$("#orderingRequestNoMoreThan90Characters_t").off();
+		$('input[name="customerPORef_t"], textarea[name="orderingRequestNoMoreThan90Characters_t"], input[name*="comment_l"]').off();
+        $('input[name="customerPORef_t"], textarea[name="orderingRequestNoMoreThan90Characters_t"], input[name*="comment_l"]').bind('change', function() {
+            $('input[name="saveQuoteRequired_t"]').val('Yes');
+            console.log('saveQuoteRequired_t change');
+        });
     };
     /*
         Start : 05 Nov 2017
@@ -2691,6 +2691,13 @@
         var userType = $('input[name="zPUserType"]').val();
         if (($("#actualMasterString").text() !== "") || (userType === 'CSTeam')) {
             $('#attribute-materialSearch').append().html(materialHTML);
+            /* 4 April 2018, Zainal : Add localstorage for scroll to shopping cart */
+            $("#addMaterialBtn").on("click", function () {
+                window.localStorage.setItem("scrollToShoppingCart", "true");
+                console.log("status isScrollToShoppingCart : ", window.localStorage.getItem("scrollToShoppingCart"));
+            });
+            /* 4 April 2018, Zainal : Add localstorage for scroll to shopping cart */
+
             console.log('mobile_materialSearch');
             materialSearch();
 
@@ -3168,6 +3175,8 @@
                         File Location :- $BASE_PATH$/javascript/js-ezrx.js
                         Layout        :- Desktop
                     */
+
+                    mobile_pricingChange();
 
                     transform_newcopypage();
                 } else if (pagetitle == 'model configuration') {
@@ -6312,7 +6321,7 @@
                         if(currentPage != "1"){
                             $(".content").prepend($(documentNumber2));
                         }
-                        
+                        $("#attribute-customerSearchHolder_HTML").removeClass("hidden");                        
                         mobile_checkItemOnCart();
                         order_page_stock_color();
                         mobile_rowBgColor();
