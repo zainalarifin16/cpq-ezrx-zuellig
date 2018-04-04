@@ -23,6 +23,17 @@ $(document).ready(function() {
 		return $("#jg-overlay").css("display") == "none"? true : false;
 	}
 
+	var userSalesOrg_t = (($("#userSalesOrg_t").length == 0) ? false : true);
+	var userSalesOrg_PL = (($('input[name="userSalesOrg_PL"]').length == 0) ? false : true);
+
+	var sg_nationalty = false;
+	if (!userSalesOrg_t && !userSalesOrg_PL) {
+		//if it's from SG check validy true
+		sg_nationalty = true;
+	} else {
+		sg_nationalty = check_nationality(2600)
+	}
+
 	function applyOrderPageChanges(){
 		setTimeout(function(){
 			if($('#jg-overlay').css("display") == "none"){
@@ -305,20 +316,6 @@ $(document).ready(function() {
 			
 		},500);
 	};
-
-	var userSalesOrg_t = (($("#userSalesOrg_t").length == 0) ? false : true);
-	var userSalesOrg_PL = (($('input[name="userSalesOrg_PL"]').length == 0) ? false : true);
-	var redColor = "rgb(255, 0, 0)";
-	var blackColor = "#000000";
-	var sg_nationalty = false;
-
-	if (!userSalesOrg_t && !userSalesOrg_PL) {
-		//if it's from SG check validy true
-		sg_nationalty = true;
-	} else {
-		sg_nationalty = check_nationality(2600)
-	}
-
 	 setTimeout(function() {
 		  if( navigator.userAgent.match(/Android/i)
              || navigator.userAgent.match(/webOS/i)
@@ -571,22 +568,13 @@ $(document).ready(function() {
 									File Location :- $BASE_PATH$/javascript/js-tablet.js
 									Layout        :- Desktop
 								*/
-								var userSalesOrg_t = (($("#userSalesOrg_t").length == 0) ? false : true);
-								var userSalesOrg_PL = (($('input[name="userSalesOrg_PL"]').length == 0) ? false : true);
 
-								var sg_nationalty = false;
-								if (!userSalesOrg_t && !userSalesOrg_PL) {
-									//if it's from SG check validy true
-									sg_nationalty = true;
-								} else {
-									sg_nationalty = check_nationality(2600)
-								}
-
-								if (sg_nationalty) {
-									$(elementToMove[2]).hide();
+								if(sg_nationalty){
+									$($(elementToMove[2])).hide();
 								}else{
 									$( $(elementToMove[2]) ).appendTo("#swipe-sidebar-content");
 								}
+								
 								/* 
 									Created By    :- Created By Zainal Arifin, Date : 19 March 2018
 									Task          :- Hide Recomended Material in SG
