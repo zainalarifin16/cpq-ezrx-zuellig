@@ -5586,7 +5586,7 @@
                     mobile_orderpage();
                     mobile_customerSearch();
                     if ($('#frequentlyAccessedCustomers_t').length) {
-                        var customerDetails = $("#frequentlyAccessedCustomers_t").val();
+                        var customerDetails = $("#frequentlyAccessedCustomers_t").val().replace(/~/gi, "");
                         if (customerDetails == "") {
                             return true;
                         } else {
@@ -5995,7 +5995,7 @@
                 mobile_customerSearch();
 
                 if ($('#frequentlyAccessedCustomers_t').length) {
-                    var customerDetails = $("#frequentlyAccessedCustomers_t").val();
+                    var customerDetails = $("#frequentlyAccessedCustomers_t").val().replace(/~/gi, "");
                     if (customerDetails == "") {
                         return true;
                     } else {
@@ -6673,16 +6673,23 @@
                     }
                 }
 
-                var basic_value = "";
-                if (check_nationality(2800)) {
-                    basic_value = "NT$0.00";
-                }
+                var basic_value = 0.0;
 
                 if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
                     id = $(this).attr("id").replace(var_overrideprice.replace("td.cell-", "") + "-", "").replace("-display", "");
-                    if ($(this).val() != basic_value) {
+                    var overridePriceValue = ( $(this).val() != "" ) ? parseFloat($(this).val().replace(/[a-z]/gi, "")) : 0.0;
+                    if ( overridePriceValue != basic_value) {
                         $(this).css("color", redColor);
                         $("#qty-" + id).css("color", redColor);
+                    }
+                }
+                
+                if ($(this).closest(var_netpricedisc.replace("td", "")).length > 0) {
+                    id = $(this).attr("id").replace(var_netpricedisc.replace("td.cell-", "") + "-", "").replace("-display", "");
+                    var var_netpricediscValue = ( $(this).val() != "" ) ? parseFloat($(this).val().replace(/[a-z]/gi, "")) : 0.0;
+                    if ( var_netpricediscValue != basic_value) {
+                        $(this).css("color", redColor);
+                        $("#overridePrice_currency-" + id + "-display").css("color", redColor);
                     }
                 }
 

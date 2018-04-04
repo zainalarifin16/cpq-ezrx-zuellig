@@ -189,7 +189,7 @@ $(document).ready(function(js2){
 		//if( $('#actualMasterString').length ) {
 
 		if( $('#frequentlyAccessedCustomers_t').length ) {
-			var customerDetails = $("#frequentlyAccessedCustomers_t").val();
+			var customerDetails = $("#frequentlyAccessedCustomers_t").val().replace(/~/gi, "");
 			//console.log('frequentlyAccessedCustomers_t customerDetails  PR 1.0  =====>>>>>>> ', customerDetails);
 			if(customerDetails == ""){
 				return true;
