@@ -1199,6 +1199,12 @@ $(document).ready(function() {
 											Layout        :- Desktop
 										*/
 
+										//hide sold to id
+										if(check_nationality(2500) || check_nationality(2800))
+										{
+											$("#attribute-customerSoldToId_t").hide();
+										}
+
 										var parent = $("#attribute-orderingRequestNoMoreThan90Characters_t").closest(".ui-collapsible-content");
 										$("#attribute-orderingRequestNoMoreThan90Characters_t").prependTo(parent);
 										$("#attribute-customerPORef_t").prependTo(parent);
