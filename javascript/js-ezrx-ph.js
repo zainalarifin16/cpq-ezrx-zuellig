@@ -339,6 +339,8 @@ $(document).ready(function(){
                         $("#attr_wrapper_1_customerSoldToId_New").closest(".column").css("margin-left", "0px");
                         $($("#field_wrapper_1_customerShipToId_t").closest(".column-layout").children()[0]).css("display", "block"); //clone spacer to element
 
+                        $("#attr_wrapper_1_soldToAddress_html_t").remove();// remove duplicate sold to address header.
+
                         /* 
                           Created By    :- Created By Zainal Arifin, Date : 19 Feb 2018
                           Task          :- TW-07 Address set layout correction.
