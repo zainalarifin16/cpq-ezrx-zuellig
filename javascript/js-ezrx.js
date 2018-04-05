@@ -6722,7 +6722,7 @@
             var var_netpricediscValue = ($(data).val() != "") ? parseFloat($(data).val().replace(/[a-z]/gi, "")) : 0.0;
             if (var_netpricediscValue != basic_value) {
                 $(data).css("color", redColor);
-                $("#overridePrice_currency-" + id + "-display").css("color", redColor);
+                // $("#overridePrice_currency-" + id + "-display").css("color", redColor);
                 $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").css("color", redColor);                                
             }
         }
@@ -6739,15 +6739,11 @@
                 $("#" + var_qty.replace("td.cell-", "") + "-" + id).attr("readonly", "readonly");
             }
 
-            console.log( "#" + var_qty.replace("td.cell-", "") + "-" + id, $("#" + var_qty.replace("td.cell-", "") + "-" + id).attr("readonly") );
-
             $(data).on("click change", function(){
                 console.log( "click change" , $(this).is(":checked") );
                 if ($(this).is(":checked")) {
-                    $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);
                     $("#" + var_qty.replace("td.cell-", "") + "-" + id).removeAttr("readonly");
                 } else {
-                    $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", blackColor);
                     $("#" + var_qty.replace("td.cell-", "") + "-" + id).attr("readonly", "readonly");
                 }
             });
