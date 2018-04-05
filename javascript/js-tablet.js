@@ -23,6 +23,8 @@ $(document).ready(function() {
 		return $("#jg-overlay").css("display") == "none"? true : false;
 	}
 
+	var redColor = "rgb(255, 0, 0)";
+	var blackColor = "rgb(0, 0, 0)";            
 	var userSalesOrg_t = (($("#userSalesOrg_t").length == 0) ? false : true);
 	var userSalesOrg_PL = (($('input[name="userSalesOrg_PL"]').length == 0) ? false : true);
 
@@ -542,7 +544,9 @@ $(document).ready(function() {
 
 						$("#swipe-sidebar-content").css("display", "block");
 
-						//$("#swipe-sidebar-content").html("");					
+						//$("#swipe-sidebar-content").html("");	
+						var isPOTableCreated = false;
+						var isFavTableCreated = false;				
 						function reposition_content(){
 							// $('#jg-overlay').show();
 							setTimeout(function() {
@@ -554,12 +558,20 @@ $(document).ready(function() {
 								$(elementToMove[1]).show();								
 								$( $(elementToMove[1]) ).appendTo("#swipe-sidebar-content");
 
-								js2("#PastOrders").DataTable({
-									"bLengthChange": false,
-									"searching": false,
-									"bPaginate": false,
-									"bInfo": false,
-								});
+
+								if(!isPOTableCreated){
+									
+									js2("#PastOrders").DataTable({
+										"bLengthChange": false,
+										"searching": false,
+										"bPaginate": false,
+										"bInfo": false,
+										"fnDrawCallback": function(){
+											isPOTableCreated = true;
+										}
+									});
+
+								}
 
 								/* 
 									Created By    :- Created By Zainal Arifin, Date : 19 March 2018
@@ -594,11 +606,18 @@ $(document).ready(function() {
 								$(elementToMove[3]).show();
 								$( $(elementToMove[3]) ).appendTo("#swipe-sidebar-content");
 
-								js2("#CurrentCustFav").DataTable({
-									"bLengthChange": false,
-									"searching": false,
-									"pageLength": 5,
-								});
+								if(!isFavTableCreated){
+									
+									js2("#CurrentCustFav").DataTable({
+										"bLengthChange": false,
+										"searching": false,
+										"pageLength": 5,
+										"fnDrawCallback": function () {
+											isFavTableCreated = true;
+										}
+									});
+
+								}
 
 								$("#CurrentCustFav").css({"height":"auto"});
 
@@ -858,13 +877,51 @@ $(document).ready(function() {
 									Layout        :- Desktop
 								*/
 
-								$("#attribute-materialAndDesc").css({"width":"auto"});
-								$("#attribute-qty").css({"width":"10%"});
-								$("#attribute-overridePrice_currency").css({ "width":"15%"});
-								$("#attribute-price_Currency").css({"width":"11%"});
-								$("#attribute-totalPrice_currency").css({"width":"10%"});
-								$("#attribute-inStock").css({ "width": "10%" });
-								$("#attribute-addAdditionalMaterial").css({"width":"10%"});
+								function styleShoppingTableLandscape()
+								{
+									console.log("Style Shopping Table Landscape");
+									$("#attribute-qty").css({ "width": "5%" });									
+									$("#attribute-overrideBonusQty").css({ "width": "10%" });
+									$("#attribute-price_Currency").css({ "width": "9%" });									
+									$("#attribute-overridePrice_currency").css({ "width": "10%" });
+									$("#attribute-inStock").css({ "width": "8%" });																
+
+								}
+
+								function styleShoppingTablePotrait(){
+									console.log("Style Shopping Table Potrait");									
+									$("#attribute-materialAndDesc").css({ "width": "auto" });
+									$("#attribute-qty").css({ "width": "10%" });
+									$("#attribute-overridePrice_currency").css({ "width": "15%" });
+									$("#attribute-price_Currency").css({ "width": "11%" });
+									$("#attribute-totalPrice_currency").css({ "width": "10%" });
+									$("#attribute-inStock").css({ "width": "10%" });
+									$("#attribute-addAdditionalMaterial").css({ "width": "10%" });
+								}
+
+								function doOnOrientationChange() {
+									setTimeout(function(){
+										console.log("WINDOW ORIENTATION",window.orientation);
+										switch (window.orientation) {
+											case -90:
+											case 90:
+												// setTimeout(function () {
+													styleShoppingTableLandscape();
+												// }, 1500);
+												break;
+											default:
+												// setTimeout(function () {
+													styleShoppingTablePotrait();
+												// }, 1500);
+												break;
+										}
+									},1500)
+								}
+
+								window.addEventListener('orientationchange', doOnOrientationChange);
+
+								// Initial execution if needed
+								doOnOrientationChange();
 
 								/* 
 									Created By    :- Created By Zainal Arifin, Date : 31 March 2018
@@ -1124,29 +1181,48 @@ $(document).ready(function() {
 
 									setTimeout(function () {
 
-									/* 
-										Created By    :- Created By Zainal Arifin, Date : 2 April 2018
-										Task          :- Reorder button in order page
-										Page          :- Order Page
-										File Location :- $BASE_PATH$/javascript/js-ezrx.js
-										Layout        :- Desktop
-									*/
+										/* 
+											Created By    :- Created By Zainal Arifin, Date : 2 April 2018
+											Task          :- Reorder button in order page
+											Page          :- Order Page
+											File Location :- $BASE_PATH$/javascript/js-ezrx.js
+											Layout        :- Desktop
+										*/
 
 										$("#sticky-actions").find(".action-type-modify:contains('Home')").appendTo("#sticky-actions");
 
-									/* 
-										Created By    :- Created By Zainal Arifin, Date : 2 April 2018
-										Task          :- Reorder button in order page
-										Page          :- Order Page
-										File Location :- $BASE_PATH$/javascript/js-ezrx.js
-										Layout        :- Desktop
-									*/
+										/* 
+											Created By    :- Created By Zainal Arifin, Date : 2 April 2018
+											Task          :- Reorder button in order page
+											Page          :- Order Page
+											File Location :- $BASE_PATH$/javascript/js-ezrx.js
+											Layout        :- Desktop
+										*/
 
-									var parent = $("#attribute-orderingRequestNoMoreThan90Characters_t").closest(".ui-collapsible-content");
+										var parent = $("#attribute-orderingRequestNoMoreThan90Characters_t").closest(".ui-collapsible-content");
+										$("#attribute-orderingRequestNoMoreThan90Characters_t").prependTo(parent);
+										$("#attribute-customerPORef_t").prependTo(parent);
 
-									$("#attribute-orderingRequestNoMoreThan90Characters_t").prependTo(parent);
+										$("#attribute-customerSearchHolder_HTML").removeClass("hidden");
+										function collapsedCustomerSearch(){
+											
+											setTimeout(function(){
+												var parent_customerSearchHolder = $("#attribute-customerSearchHolder_HTML").closest(".ui-collapsible-inset").addClass("ui-collapsible-collapsed");
+												if ($(parent_customerSearchHolder).hasClass("ui-collapsible-collapsed")) {
+													parent_customerSearchHolder.find(".ui-collapsible-heading").addClass("ui-collapsible-heading-collapsed");
+													parent_customerSearchHolder.find(".ui-collapsible-content").addClass("ui-collapsible-content-collapsed");
+													if (!$(parent_customerSearchHolder.find(".ui-collapsible-content")).hasClass("ui-collapsible-content-collapsed")) {
+														collapsedCustomerSearch();
+													}
+												} else {
+													collapsedCustomerSearch();
+												}
+											}, 500);
 
-									$("#attribute-customerPORef_t").prependTo(parent);
+										}
+
+										collapsedCustomerSearch();
+
 									}, 2000);
 
 								} else {
