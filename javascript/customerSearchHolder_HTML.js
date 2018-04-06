@@ -190,8 +190,15 @@ $(document).ready(function(js2){
 
 		if( $('#frequentlyAccessedCustomers_t').length ) {
 			var customerDetails = $("#frequentlyAccessedCustomers_t").val().replace(/~/gi, "");
+			// console.log("frequentlyAccessedCustomers_t", customerDetails);
+			if (customerDetails.length > 0) {
+				localStorage.setItem("frequentlyAccessedCustomers_t", customerDetails);
+			} else {
+				customerDetails = localStorage.getItem("frequentlyAccessedCustomers_t");
+			}
+			$("#frequentlyAccessedCustomers_t").val("");
 			//console.log('frequentlyAccessedCustomers_t customerDetails  PR 1.0  =====>>>>>>> ', customerDetails);
-			if(customerDetails == ""){
+			if(customerDetails.length == 0){
 				return true;
 			} else {
 				showCustomerList(customerDetails);

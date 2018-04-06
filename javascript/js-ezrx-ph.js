@@ -183,8 +183,6 @@ $(document).ready(function(){
             $(this).css("color", redColor);                        
           }
 
-
-
           if(!listEditedField.hasOwnProperty(id))
           {
               listEditedField[id] = { before : $(this).val() };
@@ -621,6 +619,10 @@ $(document).ready(function(){
           if ($(data).is(":checked")) {
             $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);
             $("#" + var_qty.replace("td.cell-", "") + "-" + id).removeAttr("readonly");
+            //set value 0.0 for override price + total price
+            $("#netPriceDiscount-"+id).val("0.0");
+            $("#overridePrice_currency-" + id + "-display").val("0.0");
+            $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").text("0.0");
           } else {
             console.log("#" + var_qty.replace("td.cell-", "") + "-" + id);
             $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", blackColor);
@@ -631,6 +633,10 @@ $(document).ready(function(){
             console.log("click change", $(this).is(":checked"));
             if ($(this).is(":checked")) {
               $("#" + var_qty.replace("td.cell-", "") + "-" + id).removeAttr("readonly");
+              //set value 0.0 for override price + total price
+              $("#netPriceDiscount-" + id).val("0.0");
+              $("#overridePrice_currency-" + id + "-display").val("0.0");
+              $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").text("0.0");
             } else {
               $("#" + var_qty.replace("td.cell-", "") + "-" + id).attr("readonly", "readonly");
             }

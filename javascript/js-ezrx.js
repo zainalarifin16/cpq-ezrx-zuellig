@@ -5603,7 +5603,14 @@
                     mobile_customerSearch();
                     if ($('#frequentlyAccessedCustomers_t').length) {
                         var customerDetails = $("#frequentlyAccessedCustomers_t").val().replace(/~/gi, "");
-                        if (customerDetails == "") {
+                        // console.log("frequentlyAccessedCustomers_t", customerDetails);
+                        if (customerDetails.length > 0) {
+                            localStorage.setItem("frequentlyAccessedCustomers_t", customerDetails);
+                        } else {
+                            customerDetails = localStorage.getItem("frequentlyAccessedCustomers_t");
+                        }
+                        $("#frequentlyAccessedCustomers_t").val("");
+                        if (customerDetails.length == 0) {
                             return true;
                         } else {
                             mobile_topCustomerList(customerDetails);
@@ -6012,7 +6019,14 @@
 
                 if ($('#frequentlyAccessedCustomers_t').length) {
                     var customerDetails = $("#frequentlyAccessedCustomers_t").val().replace(/~/gi, "");
-                    if (customerDetails == "") {
+                    // console.log("frequentlyAccessedCustomers_t", customerDetails);
+                    if (customerDetails.length > 0) {
+                        localStorage.setItem("frequentlyAccessedCustomers_t", customerDetails);
+                    } else {
+                        customerDetails = localStorage.getItem("frequentlyAccessedCustomers_t");
+                    }
+                    $("#frequentlyAccessedCustomers_t").val("");
+                    if (customerDetails.length == 0) {
                         return true;
                     } else {
                         mobile_topCustomerList(customerDetails);
