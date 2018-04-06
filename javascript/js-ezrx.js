@@ -4216,24 +4216,26 @@
             Layout : Desktop
         */
         /* find column with id is bonusOverideFlag_l when the value is True then give red color on text  */
-        $("td[id*='bonusOverideFlag_l']").each(function(i, data) {
-            var refNo = $(this).attr("id").split("attr_wrapper");
-            var object_span = $("#readonly" + refNo[1]);
-            if (object_span.text() == "True") {
-                console.log( $(object_span) );
-                var parent = $( object_span ).closest(".line-item");
-                var qty_span = $(parent).find("span[id*='qty_int_l']");
-                $(qty_span).css("color", "red");
-
-                // var idqty = $(object_span).attr("id").split("bonusOverideFlag_l");
-                // var qty_span = $("#"+idqty+"qty");
-                // var line = $(this).parent();
-                // var qty = $(line).find("td[id*='qty_l']");
-                // var remove_attr = $(qty).attr("id").split("attr_wrapper");
-                // var qty_span = $("#readonly" + remove_attr[1]);
-                // qty_span.css("color", "red");
-            }
-        });
+        if(!check_nationality(2500)){
+            $("td[id*='bonusOverideFlag_l']").each(function(i, data) {
+                var refNo = $(this).attr("id").split("attr_wrapper");
+                var object_span = $("#readonly" + refNo[1]);
+                if (object_span.text() == "True") {
+                    console.log( $(object_span) );
+                    var parent = $( object_span ).closest(".line-item");
+                    var qty_span = $(parent).find("span[id*='qty_int_l']");
+                    $(qty_span).css("color", "red");
+    
+                    // var idqty = $(object_span).attr("id").split("bonusOverideFlag_l");
+                    // var qty_span = $("#"+idqty+"qty");
+                    // var line = $(this).parent();
+                    // var qty = $(line).find("td[id*='qty_l']");
+                    // var remove_attr = $(qty).attr("id").split("attr_wrapper");
+                    // var qty_span = $("#readonly" + remove_attr[1]);
+                    // qty_span.css("color", "red");
+                }
+            });
+        }
         /*
             End   : 8-3-2017
             Task  : if Type Bonus Overide Flag is true then give red color
@@ -4251,6 +4253,9 @@
             Layout : Desktop
         */
         /* find column with id is inStock when value is no then give red color text inStock, then check type of material, if comm then give text red color on qty coloumn */
+
+
+
         $("td[id*='inStock']").each(function(i, data) {
             var refNo = $(this).attr("id").split("attr_wrapper");
             var object_span = $("#readonly" + refNo[1]);
@@ -6290,28 +6295,29 @@
 
     }
 
+    
     function mobile_orderpage() {
-
+        
         /*
-            Start : 5 Mei 2017
-            Task  : Create script for handle view on Order Page
-            Page  : Order Page
-            File Location : $BASE_PATH$/image/javascript/js-ezrx.js
-            Layout : Mobile
+        Start : 5 Mei 2017
+        Task  : Create script for handle view on Order Page
+        Page  : Order Page
+        File Location : $BASE_PATH$/image/javascript/js-ezrx.js
+        Layout : Mobile
         */
-        console.log("Order Page Controller");
-        // var hasExecute = false;
-        //re-align struktur
-        localStorage.setItem('topTenFavTab', 'collapsed');
-        localStorage.setItem('custFavItemTab', 'collapsed');
-        localStorage.setItem('recomItemTab', 'collapsed');
-		/*
-		 Task  : Replace MutationObserver and handle the Arrow click on the Order page
-		 Page  : Order Page
-		 Author: Pratap Rudra
-		*/
+       console.log("Order Page Controller");
+       // var hasExecute = false;
+       //re-align struktur
+       localStorage.setItem('topTenFavTab', 'collapsed');
+       localStorage.setItem('custFavItemTab', 'collapsed');
+       localStorage.setItem('recomItemTab', 'collapsed');
+       /*
+       Task  : Replace MutationObserver and handle the Arrow click on the Order page
+       Page  : Order Page
+       Author: Pratap Rudra
+       */
+      
         var documentNumber2 = "";
-
         //checking with timeOut 500ms if load data table is done.
         function waitShoppingCartLoad(){
             setTimeout(function(){
@@ -6405,8 +6411,9 @@
                     }else{
 						currentModelNumber = $("#line-item-grid table").find("input[name=_line_item_list]").val();
                     }
-						$("#line-item-grid table tr.parent").find("input[name=_line_item_list]").hide();
-						console.log(">>>>"+currentModelNumber);
+                    $("#line-item-grid table tr.parent").find("input[name=_line_item_list]").hide();
+                    documentNumber2 = $("#line-item-grid table tr.parent").html();
+					console.log(">>>>"+currentModelNumber);
 					//}
 					mobile_checkItemOnCart();
 					order_page_stock_color();
@@ -6645,291 +6652,293 @@
             Layout        :- Global
         */
 
-        function disabled_btn_save_show_alert() {
-            if ($("#update-alert").length == 0) {
-                var updateMsg = "<div id='update-alert' class='updateMsg'>Please click 'update' to proceed.</div>";
-                $('#materialArrayset').after(updateMsg);
-                $("#update-alert").css("padding-bottom", "30px");
-                if ($("#btn-cart-save").length > 0){
-                    $("#btn-cart-save").attr("disabled", true).css({ "background-color": "grey" });
-                }else{
-                    $("#btn-cart-addtoorder").attr("disabled", true).css({ "background-color": "grey" });
+        if(!check_nationality(2500)){
+            function disabled_btn_save_show_alert() {
+                if ($("#update-alert").length == 0) {
+                    var updateMsg = "<div id='update-alert' class='updateMsg'>Please click 'update' to proceed.</div>";
+                    $('#materialArrayset').after(updateMsg);
+                    $("#update-alert").css("padding-bottom", "30px");
+                    if ($("#btn-cart-save").length > 0) {
+                        $("#btn-cart-save").attr("disabled", true).css({ "background-color": "grey" });
+                    } else {
+                        $("#btn-cart-addtoorder").attr("disabled", true).css({ "background-color": "grey" });
+                    }
                 }
             }
-        }
 
-        function enabled_btn_save_remove_alert() {
-            $("#update-alert").remove();
-            if ($("#btn-cart-save").length > 0) {
-                $("#btn-cart-save").attr("disabled", false).css({ "background-color": "#0C727A" });
-            }else{
-                $("#btn-cart-addtoorder").attr("disabled", false).css({ "background-color": "#0C727A" });                
-            }
-        }
-
-        var var_qty = ($("td.cell-qty_text").length > 0) ? "td.cell-qty_text" : "td.cell-qty";
-        var var_netpricedisc = ($("td.cell-netPriceDiscount").length > 0) ? "td.cell-netPriceDiscount" : "td.cell-netPriceDiscount";
-        var var_Invoiceoverrideprice = ($("td.cell-overrideInvoicePrice").length > 0) ? "td.cell-overrideInvoicePrice" : "td.cell-overrideInvoicePrice";
-        var var_overrideprice = ($("td.cell-overridePrice").length > 0) ? "td.cell-overridePrice" : "td.cell-overridePrice_currency";
-        var var_comments = ($("td.cell-comments").length > 0) ? "td.cell-comments" : "td.cell-comments";
-        var var_qtyBonus = ($("td.cell-additionalMaterialQty").length > 0) ? "td.cell-additionalMaterialQty" : "td.cell-additionalMaterialQty";
-        var var_bonusOverride = ($("td.cell-overrideBonusQty").length > 0) ? "td.cell-overrideBonusQty" : "td.cell-overrideBonusQty";
-
-        var redColor = "rgb(255, 0, 0)";
-        var blackColor = "rgb(0, 0, 0)";
-
-        var basic_value = 0.0;        
-        var listEditedField = {};
-        var var_find_text = (isMobile()) ? ".form-field" : ".text-field";
-
-        function check_qty_and_stock(data, id) {
-            if ($(data).val() > $("#stockQty-" + id).val()) {
-                // qty color become red highlight if val is greater than stock
-                $(data).css("color", redColor);
-            }
-        }
-
-        function isOverridePrice(id){
-            id = Math.abs(id);
-            var overridePriceVal = $("#overridePrice_currency-" + id + "-display").val();
-            var overridePriceValue = (overridePriceVal != "") ? parseFloat(overridePriceVal.replace(/[a-z]/gi, "")) : 0.0;
-            if (overridePriceValue != basic_value) {
-                $("#overridePrice_currency-" + id + "-display").css("color", redColor);                
-                $("#totalPrice_currency-" + id ).css("color", redColor);
-                // $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);                
-            }else{
-                $("#overridePrice_currency-" + id + "-display").css("color", blackColor);
-            }
-            
-        }
-        
-        function isOverrideDiscount(id){
-            console.log("isOverrideDiscount", id);
-            id = Math.abs(id);
-            var overrideDiscountVal = $("#netPriceDiscount-" + id ).val();
-            var overrideDiscountValue = (overrideDiscountVal != "") ? parseFloat(overrideDiscountVal.replace(/[a-z]/gi, "")) : 0.0;
-            if (overrideDiscountValue != basic_value) {
-                $("#netPriceDiscount-" + id ).css("color", redColor);
-                $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").css("color", redColor);                
-                // $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);                
-            } else {
-                $("#netPriceDiscount-" + id).css("color", blackColor);
-                isOverridePrice(id);
-            }
-        }
-
-        function override_price(data, id){
-            var overridePriceValue = ($(data).val() != "") ? parseFloat($(data).val().replace(/[a-z]/gi, "")) : 0.0;
-            if (overridePriceValue != basic_value) {
-                $(data).css("color", redColor);
-                $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").css("color", redColor);                                
-                // $("#"+var_qty.replace("td.cell-", "")+"-" + id).css("color", redColor);
-            }
-        }
-
-        function netprice_disc(data, id){
-            var var_netpricediscValue = ($(data).val() != "") ? parseFloat($(data).val().replace(/[a-z]/gi, "")) : 0.0;
-            if (var_netpricediscValue != basic_value) {
-                $(data).css("color", redColor);
-                // $("#overridePrice_currency-" + id + "-display").css("color", redColor);
-                $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").css("color", redColor);                                
-            }
-        }
-
-        $(var_bonusOverride).find("input[type='checkbox']").map(function (index, data) {
-            id = $(data).attr("id").replace("overrideBonusQty_", "");
-            console.log( "overrideBonusQty_", id, $(data).is("checked") );
-            if ($(data).is(":checked")) {
-                $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);
-                $("#" + var_qty.replace("td.cell-", "") + "-" + id).removeAttr("readonly");
-            } else {
-                console.log("#" + var_qty.replace("td.cell-", "") + "-" + id );
-                $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", blackColor);
-                $("#" + var_qty.replace("td.cell-", "") + "-" + id).attr("readonly", "readonly");
+            function enabled_btn_save_remove_alert() {
+                $("#update-alert").remove();
+                if ($("#btn-cart-save").length > 0) {
+                    $("#btn-cart-save").attr("disabled", false).css({ "background-color": "#0C727A" });
+                } else {
+                    $("#btn-cart-addtoorder").attr("disabled", false).css({ "background-color": "#0C727A" });
+                }
             }
 
-            $(data).on("click change", function(){
-                console.log( "click change" , $(this).is(":checked") );
-                if ($(this).is(":checked")) {
+            var var_qty = ($("td.cell-qty_text").length > 0) ? "td.cell-qty_text" : "td.cell-qty";
+            var var_netpricedisc = ($("td.cell-netPriceDiscount").length > 0) ? "td.cell-netPriceDiscount" : "td.cell-netPriceDiscount";
+            var var_Invoiceoverrideprice = ($("td.cell-overrideInvoicePrice").length > 0) ? "td.cell-overrideInvoicePrice" : "td.cell-overrideInvoicePrice";
+            var var_overrideprice = ($("td.cell-overridePrice").length > 0) ? "td.cell-overridePrice" : "td.cell-overridePrice_currency";
+            var var_comments = ($("td.cell-comments").length > 0) ? "td.cell-comments" : "td.cell-comments";
+            var var_qtyBonus = ($("td.cell-additionalMaterialQty").length > 0) ? "td.cell-additionalMaterialQty" : "td.cell-additionalMaterialQty";
+            var var_bonusOverride = ($("td.cell-overrideBonusQty").length > 0) ? "td.cell-overrideBonusQty" : "td.cell-overrideBonusQty";
+
+            var redColor = "rgb(255, 0, 0)";
+            var blackColor = "rgb(0, 0, 0)";
+
+            var basic_value = 0.0;
+            var listEditedField = {};
+            var var_find_text = (isMobile()) ? ".form-field" : ".text-field";
+
+            function check_qty_and_stock(data, id) {
+                if ($(data).val() > $("#stockQty-" + id).val()) {
+                    // qty color become red highlight if val is greater than stock
+                    $(data).css("color", redColor);
+                }
+            }
+
+            function isOverridePrice(id) {
+                id = Math.abs(id);
+                var overridePriceVal = $("#overridePrice_currency-" + id + "-display").val();
+                var overridePriceValue = (overridePriceVal != "") ? parseFloat(overridePriceVal.replace(/[a-z]/gi, "")) : 0.0;
+                if (overridePriceValue != basic_value) {
+                    $("#overridePrice_currency-" + id + "-display").css("color", redColor);
+                    $("#totalPrice_currency-" + id).css("color", redColor);
+                    // $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);                
+                } else {
+                    $("#overridePrice_currency-" + id + "-display").css("color", blackColor);
+                }
+
+            }
+
+            function isOverrideDiscount(id) {
+                console.log("isOverrideDiscount", id);
+                id = Math.abs(id);
+                var overrideDiscountVal = $("#netPriceDiscount-" + id).val();
+                var overrideDiscountValue = (overrideDiscountVal != "") ? parseFloat(overrideDiscountVal.replace(/[a-z]/gi, "")) : 0.0;
+                if (overrideDiscountValue != basic_value) {
+                    $("#netPriceDiscount-" + id).css("color", redColor);
+                    $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").css("color", redColor);
+                    // $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);                
+                } else {
+                    $("#netPriceDiscount-" + id).css("color", blackColor);
+                    isOverridePrice(id);
+                }
+            }
+
+            function override_price(data, id) {
+                var overridePriceValue = ($(data).val() != "") ? parseFloat($(data).val().replace(/[a-z]/gi, "")) : 0.0;
+                if (overridePriceValue != basic_value) {
+                    $(data).css("color", redColor);
+                    $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").css("color", redColor);
+                    // $("#"+var_qty.replace("td.cell-", "")+"-" + id).css("color", redColor);
+                }
+            }
+
+            function netprice_disc(data, id) {
+                var var_netpricediscValue = ($(data).val() != "") ? parseFloat($(data).val().replace(/[a-z]/gi, "")) : 0.0;
+                if (var_netpricediscValue != basic_value) {
+                    $(data).css("color", redColor);
+                    // $("#overridePrice_currency-" + id + "-display").css("color", redColor);
+                    $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").css("color", redColor);
+                }
+            }
+
+            $(var_bonusOverride).find("input[type='checkbox']").map(function (index, data) {
+                id = $(data).attr("id").replace("overrideBonusQty_", "");
+                console.log("overrideBonusQty_", id, $(data).is("checked"));
+                if ($(data).is(":checked")) {
+                    $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);
                     $("#" + var_qty.replace("td.cell-", "") + "-" + id).removeAttr("readonly");
                 } else {
+                    console.log("#" + var_qty.replace("td.cell-", "") + "-" + id);
+                    $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", blackColor);
                     $("#" + var_qty.replace("td.cell-", "") + "-" + id).attr("readonly", "readonly");
                 }
-            });
-        });
 
-        $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_Invoiceoverrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).map(function(index, data){
-            
-            if (!isMobile()){
+                $(data).on("click change", function () {
+                    console.log("click change", $(this).is(":checked"));
+                    if ($(this).is(":checked")) {
+                        $("#" + var_qty.replace("td.cell-", "") + "-" + id).removeAttr("readonly");
+                    } else {
+                        $("#" + var_qty.replace("td.cell-", "") + "-" + id).attr("readonly", "readonly");
+                    }
+                });
+            });
+
+            $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_Invoiceoverrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).map(function (index, data) {
+
+                if (!isMobile()) {
+                    if ($(this).closest(var_qty.replace("td", "")).length > 0) {
+                        id = $(this).attr("id").replace(var_qty.replace("td.cell-", "") + "-", "");
+                        if (!check_nationality(2500)) {
+                            check_qty_and_stock(this, id);
+                        }
+                    }
+
+                    if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
+                        id = $(this).attr("id").replace(var_overrideprice.replace("td.cell-", "") + "-", "").replace("-display", "");
+                        override_price(this, id);
+                    }
+
+                    if ($(this).closest(var_netpricedisc.replace("td", "")).length > 0) {
+                        id = $(this).attr("id").replace(var_netpricedisc.replace("td.cell-", "") + "-", "").replace("-display", "");
+                        netprice_disc(this, id);
+                    }
+
+                }
+
+            });
+
+            $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_Invoiceoverrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).on("click focus focusin", function () {
+
+                var id = "";
                 if ($(this).closest(var_qty.replace("td", "")).length > 0) {
-                    id = $(this).attr("id").replace(var_qty.replace("td.cell-", "") + "-", "");
-                    if(!check_nationality(2500)){
-                        check_qty_and_stock(this, id);
-                    }
+                    id = "qty_" + $(this).attr("id").replace(var_qty.replace("td.cell-", ""), "");
+                    $(this).css("color", redColor);
                 }
 
                 if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
-                    id = $(this).attr("id").replace(var_overrideprice.replace("td.cell-", "") + "-", "").replace("-display", "");
-                    override_price(this, id);
+                    if (isMobile()) {
+                        id = "op_" + $(this).attr("id").replace(var_overrideprice.replace("td.cell-", "") + "-", "").replace("-display", "");
+                    } else {
+                        id = "op_" + $(this).attr("id").replace(var_overrideprice.replace("td.cell-", "") + "-", "").replace("-display", "");
+                    }
+                    if (!check_nationality(2500)) {
+                        $("#qty-" + id.replace("op_", "")).css("color", redColor);
+                    }
+                    $(this).css("color", redColor);
                 }
-                
+
+                if ($(this).closest(var_Invoiceoverrideprice.replace("td", "")).length > 0) {
+                    id = "iop_" + $(this).attr("id").replace(var_Invoiceoverrideprice.replace("td.cell-", "") + "-", "").replace("-display", "");
+                    $(this).css("color", redColor);
+                }
+
                 if ($(this).closest(var_netpricedisc.replace("td", "")).length > 0) {
-                    id = $(this).attr("id").replace(var_netpricedisc.replace("td.cell-", "") + "-", "").replace("-display", "");
-                    netprice_disc(this, id);
+                    id = "oip_" + $(this).attr("id").replace(var_netpricedisc.replace("td.cell-", ""), "");
+                    $(this).css("color", redColor);
                 }
 
-            }
+                if ($(this).closest(var_comments.replace("td", "")).length > 0) {
+                    id = "cmt_" + $(this).attr("id").replace(var_comments.replace("td.cell-", ""), "");
+                    $(this).css("color", redColor);
+                }
 
-        });
+                if ($(this).closest(var_qtyBonus.replace("td", "")).length > 0) {
+                    id = "qtyb_" + $(this).attr("id").replace(var_qtyBonus.replace("td.cell-", ""), "");
+                    $(this).css("color", redColor);
+                }
 
-        $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_Invoiceoverrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).on("click focus focusin", function () {
 
-            var id = "";
-            if ($(this).closest(var_qty.replace("td", "")).length > 0) {
-                id = "qty_" + $(this).attr("id").replace(var_qty.replace("td.cell-", ""), "");
-                $(this).css("color", redColor);
-            }
 
-            if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
+                if (!listEditedField.hasOwnProperty(id)) {
+                    listEditedField[id] = { before: $(this).val() };
+                }
+
+            });
+
+            $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_Invoiceoverrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).on("keyup blur", function () {
+
+                var id = "";
+                if ($(this).closest(var_qty.replace("td", "")).length > 0) {
+                    id = "qty_" + $(this).attr("id").replace(var_qty.replace("td.cell-", ""), "");
+                }
+
                 if (isMobile()) {
-                    id = "op_" + $(this).attr("id").replace(var_overrideprice.replace("td.cell-", "") + "-" , "").replace("-display", "");
-                }else{
-                    id = "op_" + $(this).attr("id").replace(var_overrideprice.replace("td.cell-", "") + "-", "").replace("-display", "");
+                    if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
+                        id = "op_" + $(this).attr("id").replace(var_overrideprice.replace("td.cell-", "") + "-", "").replace("-display", "");
+                    }
                 }
-                if(!check_nationality(2500)){
-                    $("#qty-" + id.replace("op_", "") ).css("color", redColor);
-                }
-                $(this).css("color", redColor);                    
-            }
-
-            if ($(this).closest(var_Invoiceoverrideprice.replace("td", "")).length > 0) {
-                id = "iop_" + $(this).attr("id").replace(var_Invoiceoverrideprice.replace("td.cell-", "") + "-", "").replace("-display", "");
-                $(this).css("color", redColor);
-            }
-            
-            if ($(this).closest(var_netpricedisc.replace("td", "")).length > 0) {
-                id = "oip_" + $(this).attr("id").replace(var_netpricedisc.replace("td.cell-", ""), "");
-                $(this).css("color", redColor);
-            }
-
-            if ($(this).closest(var_comments.replace("td", "")).length > 0) {
-                id = "cmt_" + $(this).attr("id").replace(var_comments.replace("td.cell-", ""), "");
-                $(this).css("color", redColor);
-            }
-
-            if ($(this).closest(var_qtyBonus.replace("td", "")).length > 0) {
-                id = "qtyb_" + $(this).attr("id").replace(var_qtyBonus.replace("td.cell-", ""), "");
-                $(this).css("color", redColor);
-            }
-
-
-
-            if (!listEditedField.hasOwnProperty(id)) {
-                listEditedField[id] = { before: $(this).val() };
-            }
-
-        });
-
-        $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_Invoiceoverrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).on("keyup blur", function () {
-
-            var id = "";
-            if ($(this).closest(var_qty.replace("td", "")).length > 0) {
-                id = "qty_" + $(this).attr("id").replace(var_qty.replace("td.cell-", ""), "");
-            }
-
-            if(isMobile()){
-                if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
-                    id = "op_" + $(this).attr("id").replace(var_overrideprice.replace("td.cell-", "") + "-", "").replace("-display", "");
-                }
-            }
-            else{
-                if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
-                    id = "op_" + $(this).attr("id").replace(var_overrideprice.replace("td.cell-", "") + "-", "").replace("-display", "");                    
-                }
-            }
-
-            if ($(this).closest(var_Invoiceoverrideprice.replace("td", "")).length > 0) {
-                id = "iop_" + $(this).attr("id").replace(var_Invoiceoverrideprice.replace("td.cell-", "") + "-", "").replace("-display", "");
-            }
-
-            if ($(this).closest(var_netpricedisc.replace("td", "")).length > 0) {
-                id = "oip_" + $(this).attr("id").replace(var_netpricedisc.replace("td.cell-", ""), "");
-            }
-
-            if ($(this).closest(var_comments.replace("td", "")).length > 0) {
-                id = "cmt_" + $(this).attr("id").replace(var_comments.replace("td.cell-", ""), "");
-            }
-
-            if ($(this).closest(var_qtyBonus.replace("td", "")).length > 0) {
-                id = "qtyb_" + $(this).attr("id").replace(var_qtyBonus.replace("td.cell-", ""), "");                
-            }
-
-            listEditedField[id]["after"] = $(this).val();
-            var currentObject = $(this);
-            // var isShowMessage = false;
-            // console.log(listEditedField);
-            $.each(listEditedField, function (index, data) {
-                
-                if(index == id){
-                    if(data.before == data.after){
-                        $(currentObject).css("color", blackColor);
-                        
-                        if(id.indexOf("op_") != -1){
-                            current_id = parseInt(id.replace("op_", ""));
-                            // $("#qty-" + id.replace("op_", "") ).css("color", blackColor);
-                            isOverridePrice(current_id);
-                            isOverrideDiscount(current_id);
-                        }
-                        
-                        if(id.indexOf("oip_") != -1){
-                            current_id = parseInt(id.replace("oip_", ""));
-                            isOverrideDiscount(current_id);
-                        }
-                        
-                        if (id.indexOf("qty_") != -1) {
-                            current_id = parseInt(id.replace("qty_", ""));
-                            if (!check_nationality(2500)) {
-                                check_qty_and_stock($(var_qty.replace("td.cell-", "")), current_id);
-                            }                            
-                        }
-                    }else{
-                        $(currentObject).css("color", redColor);
-                        
-                        if (id.indexOf("op_") != -1) {
-                            current_id = parseInt(id.replace("op_", ""));
-                            $("#qty-" + id.replace("op_", "") ).css("color", redColor);
-                            isOverridePrice(current_id);
-                            isOverrideDiscount(current_id);                            
-                        }
-                        if(id.indexOf("qty_") != -1){
-                            current_id = parseInt(id.replace("qty_", ""));
-                            if (!check_nationality(2500)) {
-                                check_qty_and_stock($(var_qty.replace("td.cell-", "")), current_id);
-                            }                            
-                        }
+                else {
+                    if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
+                        id = "op_" + $(this).attr("id").replace(var_overrideprice.replace("td.cell-", "") + "-", "").replace("-display", "");
                     }
                 }
 
-            });
+                if ($(this).closest(var_Invoiceoverrideprice.replace("td", "")).length > 0) {
+                    id = "iop_" + $(this).attr("id").replace(var_Invoiceoverrideprice.replace("td.cell-", "") + "-", "").replace("-display", "");
+                }
 
-            var isShowMessage = false;
-            $.each(listEditedField, function (index, data) {
-                if (!isShowMessage) {
-                    if (data.before != data.after) {
-                        isShowMessage = true;
+                if ($(this).closest(var_netpricedisc.replace("td", "")).length > 0) {
+                    id = "oip_" + $(this).attr("id").replace(var_netpricedisc.replace("td.cell-", ""), "");
+                }
+
+                if ($(this).closest(var_comments.replace("td", "")).length > 0) {
+                    id = "cmt_" + $(this).attr("id").replace(var_comments.replace("td.cell-", ""), "");
+                }
+
+                if ($(this).closest(var_qtyBonus.replace("td", "")).length > 0) {
+                    id = "qtyb_" + $(this).attr("id").replace(var_qtyBonus.replace("td.cell-", ""), "");
+                }
+
+                listEditedField[id]["after"] = $(this).val();
+                var currentObject = $(this);
+                // var isShowMessage = false;
+                // console.log(listEditedField);
+                $.each(listEditedField, function (index, data) {
+
+                    if (index == id) {
+                        if (data.before == data.after) {
+                            $(currentObject).css("color", blackColor);
+
+                            if (id.indexOf("op_") != -1) {
+                                current_id = parseInt(id.replace("op_", ""));
+                                // $("#qty-" + id.replace("op_", "") ).css("color", blackColor);
+                                isOverridePrice(current_id);
+                                isOverrideDiscount(current_id);
+                            }
+
+                            if (id.indexOf("oip_") != -1) {
+                                current_id = parseInt(id.replace("oip_", ""));
+                                isOverrideDiscount(current_id);
+                            }
+
+                            if (id.indexOf("qty_") != -1) {
+                                current_id = parseInt(id.replace("qty_", ""));
+                                if (!check_nationality(2500)) {
+                                    check_qty_and_stock($(var_qty.replace("td.cell-", "")), current_id);
+                                }
+                            }
+                        } else {
+                            $(currentObject).css("color", redColor);
+
+                            if (id.indexOf("op_") != -1) {
+                                current_id = parseInt(id.replace("op_", ""));
+                                $("#qty-" + id.replace("op_", "")).css("color", redColor);
+                                isOverridePrice(current_id);
+                                isOverrideDiscount(current_id);
+                            }
+                            if (id.indexOf("qty_") != -1) {
+                                current_id = parseInt(id.replace("qty_", ""));
+                                if (!check_nationality(2500)) {
+                                    check_qty_and_stock($(var_qty.replace("td.cell-", "")), current_id);
+                                }
+                            }
+                        }
                     }
+
+                });
+
+                var isShowMessage = false;
+                $.each(listEditedField, function (index, data) {
+                    if (!isShowMessage) {
+                        if (data.before != data.after) {
+                            isShowMessage = true;
+                        }
+                    } else {
+                        return false;
+                    }
+                });
+
+                if (isShowMessage) {
+                    disabled_btn_save_show_alert();
                 } else {
-                    return false;
+                    enabled_btn_save_remove_alert();
                 }
+
             });
-
-            if (isShowMessage) {
-                disabled_btn_save_show_alert();
-            } else {
-                enabled_btn_save_remove_alert();
-            }
-
-        });
+        }
 
         /* 
             Created By    :- Created By Zainal Arifin, Date : 30 March 2018

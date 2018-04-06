@@ -1227,7 +1227,9 @@ $(document).ready(function() {
 
 										}
 
-										collapsedCustomerSearch();
+										if ($("#customerSoldToId_t").length > 0){
+											collapsedCustomerSearch();
+										}
 
 									}, 2000);
 
