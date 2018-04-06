@@ -4355,16 +4355,22 @@
             File Location :- $BASE_PATH$/javascript/js-ezrx.js
             Layout        :- Desktop
         */
-        var trans_id = $("#readonly_1_transactionID_t").text();
-        var isUserHaveModifySC = localStorage.getItem("orderItem_" + trans_id );
-        if( typeof isUserHaveModifySC == 'undefined'){
-            isUserHaveModifySC = false;
-            localStorage.setItem("orderItem_" + trans_id, isUserHaveModifySC);
-        }
-        if ($("#zPUserType").val().toLowerCase() != "csteam") {
-            if ( $("#line-item-grid").find(".line-item-show:not(.parent-line-item)").length > 0 ){
-                if(!isUserHaveModifySC){
-                    $("#edit_shopping_cart").click();
+        if(check_nationality(2600)){
+
+            var trans_id = $("#readonly_1_transactionID_t").text();
+            var isUserHaveModifySC = localStorage.getItem("orderItem_" + trans_id);
+            if (typeof isUserHaveModifySC == 'undefined') {
+                isUserHaveModifySC = false;
+                localStorage.setItem("orderItem_" + trans_id, isUserHaveModifySC);
+            }
+
+            if ($("#zPUserType").val().toLowerCase() != "csteam") {
+                if ( $("#line-item-grid").find(".line-item-show:not(.parent-line-item)").length > 0 ){
+                    if(!isUserHaveModifySC){
+                        setTimeout(function(){
+                            $("#edit_shopping_cart").click();
+                        }, 1000);
+                    }
                 }
             }
         }
