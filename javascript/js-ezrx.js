@@ -4758,8 +4758,11 @@
             Layout : Desktop
         */
         // var tabelFavFreqReq = $("#tab-material-content").children('.grid.clearfix').children().children('.column-1');
-        var tabelFavFreqReq = $("#attribute-pastOrders").parent().parent().parent().parent().parent().parent('.column-1');
-        console.log(tabelFavFreqReq.length);
+        var tabelFavFreqReq = $("#attribute-pastOrders").closest('.column-1');
+        
+        var column0Area = $(tabelFavFreqReq).closest(".row");
+        //prevent moving element html
+        $( tabelFavFreqReq ).insertAfter( $(column0Area).children(".column-0") );
 
 
         /* total price on top table material */
