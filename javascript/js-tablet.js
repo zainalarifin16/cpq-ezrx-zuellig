@@ -396,6 +396,7 @@ $(document).ready(function() {
 							 if (!isSliderShow) {
 								 $("#button-bar").slideDown();
 								 $("#swipe-sidebar").css("height", "auto");
+								 $("#swipe-sidebar-header").css("text-shadow", "none");
 							 } else {
 								 $("#button-bar").slideUp();
 								 $("#swipe-sidebar").css("height", "calc( 100% - 54px )");
@@ -1205,9 +1206,19 @@ $(document).ready(function() {
 											$("#attribute-customerSoldToId_t").hide();
 										}
 
-										var parent = $("#attribute-orderingRequestNoMoreThan90Characters_t").closest(".ui-collapsible-content");
+										/* var parent = $("#attribute-orderingRequestNoMoreThan90Characters_t").closest(".ui-collapsible-content");
 										$("#attribute-orderingRequestNoMoreThan90Characters_t").prependTo(parent);
-										$("#attribute-customerPORef_t").prependTo(parent);
+										$("#attribute-customerPORef_t").prependTo(parent); */
+
+										$("#attribute-orderingRequestNoMoreThan90Characters_t").on("focus click", function(e){
+											e.preventDefault();
+											e.stopPropagation();
+											$(this).closest(".group-content").css("height", "1000px");
+										});
+
+										$("#attribute-orderingRequestNoMoreThan90Characters_t").on("blur", function(){
+											$(this).closest(".ui-collapsible-content").css("height", "auto");											
+										});
 
 										$("#attribute-customerSearchHolder_HTML").removeClass("hidden");
 										function collapsedCustomerSearch(){

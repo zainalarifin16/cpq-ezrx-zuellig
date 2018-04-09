@@ -2968,8 +2968,9 @@
                     $('body').addClass('jg-page-orders');
                     $('#jg-mainmenu-orders').addClass('active');
                     $('#jg-submenu-myorders').addClass('active');
+                    localStorage.removeItem("frequentlyAccessedCustomers_t");
                     transform_orderspage();
-
+                    
                     var hideMenuForCreditControlUser = function(){
                         $('#jg-overlay').show();
 
@@ -3026,6 +3027,7 @@
                     $('#jg-submenu-copyorder').parent().remove();
                     $('#jg-submenu-neworder').click(function(e) {
                         e.preventDefault();
+                        localStorage.removeItem("frequentlyAccessedCustomers_t");
                         var selectedSearchId = '-1';
                         var token = $("input[name=token]").val();
                         var url = "/commerce/buyside/document.jsp?token=" + token + "&process=oraclecpqo&formaction=create&search_id=" + selectedSearchId;
