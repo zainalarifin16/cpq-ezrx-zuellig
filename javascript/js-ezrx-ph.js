@@ -477,14 +477,14 @@ $(document).ready(function(){
 
         var order_page_stock_color = function(){
           
-          $("td[id*='qty_l']").each(function (i, data) {
-            var isBonusOverride = $(this).find("span[id*='qty_l']").text().trim().toLowerCase();
-            if (isBonusOverride == "true") {
-              var parent = $(this).closest(".line-item");
-              var qty_span = $(parent).find("span[id*='qty_int_l']");
-              $(qty_span).css("color", "red");
+          /* $("td[id*='qty_int_l']").each(function (i, data) {
+            var isQtyOverride = parseInt( $(this).find("span[id*='qty_int_l']").text().trim().toLowerCase() );
+            if (isQtyOverride > 0) {
+              // var parent = $(this).closest(".line-item");
+              // var qty_span = $(parent).find("span[id*='qty_int_l']");
+              $(this).find("span[id*='qty_int_l']").css("color", "rgb(255,0,0)");
             }
-          });
+          }); */
           
           $("td[id*='bonusOverideFlag_l']").each(function (i, data) {
             var isBonusOverride = $(this).find("span[id*='bonusOverideFlag_l']").text().trim().toLowerCase();
@@ -498,19 +498,23 @@ $(document).ready(function(){
 
           $("td[id*='isPriceOverride']").each(function(i, data){
             var isPriceOverrideVal = $(this).find("span[id*='isPriceOverride']").text().trim().toLowerCase();
-            if(isPriceOverrideVal == 'true'){
-              var parent = $(this).closest(".line-item");
-              var qty_span = $(parent).find("span[id*='totalPrice_currency']");
-              $(qty_span).css("color", "red");
+            if(isPriceOverrideVal.length > 0){
+              if(isPriceOverrideVal == 'true'){
+                var parent = $(this).closest(".line-item");
+                var qty_span = $(parent).find("span[id*='totalPrice_currency']");
+                $(qty_span).css("color", "red");
+              }
             }
           });
 
           $("td[id*='netPriceDiscount_t']").each(function(i, data){
             var priceDiscount_tVal = $(this).find("span[id*='netPriceDiscount_t']").text().trim().toLowerCase();
-            if (priceDiscount_tVal != '0.0'){
-              var parent = $(this).closest(".line-item");
-              var qty_span = $(parent).find("span[id*='totalPrice_currency']");
-              $(qty_span).css("color", "red");
+            if(priceDiscount_tVal.length > 0){
+              if (priceDiscount_tVal != '0.0'){
+                var parent = $(this).closest(".line-item");
+                var qty_span = $(parent).find("span[id*='totalPrice_currency']");
+                $(qty_span).css("color", "red");
+              }
             }
           });
 
@@ -620,9 +624,11 @@ $(document).ready(function(){
             $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);
             $("#" + var_qty.replace("td.cell-", "") + "-" + id).removeAttr("readonly");
             //set value 0.0 for override price + total price
-            $("#netPriceDiscount-"+id).val("0.0");
-            $("#overridePrice_currency-" + id + "-display").val("0.0");
-            $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").text("0.0");
+            $("#netPriceDiscount-"+id).val("0.0").css({"color" : blackColor});
+            $("#netPriceDiscount-"+id).attr("readonly", "readonly");
+            $("#overridePrice_currency-" + id + "-display").val("P0.00").css({"color" : blackColor});
+            $("#overridePrice_currency-" + id + "-display").attr("readonly", "readonly");
+            $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").text("0.0").css({ "color": blackColor });
           } else {
             console.log("#" + var_qty.replace("td.cell-", "") + "-" + id);
             $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", blackColor);
@@ -634,9 +640,11 @@ $(document).ready(function(){
             if ($(this).is(":checked")) {
               $("#" + var_qty.replace("td.cell-", "") + "-" + id).removeAttr("readonly");
               //set value 0.0 for override price + total price
-              $("#netPriceDiscount-" + id).val("0.0");
-              $("#overridePrice_currency-" + id + "-display").val("0.0");
-              $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").text("0.0");
+              $("#netPriceDiscount-" + id).val("0.0").css({ "color": blackColor });              
+              $("#netPriceDiscount-" + id).attr("readonly", "readonly");              
+              $("#overridePrice_currency-" + id + "-display").val("P0.00").css({ "color": blackColor });   
+              $("#overridePrice_currency-" + id + "-display").attr("readonly", "readonly");                         
+              $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").text("0.0").css({ "color": blackColor });              
             } else {
               $("#" + var_qty.replace("td.cell-", "") + "-" + id).attr("readonly", "readonly");
             }
