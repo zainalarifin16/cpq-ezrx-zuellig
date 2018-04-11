@@ -853,12 +853,27 @@ $(document).ready(function(){
           }
 
           if(pageTitle == "order page"){
-            reAlignSoldShipAddressSection();
+
+            function loadOderPageScript() {
+              setTimeout(function () {
+                if (isLoadingDone) {
+                  reAlignSoldShipAddressSection();
+                  reset_color_lineitemgrid();
+                  order_page_stock_color();
+                } else {
+                  loadOderPageScript();
+                }
+              }, 1000);
+            }
+
+            loadOderPageScript();
+
           }else{
             function loadShoppingCartScript(){
               setTimeout(function(){
                 if (isLoadingDone) {
-                  check_user_change_value(true);
+                  // check_user_change_value(true);
+                  textColorQty();                  
                 } else {
                   loadShoppingCartScript();
                 }
