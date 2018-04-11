@@ -1627,6 +1627,9 @@
         if(check_nationality(2500)){
             ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master_2500";
         }
+        if(check_nationality(2800)){
+            ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master_2800";
+        }
 
         $.ajax({
             //url: 'https://zuelligpharmatest1.bigmachines.com/rest/v3/customCustomer_Master?q={"contact_firstname":"Biomedical Science Institutes"}',
@@ -1634,18 +1637,55 @@
           //data: "q={'custmasterstring':{$regex:'/" + encodeURIComponent($('#searchCustomerInput').val()) + "/i'}}&orderby=customer_name:asc"
             data: 'q={"custmasterstring":{$regex:"/' + encodeURIComponent($("#searchCustomerInput").val()) + '/i"}}&orderby=customer_name:asc'
         }).done(function(response) {
-            console.log('jquery done');
             var data = response.items;
             $.each(data, function(i, item) {
                 var subDataSet = [
                                     "", 
-                                    item.customer_soldto_id, item.customer_shipto_id, item.customer_name, item.customer_corp_group, item.cust_shpto_add1, item.cust_shpto_addr2, item.customer_ship_phone, item.customer_shpto_pcode
+                                    item.customer_soldto_id, 
+                                    item.customer_shipto_id, 
+                                    item.customer_name, 
+                                    item.customer_corp_group, 
+                                    item.cust_shpto_add1, 
+                                    item.cust_shpto_addr2, 
+                                    item.customer_ship_phone, 
+                                    item.customer_shpto_pcode
                                 ];
-
+                if (check_nationality(2800)) {
+                    subDataSet = [
+                        "", //number
+                        item.customer_sold_to_id, 	//1 SOLD TO ID
+                        item.customer_name, 		//2 SOLD TO NAME
+                        item.customer_shipto_id,	//3 SHIP TO ID
+                        item.cust_name_shipto,		//4 SHIP TO NAME
+                        item.address_1_shipto,		//5 SHIP TO ADDRESS 1
+                        item.address_2_shipto,		//6 SHIP TO ADDRESS 2
+                        item.address_4_shipto,		//7 SHIP TO DISTRICT
+                        item.city_shipto,			//8 SHIP TO CITY
+                        item.postalcode_shipto,		//9 SHIP TO POSTAL Code
+                        item.customer_bill_to_id,	//10 BILL TO ID
+                        item.cust_name_billto,		//11 BILL TO NAME
+                    ];
+                } else if (check_nationality(2500)) {
+                    subDataSet = [
+                        "", //number
+                        item.customer_soldto_id, 	//SOLD TO ID
+                        item.customer_shipto_id, 	//SHIP TO ID
+                        item.customer_name, 		//CUSTOMER NAME
+                        item.customer_corp_group, 	//CORP. GROUP
+                        item.address_1, 			//SOLD TO ADDRESS1
+                        item.address_2, 			//SOLD TO ADDRESS2
+                        item.phone, 				//SOLD TO PHONE
+                        item.postal_code, 			//SOLD TO POSTAL CODE
+                        item.address_1_shipto, 		//SHIP TO ADDRESS1
+                        item.address_2_shipto, 		//SHIP TO ADDRESS2
+                        "", 						//SHIP TO NAME
+                        item.PostalCode_ShipTo, 	//SHIP TO POSTAL CODE
+                    ];
+                }
                 /*if(userCountry === 'PH'){
                     subDataSet = ["", item.customer_soldto_id, item.customer_name, item.customer_corp_group, item.cust_shpto_add1, item.cust_shpto_addr2, item.customer_ship_phone, item.customer_shpto_pcode];
                 }*/
-
+                console.log('jquery done', subDataSet);
                 dataSet.push(subDataSet);
             });
 
@@ -1687,6 +1727,39 @@
                         colArr[19],  //SHIP TO POSTAL CODE
                         colArr[14],
                     ];
+                }
+                if(check_nationality(2800)){
+                    if (zPUserType.toLowerCase() == "principal") {
+                        subDataSet = ['',
+                            colArr[0],  //1 PRINCIPAL CUST CODE
+                            colArr[1],  //2 SOLD TO ID
+                            colArr[3],  //3 SOLD TO NAME
+                            colArr[2],  //4 SHIP TO ID
+                            colArr[14], //5 SHIP TO NAME
+                            colArr[18], //6 SHIP TO ADDRESS 1
+                            colArr[19], //7 SHIP TO ADDRESS 2
+                            colArr[21], //8 SHIP TO DISTRICT
+                            colArr[23], //9 SHIP TO CITY
+                            colArr[22], //10 SHIP TO POSTAL CODE
+                            colArr[15], //11 BILL TO ID
+                            colArr[16], //12 BIILL TO NAME
+                        ];
+                    }
+                    if (zPUserType.toLowerCase() == "salesrep") {
+                        subDataSet = ['',
+                            colArr[0],  //1 SOLD TO ID
+                            colArr[2],  //2 SOLD TO NAME
+                            colArr[1],  //3 SHIP TO ID
+                            colArr[13], //4 SHIP TO NAME
+                            colArr[17], //5 SHIP TO ADDRESS 1
+                            colArr[18], //6 SHIP TO ADDRESS 2
+                            colArr[20], //7 SHIP TO DISTRICT
+                            colArr[22], //8 SHIP TO CITY
+                            colArr[21], //9 SHIP TO POSTAL CODE
+                            colArr[14], //10 BILL TO ID
+                            colArr[15], //11 BIILL TO NAME
+                        ];
+                    }
                 }else{
                     subDataSet = [  '', 
                                     colArr[0], 
@@ -1715,7 +1788,7 @@
 
         var userColumn = [];
 
-        if (check_nationality(2500)) {
+        if (check_nationality(2500) || check_nationality(2800)) {
             
             userColumn.push({ title: "" });
 
@@ -1785,7 +1858,13 @@
                             }
                             console.log(full);
 							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '" data-suspended="'+full[13]+'" '+disabled+' >';
-						} else{
+                        }else if(check_nationality(2800)){
+                            if( zPUserType == "Principal" ){
+								data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2]+ '$$' + full[4] + '$$' +full[11] +'">';
+							}else{
+								data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1]+ '$$' + full[3] + '$$' +full[10] +'">';
+							}
+                        }else{
 							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '">';
 						}
                     }
@@ -1815,6 +1894,18 @@
 
             },
         });
+
+        seachCustomer.on( 'draw', function () {
+
+			console.log("draw dt");
+			$("input[name='searchCust']").off();
+		    $("input[name='searchCust']").on('click', function() {
+	             //console.log('777.111111 ===>>> ',$(this).val());
+				delete_line_item_func($(this).val());
+				
+			});
+
+		} );
 
         $("#searchCustomer").on('click',"input[name='searchCust']", function() {
         //$("input[name='searchCust']").on('click', function() {
@@ -2716,12 +2807,7 @@
         for (var i = fromIndex; i < toIndex; i++) {
             colArr = custArr[i].split("$$");
             var subDataSet;
-            if (custArr.length > 2) {
-                subDataSet = ['', colArr[2], colArr[0], colArr[1], colArr[3]];
-            } else {
-                subDataSet = ['', colArr[0], colArr[1], "", ""];
-            }
-
+            subDataSet = ['', colArr[2], colArr[0], colArr[1], colArr[3]];
             dataSet.push(subDataSet);
         }
 
@@ -3012,7 +3098,6 @@
                             $('#jg-overlay').hide();
                         });
                     }
-
                     hideMenuForCreditControlUser();
                     clearStorageOrderItem();
 
@@ -5589,7 +5674,8 @@
             /* if filterPage contains with commerce */
             console.log('filterPage', filterPage);
             if ($("#line-item-grid").length > 0 && filterPage.search("copy_processing.jsp") == -1 ){
-				filterPage = "commerce";
+                filterPage = "commerce";
+                localStorage.removeItem("frequentlyAccessedCustomers_t");                
 			}
 			if($("#materialArrayset").length > 0){
 				filterPage = "config";
@@ -5605,11 +5691,11 @@
                     mobile_customerSearch();
                     if ($('#frequentlyAccessedCustomers_t').length) {
                         var customerDetails = $("#frequentlyAccessedCustomers_t").val().replace(/~/gi, "");
-                        // console.log("frequentlyAccessedCustomers_t", customerDetails);
+                        console.log("frequentlyAccessedCustomers_t", customerDetails);
                         if (customerDetails.length > 0) {
                             localStorage.setItem("frequentlyAccessedCustomers_t", customerDetails);
                         } else {
-                            customerDetails = localStorage.getItem("frequentlyAccessedCustomers_t");
+                            customerDetails = (localStorage.getItem("frequentlyAccessedCustomers_t") != null ? localStorage.getItem("frequentlyAccessedCustomers_t") : "");                            
                         }
                         $("#frequentlyAccessedCustomers_t").val("");
                         if (customerDetails.length == 0) {
@@ -6025,7 +6111,7 @@
                     if (customerDetails.length > 0) {
                         localStorage.setItem("frequentlyAccessedCustomers_t", customerDetails);
                     } else {
-                        customerDetails = localStorage.getItem("frequentlyAccessedCustomers_t");
+                        customerDetails = (localStorage.getItem("frequentlyAccessedCustomers_t") != null ? localStorage.getItem("frequentlyAccessedCustomers_t") : "");                        
                     }
                     $("#frequentlyAccessedCustomers_t").val("");
                     if (customerDetails.length == 0) {
@@ -7589,83 +7675,90 @@
 
         });
 
-		$('td.cell-promotion').off();
-        $('td.cell-promotion').attr('tooltip', function() {
-			//console.log(' mobile_adjust_tooltip cell-promotion click 222 =====>>>> ');
-            var button_helper;
-            var valueOfPromotion = $(this).find('input[name=promotion]').val();
-            //console.log(' mobile_adjust_tooltip cell-promotion click 222.111 =====>>>> ', valueOfPromotion);
-            if (valueOfPromotion != '') {
-				 //console.log(' mobile_adjust_tooltip cell-promotion click 222.111.111 =====>>>> ');
-                button_helper = '<i class="material-lens" aria-hidden="true" ></i>';
-                $(this).find('input[name=promotion]').attr('type', 'text');
-                $(this).find('input[name=promotion]').css('display', 'block !important');
-            } else {
-                button_helper = '-';
-            }
-			//console.log(' mobile_adjust_tooltip cell-promotion click 222.111.222 =====>>>> ');
-            // $(this).children('.attribute-field-container').children('span').html(button_helper);
-            $($(this).children().children()).hide();
-			//console.log(' mobile_adjust_tooltip cell-promotion click 222.111.333 =====>>>> ');
-            $($(this).children().children()).parent().append(button_helper);
-			//console.log(' mobile_adjust_tooltip cell-promotion click 222.111.444 =====>>>> ');
-            return valueOfPromotion;
-        }).click(function() {
-            if ($(this).attr('tooltip').trim() != '') {
-                if ($(this).hasClass('open')) {
-
-                    $(this).removeClass('open');
-                    $('.table-tooltip').remove();
-
+        if(!check_nationality(2800)){
+            
+            $('td.cell-promotion').off();
+            $('td.cell-promotion').attr('tooltip', function() {
+                //console.log(' mobile_adjust_tooltip cell-promotion click 222 =====>>>> ');
+                var button_helper;
+                var valueOfPromotion = $(this).find('input[name=promotion]').val();
+                //console.log(' mobile_adjust_tooltip cell-promotion click 222.111 =====>>>> ', valueOfPromotion);
+                if (valueOfPromotion != '') {
+                     //console.log(' mobile_adjust_tooltip cell-promotion click 222.111.111 =====>>>> ');
+                    button_helper = '<i class="material-lens" aria-hidden="true" ></i>';
+                    $(this).find('input[name=promotion]').attr('type', 'text');
+                    $(this).find('input[name=promotion]').css('display', 'block !important');
                 } else {
-                    //console.log(' mobile_adjust_tooltip 222.222 =====>>>> ');
-                    $(this).addClass('open');
-                    $('.table-tooltip').remove();
-
-                    var table = '<table class="table-tooltip"><thead style="padding:5px;font-weight:bold"><tr style="background-color:#EEE;"><th style="border: 1px solid #999;padding:5px;">Ordered Quantity</th><th style="border: 1px solid #999;padding:5px;">Contract Price</th></tr></thead>';
-                    //console.log(' mobile_adjust_tooltip 333 =====>>>> ');
-                    var x = $(this).attr('tooltip').trim();
-                    if (x != "") {
-						 //console.log(' mobile_adjust_tooltip 444 =====>>>> ');
-                        var col = x.trim().split(",");
-                        if (col.length > 0) {
-                            table += "<tbody>";
-                            col.forEach(function(row) {
-                                table += '<tr>';
-                                //row = row.trim().split('#@#');
-                                row = row.trim().split('**');
-                                if (row.length > 0) {
-                                    row.forEach(function(item) {
-                                        table = table + '<td style="border: 1px solid #999;padding:5px;">' + item + '</td>';
-                                    });
-                                }
-                                table += '</tr>';
-                            });
-                            table += '</tbody>';
-
-                        }
-                    }
-                    table += '</table>';
-					//console.log(' mobile_adjust_tooltip 555 =====>>>> ');
-                    $(this).parent().parent().parent().parent().append(table);
-                    $('.table-tooltip').css({
-                        right: '50%',
-                        position: 'absolute',
-                        transform: 'translate(50%, -50%)',
-                        top: '50%',
-                        width: '500px'
-                    });
-                    // var tooltipPosX = document.querySelector( ".table-tooltip" ).getBoundingClientRect().x;
-                    // var tooltipWidth = document.querySelector( ".table-tooltip" ).getBoundingClientRect().width;
-                    // if ( ( tooltipPosX + tooltipWidth ) > $( window ).width() ) {
-                    //     $('.table-tooltip').css({
-                    //         left: - ((( tooltipPosX + tooltipWidth ) / 2) - 60)
-                    //     });
-                    // }
+                    button_helper = '-';
                 }
-            }
+                //console.log(' mobile_adjust_tooltip cell-promotion click 222.111.222 =====>>>> ');
+                // $(this).children('.attribute-field-container').children('span').html(button_helper);
+                $($(this).children().children()).hide();
+                //console.log(' mobile_adjust_tooltip cell-promotion click 222.111.333 =====>>>> ');
+                $($(this).children().children()).parent().append(button_helper);
+                //console.log(' mobile_adjust_tooltip cell-promotion click 222.111.444 =====>>>> ');
+                return valueOfPromotion;
+            }).click(function() {
+                if ($(this).attr('tooltip').trim() != '') {
+                    if ($(this).hasClass('open')) {
+    
+                        $(this).removeClass('open');
+                        $('.table-tooltip').remove();
+    
+                    } else {
+                        //console.log(' mobile_adjust_tooltip 222.222 =====>>>> ');
+                        $(this).addClass('open');
+                        $('.table-tooltip').remove();
+    
+                        var table = '<table class="table-tooltip"><thead style="padding:5px;font-weight:bold">'+
+                                    '<tr style="background-color:#EEE;">'+
+                                    '<th style="border: 1px solid #999;padding:5px;">Ordered Quantity</th>'+
+                                    '<th style="border: 1px solid #999;padding:5px;">Contract Price</th></tr></thead>';
+                        //console.log(' mobile_adjust_tooltip 333 =====>>>> ');
+                        var x = $(this).attr('tooltip').trim();
+                        if (x != "") {
+                             //console.log(' mobile_adjust_tooltip 444 =====>>>> ');
+                            var col = x.trim().split(",");
+                            if (col.length > 0) {
+                                table += "<tbody>";
+                                col.forEach(function(row) {
+                                    table += '<tr>';
+                                    //row = row.trim().split('#@#');
+                                    row = row.trim().split('**');
+                                    if (row.length > 0) {
+                                        row.forEach(function(item) {
+                                            table = table + '<td style="border: 1px solid #999;padding:5px;">' + item + '</td>';
+                                        });
+                                    }
+                                    table += '</tr>';
+                                });
+                                table += '</tbody>';
+    
+                            }
+                        }
+                        table += '</table>';
+                        //console.log(' mobile_adjust_tooltip 555 =====>>>> ');
+                        $(this).parent().parent().parent().parent().append(table);
+                        $('.table-tooltip').css({
+                            right: '50%',
+                            position: 'absolute',
+                            transform: 'translate(50%, -50%)',
+                            top: '50%',
+                            width: '500px'
+                        });
+                        // var tooltipPosX = document.querySelector( ".table-tooltip" ).getBoundingClientRect().x;
+                        // var tooltipWidth = document.querySelector( ".table-tooltip" ).getBoundingClientRect().width;
+                        // if ( ( tooltipPosX + tooltipWidth ) > $( window ).width() ) {
+                        //     $('.table-tooltip').css({
+                        //         left: - ((( tooltipPosX + tooltipWidth ) / 2) - 60)
+                        //     });
+                        // }
+                    }
+                }
+    
+            });
 
-        });
+        }
 
 
         /* create tootip for contract bonus */

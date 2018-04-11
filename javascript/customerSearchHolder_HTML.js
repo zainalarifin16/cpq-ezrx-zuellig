@@ -413,7 +413,8 @@ var loadAjax = function() {
 									item.customer_corp_group, 
 									item.cust_shpto_add1, 
 									item.cust_shpto_addr2, 
-									item.customer_ship_phone, item.customer_shpto_pcode 
+									item.customer_ship_phone, 
+									item.customer_shpto_pcode 
 								];
 
 				if(userCountry == "TW"){

@@ -487,33 +487,47 @@ $(document).ready(function(){
           }); */
           
           $("td[id*='bonusOverideFlag_l']").each(function (i, data) {
-            var isBonusOverride = $(this).find("span[id*='bonusOverideFlag_l']").text().trim().toLowerCase();
-            if (isBonusOverride == "true") {
-              var parent = $(this).closest(".line-item");
-              var qty_span = $(parent).find("span[id*='qty_int_l']");
-              $(qty_span).css("color", "red");
-            }
-          });
-
-
-          $("td[id*='isPriceOverride']").each(function(i, data){
-            var isPriceOverrideVal = $(this).find("span[id*='isPriceOverride']").text().trim().toLowerCase();
-            if(isPriceOverrideVal.length > 0){
-              if(isPriceOverrideVal == 'true'){
-                var parent = $(this).closest(".line-item");
-                var qty_span = $(parent).find("span[id*='totalPrice_currency']");
+            var parent = $(this).closest(".line-item");
+            var type_material = $(parent).find("span[id*='refNO_text']").text().trim().toLowerCase();
+            if(type_material != "bonus"){
+              var isBonusOverride = $(this).find("span[id*='bonusOverideFlag_l']").text().trim().toLowerCase();
+              if (isBonusOverride == "true") {
+                var qty_span = $(parent).find("span[id*='qty_int_l']");
                 $(qty_span).css("color", "red");
               }
             }
           });
 
+
+          $("td[id*='isPriceOverride']").each(function(i, data){
+            var parent = $(this).closest(".line-item");
+            var type_material = $(parent).find("span[id*='refNO_text']").text().trim().toLowerCase();
+            if(type_material != "bonus"){
+              var isPriceOverrideVal = $(this).find("span[id*='isPriceOverride']").text().trim().toLowerCase();
+              if(isPriceOverrideVal.length > 0){
+                if(isPriceOverrideVal == 'true'){
+                  var totalPriceSpan = $(parent).find("span[id*='totalPrice_currency']");
+                  $(totalPriceSpan).css("color", "red");
+                  var unitPriceSpan = $(parent).find("span[id*='unitPrice_currency']");
+                  $(unitPriceSpan).css("color", "red");
+                }
+              }
+            }
+          });
+
           $("td[id*='netPriceDiscount_t']").each(function(i, data){
-            var priceDiscount_tVal = $(this).find("span[id*='netPriceDiscount_t']").text().trim().toLowerCase();
-            if(priceDiscount_tVal.length > 0){
-              if (priceDiscount_tVal != '0.0'){
-                var parent = $(this).closest(".line-item");
-                var qty_span = $(parent).find("span[id*='totalPrice_currency']");
-                $(qty_span).css("color", "red");
+            var parent = $(this).closest(".line-item");
+            var type_material = $(parent).find("span[id*='refNO_text']").text().trim().toLowerCase();
+            if(type_material != "bonus"){
+              var priceDiscount_tVal = $(this).find("span[id*='netPriceDiscount_t']").text().trim().toLowerCase();
+              if(priceDiscount_tVal.length > 0){
+                if (priceDiscount_tVal != '0.0'){
+                  var parent = $(this).closest(".line-item");
+                  var totalPriceSpan = $(parent).find("span[id*='totalPrice_currency']");
+                  $(totalPriceSpan).css("color", "red");
+                  var unitPriceSpan = $(parent).find("span[id*='unitPrice_currency']");
+                  $(unitPriceSpan).css("color", "red");
+                }
               }
             }
           });
@@ -666,6 +680,14 @@ $(document).ready(function(){
             if ($(this).closest(var_netpricedisc.replace("td", "")).length > 0) {
               id = $(this).attr("id").replace(var_netpricedisc.replace("td.cell-", "") + "-", "").replace("-display", "");
               netprice_disc($(this), id);
+            }
+            
+            if ($(this).closest(var_qtyBonus.replace("td","")).length > 0 ){
+              
+              if($(this).val() > 0){
+                $(this).css("color", redColor);
+              }
+              
             }
 
           }
