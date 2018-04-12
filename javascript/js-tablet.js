@@ -830,7 +830,7 @@ $(document).ready(function() {
 					
 					/* 
 						Created By    :- Created By Zainal Arifin, Date : 31 March 2018
-						Task          :- after adding materials focus should go to shopping cart table in shopping cart page
+						Task          :- SG-20 after adding materials focus should go to shopping cart table in shopping cart page
 						Page          :- Model Configuration
 						File Location :- $BASE_PATH$/javascript/js-tablet.js
 						Layout        :- Desktop
@@ -858,14 +858,20 @@ $(document).ready(function() {
 
 					/* 
 						Created By    :- Created By Zainal Arifin, Date : 31 March 2018
-						Task          :- after adding materials focus should go to shopping cart table in shopping cart page
+						Task          :- SG-20 after adding materials focus should go to shopping cart table in shopping cart page
 						Page          :- Model Configuration
 						File Location :- $BASE_PATH$/javascript/js-tablet.js
 						Layout        :- Desktop
 					*/
 
 					
-
+					 /* 
+					 	Created By    :- Created By Zainal Arifin
+						Task          :- SG-16 Alignment of my fav section is distorted in shopping cart. Please check screen shot
+						Page          :- Model Configuration
+						File Location :- $BASE_PATH$/javascript/js-tablet.js
+						Layout        :- Tablet
+					 */
 					function reStylingTableShoppingCart(){
 						setTimeout(function(){
 							if(isLoadingDone()){
@@ -941,6 +947,14 @@ $(document).ready(function() {
 					if(!check_nationality(2800)){
 						reStylingTableShoppingCart();
 					}
+
+					/* 
+					 	Created By    :- Created By Zainal Arifin
+						Task          :- SG-16 Alignment of my fav section is distorted in shopping cart. Please check screen shot
+						Page          :- Model Configuration
+						File Location :- $BASE_PATH$/javascript/js-tablet.js
+						Layout        :- Tablet
+					 */
 						
 				}else if(pageTitle == "order page"){
 						 var isPageError = false;
@@ -1207,6 +1221,7 @@ $(document).ready(function() {
 										$("#attribute-orderingRequestNoMoreThan90Characters_t").prependTo(parent);
 										$("#attribute-customerPORef_t").prependTo(parent); */
 
+										/* SG-15 : Customer PO Ref is hiding behing keyboard when typing letters in order page, by Zainal Arifin */
 										$("#attribute-orderingRequestNoMoreThan90Characters_t").on("focus click", function(e){
 											e.preventDefault();
 											e.stopPropagation();
@@ -1216,6 +1231,7 @@ $(document).ready(function() {
 										$("#attribute-orderingRequestNoMoreThan90Characters_t").on("blur", function(){
 											$(this).closest(".ui-collapsible-content").css("height", "auto");											
 										});
+										/* SG-15 : Customer PO Ref is hiding behing keyboard when typing letters in order page, by Zainal Arifin */
 
 										$("#attribute-customerSearchHolder_HTML").removeClass("hidden");
 										function collapsedCustomerSearch(){

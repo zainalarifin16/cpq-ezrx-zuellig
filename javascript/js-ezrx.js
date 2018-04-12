@@ -3228,6 +3228,7 @@
                         Layout        :- Desktop
                     */
                     
+                   /* SG-19 : Hide add to Favourites  Refresh Order from SAP, by Zainal Arifin */
                     $("#add_to_favourites").closest("a[name='_line_items']").hide();
                     $("#refresh_order_from_sap").closest("table").hide();                    
                     
@@ -3241,7 +3242,7 @@
 
                     /* 
                         Created By    :- Created By Zainal Arifin, Date : 2 April 2018
-                        Task          :- Hide All Order button on order page for non CSTeam users
+                        Task          :- SG-18 : Hide All Order button on order page for non CSTeam users
                         Page          :- Order Page
                         File Location :- $BASE_PATH$/javascript/js-ezrx.js
                         Layout        :- Desktop
@@ -3281,6 +3282,7 @@
                         showLoadingDialog();
                     });
                     $('#jg-submenu-copyorder').parent().remove();
+                    /* SG-19  Pipeline viewer link on top right corner in shopping cart, by Zainal Arifin */
                     $("#pipeline-viewer-opener").hide(); //hide pipeline-viewer-opener
                     transform_modelconfig();
                 } else if (pagetitle == "report manager") {
