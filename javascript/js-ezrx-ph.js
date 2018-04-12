@@ -441,8 +441,6 @@ $(document).ready(function(){
                         // override_redcolor();
                         /* TW-05 and TW-13 Override Invoice Price */
 
-                        check_user_change_value(false);
-
 
                         /* 
                           Created By    :- Created By Zainal Arifin, Date : 7 Mar 2018
@@ -534,7 +532,41 @@ $(document).ready(function(){
 
         }
 
-      function textColorQty() {
+        var order_page_stock_color_mobile = function () {
+          var redColor = "rgb(255, 0, 0)";
+          
+          $('#line-item-grid .lig-side-scroller>table tr.lig-row.child').each(function () {
+            var $child = $(this).children('td');
+            var isBonusOverride = $($child).find('input[name*="bonusOverideFlag_l"]').val().trim().toLowerCase();
+            var isPriceOverride = $($child).find('input[name*="isPriceOverride"]').val();
+            var isNetPriceDisc = $($child).find('input[name*="netPriceDiscount_t"]').val();
+            
+            var qty_text = $($child).find('input[name*="qty_l"]');
+            var totalPrice_text = $($child).find('input[name*="totalPrice_l"]');
+            var unitPrice_text = $($child).find('input[name*="unitPrice_l"]');
+            var type_material = $($child).find('input[name*="refNO_text"]').val().trim().toLowerCase();
+
+            if(type_material != "bonus"){
+              if(isBonusOverride == "true"){
+                $($(qty_text).siblings()[0]).css("color", redColor);
+              }
+            }
+
+            if (isPriceOverride.toLowerCase() == "true"){
+              $($(unitPrice_text).siblings()[0]).css("color", redColor);
+              $($(totalPrice_text).siblings()[0]).css("color", redColor);              
+            }
+            console.log( isNetPriceDisc );
+            if(isNetPriceDisc.toLowerCase() != "0.0"){
+              $($(unitPrice_text).siblings()[0]).css("color", redColor);
+              $($(totalPrice_text).siblings()[0]).css("color", redColor); 
+            }
+
+          });
+
+        }
+
+        function textColorQty() {
         console.log('textColorQty');
 
         /* 
@@ -551,7 +583,11 @@ $(document).ready(function(){
             $('#materialArrayset').after(updateMsg);
             $("#update-alert").css("padding-bottom", "30px");
             if ($("#btn-cart-save").length > 0) {
-              $("#btn-cart-save").attr("disabled", true).css({ "background-color": "grey" });
+              if(isMobile()){
+                $(".button-save").attr("disabled");
+              }else{
+                $("#btn-cart-save").attr("disabled", true).css({ "background-color": "grey" });
+              }
             } else {
               $("#btn-cart-addtoorder").attr("disabled", true).css({ "background-color": "grey" });
             }
@@ -561,7 +597,11 @@ $(document).ready(function(){
         function enabled_btn_save_remove_alert() {
           $("#update-alert").remove();
           if ($("#btn-cart-save").length > 0) {
-            $("#btn-cart-save").attr("disabled", false).css({ "background-color": "#0C727A" });
+            if(isMobile()){
+              $(".button-save").removeAttr("disabled");
+            }else{
+              $("#btn-cart-save").attr("disabled", false).css({ "background-color": "#0C727A" });
+            }
           } else {
             $("#btn-cart-addtoorder").attr("disabled", false).css({ "background-color": "#0C727A" });
           }
@@ -658,14 +698,20 @@ $(document).ready(function(){
         $(var_bonusOverride).find("input[type='checkbox']").map(function (index, data) {
           id = $(data).attr("id").replace("overrideBonusQty_", "");
           console.log("overrideBonusQty_", id, $(data).is("checked"));
+          // Check if Checbox is checked
           if ($(data).is(":checked")) {
             $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);
+            var qty_bns_current = $("#" + var_qty.replace("td.cell-", "") + "-" + id).val();
+            var qty_bns_before = $("#prevQty-" + id).val();
+            if (qty_bns_before != qty_bns_current) {
+              $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);
+            }
             $("#" + var_qty.replace("td.cell-", "") + "-" + id).removeAttr("readonly");
             //set value 0.0 for override price + total price
             var overridePriceString = (isMobile())? "overridePrice_currency" : "overridePrice_currency-"; 
-            $("#netPriceDiscount-"+id).val("0.0").css({"color" : blackColor});
+            $("#netPriceDiscount-" + id).val("0.0").css({ "color": blackColor, "background": "transparent", "border": "0px" });                          
             $("#netPriceDiscount-"+id).attr("readonly", "readonly");
-            $("#" + overridePriceString + id + "-display").val("P0.00").css({"color" : blackColor});
+            $("#" + overridePriceString + id + "-display").val("P0.00").css({ "color": blackColor, "background": "transparent", "border": "0px" });            
             $("#" + overridePriceString + id + "-display").attr("readonly", "readonly");
             if(!isMobile()){
               $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").text("0.0").css({ "color": blackColor });
@@ -678,25 +724,37 @@ $(document).ready(function(){
             $("#" + var_qty.replace("td.cell-", "") + "-" + id).attr("readonly", "readonly");
           }
 
+          // Listen On CLICK
           $(data).on("click change", function () {
             console.log("click change", $(this).is(":checked"));
+            id = $(this).attr("id").replace("overrideBonusQty_", "");            
+            var overridePriceString = (isMobile())? "overridePrice_currency" : "overridePrice_currency-";
             if ($(this).is(":checked")) {
               $("#" + var_qty.replace("td.cell-", "") + "-" + id).removeAttr("readonly");
+              $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);              
               //set value 0.0 for override price + total price
-              var overridePriceString = (isMobile())? "overridePrice_currency" : "overridePrice_currency-";
 
-
-              $("#netPriceDiscount-" + id).val("0.0").css({ "color": blackColor });              
+              $("#netPriceDiscount-" + id).val("0.0").css({ "color": blackColor, "background": "transparent", "border": "0px" });              
               $("#netPriceDiscount-" + id).attr("readonly", "readonly");              
-              $("#" + overridePriceString + id + "-display").val("P0.00").css({ "color": blackColor });   
+              $("#" + overridePriceString + id + "-display").val("P0.00").css({ "color": blackColor, "background": "transparent", "border" : "0px" });   
               $("#" + overridePriceString + id + "-display").attr("readonly", "readonly");
               if(!isMobile()){
                 $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").text("0.0").css({ "color": blackColor });
               }else{
                 $("#" + var_totalPrice_Currency.replace("td.", "") + "-" + id).find(".form-field").css({ "color": blackColor });
-              }                         
+              }
+              var qty_bns_current = $("#" + var_qty.replace("td.cell-", "") + "-" + id).val();
+              var qty_bns_before = $("#prevQty-"+id).val();
+              if( qty_bns_before != qty_bns_current ){
+                $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);                
+              }
+              
             } else {
               $("#" + var_qty.replace("td.cell-", "") + "-" + id).attr("readonly", "readonly");
+              $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", blackColor);
+              
+              $("#netPriceDiscount-" + id).css({"background": "rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box border-box", "border" : "1px solid rgb(204, 204, 204)"});
+              $("#" + overridePriceString + id + "-display").css({"background": "rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box border-box", "border" : "1px solid rgb(204, 204, 204)"});
             }
           });
         });
@@ -718,13 +776,13 @@ $(document).ready(function(){
               netprice_disc($(this), id);
             }
             
-            if ($(this).closest(var_qtyBonus.replace("td","")).length > 0 ){
+            /* if ($(this).closest(var_qtyBonus.replace("td","")).length > 0 ){
               
               if($(this).val() > 0){
                 $(this).css("color", redColor);
               }
               
-            }
+            } */
 
           }
 
@@ -842,6 +900,18 @@ $(document).ready(function(){
                   isOverrideDiscount(current_id);
                 }
               }
+
+              if (id.indexOf("qty_") != -1) {
+                var var_type_qty = $(this).closest("tr").find("td.cell-type").find(".attribute-field.read-only").text().trim().toLowerCase();
+                if (var_type_qty == "bonus") {
+                  var qty_bns_current = $("#" + var_qty.replace("td.cell-", "") + "-" + id).val();
+                  var qty_bns_before = $("#prevQty-" + id).val();
+                  if (qty_bns_before != qty_bns_current) {
+                    $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);
+                  }
+                }
+              }
+
             }
 
           });
@@ -871,6 +941,23 @@ $(document).ready(function(){
         // tw_tooltip_modelconfiguration();
         /* TW-03 Price hover table columns to be corrected for TW - Quantity, Invoice Price, Unit Price. */
 
+        var onShoppingCartSwipe = function(){
+          $("body").on("click tochend swipeleft swiperight", "#swipe-sidebar", function (e) {
+
+            var waitingShoppingCartShow = function(){
+              setTimeout(function(){
+                if ($('.ui-loader').css("display") == "none") {
+                  order_page_stock_color_mobile();
+                } else {
+                  waitingShoppingCartShow();
+                }
+              }, 500);
+            }
+
+            waitingShoppingCartShow();
+
+          });
+        }
 
         if (navigator.userAgent.match(/Android/i) ||
             navigator.userAgent.match(/webOS/i) ||
@@ -895,8 +982,7 @@ $(document).ready(function(){
               setTimeout(function () {
                 if (isLoadingDone) {
                   reAlignSoldShipAddressSection();
-                  reset_color_lineitemgrid();
-                  order_page_stock_color();
+                  onShoppingCartSwipe();
                 } else {
                   loadOderPageScript();
                 }
