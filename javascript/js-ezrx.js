@@ -2434,38 +2434,39 @@
     */
     function order_page_stock_color() {
         console.log('order_page_stock_color');
-        $('#line-item-grid .lig-side-scroller>table tr.lig-row.child').each(function () {
-            var $child = $(this).children('td');
-            var $stock = $child.find('input[name*="inStock_l"]');
-            var $invoiceOverridePrice = $child.find('input[name*="invoicePrice_l"]');
-            var stockval = $stock.val();
-            var $qty_text = $child.find('input[name*="qty_l"]');
+        if (check_nationality(2600)) {
+            $('#line-item-grid .lig-side-scroller>table tr.lig-row.child').each(function () {
+                var $child = $(this).children('td');
+                var $stock = $child.find('input[name*="inStock_l"]');
+                var $invoiceOverridePrice = $child.find('input[name*="invoicePrice_l"]');
+                var stockval = $stock.val();
+                var $qty_text = $child.find('input[name*="qty_l"]');
 
-            if (stockval == 'No') {
-                $($qty_text.siblings()[0]).css("color", "red");
-                $stock.parent().parent().parent().css('color', 'red');
-                $qty_text.parent().parent().parent().css('color', 'red');
-            }
+                if (stockval == 'No') {
+                    $($qty_text.siblings()[0]).css("color", "red");
+                    $stock.parent().parent().parent().css('color', 'red');
+                    $qty_text.parent().parent().parent().css('color', 'red');
+                }
 
-            var $overridePrice = $child.find('input[name*="isPriceOverride"]');
+                var $overridePrice = $child.find('input[name*="isPriceOverride"]');
 
-            if ($overridePrice.val() == 'true') {
-                $($child.find("input[name*=_unitPrice_l]").siblings()[0]).css('color', 'red');
-            }
+                if ($overridePrice.val() == 'true') {
+                    $($child.find("input[name*=_unitPrice_l]").siblings()[0]).css('color', 'red');
+                }
 
-            var textInvoiceOverridePrice = $($invoiceOverridePrice).find("span[data-varname='invoicePrice_l']");
-            if ($(textInvoiceOverridePrice).text().trim() != "NT$0.00") {
-                $(textInvoiceOverridePrice).css("color", "red");
-            }
+                var textInvoiceOverridePrice = $($invoiceOverridePrice).find("span[data-varname='invoicePrice_l']");
+                if ($(textInvoiceOverridePrice).text().trim() != "NT$0.00") {
+                    $(textInvoiceOverridePrice).css("color", "red");
+                }
 
-            var $overrideBonusQty = $child.find('input[name*="bonusOverideFlag_l"]');
-            if ($overrideBonusQty.val() == "true") {
-                // Qty Text in row of bonus
-                $qty_text.parent().parent().parent().css('color', 'red');
-            }
+                var $overrideBonusQty = $child.find('input[name*="bonusOverideFlag_l"]');
+                if ($overrideBonusQty.val() == "true") {
+                    // Qty Text in row of bonus
+                    $qty_text.parent().parent().parent().css('color', 'red');
+                }
 
-        });
-
+            });
+        }
     }
     /*
         End : 07 Nov 2017
