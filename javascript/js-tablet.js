@@ -1191,11 +1191,11 @@ $(document).ready(function() {
 
 							setTimeout(function () {
 								if (isLoadingDone()) {
-									$("#attribute-orderingRequestNoMoreThan90Characters_t").closest(".group-content").css({
+									/* $("#attribute-orderingRequestNoMoreThan90Characters_t").closest(".group-content").css({
 										"margin-top": "30px",
 										"padding-top": "30px",
 										"border-top": "solid 2px #ddd"
-									});
+									}); */
 
 									setTimeout(function () {
 
