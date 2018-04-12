@@ -1710,25 +1710,24 @@
             for (var i = fromIndex; i < toIndex; i++) {
                 colArr = custArr[i].split("$$");
                 var subDataSet = [];
-
                 if (check_nationality(2500)) {
-                    subDataSet = ['',
-                        colArr[0],  //SOLD TO ID
-                        colArr[1],  //SHIP TO ID
-                        colArr[2],  //CUSTOMER NAME
-                        colArr[3],  //CORP.NAME
-                        colArr[4],  //SOLD TO ADDRESS1
-                        colArr[5],  //SOLD TO ADDRESS2
-                        colArr[6],  //SOLD TO PHONE
-                        colArr[7],  //SOLD TO POSTAL CODE
-                        colArr[15], //SHIP TO ADDRESS1
-                        colArr[16], //SHIP TO ADDRESS2
-                        '', //SHIP TO PHONE
-                        colArr[19],  //SHIP TO POSTAL CODE
-                        colArr[14],
+                    subDataSet = [
+                        '', // 1.Radio Button
+                        colArr[0],  // 2.SOLD TO ID
+                        colArr[1],  // 3.SHIP TO ID
+                        colArr[2],  // 4.CUSTOMER NAME
+                        colArr[3],  // 5.CORP.NAME
+                        colArr[4],  // 6.SOLD TO ADDRESS1
+                        colArr[5],  // 7.SOLD TO ADDRESS2
+                        colArr[6],  // 8.SOLD TO PHONE
+                        colArr[7],  // 9.SOLD TO POSTAL CODE
+                        colArr[15], // 10.SHIP TO ADDRESS1
+                        colArr[16], // 11.SHIP TO ADDRESS2
+                        '', // 12.SHIP TO PHONE
+                        colArr[19],  // 13.SHIP TO POSTAL CODE
+                        colArr[14], //14. 
                     ];
-                }
-                if(check_nationality(2800)){
+                }else if(check_nationality(2800)){
                     if (zPUserType.toLowerCase() == "principal") {
                         subDataSet = ['',
                             colArr[0],  //1 PRINCIPAL CUST CODE
@@ -1772,6 +1771,7 @@
                                     colArr[7]
                                 ];
                 }
+                
                 dataSet.push(subDataSet);
             }
 
