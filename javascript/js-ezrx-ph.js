@@ -1020,6 +1020,24 @@ $(document).ready(function(){
                   if (isLoadingDone) {
                     reset_color_lineitemgrid();
                     order_page_stock_color();
+                    /*
+                        Start : 03 Jan 2018
+                        Task  : Ship To Address header name to Sold to Address for PH.
+                        Page  : Global
+                        File Location : $BASE_PATH$/javascript/js-ezrx-ph.js
+                        Layout : Both
+
+                        get full url split it to get subdomain, and generate url of assets.
+                    */
+
+                            sold_to_address();
+                    /*
+                        End   : 03 Jan 2018
+                        Task  : Ship To Address header name to Sold to Address for PH.
+                        Page  : Global
+                        File Location : $BASE_PATH$/javascript/js-ezrx.js
+                        Layout : Both
+                    */
                   } else {
                     loadOderPageScript();
                   }
@@ -1049,24 +1067,6 @@ $(document).ready(function(){
           } else if (pagetitle == 'my profile'){
             
           }
-            /*
-                Start : 03 Jan 2018
-                Task  : Ship To Address header name to Sold to Address for PH.
-                Page  : Global
-                File Location : $BASE_PATH$/javascript/js-ezrx-ph.js
-                Layout : Both
-
-                get full url split it to get subdomain, and generate url of assets.
-            */
-
-            sold_to_address();  
-            /*
-                End   : 03 Jan 2018
-                Task  : Ship To Address header name to Sold to Address for PH.
-                Page  : Global
-                File Location : $BASE_PATH$/javascript/js-ezrx.js
-                Layout : Both
-            */
         }
     }
 });
