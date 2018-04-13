@@ -12,6 +12,17 @@ $(document).ready(function(){
       return $("#jg-overlay").css("display") == "none" ? true : false;
     }
 
+    var isMobile = function () {
+      return (navigator.userAgent.match(/Android/i) ||
+        navigator.userAgent.match(/webOS/i) ||
+        navigator.userAgent.match(/iPhone/i) ||
+        navigator.userAgent.match(/iPad/i) ||
+        navigator.userAgent.match(/iPod/i) ||
+        navigator.userAgent.match(/BlackBerry/i) ||
+        navigator.userAgent.match(/Windows Phone/i)) ? true : false;
+
+    }
+
     /* 
       Created By    :- Created By Zainal Arifin, Date : 21 Feb 2018
       Task          :- remove existing bonus item in Bonus select
@@ -244,11 +255,38 @@ $(document).ready(function(){
       Layout        :- Both (Desktop/Mobile)
     */
 
-    $("#readonly_1_paymentTerm_TW_t").on("change", function(){
-      // when user change value of readonly_1_paymentTerm_TW_t, then get the value of readonly_1_paymentTerm_TW_t and save it
-      $("#defaultPaymentTerm_TW_t").prop("value", $("#readonly_1_paymentTerm_TW_t option:selected").val());
-      $("#save").click();
-    });
+    var defaultPaymentTerm = function(){
+      if(isMobile()){
+
+        $("#defaultPaymentTerm_TW_t").prop("value", $("#select-38-button option:selected").val());        
+
+        $("#select-38-button").find("select").prop("disabled", true);
+        setTimeout(function () {
+          console.log("implementation listen button 38");
+          console.log($("#select-38-button").find("select"));
+          $("#select-38-button").find("select").prop("disabled", false);
+          $("#select-38-button").find("select").on("change", function () {
+            console.log("on save select");
+            $("#defaultPaymentTerm_TW_t").prop("value", $("#select-38-button option:selected").val());
+            $(".action-type-modify")[0].click();
+          });
+        }, 3000);
+      }else{
+
+        if ($("#readonly_1_status_t").text().trim().toLowerCase() != "not submitted"){
+          $("#readonly_1_paymentTerm_TW_t select").prop("disabled", "disabled");
+          $("#readonly_1_paymentTerm_TW_t select").css({ "background": "transparent", "border": "0px", "-webkit-appearance":"none"});
+        }
+
+        $("#defaultPaymentTerm_TW_t").prop("value", $("#readonly_1_paymentTerm_TW_t option:selected").val());
+        
+        $("#readonly_1_paymentTerm_TW_t").on("change", function () {
+          // when user change value of readonly_1_paymentTerm_TW_t, then get the value of readonly_1_paymentTerm_TW_t and save it
+          $("#defaultPaymentTerm_TW_t").prop("value", $("#readonly_1_paymentTerm_TW_t option:selected").val());
+          $("#save").click();
+        });
+      }
+    }
 
     /* 
       Created By    :- Created By Zainal Arifin, Date : 16 Feb 2018
@@ -694,7 +732,26 @@ $(document).ready(function(){
 
   }
 
+  var resizeTableShoppingCart = function(){
+    $("td.cell-overrideInvoicePrice").find(".text-field").each(function(index, fieldText){
+      $(fieldText).css({"width": "60px"});
+    });
+    
+    $("td.cell-pPAApprovalNo").find(".text-field").each(function(index, fieldText){
+      $(fieldText).css({"width": "60px"});
+    });
+    
+    $("td.cell-comments").find(".text-field").each(function(index, fieldText){
+      $(fieldText).css({"width": "80px"});
+    });
+
+  }
    
+  var resizeTableMaterial = function(){
+    $("td[id*='comment_l']").each(function (i, data) {
+      $(this).find("span[id*='comment_l']").css({"white-space":"normal"});
+    });
+  }
     if (navigator.userAgent.match(/Android/i)  ||
           navigator.userAgent.match(/webOS/i)  ||
           navigator.userAgent.match(/iPhone/i) ||
@@ -735,17 +792,7 @@ $(document).ready(function(){
                 File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
                 Layout        :- Both (Desktop/Mobile)
               */
-              $("#select-38-button").find("select").prop("disabled", true);
-              setTimeout(function () {
-                console.log("implementation listen button 38");
-                console.log($("#select-38-button").find("select"));
-                $("#select-38-button").find("select").prop("disabled", false);
-                $("#select-38-button").find("select").on("change", function () {
-                  console.log("on save select");
-                  $("#defaultPaymentTerm_TW_t").prop("value", $("#select-38-button option:selected").val());
-                  $(".action-type-modify")[0].click();
-                });
-              }, 3000);
+              defaultPaymentTerm();
               /* 
                 Created By    :- Created By Zainal Arifin, Date : 16 Feb 2018
                 Task          :- TW-01 & TW-02 Persist Payment term selection
@@ -771,7 +818,6 @@ $(document).ready(function(){
               /* TW-03 Price hover table columns to be corrected for TW - Quantity, Invoice Price, Unit Price.  */
               tw_tooltip_modelconfiguration();
               /* TW-03 Price hover table columns to be corrected for TW - Quantity, Invoice Price, Unit Price. */
-
             } else {
               loadShoppingCartScript();
             }
@@ -783,6 +829,65 @@ $(document).ready(function(){
       }
 
     } else {
+      if (pagetitle == 'commerce management' || pagetitle == 'transaction' || pagetitle == 'model configuration' || pagetitle == "report manager") {
+        
+        if (pagetitle == 'commerce management') {
+
+        } else if (pagetitle == 'transaction') {
+
+          function loadScriptOrderPage() {
+            setTimeout(function () {
+              if (isLoadingDone) {
+                
+                /* 
+                  Created By    :- Created By Zainal Arifin, Date : 16 Feb 2018
+                  Task          :- TW-01 & TW-02 Persist Payment term selection
+                  Page          :- Global
+                  File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
+                  Layout        :- Both (Desktop/Mobile)
+                */
+                defaultPaymentTerm();
+                /* 
+                  Created By    :- Created By Zainal Arifin, Date : 16 Feb 2018
+                  Task          :- TW-01 & TW-02 Persist Payment term selection
+                  Page          :- Global
+                  File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
+                  Layout        :- Both (Desktop/Mobile)
+                */
+                resizeTableMaterial();
+
+              } else {
+                loadScriptOrderPage();
+              }
+            }, 1000);
+          }
+
+          loadScriptOrderPage();
+
+        } else if (pagetitle == 'model configuration') {
+          function loadShoppingCartScript() {
+            setTimeout(function () {
+              if (isLoadingDone) {
+                /* TW-17 Scroll bar adjustment in the Shopping cart page and the Commerce Page., Created By Zainal Arifin, Date : 13 April 2018 */
+                resizeTableShoppingCart();
+                /* TW-17 Scroll bar adjustment in the Shopping cart page and the Commerce Page., Created By Zainal Arifin, Date : 13 April 2018 */
+              } else {
+                loadShoppingCartScript();
+              }
+            }, 1000);
+          }
+
+          loadShoppingCartScript();
+
+        } else if (pagetitle == "report manager") {
+          
+        }
+
+      } else if (pagetitle == 'folders') {
+
+      } else if (pagetitle == 'my profile') {
+
+      }
 
     }
 
