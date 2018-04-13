@@ -24,19 +24,21 @@ $(document).ready(function() {
         var isUndefined = (typeof url_script == "undefined");
         // if( !isEmpty == false || !isUndefined == false ){
           //we call script
-          url_script.forEach(function(dataUrl, index){
-            $.ajax({
-                url: dataUrl,
-                dataType: "script",
-                async: false,
-                success: function( data, textStatus, jqxhr ) {
-                    console.log( data ); // Data returned
-                    console.log( textStatus ); // Success
-                    console.log( jqxhr.status ); // 200
-                    console.log( "Script TW / PH was performed." );
-                }//end of success aja response.
-              });//end of ajax function
-          });//end of foreach script
+        if(typeof countryCode != "undefined"){
+            url_script.forEach(function(dataUrl, index){
+              $.ajax({
+                  url: dataUrl,
+                  dataType: "script",
+                  async: false,
+                  success: function( data, textStatus, jqxhr ) {
+                      console.log( data ); // Data returned
+                      console.log( textStatus ); // Success
+                      console.log( jqxhr.status ); // 200
+                      console.log( "Script TW / PH was performed." );
+                  }//end of success aja response.
+                });//end of ajax function
+            });//end of foreach script
+        }
         // }
 
     }//end of if countryEle

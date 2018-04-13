@@ -11,8 +11,16 @@ $(document).ready(function() {
 		} else {
 			var countryCode = parseInt(countryEle.value);
 		}
+		
+		if (typeof countryCode == "undefined") {
+			countryCode = "2601";
+		}
+		if (nationality == 2600) {
+			nationality = 2601;
+		}
+
 		var valid = false;
-		if (nationality == countryCode) {
+		if (nationality == countryCode || countryCode == 2601) {
 			valid = true;
 		}
 

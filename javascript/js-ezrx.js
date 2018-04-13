@@ -73,13 +73,35 @@
         } else {
             var countryCode = parseInt(countryEle.value);
         }
+        if (typeof countryCode == "undefined"){
+            countryCode = "2601";
+        }
+        if(nationality == 2600){
+            nationality = 2601;
+        }
+
         var valid = false;
-        if (nationality == countryCode) {
+        if (nationality == countryCode || countryCode == 2601 ) {
             valid = true;
         }
 
         return valid;
     }
+
+    /* var getUserSalesOrg = function(){
+        var countryCode = parseInt( $("#userSalesOrg_t").val() );
+        
+        if (typeof countryCode == "undefined") { //this is for material page.
+            countryCode = parseInt( $('input[name="userSalesOrg_PL"]').val() );
+        }
+
+        if (typeof countryCode == "undefined") {
+            countryCode = "2601";
+        }
+        
+        return countryCode;
+
+    } */
 
     var isLoadingDone = function () {
         return $("#jg-overlay").css("display") == "none" ? true : false;
@@ -1099,7 +1121,7 @@
         ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";
         var ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&orderby=material_desc:asc";
         
-        if (salesOrg != 2600 && typeof salesOrg != 'undefined' ) {
+        if ( !check_nationality(2600) ) {
             ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";            
         // if (typeof salesOrg != 'undefined') {
             ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&salesorg=" + salesOrg + "&orderby=material:asc";
@@ -1384,7 +1406,7 @@
             ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";
             var ajaxData = "orderby=material_desc:asc";
             
-            if (salesOrg != 2600 && typeof salesOrg != 'undefined') {
+            if ( !check_nationality(2600) ) {
                 ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";
             // if (typeof salesOrg != 'undefined') {
                 ajaxData = "q=\{\"sales_org\":\"" + salesOrg + "\"}&orderby=material:asc";

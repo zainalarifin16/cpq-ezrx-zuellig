@@ -138,7 +138,40 @@ $(document).ready(function(){
           });
       });
 
-      $('td.cell-promotion')
+      var input_val;
+      /* prepare for tooltip on material description */
+      $('td.cell-additionalMaterialDescription').off();
+      $('td.cell-additionalMaterialDescription').attr("tooltip", function () {
+        var input_text = $(this).find(".attribute-field-container span").text();
+        // console.log('input_text',input_text);
+        // $('textarea[name="area_materialDescription"]').hide();
+        // console.log('materialDescription', input_text, input_val);
+        return input_text;
+      }).mouseenter(function () {
+        /* get text of material desciption */
+        var input_text = $(this).find(".attribute-field-container span").text();
+        if ($('input[name="userSalesOrg_PL"]').val() == "2800" || (userCountry === 'TW')) {
+          var chineseTxt = '#additionalBonusChineseDescription-' + (parseInt($(this).parent().children().eq(0).html()) - 1);
+          console.log(chineseTxt);
+          input_text = $(chineseTxt).val();
+        }
+        console.info(input_text);
+        /* if mouse hover on element material description then showing table of Material Description. */
+        var table = '<table style="text-align:center;width:100%;border-collapse: collapse;"><thead style="padding:5px;font-weight:bold"><tr style="background-color:#EEE;"><th style="border: 1px solid #999;padding:5px;">Material Description</th></thead>';
+        table += "<tbody>";
+        table += "<tr><td>" + input_text + "</td></tr>";
+        table += "</tbody></table>";
+        // if ($(this).attr('tooltip') != '') {
+        /* always showing table of material description */
+        $('#myModal').addClass('hover-modal-content').html(table);
+        $('#myModal').css("display", "block");
+        // }
+        $('.cell-additionalMaterialDescription').mouseleave(function () {
+          $('#myModal').css("display", "none");
+        });
+      });
+
+      $('td.cell-promotion, td.cell-additionalMaterialDescription')
         .hover(function(e) {
             e.preventDefault();
         })
@@ -871,6 +904,8 @@ $(document).ready(function(){
                 /* TW-17 Scroll bar adjustment in the Shopping cart page and the Commerce Page., Created By Zainal Arifin, Date : 13 April 2018 */
                 resizeTableShoppingCart();
                 /* TW-17 Scroll bar adjustment in the Shopping cart page and the Commerce Page., Created By Zainal Arifin, Date : 13 April 2018 */
+                tw_tooltip_modelconfiguration();
+                
               } else {
                 loadShoppingCartScript();
               }
