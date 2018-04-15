@@ -81,7 +81,7 @@
         }
 
         var valid = false;
-        if (nationality == countryCode || countryCode == 2601 ) {
+        if (nationality == countryCode || countryCode == 2601 || countryCode == 2600 ) {
             valid = true;
         }
 
@@ -1118,14 +1118,15 @@
         var dataSet2 = [];
 
         var salesOrg = $('input[name="userSalesOrg_PL"]').val();
-        ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";
-        var ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&orderby=material_desc:asc";
+/*         ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";
+        var ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&orderby=material_desc:asc"; */
         
-        if ( !check_nationality(2600) ) {
+        if ( check_nationality(2600) ) {
+            salesOrg = (salesOrg == 2601)? salesOrg : 2601;
+        }
             ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";            
         // if (typeof salesOrg != 'undefined') {
             ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&salesorg=" + salesOrg + "&orderby=material:asc";
-        }
 
         // var ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";
         // var ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&orderby=material_desc:asc";
@@ -1179,7 +1180,12 @@
             $.each(data, function(i, item) {
                 // console.log(item.material_number, item.material_desc, item.principal_name);
                // console.log(item);
-                var subDataSet2 = ["", item.material_number, item.material_desc, item.principal_name];
+                var subDataSet2 = [
+                                    "", 
+                                    (item.material_number != null)? item.material_number : "", 
+                                    (item.material_desc != null)? item.material_desc : "", 
+                                    (item.principal_name != null)? item.principal_name : ""
+                                ];
                 if($('input[name="userSalesOrg_PL"]').val()=="2800"){
                     if(item.material_group_5 == 500 && item.materialgroup != "ZGM"){
                         var promo = "P";
@@ -1403,14 +1409,15 @@
             //console.info('material search ajax call');
 
             var salesOrg = $('input[name="userSalesOrg_PL"]').val();
-            ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";
-            var ajaxData = "orderby=material_desc:asc";
+            /* ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";
+            var ajaxData = "orderby=material_desc:asc"; */
             
-            if ( !check_nationality(2600) ) {
+            if ( check_nationality(2600) ) {
+                salesOrg = (salesOrg == 2601) ? salesOrg : 2601;                
+            }
                 ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";
             // if (typeof salesOrg != 'undefined') {
                 ajaxData = "q=\{\"sales_org\":\"" + salesOrg + "\"}&orderby=material:asc";
-            }
 
              // var ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";
             // var ajaxData = "orderby=material_desc:asc";
@@ -1433,14 +1440,27 @@
                 $.each(data, function(i, item) {
                     //console.log(item.material_number, item.material_desc, item.principal_name);
                     //console.log(item);
-                    var subDataSet = ["", item.material_number, item.material_desc, item.principal_name];
+                    var subDataSet = [
+                                        "", 
+                                        (item.material_number != null) ? item.material_number : "",                                         
+                                        (item.material_desc != null) ? item.material_desc : "",                                         
+                                        (item.principal_name != null) ? item.principal_name : ""
+                                    ];
                     if($('input[name="userSalesOrg_PL"]').val()=="2800"){
                         if(item.material_group_5 == 500 && item.materialgroup != "ZGM"){
                             var promo = "P";
                         } else {
                             var promo = "";
                         }
-                        subDataSet = ["", item.material, item.description, promo, item.principal_code, item.principal_name];
+                        
+                        subDataSet = [
+                                        "", 
+                                        (item.material != null)? item.material : "", 
+                                        (item.description != null)? item.description : "", 
+                                        (promo != null)? promo : "", 
+                                        (item.principal_code != null)? item.principal_code : "", 
+                                        (item.principal_name != null)? item.principal_name : ""
+                                    ];
                     }
                     dataSet.push(subDataSet);
                     //console.log(subDataSet);
