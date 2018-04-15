@@ -306,7 +306,8 @@ $(document).ready(function(){
         }, 3000);
       }else{
 
-        if ($("#readonly_1_status_t").text().trim().toLowerCase() != "not submitted"){
+        var paymentTermLabel = $("#readonly_1_status_t").text().trim().toLowerCase();
+        if (paymentTermLabel != "not submitted" || paymentTermLabel != "failed" || paymentTermLabel != "transmission failed" ){
           $("#readonly_1_paymentTerm_TW_t select").prop("disabled", "disabled");
           $("#readonly_1_paymentTerm_TW_t select").css({ "background": "transparent", "border": "0px", "-webkit-appearance":"none"});
         }
