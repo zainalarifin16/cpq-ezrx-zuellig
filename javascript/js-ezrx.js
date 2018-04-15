@@ -1182,8 +1182,8 @@
                // console.log(item);
                 var subDataSet2 = [
                                     "", 
-                                    (item.material_number != null)? item.material_number : "", 
-                                    (item.material_desc != null)? item.material_desc : "", 
+                                    (item.material != null)? item.material : "", 
+                                    (item.description != null)? item.description : "", 
                                     (item.principal_name != null)? item.principal_name : ""
                                 ];
                 if($('input[name="userSalesOrg_PL"]').val()=="2800"){
