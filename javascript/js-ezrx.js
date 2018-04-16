@@ -73,7 +73,9 @@
         } else {
             var countryCode = parseInt(countryEle.value);
         }
-        if (typeof countryCode == "undefined"){
+        
+        console.log( "countryCode", typeof countryCode, countryCode, typeof countryCode == "undefined" );
+        if (typeof countryCode == "undefined" || countryCode == "" ){
             countryCode = "2601";
         }
         if(nationality == 2600){
@@ -6817,15 +6819,20 @@
             File Location :- $BASE_PATH$/javascript/js-ezrx.js
             Layout        :- Global
         */
+        console.log("check_nationality", check_nationality(2601) );
+        if(check_nationality(2601)){
 
-        if(!check_nationality(2500)){
             function disabled_btn_save_show_alert() {
                 if ($("#update-alert").length == 0) {
                     var updateMsg = "<div id='update-alert' class='updateMsg'>Please click 'update' to proceed.</div>";
                     $('#materialArrayset').after(updateMsg);
                     $("#update-alert").css("padding-bottom", "30px");
                     if ($("#btn-cart-save").length > 0) {
-                        $("#btn-cart-save").attr("disabled", true).css({ "background-color": "grey" });
+                        if (isMobile()) {
+                            $(".button-save").attr("disabled");
+                        } else {
+                            $("#btn-cart-save").attr("disabled", true).css({ "background-color": "grey" });
+                        }
                     } else {
                         $("#btn-cart-addtoorder").attr("disabled", true).css({ "background-color": "grey" });
                     }
@@ -6835,86 +6842,170 @@
             function enabled_btn_save_remove_alert() {
                 $("#update-alert").remove();
                 if ($("#btn-cart-save").length > 0) {
-                    $("#btn-cart-save").attr("disabled", false).css({ "background-color": "#0C727A" });
+                    if (isMobile()) {
+                        $(".button-save").removeAttr("disabled");
+                    } else {
+                        $("#btn-cart-save").attr("disabled", false).css({ "background-color": "#0C727A" });
+                    }
                 } else {
                     $("#btn-cart-addtoorder").attr("disabled", false).css({ "background-color": "#0C727A" });
                 }
             }
 
             var var_qty = ($("td.cell-qty_text").length > 0) ? "td.cell-qty_text" : "td.cell-qty";
-            var var_netpricedisc = ($("td.cell-netPriceDiscount").length > 0) ? "td.cell-netPriceDiscount" : "td.cell-netPriceDiscount";
-            var var_Invoiceoverrideprice = ($("td.cell-overrideInvoicePrice").length > 0) ? "td.cell-overrideInvoicePrice" : "td.cell-overrideInvoicePrice";
             var var_overrideprice = ($("td.cell-overridePrice").length > 0) ? "td.cell-overridePrice" : "td.cell-overridePrice_currency";
-            var var_comments = ($("td.cell-comments").length > 0) ? "td.cell-comments" : "td.cell-comments";
             var var_qtyBonus = ($("td.cell-additionalMaterialQty").length > 0) ? "td.cell-additionalMaterialQty" : "td.cell-additionalMaterialQty";
             var var_bonusOverride = ($("td.cell-overrideBonusQty").length > 0) ? "td.cell-overrideBonusQty" : "td.cell-overrideBonusQty";
+            var var_totalPrice_Currency = "td.cell-totalPrice_currency";
 
             var redColor = "rgb(255, 0, 0)";
             var blackColor = "rgb(0, 0, 0)";
 
-            var basic_value = 0.0;
+            var basic_value = "0.0";
+            var basic_value_price = "0.00";
             var listEditedField = {};
             var var_find_text = (isMobile()) ? ".form-field" : ".text-field";
 
-            function check_qty_and_stock(data, id) {
-                if ($(data).val() > $("#stockQty-" + id).val()) {
-                    // qty color become red highlight if val is greater than stock
-                    $(data).css("color", redColor);
+            $(var_qty + ", " + var_overrideprice + ", " + var_qtyBonus + ", " + var_bonusOverride).off();
+
+            function isStockAvailable(id){
+                id = Math.abs(id);
+                var qty_l = $("#"+var_qty.replace("td.cell-", "")+"-"+id);
+                var parent = $(qty_l).closest("tr");
+                var isInStock = $(parent).find("input[id='inStock-" + id + "']").val().trim().toLowerCase();
+                var typeMaterial = $(parent).find("input[id='type-" + id + "']").val().trim().toLowerCase();
+
+                if(typeMaterial != "bonus"){
+                    console.log(qty_l, "isInStock", isInStock);                
+                    if (isInStock == "yes") {
+                        console.log($(qty_l).val(), ">", $("input[id='stockQty-" + id + "']").val());
+                        if ($(qty_l).val() > $("input[id='stockQty-" + id + "']").val()) {
+                            $(qty_l).css("color", redColor);
+                        }
+                    } else {
+                        $(qty_l).css("color", redColor);
+                    }
                 }
             }
 
             function isOverridePrice(id) {
                 id = Math.abs(id);
-                var overridePriceVal = $("#overridePrice_currency-" + id + "-display").val();
-                var overridePriceValue = (overridePriceVal != "") ? parseFloat(overridePriceVal.replace(/[a-z]/gi, "")) : 0.0;
-                if (overridePriceValue != basic_value) {
-                    $("#overridePrice_currency-" + id + "-display").css("color", redColor);
-                    $("#totalPrice_currency-" + id).css("color", redColor);
+                var overridePriceString = (isMobile()) ? "overridePrice_currency" : "overridePrice_currency-";
+                var overridePriceVal = $("#" + overridePriceString + id + "-display").val();
+                if (!isMobile()) {
+                    var overridePriceValue = (overridePriceVal != "") ? overridePriceVal.slice(1) : 0.0;
+                }
+                if (overridePriceValue != basic_value_price) {
+                    $("#" + overridePriceString + id + "-display").css("color", redColor);
+                    if (!isMobile()) {
+                        $("#totalPrice_currency-" + id).css("color", redColor);
+                    } else {
+                        $("#" + var_totalPrice_Currency.replace("td.", "") + "-" + id).find(".form-field").css({ "color": redColor });
+                    }
                     // $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);                
                 } else {
-                    $("#overridePrice_currency-" + id + "-display").css("color", blackColor);
+                    $("#" + overridePriceValue + id + "-display").css("color", blackColor);
                 }
 
             }
 
-            function isOverrideDiscount(id) {
-                console.log("isOverrideDiscount", id);
-                id = Math.abs(id);
-                var overrideDiscountVal = $("#netPriceDiscount-" + id).val();
-                var overrideDiscountValue = (overrideDiscountVal != "") ? parseFloat(overrideDiscountVal.replace(/[a-z]/gi, "")) : 0.0;
-                if (overrideDiscountValue != basic_value) {
-                    $("#netPriceDiscount-" + id).css("color", redColor);
-                    $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").css("color", redColor);
-                    // $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);                
-                } else {
-                    $("#netPriceDiscount-" + id).css("color", blackColor);
-                    isOverridePrice(id);
+            function inStock(data, id) {
+                var parent = $(data).closest("tr");
+                var isInStock = $(parent).find("input[id='inStock-" + id + "']").val().trim().toLowerCase();
+                var typeMaterial = $(parent).find("input[id='type-"+ id +"']").val().trim().toLowerCase();
+                if(typeMaterial != "bonus"){
+                    if (isInStock == "yes") {
+                        if ($(data).val() > $("input[id='stockQty-" + id + "']").val()) {
+                            $(data).css("color", redColor);
+                        }
+                    } else {
+                        $(data).css("color", redColor);
+                    }
                 }
+
             }
 
             function override_price(data, id) {
-                var overridePriceValue = ($(data).val() != "") ? parseFloat($(data).val().replace(/[a-z]/gi, "")) : 0.0;
-                if (overridePriceValue != basic_value) {
+                if (isMobile()) {
+                    overridePriceValue = parseFloat($("#" + var_overrideprice.replace("td.cell-", "") + id).val());
+                } else {
+                    overridePriceValue = ($(data).val() != "") ? $(data).val().slice(1) : 0.0;
+                }
+                console.log(overridePriceValue, "==", basic_value_price, overridePriceValue != basic_value_price);
+                if (overridePriceValue != basic_value_price) {
                     $(data).css("color", redColor);
-                    $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").css("color", redColor);
-                    // $("#"+var_qty.replace("td.cell-", "")+"-" + id).css("color", redColor);
+                    if (!isMobile()) {
+                        $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").css("color", redColor);
+                    } else {
+                        console.log("#" + var_totalPrice_Currency.replace("td.", "") + "-" + id);
+                        $("#" + var_totalPrice_Currency.replace("td.", "") + "-" + id).find(".form-field").css({ "color": redColor });
+                    }
                 }
             }
 
-            function netprice_disc(data, id) {
-                var var_netpricediscValue = ($(data).val() != "") ? parseFloat($(data).val().replace(/[a-z]/gi, "")) : 0.0;
-                if (var_netpricediscValue != basic_value) {
-                    $(data).css("color", redColor);
-                    // $("#overridePrice_currency-" + id + "-display").css("color", redColor);
-                    $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").css("color", redColor);
-                }
-            }
+            $( var_qty + ", " + var_overrideprice + ", " + var_qtyBonus).find(var_find_text).map(function (index, data) {
+                console.log($(this));
+                if (!isMobile()) {
+                    if ($(this).closest(var_qty.replace("td", "")).length > 0) {
+                        id = $(this).attr("id").replace(var_qty.replace("td.cell-", "") + "-", "");
+                        inStock($(this), id);
+                    }
 
-            $(var_bonusOverride).find("input[type='checkbox']").map(function (index, data) {
-                id = $(data).attr("id").replace("overrideBonusQty_", "");
-                console.log("overrideBonusQty_", id, $(data).is("checked"));
-                if ($(data).is(":checked")) {
+                    if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
+                        id = $(this).attr("id").replace(var_overrideprice.replace("td.cell-", "") + "-", "").replace("-display", "");
+                        override_price($(this), id);
+                    }
+
+                } else {
+                    if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
+                        id = $(this).attr("id").replace(var_overrideprice.replace("td.cell-", ""), "").replace("-display", "");
+                        override_price($(this), id);
+                    }
+
+                }
+
+            });
+
+            var typeBnsOverride = (isMobile()) ? "select" : "input[type='checkbox']";
+            $(var_bonusOverride).find(typeBnsOverride).map(function (index, data) {
+                id = (isMobile()) ? $(data).attr("id").replace("overrideBonusQty", "") : $(data).attr("id").replace("overrideBonusQty_", "");
+
+                /* set net price discount and overrideprice to readonly */
+                var overridePriceString = (isMobile()) ? "overridePrice_currency" : "overridePrice_currency-";
+                //set value 0.0 total price
+                if (!isMobile()) {
+                    $("#" + overridePriceString + id + "-display").val("P0.00").css({ "color": blackColor, "background": "transparent", "border": "0px" });
+                    $("#" + overridePriceString + id + "-display").attr("readonly", "readonly");
+                    $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").text("0.0").css({ "color": blackColor });
+                } else {
+                    $("#" + overridePriceString + id + "-display").val("P0.00").css({ "color": blackColor }).parent().css({ "background": "transparent", "border": "0px" });
+                    $("#" + overridePriceString + id + "-display").attr("readonly", "readonly");
+                    $("#" + var_totalPrice_Currency.replace("td.", "") + "-" + id).find(".form-field").css({ "color": blackColor });
+                    //remove class recommended
+                    $("#" + overridePriceString + id + "-display").closest(var_overrideprice.replace("td", "")).removeClass("recommended");
+                    $("#" + var_totalPrice_Currency.replace("td.", "") + "-" + id).closest(var_totalPrice_Currency.replace("td", "")).removeClass("recommended")
+                }
+
+                // Check if Checbox is checked
+
+                if (isMobile()) {
+                    isChecked = $(data).val();
+                    if (isChecked.toLowerCase() == "true") {
+                        isChecked = true;
+                    } else {
+                        isChecked = false;
+                    }
+                } else {
+                    isChecked = $(data).is(":checked");
+                }
+                console.log($(data).id, isChecked);
+                if (isChecked) {
                     $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);
+                    var qty_bns_current = $("#" + var_qty.replace("td.cell-", "") + "-" + id).val();
+                    var qty_bns_before = $("#prevQty-" + id).val();
+                    if (qty_bns_before != qty_bns_current) {
+                        $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);
+                    }
                     $("#" + var_qty.replace("td.cell-", "") + "-" + id).removeAttr("readonly");
                 } else {
                     console.log("#" + var_qty.replace("td.cell-", "") + "-" + id);
@@ -6922,41 +7013,44 @@
                     $("#" + var_qty.replace("td.cell-", "") + "-" + id).attr("readonly", "readonly");
                 }
 
+                // Listen On CLICK
                 $(data).on("click change", function () {
                     console.log("click change", $(this).is(":checked"));
-                    if ($(this).is(":checked")) {
+                    id = $(this).attr("id").replace("overrideBonusQty_", "");
+                    var overridePriceString = (isMobile()) ? "overridePrice_currency" : "overridePrice_currency-";
+
+                    if (isMobile()) {
+                        isChecked = $(data).val();
+                        if (isChecked.toLowerCase() == "true") {
+                            isChecked = true;
+                        } else {
+                            isChecked = false;
+                        }
+                    } else {
+                        isChecked = $(data).is(":checked");
+                    }
+
+                    if (isChecked) {
                         $("#" + var_qty.replace("td.cell-", "") + "-" + id).removeAttr("readonly");
+                        $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);
+                        //set value 0.0 for override price + total price
+
+                        var qty_bns_current = $("#" + var_qty.replace("td.cell-", "") + "-" + id).val();
+                        var qty_bns_before = $("#prevQty-" + id).val();
+                        if (qty_bns_before != qty_bns_current) {
+                            $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);
+                        }
+
                     } else {
                         $("#" + var_qty.replace("td.cell-", "") + "-" + id).attr("readonly", "readonly");
+                        $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", blackColor);
+
                     }
                 });
-            });
-
-            $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_Invoiceoverrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).map(function (index, data) {
-
-                if (!isMobile()) {
-                    if ($(this).closest(var_qty.replace("td", "")).length > 0) {
-                        id = $(this).attr("id").replace(var_qty.replace("td.cell-", "") + "-", "");
-                        if (!check_nationality(2500)) {
-                            check_qty_and_stock(this, id);
-                        }
-                    }
-
-                    if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
-                        id = $(this).attr("id").replace(var_overrideprice.replace("td.cell-", "") + "-", "").replace("-display", "");
-                        override_price(this, id);
-                    }
-
-                    if ($(this).closest(var_netpricedisc.replace("td", "")).length > 0) {
-                        id = $(this).attr("id").replace(var_netpricedisc.replace("td.cell-", "") + "-", "").replace("-display", "");
-                        netprice_disc(this, id);
-                    }
-
-                }
 
             });
 
-            $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_Invoiceoverrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).on("click focus focusin", function () {
+            $( var_qty + ", " + var_overrideprice + ", " + var_qtyBonus).find(var_find_text).on("click focus focusin", function () {
 
                 var id = "";
                 if ($(this).closest(var_qty.replace("td", "")).length > 0) {
@@ -6966,28 +7060,10 @@
 
                 if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
                     if (isMobile()) {
-                        id = "op_" + $(this).attr("id").replace(var_overrideprice.replace("td.cell-", "") + "-", "").replace("-display", "");
+                        id = "op_" + $(this).attr("id").replace(var_overrideprice.replace("td.cell-", ""), "").replace("-display", "");
                     } else {
                         id = "op_" + $(this).attr("id").replace(var_overrideprice.replace("td.cell-", "") + "-", "").replace("-display", "");
                     }
-                    if (!check_nationality(2500)) {
-                        $("#qty-" + id.replace("op_", "")).css("color", redColor);
-                    }
-                    $(this).css("color", redColor);
-                }
-
-                if ($(this).closest(var_Invoiceoverrideprice.replace("td", "")).length > 0) {
-                    id = "iop_" + $(this).attr("id").replace(var_Invoiceoverrideprice.replace("td.cell-", "") + "-", "").replace("-display", "");
-                    $(this).css("color", redColor);
-                }
-
-                if ($(this).closest(var_netpricedisc.replace("td", "")).length > 0) {
-                    id = "oip_" + $(this).attr("id").replace(var_netpricedisc.replace("td.cell-", ""), "");
-                    $(this).css("color", redColor);
-                }
-
-                if ($(this).closest(var_comments.replace("td", "")).length > 0) {
-                    id = "cmt_" + $(this).attr("id").replace(var_comments.replace("td.cell-", ""), "");
                     $(this).css("color", redColor);
                 }
 
@@ -6996,7 +7072,7 @@
                     $(this).css("color", redColor);
                 }
 
-
+                console.log(id);
 
                 if (!listEditedField.hasOwnProperty(id)) {
                     listEditedField[id] = { before: $(this).val() };
@@ -7004,7 +7080,7 @@
 
             });
 
-            $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_Invoiceoverrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).on("keyup blur", function () {
+            $( var_qty + ", " + var_overrideprice + ", " + var_qtyBonus).find(var_find_text).on("keyup blur", function () {
 
                 var id = "";
                 if ($(this).closest(var_qty.replace("td", "")).length > 0) {
@@ -7013,25 +7089,13 @@
 
                 if (isMobile()) {
                     if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
-                        id = "op_" + $(this).attr("id").replace(var_overrideprice.replace("td.cell-", "") + "-", "").replace("-display", "");
+                        id = "op_" + $(this).attr("id").replace(var_overrideprice.replace("td.cell-", ""), "").replace("-display", "");
                     }
                 }
                 else {
                     if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
                         id = "op_" + $(this).attr("id").replace(var_overrideprice.replace("td.cell-", "") + "-", "").replace("-display", "");
                     }
-                }
-
-                if ($(this).closest(var_Invoiceoverrideprice.replace("td", "")).length > 0) {
-                    id = "iop_" + $(this).attr("id").replace(var_Invoiceoverrideprice.replace("td.cell-", "") + "-", "").replace("-display", "");
-                }
-
-                if ($(this).closest(var_netpricedisc.replace("td", "")).length > 0) {
-                    id = "oip_" + $(this).attr("id").replace(var_netpricedisc.replace("td.cell-", ""), "");
-                }
-
-                if ($(this).closest(var_comments.replace("td", "")).length > 0) {
-                    id = "cmt_" + $(this).attr("id").replace(var_comments.replace("td.cell-", ""), "");
                 }
 
                 if ($(this).closest(var_qtyBonus.replace("td", "")).length > 0) {
@@ -7044,6 +7108,7 @@
                 // console.log(listEditedField);
                 $.each(listEditedField, function (index, data) {
 
+                    console.log(id);
                     if (index == id) {
                         if (data.before == data.after) {
                             $(currentObject).css("color", blackColor);
@@ -7052,36 +7117,38 @@
                                 current_id = parseInt(id.replace("op_", ""));
                                 // $("#qty-" + id.replace("op_", "") ).css("color", blackColor);
                                 isOverridePrice(current_id);
-                                isOverrideDiscount(current_id);
                             }
 
                             if (id.indexOf("oip_") != -1) {
                                 current_id = parseInt(id.replace("oip_", ""));
-                                isOverrideDiscount(current_id);
                             }
-
+                            
                             if (id.indexOf("qty_") != -1) {
                                 current_id = parseInt(id.replace("qty_", ""));
-                                if (!check_nationality(2500)) {
-                                    check_qty_and_stock($(var_qty.replace("td.cell-", "")), current_id);
-                                }
+                                isStockAvailable(current_id);
                             }
+
                         } else {
                             $(currentObject).css("color", redColor);
 
                             if (id.indexOf("op_") != -1) {
                                 current_id = parseInt(id.replace("op_", ""));
-                                $("#qty-" + id.replace("op_", "")).css("color", redColor);
+                                // $("#qty-" + id.replace("op_", "")).css("color", redColor);
                                 isOverridePrice(current_id);
-                                isOverrideDiscount(current_id);
                             }
-                            if (id.indexOf("qty_") != -1) {
-                                current_id = parseInt(id.replace("qty_", ""));
-                                if (!check_nationality(2500)) {
-                                    check_qty_and_stock($(var_qty.replace("td.cell-", "")), current_id);
+                        }
+
+                        if (id.indexOf("qty_") != -1) {
+                            var var_type_qty = $(this).closest("tr").find("td.cell-type").find(".attribute-field.read-only").text().trim().toLowerCase();
+                            if (var_type_qty == "bonus") {
+                                var qty_bns_current = $("#" + var_qty.replace("td.cell-", "") + "-" + id).val();
+                                var qty_bns_before = $("#prevQty-" + id).val();
+                                if (qty_bns_before != qty_bns_current) {
+                                    $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);
                                 }
                             }
                         }
+
                     }
 
                 });
@@ -7104,6 +7171,8 @@
                 }
 
             });
+
+        
         }
 
         /* 
