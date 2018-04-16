@@ -45,198 +45,6 @@ $(document).ready(function(){
       return $("#jg-overlay").css("display") == "none" ? true : false;
     }
 
-    //config dynamic variable
-    var var_qty = ($("td.cell-qty_text").length > 0) ? "td.cell-qty_text" : "td.cell-qty";
-    var var_netpricedisc = ($("td.cell-netPriceDiscount").length > 0) ? "td.cell-netPriceDiscount" : "td.cell-netPriceDiscount";
-    var var_overrideprice = ($("td.cell-overridePrice").length > 0) ? "td.cell-overridePrice" : "td.cell-overridePrice_currency";
-    var var_comments = ($("td.cell-comments").length > 0) ? "td.cell-comments" : "td.cell-comments";
-    var var_qtyBonus = ($("td.cell-additionalMaterialQty").length > 0) ? "td.cell-additionalMaterialQty" : "td.cell-additionalMaterialQty";
-    var var_bonusOverride = ($("td.cell-overrideBonusQty").length > 0) ? "td.cell-overrideBonusQty" : "td.cell-overrideBonusQty";
-
-     /* TW-05 and TW-13 Override Invoice Price */
-    /* function override_redcolor(){
-        var redColor = "rgb(255, 0, 0)";
-        var blackColor = "#000000";
-        
-        $(var_netpricedisc.replace("td", "")).find(".text-field").off();        
-        $(var_netpricedisc.replace("td", "")).find(".text-field").map(function(index, data){
-            if( $(data).val() != "0.0" ){
-                // $(data).css("color", redColor); //remove logic for Highlight QTY in case of PH. 7 March 2018
-            }
-        });
-
-        $(var_netpricedisc.replace("td", "")).find(".text-field").on("keyup click", function(){
-            
-            // $(this).css("color", redColor); //remove logic for Highlight QTY in case of PH. 7 March 2018
-            
-        });
-
-        $(var_netpricedisc.replace("td", "")).find(".text-field").blur( function(){
-            
-            if( $(this).val() == "0.0" ){
-                $(this).css("color", blackColor);
-            }
-
-        });
-
-        $( var_overrideprice.replace("td", "") ).map(function(index, data){
-            var overridePrice = $(data).find(".text-field");
-
-            if( $(overridePrice).length > 0  ){
-
-              if($(overridePrice).val() != "0.0"){
-                overridePrice.css("color", redColor);
-                $(data).attr("style", "color: "+redColor+" !important;");
-                var rowMaterial = $(overridePrice).attr("id").replace("overridePrice-", "");
-                // $( "#qty_text-"+rowMaterial ).css("color", redColor); //remove logic for Highlight QTY in case of PH. 7 March 2018
-              }
-              
-            }
-        });
-
-        $("input[name='"+var_bonusOverride.replace("td.cell-")+"'][type='checkbox']").map(function(index, data){
-          isChecked = (typeof $(this).attr("checked") == 'undefined') ? false : true;
-          var rowMaterial = $(this).val();
-          if( isChecked ){
-            $( "#qty_text-"+rowMaterial ).css("color", redColor);
-          }else{
-            $( "#qty_text-"+rowMaterial ).css("color", blackColor);
-          }
-
-        });        
-
-        $("input[name='"+var_bonusOverride.replace("td.cell-")+"'][type='checkbox']").on("change", function(){
-          
-          isChecked = (typeof $(this).attr("checked") == 'undefined') ? false : true;
-          var rowMaterial = $(this).val();
-          if( isChecked ){
-            $( "#qty_text-"+rowMaterial ).css("color", redColor);
-          }else{
-            $( "#qty_text-"+rowMaterial ).css("color", blackColor);
-          }
-
-        });
-
-    } */
-
-    function disabled_btn_save_show_alert()
-    {
-      if( $("#update-alert").length == 0 ){
-          var updateMsg = "<div id='update-alert' class='updateMsg'>Please click 'update' to proceed.</div>";
-          $('#materialArrayset').after(updateMsg);
-          $("#update-alert").css("padding-bottom", "30px");
-          if ($("#btn-cart-save").length > 0){
-            $("#btn-cart-save").attr("disabled", true).css({ "background-color": "grey"});
-          }else{
-            $("#btn-cart-addtoorder").attr("disabled", true).css({ "background-color": "grey"});
-          }
-      }
-    }
-
-    function enabled_btn_save_remove_alert()
-    {
-      $("#update-alert").remove();
-      if ($("#btn-cart-save").length > 0) {
-        $("#btn-cart-save").attr("disabled", false).css({ "background-color": "#0C727A" });
-      }else{
-        $("#btn-cart-addtoorder").attr("disabled", false).css({ "background-color": "#0C727A" });
-      }      
-    }
-
-    /*
-        SUMMARY : Listen user change the value of QTY, OVerride Invoice and Override Price,
-                  Show Alert if the value has been changed
-    */
-    var redColor = "rgb(255, 0, 0)";
-    var blackColor = "rgb(255, 255, 0)";
-
-    function check_user_change_value(isMobile){
-        var listEditedField = {};
-        console.log("APPLY check_user_change_value");
-        var var_find_text = (isMobile) ? ".form-field" : ".text-field";
-        
-        $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).on("click focus", function(){
-
-          var id = "";
-          if ($(this).closest(var_qty.replace("td", "")).length > 0 ){
-            id = "qty_" + $(this).attr("id").replace(var_qty.replace("td.cell-", "")+"-", "");
-            $(this).css("color", redColor);
-          }
-
-          if ($(this).closest( var_overrideprice.replace("td", "") ).length > 0){
-            id = "op_" + $(this).attr("data-value-attr").replace(var_overrideprice.replace("td.cell-", "")+ "-", "");
-            $(this).css("color", redColor);            
-          }
-
-          if( $(this).closest( var_netpricedisc.replace("td", "") ).length > 0 ){
-            id = "oip_" + $(this).attr("id").replace(var_netpricedisc.replace("td.cell-", "")+"-", "");
-            $(this).css("color", redColor);            
-          }
-          
-          if ($(this).closest(var_comments.replace("td", "") ).length > 0 ){
-            id = "cmt_" + $(this).attr("id").replace(var_comments.replace("td.cell-", "")+"-", "");
-            $(this).css("color", redColor);                        
-          }
-
-          if ($(this).closest(var_qtyBonus.replace("td", "") ).length > 0 ){
-            id = "cmt_" + $(this).attr("id").replace(var_qtyBonus.replace("td.cell-", "")+"-", "");
-            $(this).css("color", redColor);                        
-          }
-
-          if(!listEditedField.hasOwnProperty(id))
-          {
-              listEditedField[id] = { before : $(this).val() };
-          }
-
-        });
-
-        $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).on("keyup blur", function(){
-          
-          var id = "";
-          if ($(this).closest(var_qty.replace("td", "")).length > 0) {
-            id = "qty_" + $(this).attr("id").replace(var_qty.replace("td.cell-", "") + "-", "");
-          }
-
-          if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
-            id = "op_" + $(this).attr("data-value-attr").replace(var_overrideprice.replace("td.cell-", "") + "-", "");
-          }
-
-          if ($(this).closest(var_netpricedisc.replace("td", "")).length > 0) {
-            id = "oip_" + $(this).attr("id").replace(var_netpricedisc.replace("td.cell-", "") + "-", "");
-          }
-
-          if ($(this).closest(var_comments.replace("td", "")).length > 0) {
-            id = "cmt_" + $(this).attr("id").replace(var_comments.replace("td.cell-", "") + "-", "");
-          }
-
-          if ($(this).closest(var_qtyBonus.replace("td", "")).length > 0) {
-            id = "cmt_" + $(this).attr("id").replace(var_qtyBonus.replace("td.cell-", "") + "-", "");
-          }
-
-          listEditedField[id]["after"] = $(this).val();
-
-          var isShowMessage = false;
-          $.each(listEditedField, function(index, data){
-            if(!isShowMessage){
-              if(data.before != data.after){
-                isShowMessage = true;
-              }
-            }else{
-              $(this).css("color", blackColor);                          
-              return false;
-            }
-          });
-
-          if(isShowMessage){
-            disabled_btn_save_show_alert();
-          }else{
-            enabled_btn_save_remove_alert();
-          }
-
-        });
-
-    }
-
     function hide_recommended_material(){
       var tabelFavFreqReq = $("#attribute-pastOrders").parent().parent().parent().parent().parent().parent('.column-1');
       $(tabelFavFreqReq.children()[1]).hide();
@@ -381,6 +189,7 @@ $(document).ready(function(){
                         //remove duplicate of saveQuoteRequired_t
                         $($("input[name='saveQuoteRequired_t']")[1]).remove();
 
+
                         /* 
                           Created By    :- Created By Zainal Arifin, Date : 15 March 2018
                           Task          :- Remove Duplicate input field
@@ -487,11 +296,14 @@ $(document).ready(function(){
           $("td[id*='bonusOverideFlag_l']").each(function (i, data) {
             var parent = $(this).closest(".line-item");
             var type_material = $(parent).find("span[id*='refNO_text']").text().trim().toLowerCase();
-            if(type_material != "bonus"){
+            if (type_material == "bonus") {
               var isBonusOverride = $(this).find("span[id*='bonusOverideFlag_l']").text().trim().toLowerCase();
               if (isBonusOverride == "true") {
-                var qty_span = $(parent).find("span[id*='qty_int_l']");
-                $(qty_span).css("color", "red");
+                var typeBonus = $(parent).find("span[id*='bonusType_l']").text().trim().toLowerCase();
+                if (typeBonus == "system bonus") {
+                  var qty_span = $(parent).find("span[id*='qty_int_l']");
+                  $(qty_span).css("color", "red");
+                }
               }
             }
           });
@@ -546,20 +358,25 @@ $(document).ready(function(){
             var unitPrice_text = $($child).find('input[name*="unitPrice_l"]');
             var type_material = $($child).find('input[name*="refNO_text"]').val().trim().toLowerCase();
 
-            if(type_material != "bonus"){
-              if(isBonusOverride == "true"){
-                $($(qty_text).siblings()[0]).css("color", redColor);
-              }
-            }
-
             if (isPriceOverride.toLowerCase() == "true"){
               $($(unitPrice_text).siblings()[0]).css("color", redColor);
               $($(totalPrice_text).siblings()[0]).css("color", redColor);              
             }
-            console.log( isNetPriceDisc );
+            
             if(isNetPriceDisc.toLowerCase() != "0.0"){
               $($(unitPrice_text).siblings()[0]).css("color", redColor);
               $($(totalPrice_text).siblings()[0]).css("color", redColor); 
+            }
+
+            if (type_material == "bonus") {
+              if (isBonusOverride == "true") {
+                var typeBonus = $($child).find('input[name*="bonusType_l"]').val().trim().toLowerCase();
+                if (typeBonus == "system bonus") {
+                  $($(qty_text).siblings()[0]).css("color", redColor);
+                }
+              }
+              $($(unitPrice_text).siblings()[0]).css("color", blackColor);
+              $($(totalPrice_text).siblings()[0]).css("color", blackColor);
             }
 
           });
@@ -670,13 +487,18 @@ $(document).ready(function(){
         }
         
         function override_price(data, id) {
-          var overridePriceValue = ($(data).val() != "") ? $(data).val().slice(1) : 0.0;
-          console.log(overridePriceValue, "==", basic_value, overridePriceValue != basic_value_price);          
+          if(isMobile()){
+            overridePriceValue = parseFloat($("#" + var_overrideprice.replace("td.cell-", "") + id).val());
+          }else{
+            overridePriceValue = ($(data).val() != "") ? $(data).val().slice(1) : 0.0;
+          }
+          console.log(overridePriceValue, "==", basic_value_price, overridePriceValue != basic_value_price);          
           if (overridePriceValue != basic_value_price) {
             $(data).css("color", redColor);
             if(!isMobile()){
               $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").css("color", redColor);
             }else{
+              console.log( "#" + var_totalPrice_Currency.replace("td.", "") + "-" + id );
               $("#" + var_totalPrice_Currency.replace("td.", "") + "-" + id).find(".form-field").css({ "color": redColor });
             }
           }
@@ -695,70 +517,7 @@ $(document).ready(function(){
           }
         }
 
-        $(var_bonusOverride).find("input[type='checkbox']").map(function (index, data) {
-          id = $(data).attr("id").replace("overrideBonusQty_", "");
-          console.log("overrideBonusQty_", id, $(data).is("checked"));
-          // Check if Checbox is checked
-          if ($(data).is(":checked")) {
-            $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);
-            var qty_bns_current = $("#" + var_qty.replace("td.cell-", "") + "-" + id).val();
-            var qty_bns_before = $("#prevQty-" + id).val();
-            if (qty_bns_before != qty_bns_current) {
-              $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);
-            }
-            $("#" + var_qty.replace("td.cell-", "") + "-" + id).removeAttr("readonly");
-            //set value 0.0 for override price + total price
-            var overridePriceString = (isMobile())? "overridePrice_currency" : "overridePrice_currency-"; 
-            $("#netPriceDiscount-" + id).val("0.0").css({ "color": blackColor, "background": "transparent", "border": "0px" });                          
-            $("#netPriceDiscount-"+id).attr("readonly", "readonly");
-            $("#" + overridePriceString + id + "-display").val("P0.00").css({ "color": blackColor, "background": "transparent", "border": "0px" });            
-            $("#" + overridePriceString + id + "-display").attr("readonly", "readonly");
-            if(!isMobile()){
-              $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").text("0.0").css({ "color": blackColor });
-            }else{
-              $("#" + var_totalPrice_Currency.replace("td.", "") + "-" + id).find(".form-field").css({ "color": blackColor });
-            }
-          } else {
-            console.log("#" + var_qty.replace("td.cell-", "") + "-" + id);
-            $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", blackColor);
-            $("#" + var_qty.replace("td.cell-", "") + "-" + id).attr("readonly", "readonly");
-          }
-
-          // Listen On CLICK
-          $(data).on("click change", function () {
-            console.log("click change", $(this).is(":checked"));
-            id = $(this).attr("id").replace("overrideBonusQty_", "");            
-            var overridePriceString = (isMobile())? "overridePrice_currency" : "overridePrice_currency-";
-            if ($(this).is(":checked")) {
-              $("#" + var_qty.replace("td.cell-", "") + "-" + id).removeAttr("readonly");
-              $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);              
-              //set value 0.0 for override price + total price
-
-              $("#netPriceDiscount-" + id).val("0.0").css({ "color": blackColor, "background": "transparent", "border": "0px" });              
-              $("#netPriceDiscount-" + id).attr("readonly", "readonly");              
-              $("#" + overridePriceString + id + "-display").val("P0.00").css({ "color": blackColor, "background": "transparent", "border" : "0px" });   
-              $("#" + overridePriceString + id + "-display").attr("readonly", "readonly");
-              if(!isMobile()){
-                $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").text("0.0").css({ "color": blackColor });
-              }else{
-                $("#" + var_totalPrice_Currency.replace("td.", "") + "-" + id).find(".form-field").css({ "color": blackColor });
-              }
-              var qty_bns_current = $("#" + var_qty.replace("td.cell-", "") + "-" + id).val();
-              var qty_bns_before = $("#prevQty-"+id).val();
-              if( qty_bns_before != qty_bns_current ){
-                $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);                
-              }
-              
-            } else {
-              $("#" + var_qty.replace("td.cell-", "") + "-" + id).attr("readonly", "readonly");
-              $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", blackColor);
-              
-              $("#netPriceDiscount-" + id).css({"background": "rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box border-box", "border" : "1px solid rgb(204, 204, 204)"});
-              $("#" + overridePriceString + id + "-display").css({"background": "rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box border-box", "border" : "1px solid rgb(204, 204, 204)"});
-            }
-          });
-        });
-
+        
         $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_Invoiceoverrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).map(function (index, data) {
 
           if (!isMobile()) {
@@ -775,17 +534,106 @@ $(document).ready(function(){
               id = $(this).attr("id").replace(var_netpricedisc.replace("td.cell-", "") + "-", "").replace("-display", "");
               netprice_disc($(this), id);
             }
-            
-            /* if ($(this).closest(var_qtyBonus.replace("td","")).length > 0 ){
-              
-              if($(this).val() > 0){
-                $(this).css("color", redColor);
-              }
-              
-            } */
+          }else{
+            if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
+              id = $(this).attr("id").replace(var_overrideprice.replace("td.cell-", ""), "").replace("-display", "");
+              override_price($(this), id);
+            }
 
+            if (typeof $(this).attr("id") != 'undefine') {
+              if ($(this).closest(var_netpricedisc.replace("td", "")).length > 0) {
+                id = $(this).attr("id").replace(var_netpricedisc.replace("td.cell-", ""), "");
+                netprice_disc($(this), id);
+              }
+            }
           }
 
+        });
+
+        var typeBnsOverride = (isMobile()) ? "select" : "input[type='checkbox']";
+        $(var_bonusOverride).find(typeBnsOverride).map(function (index, data) {
+          id = (isMobile()) ? $(data).attr("id").replace("overrideBonusQty", "") : $(data).attr("id").replace("overrideBonusQty_", "");
+
+          /* set net price discount and overrideprice to readonly */
+          var overridePriceString = (isMobile()) ? "overridePrice_currency" : "overridePrice_currency-";
+          $("#netPriceDiscount-" + id).val("0.0").css({ "color": blackColor, "background": "transparent", "border": "0px" });
+          $("#netPriceDiscount-" + id).attr("readonly", "readonly");
+          //set value 0.0 total price
+          if (!isMobile()) {
+            $("#" + overridePriceString + id + "-display").val("P0.00").css({ "color": blackColor, "background": "transparent", "border": "0px" });
+            $("#" + overridePriceString + id + "-display").attr("readonly", "readonly");
+            $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").text("0.0").css({ "color": blackColor });
+          } else {
+            $("#" + overridePriceString + id + "-display").val("P0.00").css({ "color": blackColor }).parent().css({ "background": "transparent", "border": "0px" });
+            $("#" + overridePriceString + id + "-display").attr("readonly", "readonly");
+            $("#" + var_totalPrice_Currency.replace("td.", "") + "-" + id).find(".form-field").css({ "color": blackColor });
+            //remove class recommended
+            $("#" + overridePriceString + id + "-display").closest(var_overrideprice.replace("td", "")).removeClass("recommended");
+            $("#" + var_totalPrice_Currency.replace("td.", "") + "-" + id).closest(var_totalPrice_Currency.replace("td", "")).removeClass("recommended")
+          }
+
+          // Check if Checbox is checked
+
+          if (isMobile()) {
+            isChecked = $(data).val();
+            if (isChecked.toLowerCase() == "true") {
+              isChecked = true;
+            } else {
+              isChecked = false;
+            }
+          } else {
+            isChecked = $(data).is(":checked");
+          }
+          console.log( $(data).id, isChecked );
+          if (isChecked) {
+            $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);
+            var qty_bns_current = $("#" + var_qty.replace("td.cell-", "") + "-" + id).val();
+            var qty_bns_before = $("#prevQty-" + id).val();
+            if (qty_bns_before != qty_bns_current) {
+              $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);
+            }
+            $("#" + var_qty.replace("td.cell-", "") + "-" + id).removeAttr("readonly");
+          } else {
+            console.log("#" + var_qty.replace("td.cell-", "") + "-" + id);
+            $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", blackColor);
+            $("#" + var_qty.replace("td.cell-", "") + "-" + id).attr("readonly", "readonly");
+          }
+
+          // Listen On CLICK
+          $(data).on("click change", function () {
+            console.log("click change", $(this).is(":checked"));
+            id = $(this).attr("id").replace("overrideBonusQty_", "");
+            var overridePriceString = (isMobile()) ? "overridePrice_currency" : "overridePrice_currency-";
+
+            if (isMobile()) {
+              isChecked = $(data).val();
+              if (isChecked.toLowerCase() == "true") {
+                isChecked = true;
+              } else {
+                isChecked = false;
+              }
+            } else {
+              isChecked = $(data).is(":checked");
+            }
+
+            if (isChecked) {
+              $("#" + var_qty.replace("td.cell-", "") + "-" + id).removeAttr("readonly");
+              $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);
+              //set value 0.0 for override price + total price
+
+              var qty_bns_current = $("#" + var_qty.replace("td.cell-", "") + "-" + id).val();
+              var qty_bns_before = $("#prevQty-" + id).val();
+              if (qty_bns_before != qty_bns_current) {
+                $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);
+              }
+
+            } else {
+              $("#" + var_qty.replace("td.cell-", "") + "-" + id).attr("readonly", "readonly");
+              $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", blackColor);
+
+            }
+          });
+        
         });
 
         $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_Invoiceoverrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).on("click focus focusin", function () {
@@ -937,6 +785,30 @@ $(document).ready(function(){
 
       }
 
+        var reposition_order_mobile = function(){
+          
+          setTimeout(function(){
+            var orderNumber = $("#attribute-transactionID_t").find("div[role='heading']")[0];
+            $(orderNumber).css({"width":"18%", "float":"left", "min-width": "40%"});
+            $( $(orderNumber).siblings()[0]).css("width", "50%");
+  
+            var processingStatus = $("#attribute-status_t").find("div[role='heading']")[0];
+            $(processingStatus).css("float", "left");
+            $($(processingStatus).siblings()[0]).css("width", "50%");
+
+            var paymentTerm = $("#attribute-defaultPaymentTerm_t").find("div[role='heading']")[0];
+            $(paymentTerm).css({"width":"18%"});
+            
+            var paymentTermDesc = $("#attribute-paymentTermDescription").find("div[role='heading']")[0];
+            $(paymentTermDesc).css({"width":"18%"});
+            
+            var orderFailureReason = $("#attribute-OrderFailMessage").find("div[role='heading']")[0];
+            $(orderFailureReason).css({"width":"18%"});
+
+          },1000);
+
+        }
+
         /* TW-03 Price hover table columns to be corrected for TW - Quantity, Invoice Price, Unit Price.  */
         // tw_tooltip_modelconfiguration();
         /* TW-03 Price hover table columns to be corrected for TW - Quantity, Invoice Price, Unit Price. */
@@ -983,6 +855,7 @@ $(document).ready(function(){
                 if (isLoadingDone) {
                   reAlignSoldShipAddressSection();
                   onShoppingCartSwipe();
+                  reposition_order_mobile();
                 } else {
                   loadOderPageScript();
                 }
