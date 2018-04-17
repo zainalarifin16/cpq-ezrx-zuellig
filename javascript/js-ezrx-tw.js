@@ -74,110 +74,195 @@ $(document).ready(function(){
     /* TW-03 Price hover table columns to be corrected for TW - Quantity, Invoice Price, Unit Price.  */
     function tw_tooltip_modelconfiguration(){
 
-      $('td.cell-promotion').off();      
-      $('td.cell-promotion').attr('tooltip', function() {
-          var button_helper;
-          var valueOfPromotion = $(this).find('input[name=promotion]').val();
+      if(isMobile()){
 
-          if (valueOfPromotion != '') {
+        setTimeout(function(){
+          $("td.cell-promotion").off();
+          $("td.cell-promotion").each(function(index, data){
+            var button_helper;
+            var valueOfPromotion = $(this).find('input[name="promotion"]').val();
+            if (valueOfPromotion != '') {
               button_helper = '<i class="material-lens" aria-hidden="true" ></i>';
               $(this).find('input[name=promotion]').prop('type', 'text');
               $(this).find('input[name=promotion]').css('display', 'block !important');
-          } else {
+            } else {
               button_helper = '-';
-          }
-          // $(this).children('.attribute-field-container').children('span').html(button_helper);
-          $($(this).children().children()).hide();
-          $($(this).children().children()).parent().append(button_helper);
-          return valueOfPromotion;
-      }).mouseenter(function() {
-          /*
-              if mouse hover on element promotion (lens icon) then showing table of Ordered Quantity and contract price
-          */
+            }
+            $($(this).children().children()).hide();
+            $($(this).children().children()).parent().append(button_helper);
+            $(this).prop("tooltip", valueOfPromotion);
 
-          var table = '<table style="text-align:center;width:100%;border-collapse: collapse;">\
-                          <thead style="padding:5px;font-weight:bold">\
-                            <tr style="background-color:#EEE;">\
-                              <th style="border: 1px solid #999;padding:5px;">Quantity</th>\
-                              <th style="border: 1px solid #999;padding:5px;">Invoice Price</th>\
-                              <th style="border: 1px solid #999;padding:5px;">Unit Price</th>\
-                            </tr>\
-                          </thead>';
+            $(this).on("click", function(){
+              var valueOfPromotion = $(this).find('input[name="promotion"]').val();
+              if(valueOfPromotion.trim() != '') {
+                if ($(this).hasClass('open')) {
 
-          var x = $(this).attr('tooltip').trim();
-          if (x != "") {
-              var col = x.trim().split(",");
-              if (col.length > 0) {
-                  table += "<tbody>";
-                  col.forEach(function(row) {
-                      table += '<tr>';
-                      //row = row.trim().split('#@#');
-                      row = row.trim().split('**');
-                      if (row.length > 0) {
-                          row.forEach(function(item) {
-                              table = table + '<td style="border: 1px solid #999;padding:5px;">' + item + '</td>';
+                  $(this).removeClass('open');
+                  $('.table-tooltip').remove();
+
+                } else {
+                  $(this).addClass('open');
+                  $('.table-tooltip').remove();
+
+                  var table = '<table class="table-tooltip" >\
+                              <thead style="padding:5px;font-weight:bold">\
+                                <tr style="background-color:#EEE;">\
+                                  <th style="border: 1px solid #999;padding:5px;">Quantity</th>\
+                                  <th style="border: 1px solid #999;padding:5px;">Invoice Price</th>\
+                                  <th style="border: 1px solid #999;padding:5px;">Unit Price</th>\
+                                </tr>\
+                              </thead>';
+                  var x = $(this).prop('tooltip').trim();
+                  if (x != "") {
+                    //console.log(' mobile_adjust_tooltip 444 =====>>>> ');
+                    var col = x.trim().split(",");
+                    if (col.length > 0) {
+                      table += "<tbody>";
+                      col.forEach(function (row) {
+                        table += '<tr>';
+                        //row = row.trim().split('#@#');
+                        row = row.trim().split('**');
+                        if (row.length > 0) {
+                          row.forEach(function (item) {
+                            table = table + '<td style="border: 1px solid #999;padding:5px;">' + item + '</td>';
                           });
-                      }
-                      table += '</tr>';
+                        }
+                        table += '</tr>';
+                      });
+                      table += '</tbody>';
+
+                    }
+                  }
+                  table += '</table>';
+                  
+                  $(this).parent().parent().parent().parent().append(table);
+                  $('.table-tooltip').css({
+                    right: '50%',
+                    position: 'absolute',
+                    transform: 'translate(50%, -50%)',
+                    top: '50%',
+                    width: '500px'
                   });
-                  table += '</tbody>';
-
+                }
               }
-          }
-          table += '</table>';
-          /*
-              showing element if the content is not null
-          */
-
-          if ($(this).attr('tooltip').trim() != '') {
-              $('#myModal').addClass('hover-modal-content').html(table);
-              $('#myModal').css("display", "block");
-          }
-          $('.cell-promotion').mouseleave(function() {
-              $('#myModal').css("display", "none");
+            });
           });
-      });
 
-      var input_val;
-      /* prepare for tooltip on material description */
-      $('td.cell-additionalMaterialDescription').off();
-      $('td.cell-additionalMaterialDescription').attr("tooltip", function () {
-        var input_text = $(this).find(".attribute-field-container span").text();
-        // console.log('input_text',input_text);
-        // $('textarea[name="area_materialDescription"]').hide();
-        // console.log('materialDescription', input_text, input_val);
-        return input_text;
-      }).mouseenter(function () {
-        /* get text of material desciption */
-        var input_text = $(this).find(".attribute-field-container span").text();
-        if ($('input[name="userSalesOrg_PL"]').val() == "2800" || (userCountry === 'TW')) {
-          var chineseTxt = '#additionalBonusChineseDescription-' + (parseInt($(this).parent().children().eq(0).html()) - 1);
-          console.log(chineseTxt);
-          input_text = $(chineseTxt).val();
-        }
-        console.info(input_text);
-        /* if mouse hover on element material description then showing table of Material Description. */
-        var table = '<table style="text-align:center;width:100%;border-collapse: collapse;"><thead style="padding:5px;font-weight:bold"><tr style="background-color:#EEE;"><th style="border: 1px solid #999;padding:5px;">Material Description</th></thead>';
-        table += "<tbody>";
-        table += "<tr><td>" + input_text + "</td></tr>";
-        table += "</tbody></table>";
-        // if ($(this).attr('tooltip') != '') {
-        /* always showing table of material description */
-        $('#myModal').addClass('hover-modal-content').html(table);
-        $('#myModal').css("display", "block");
-        // }
-        $('.cell-additionalMaterialDescription').mouseleave(function () {
-          $('#myModal').css("display", "none");
-        });
-      });
+        }, 1000);
+      
+      }else{
 
-      $('td.cell-promotion, td.cell-additionalMaterialDescription')
-        .hover(function(e) {
-            e.preventDefault();
-        })
-        .mousemove(function(e) {
-            $('#myModal').css('top', e.pageY - $(document).scrollTop() + 10 + 'px').css('left', e.pageX - $(document).scrollLeft() + 10 + 'px');
+        $('td.cell-promotion').off();      
+        $('td.cell-promotion').prop('tooltip', function() {
+            var button_helper;
+            var valueOfPromotion = $(this).find('input[name=promotion]').val();
+  
+            if (valueOfPromotion != '') {
+                button_helper = '<i class="material-lens" aria-hidden="true" ></i>';
+                $(this).find('input[name=promotion]').prop('type', 'text');
+                $(this).find('input[name=promotion]').css('display', 'block !important');
+            } else {
+                button_helper = '-';
+            }
+            // $(this).children('.attribute-field-container').children('span').html(button_helper);
+            $($(this).children().children()).hide();
+            $($(this).children().children()).parent().append(button_helper);
+            return valueOfPromotion;
+        }).mouseenter(function() {
+            /*
+                if mouse hover on element promotion (lens icon) then showing table of Ordered Quantity and contract price
+            */
+  
+            var table = '<table style="text-align:center;width:100%;border-collapse: collapse;">\
+                            <thead style="padding:5px;font-weight:bold">\
+                              <tr style="background-color:#EEE;">\
+                                <th style="border: 1px solid #999;padding:5px;">Quantity</th>\
+                                <th style="border: 1px solid #999;padding:5px;">Invoice Price</th>\
+                                <th style="border: 1px solid #999;padding:5px;">Unit Price</th>\
+                              </tr>\
+                            </thead>';
+  
+            var x = valueOfPromotion.trim();
+            if (x != "") {
+                var col = x.trim().split(",");
+                if (col.length > 0) {
+                    table += "<tbody>";
+                    col.forEach(function(row) {
+                        table += '<tr>';
+                        //row = row.trim().split('#@#');
+                        row = row.trim().split('**');
+                        if (row.length > 0) {
+                            row.forEach(function(item) {
+                                table = table + '<td style="border: 1px solid #999;padding:5px;">' + item + '</td>';
+                            });
+                        }
+                        table += '</tr>';
+                    });
+                    table += '</tbody>';
+  
+                }
+            }
+            table += '</table>';
+            /*
+                showing element if the content is not null
+            */
+  
+            if ($(this).attr('tooltip').trim() != '') {
+                $('#myModal').addClass('hover-modal-content').html(table);
+                $('#myModal').css("display", "block");
+            }
+            $('.cell-promotion').mouseleave(function() {
+                $('#myModal').css("display", "none");
+            });
         });
+  
+        var input_val;
+        /* prepare for tooltip on material description */
+        $('td.cell-additionalMaterialDescription').off();
+        $('td.cell-additionalMaterialDescription').prop("tooltip", function () {
+          var input_text = $(this).find(".attribute-field-container span").text();
+          // console.log('input_text',input_text);
+          // $('textarea[name="area_materialDescription"]').hide();
+          // console.log('materialDescription', input_text, input_val);
+          return input_text;
+        }).mouseenter(function () {
+          /* get text of material desciption */
+          var input_text = $(this).find(".attribute-field-container span").text();
+          if ($('input[name="userSalesOrg_PL"]').val() == "2800" || (userCountry === 'TW')) {
+            var chineseTxt = '#additionalBonusChineseDescription-' + (parseInt($(this).parent().children().eq(0).html()) - 1);
+            console.log(chineseTxt);
+            input_text = $(chineseTxt).val();
+          }
+          console.info(input_text);
+          /* if mouse hover on element material description then showing table of Material Description. */
+          var table = '<table style="text-align:center;width:100%;border-collapse: collapse;">\
+                        <thead style="padding:5px;font-weight:bold">\
+                          <tr style="background-color:#EEE;">\
+                            <th style="border: 1px solid #999;padding:5px;">Material Description</th>\
+                          <tr></thead>';
+          table += "<tbody>";
+          table += "<tr><td>" + input_text + "</td></tr>";
+          table += "</tbody></table>";
+          // if ($(this).attr('tooltip') != '') {
+          /* always showing table of material description */
+          $('#myModal').addClass('hover-modal-content').html(table);
+          $('#myModal').css("display", "block");
+          // }
+          $('.cell-additionalMaterialDescription').mouseleave(function () {
+            $('#myModal').css("display", "none");
+          });
+        });
+  
+        $('td.cell-promotion, td.cell-additionalMaterialDescription')
+          .hover(function(e) {
+              e.preventDefault();
+          })
+          .mousemove(function(e) {
+              $('#myModal').css('top', e.pageY - $(document).scrollTop() + 10 + 'px').css('left', e.pageX - $(document).scrollLeft() + 10 + 'px');
+          });
+
+      }
+
 
     }
 
@@ -291,19 +376,20 @@ $(document).ready(function(){
     var defaultPaymentTerm = function(){
       if(isMobile()){
 
-        $("#defaultPaymentTerm_TW_t").prop("value", $("#select-38-button option:selected").val());        
+        var defaultPaymentTermComponent = $("#attribute-paymentTerm_TW_t").find("select");
 
-        $("#select-38-button").find("select").prop("disabled", true);
+        var currentDefaultPaymentTerm =  $( defaultPaymentTermComponent ).val();
+        $("#defaultPaymentTerm_TW_t").prop("value", currentDefaultPaymentTerm );
+
+        $( defaultPaymentTermComponent ).prop("disabled", true);
         setTimeout(function () {
-          console.log("implementation listen button 38");
-          console.log($("#select-38-button").find("select"));
-          $("#select-38-button").find("select").prop("disabled", false);
-          $("#select-38-button").find("select").on("change", function () {
-            console.log("on save select");
-            $("#defaultPaymentTerm_TW_t").prop("value", $("#select-38-button option:selected").val());
+          $( defaultPaymentTermComponent ).prop("disabled", false);
+          $( defaultPaymentTermComponent ).on("change", function () {
+            currentDefaultPaymentTerm =  $( this ).val();
+            $("#defaultPaymentTerm_TW_t").prop("value", currentDefaultPaymentTerm );
             $(".action-type-modify")[0].click();
           });
-        }, 3000);
+        }, 2000);
       }else{
 
         var paymentTermLabel = $("#readonly_1_status_t").text().trim().toLowerCase();
