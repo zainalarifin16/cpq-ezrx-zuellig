@@ -90,20 +90,13 @@
         return valid;
     }
 
-    /* var getUserSalesOrg = function(){
-        var countryCode = parseInt( $("#userSalesOrg_t").val() );
-        
-        if (typeof countryCode == "undefined") { //this is for material page.
-            countryCode = parseInt( $('input[name="userSalesOrg_PL"]').val() );
+    var getZPUserType = function() {
+        if ($("#zPUserType").length > 0 || $("input[name='zPUserType']").length > 0 ){
+            return ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();
+        }else{
+            return "";
         }
-
-        if (typeof countryCode == "undefined") {
-            countryCode = "2601";
-        }
-        
-        return countryCode;
-
-    } */
+    }
 
     var isLoadingDone = function () {
         return $("#jg-overlay").css("display") == "none" ? true : false;
@@ -3312,6 +3305,65 @@
                     */
 
                     mobile_pricingChange();
+
+                    if(check_nationality(2600)){
+                        /* 
+                            Created By    :- Created By Zainal Arifin, Date : 17 April 2018
+                            Task          :- SG-37 Hide Customer Search and Top 10 Customers if ZP User Type = Customer
+                            Page          :- Order Page
+                            File Location :- $BASE_PATH$/javascript/js-ezrx.js
+                            Layout        :- Desktop
+                        */
+                        if (getZPUserType().length && getZPUserType() == "customer") {
+                            $("#searchCustomerInput").closest(".column").hide();
+                            var parentSearchCustomer = $("#searchCustomerInput").closest(".column-layout");
+                            $(parentSearchCustomer).find(".last").remove();
+                            $("label[for*='customerSelection_t']").closest(".column").hide();
+                            var parentCustomerSelection = $("label[for*='customerSelection_t']").closest(".column-layout");
+                            $($("#attr_wrapper_1_shipToAddress_html_t").closest(".column")).appendTo(parentCustomerSelection);
+                            $("#attr_wrapper_1_shipToAddress_html_t").css("margin-top", "0px");
+                            $($("#attr_wrapper_1_customerShipToId_t").closest(".column")).appendTo(parentSearchCustomer);
+                            $($("#attr_wrapper_1_customerSoldToId_t").closest(".column")).appendTo(parentSearchCustomer);
+                        }
+
+                        /* 
+                            Created By    :- Created By Zainal Arifin, Date : 17 April 2018
+                            Task          :- SG-37 Hide Customer Search and Top 10 Customers if ZP User Type = Customer
+                            Page          :- Order Page
+                            File Location :- $BASE_PATH$/javascript/js-ezrx.js
+                            Layout        :- Desktop
+                        */
+
+                        /* 
+                            Created By    :- Created By Zainal Arifin, Date : 17 April 2018
+                            Task          :- 8000348146 Change Save as template order? attribute value true  to Yes , false to No in order page in Submitted/completed orders
+                            Page          :- Order Page
+                            File Location :- $BASE_PATH$/javascript/js-ezrx.js
+                            Layout        :- Desktop
+                        */
+
+                        if (isMobile()) {
+                            var isCompleteOrSubmitted = $("#attribute-status_t").find("span.form-field").text().trim().toLowerCase();
+                            if (isCompleteOrSubmitted == "completed" || isCompleteOrSubmitted == "submitted") {
+                                var isSaveAsTemplate = $("#attribute-isATestOrder_t").find("span.form-field").text().trim().toLowerCase();
+                                if (isSaveAsTemplate == "true") {
+                                    $("#attribute-isATestOrder_t").find("span.form-field").text("Yes");
+                                } else {
+                                    $("#attribute-isATestOrder_t").find("span.form-field").text("No");
+                                }
+                            }
+                        }
+
+
+                        /* 
+                            Created By    :- Created By Zainal Arifin, Date : 17 April 2018
+                            Task          :- 8000348146 Change Save as template order? attribute value true  to Yes , false to No in order page in Submitted/completed orders
+                            Page          :- Order Page
+                            File Location :- $BASE_PATH$/javascript/js-ezrx.js
+                            Layout        :- Desktop
+                        */
+
+                    }
 
                     transform_newcopypage();
                 } else if (pagetitle == 'model configuration') {
