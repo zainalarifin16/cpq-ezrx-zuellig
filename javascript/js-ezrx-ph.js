@@ -115,7 +115,7 @@ $(document).ready(function(){
 
         var sold_to_address = function(){
           $('#attr_wrapper_1__soldTo_t_address_2').parent().before('<div id="soldToAddress88"><span style="padding-right: 1px;width: 100%;">Sold To Address</span></div>');
-          $('#attr_wrapper_1__soldTo_t_address').parent().attr("style","margin-left: 30%; width: 40%;");
+          $('#attr_wrapper_1__soldTo_t_address').parent().attr("style","width: 40%;");
           $('#attr_wrapper_1__soldTo_t_zip').parent().attr("style","margin-left: 0%; width: 30%;");
         }
 
@@ -831,6 +831,15 @@ $(document).ready(function(){
           });
         }
 
+        var orderPageComponent = function(){
+            if(isMobile()){
+              $("label[for*='pODate']").css("color", "red");
+            }else{
+              $("label[for*='pODate']").find("span").css("color", "red");
+              $("#field_wrapper_1_pODate").css({"padding-left": "130px"});
+            }
+        }
+
         if (navigator.userAgent.match(/Android/i) ||
             navigator.userAgent.match(/webOS/i) ||
             navigator.userAgent.match(/iPhone/i) ||
@@ -856,6 +865,7 @@ $(document).ready(function(){
                   reAlignSoldShipAddressSection();
                   onShoppingCartSwipe();
                   reposition_order_mobile();
+                  orderPageComponent();
                 } else {
                   loadOderPageScript();
                 }
@@ -911,6 +921,7 @@ $(document).ready(function(){
                         File Location : $BASE_PATH$/javascript/js-ezrx.js
                         Layout : Both
                     */
+                    orderPageComponent();
                   } else {
                     loadOderPageScript();
                   }
