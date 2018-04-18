@@ -31,16 +31,32 @@ $(document).ready(function(){
       Layout        :- Desktop
     */
     function remove_exisiting_bonus(){
-      $('#resultsTable').on('click', 'input[type="radio"]', function() {
-          $("#materialArrayset").find("input[name='type']").map(function(index, data){
-            if($(data).val().toLowerCase() == "bonus"){
-              var id = $(data).attr("id").replace("type-","");
-              var code_material = $("#material-"+id).val();
-              $("select[name='itemBonus']").find("option[value='"+code_material+"']").remove();
+      if(isMobile()){
+        console.log("implement on click");
+        $('#resultsTable').on('click', 'input[type="radio"]', function () {
+          console.log("User click this item");
+          $("#materialArrayset").find("input[name='materialAndDesc']").map( function(index, data){
+            var materialDesc = $(data).closest("tr").find("input[name='materialDescription']").val();
+            var typeMaterialandCode = $(data).val().replace( materialDesc, "" ).split("-");
+            console.log(typeMaterialandCode);
+            if(typeMaterialandCode[0].toLowerCase() == "bonus"){
+              $("select[name='itemBonus']").find("option[value='" + typeMaterialandCode[1] + "']").remove();
             }
-          }); 
-        
-      });
+          });
+
+        });
+      }else{
+        $('#resultsTable').on('click', 'input[type="radio"]', function () {
+          $("#materialArrayset").find("input[name='type']").map(function (index, data) {
+            if ($(data).val().toLowerCase() == "bonus") {
+              var id = $(data).attr("id").replace("type-", "");
+              var code_material = $("#material-" + id).val();
+              $("select[name='itemBonus']").find("option[value='" + code_material + "']").remove();
+            }
+          });
+
+        });
+      }
     }
     /* TW-05 and TW-13 Override Invoice Price */
     function override_redcolor(){
@@ -89,7 +105,7 @@ $(document).ready(function(){
               button_helper = '-';
             }
             $($(this).children().children()).hide();
-            $($(this).children().children()).parent().append(button_helper);
+            $($(this).children().children()).parent().append(button_helper); 
             $(this).prop("tooltip", valueOfPromotion);
 
             $(this).on("click", function(){
@@ -135,6 +151,58 @@ $(document).ready(function(){
                   }
                   table += '</table>';
                   
+                  $(this).parent().parent().parent().parent().append(table);
+                  $('.table-tooltip').css({
+                    right: '50%',
+                    position: 'absolute',
+                    transform: 'translate(50%, -50%)',
+                    top: '50%',
+                    width: '500px'
+                  });
+                }
+              }
+            });
+          });
+          
+          
+          $("td.cell-additionalMaterialDescription").off();
+          $("td.cell-additionalMaterialDescription").each(function (index, data) {
+            var button_helper;
+            var valueOfPromotion = $(this).find('input[name="promotion"]').val();
+            if (valueOfPromotion != '') {
+              button_helper = '<i class="material-lens" aria-hidden="true" ></i>';
+              $(this).find('input[name=promotion]').prop('type', 'text');
+              $(this).find('input[name=promotion]').css('display', 'block !important');
+            } else {
+              button_helper = '-';
+            }
+            $($(this).children().children()).hide();
+            $($(this).children().children()).parent().append(button_helper);
+            $(this).prop("tooltip", valueOfPromotion);
+
+            $(this).on("click", function () {
+              var additionalMaterialDescription = $(this).find('input[name="additionalMaterialDescription"]').val();
+              if (additionalMaterialDescription.trim() != '') {
+                if ($(this).hasClass('open')) {
+
+                  $(this).removeClass('open');
+                  $('.table-tooltip').remove();
+
+                } else {
+                  $(this).addClass('open');
+                  $('.table-tooltip').remove();
+
+                  /* if mouse hover on element material description then showing table of Material Description. */
+                  var table = '<table class="table-tooltip" >\
+                              <thead style="padding:5px;font-weight:bold">\
+                                <tr style="background-color:#EEE;">\
+                                  <th style="border: 1px solid #999;padding:5px;">Material Description</th>\
+                                </tr>\
+                              </thead>';
+                  table += "<tbody>";
+                  table += "<tr><td>" + additionalMaterialDescription + "</td></tr>";
+                  table += "</tbody></table>";
+
                   $(this).parent().parent().parent().parent().append(table);
                   $('.table-tooltip').css({
                     right: '50%',
@@ -266,104 +334,30 @@ $(document).ready(function(){
 
     }
 
-    function disabled_btn_save_show_alert()
-    {
-      if($("#update-alert").length == 0){
-        var updateMsg = "<div id='update-alert' class='updateMsg'>Please click 'update' to proceed.</div>";
-        $('#materialArrayset').after(updateMsg);
-        $("#update-alert").css("padding-bottom", "30px");
-        $("#btn-cart-save").attr("disabled", true).css({ "background-color": "grey"});
-      }
-    }
-
-    function enabled_btn_save_remove_alert()
-    {
-      $("#update-alert").remove();
-      $("#btn-cart-save").attr("disabled", false).css({ "background-color": "#0C727A" });
-    }
-
-    /*
-        SUMMARY : Listen user change the value of QTY, OVerride Invoice and Override Price,
-                  Show Alert if the value has been changed
-    */
-
-    function check_user_change_value(){
-        var listEditedField = {};
-
-      $("td.cell-overrideInvoicePrice, td.cell-qty_text, td.cell-overridePrice, td.cell-comments").find(".text-field").on("click focus", function(){
-
-          var id = "";
-          if( $(this).closest(".cell-qty_text").length > 0 ){
-            id = "qty_"+$(this).attr("id").replace("qty_text-", "");
-          }
-
-          if( $(this).closest(".cell-overridePrice").length > 0){
-            id = "op_"+$(this).attr("id").replace("overridePrice-", "");
-          }
-
-          if( $(this).closest(".cell-overrideInvoicePrice").length > 0 ){
-            id = "oip_"+$(this).data("value-attr").replace("overrideInvoicePrice-", "");
-          }
-
-          if ($(this).closest(".cell-comments").length > 0 ){
-            id = "comment_" + $(this).attr("id").replace("comments-", "");
-          }
-
-          if(!listEditedField.hasOwnProperty(id))
-          {
-              listEditedField[id] = { before : $(this).val() };
-          }
-
-        });
-
-        $("td.cell-overrideInvoicePrice, td.cell-qty_text, td.cell-overridePrice, td.cell-comments").find(".text-field").on("keyup blur", function(){
-          
-          var id = "";
-          if( $(this).closest(".cell-qty_text").length > 0 ){
-            id = "qty_"+$(this).attr("id").replace("qty_text-", "");
-          }
-
-          if( $(this).closest(".cell-overridePrice").length > 0){
-            id = "op_"+$(this).attr("id").replace("overridePrice-", "");
-          }
-
-          if( $(this).closest(".cell-overrideInvoicePrice").length > 0 ){
-            id = "oip_"+$(this).data("value-attr").replace("overrideInvoicePrice-", "");
-          }
-
-          if ($(this).closest(".cell-comments").length > 0) {
-            id = "comment_" + $(this).attr("id").replace("comments-", "");
-          }
-
-          listEditedField[id]["after"] = $(this).val();
-
-          var isShowMessage = false;
-          $.each(listEditedField, function(index, data){
-            if(!isShowMessage){
-              if(data.before != data.after){
-                isShowMessage = true;
-              }
-            }else{
-              return false;
-            }
-          });
-
-          if(isShowMessage){
-            disabled_btn_save_show_alert();
-          }else{
-            enabled_btn_save_remove_alert();
-          }
-
-        });
-
-    }
-
     function hide_recommended_material(){
       var tabelFavFreqReq = $("#attribute-pastOrders").parent().parent().parent().parent().parent().parent('.column-1');
       $(tabelFavFreqReq.children()[1]).hide();
     }
 
-    $("#zPUserType").prop("disabled", true).parent().css({"background":"transparent", "border": "0px"});
+    function remove_NT_currency(){
+      
+      $("td.cell-overrideInvoicePrice").find("input.form-field").each(function(index, data){
+        var overrideInvoicePriceVal = $(data).val();
+        if(overrideInvoicePriceVal.indexOf("NT$") != -1){
+          overrideInvoicePriceVal = overrideInvoicePriceVal.replace("NT$", "");
+          $(data).val( overrideInvoicePriceVal );
+        }
+      });
+      
+      $("td.cell-overridePrice_currency").find("input.form-field").each(function(index, data){
+        var overridePriceVal = $(data).val();
+        if(overridePriceVal.indexOf("NT$") != -1){
+          overridePriceVal = overridePriceVal.replace("NT$", "");
+          $(data).val( overridePriceVal );
+        }
+      });
+
+    }
 
     /* 
       Created By    :- Created By Zainal Arifin, Date : 16 Feb 2018
@@ -375,25 +369,42 @@ $(document).ready(function(){
 
     var defaultPaymentTerm = function(){
       if(isMobile()){
-
+        var paymentTermLabel = $("input[name='status_t']").val().trim().toLowerCase();
         var defaultPaymentTermComponent = $("#attribute-paymentTerm_TW_t").find("select");
 
         var currentDefaultPaymentTerm =  $( defaultPaymentTermComponent ).val();
         $("#defaultPaymentTerm_TW_t").prop("value", currentDefaultPaymentTerm );
 
-        $( defaultPaymentTermComponent ).prop("disabled", true);
         setTimeout(function () {
-          $( defaultPaymentTermComponent ).prop("disabled", false);
           $( defaultPaymentTermComponent ).on("change", function () {
             currentDefaultPaymentTerm =  $( this ).val();
             $("#defaultPaymentTerm_TW_t").prop("value", currentDefaultPaymentTerm );
             $(".action-type-modify")[0].click();
           });
+
+          if (paymentTermLabel != "not submitted" ||
+            paymentTermLabel != "failed" ||
+            paymentTermLabel != "transmission failed" ||
+            paymentTermLabel != "order initiated") {
+
+            $(defaultPaymentTermComponent).attr("disabled", true).hide();
+            $(defaultPaymentTermComponent).parent().css({
+              "background": "transparent",
+              "border": "0px",
+              "text-align": "left",
+              "padding-left": "0px",
+            }).removeClass("ui-btn ui-icon-carat-d ui-btn-icon-right ui-corner-all ui-shadow");
+
+          }
+
         }, 2000);
       }else{
 
         var paymentTermLabel = $("#readonly_1_status_t").text().trim().toLowerCase();
-        if (paymentTermLabel != "not submitted" || paymentTermLabel != "failed" || paymentTermLabel != "transmission failed" ){
+        if (paymentTermLabel != "not submitted" || 
+            paymentTermLabel != "failed" || 
+            paymentTermLabel != "transmission failed" || 
+            paymentTermLabel != "order initiated" ){
           $("#readonly_1_paymentTerm_TW_t select").prop("disabled", "disabled");
           $("#readonly_1_paymentTerm_TW_t select").css({ "background": "transparent", "border": "0px", "-webkit-appearance":"none"});
         }
@@ -509,8 +520,7 @@ $(document).ready(function(){
           if($('title').text().toLowerCase() == "model configuration"){
             /* 
               Remove Existing Bonus Material.
-            */  
-            remove_exisiting_bonus();
+            */ 
 
             /* 
               Created By    :- Created By Zainal Arifin, Date : 27 Feb 2018
@@ -573,7 +583,11 @@ $(document).ready(function(){
         $('#materialArrayset').after(updateMsg);
         $("#update-alert").css("padding-bottom", "30px");
         if ($("#btn-cart-save").length > 0) {
-          $("#btn-cart-save").attr("disabled", true).css({ "background-color": "grey" });
+          if (isMobile()) {
+            $(".button-save").attr("disabled");
+          } else {
+            $("#btn-cart-save").attr("disabled", true).css({ "background-color": "grey" });
+          }
         } else {
           $("#btn-cart-addtoorder").attr("disabled", true).css({ "background-color": "grey" });
         }
@@ -583,11 +597,16 @@ $(document).ready(function(){
     function enabled_btn_save_remove_alert() {
       $("#update-alert").remove();
       if ($("#btn-cart-save").length > 0) {
-        $("#btn-cart-save").attr("disabled", false).css({ "background-color": "#0C727A" });
+        if (isMobile()) {
+          $(".button-save").removeAttr("disabled");
+        } else {
+          $("#btn-cart-save").attr("disabled", false).css({ "background-color": "#0C727A" });
+        }
       } else {
         $("#btn-cart-addtoorder").attr("disabled", false).css({ "background-color": "#0C727A" });
       }
     }
+
 
     var var_qty = ($("td.cell-qty_text").length > 0) ? "td.cell-qty_text" : "td.cell-qty";
     var var_netpricedisc = ($("td.cell-netPriceDiscount").length > 0) ? "td.cell-netPriceDiscount" : "td.cell-netPriceDiscount";
@@ -607,16 +626,17 @@ $(document).ready(function(){
 
     $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_Invoiceoverrideprice + ", " + var_comments + ", " + var_qtyBonus + ", " + var_bonusOverride).off();
 
-    function isOverridePrice(id) {
-      id = Math.abs(id);
-      var overridePriceVal = $("#overridePrice_currency-" + id + "-display").val();
-      var overridePriceValue = (overridePriceVal != "") ? overridePriceVal.slice(1) : 0.0;
+    function isOverridePrice(currentObject) {
+      // console.log(id);
+      // id = Math.abs(id);
+      var overridePriceVal = $( currentObject ).val();
+      var overridePriceValue = (overridePriceVal != "") ? overridePriceVal.replace("NT$", "") : 0.0;
       if (overridePriceValue != basic_value_price) {
-        $("#overridePrice_currency-" + id + "-display").css("color", redColor);
-        $("#totalPrice_currency-" + id).css("color", redColor);
-        // $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);                
+        $(currentObject ).css("color", redColor);
+        var totalPrice_currency = $(currentObject).closest("tr").find(".cell-totalPrice_currency").find("span.form-field");
+        $( totalPrice_currency ).css("color", redColor);
       } else {
-        $("#overridePrice_currency-" + id + "-display").css("color", blackColor);
+        $( currentObject ).css("color", blackColor);
       }
 
     }
@@ -636,11 +656,13 @@ $(document).ready(function(){
     }
 
     function override_price(data, id) {
-      var overridePriceValue = ($(data).val() != "") ? $(data).val().slice(1) : 0.0;
+      var overridePriceValue = ($(data).val() != "") ? $(data).val().replace("NT$", "") : 0.0;
       console.log(overridePriceValue, "==", basic_value, overridePriceValue != basic_value_price);
       if (overridePriceValue != basic_value_price) {
         $(data).css("color", redColor);
-        $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").css("color", redColor);
+        var totalPrice_currency = $(currentObject).closest("tr").find(".cell-totalPrice_currency").find("span.form-field");
+        $( totalPrice_currency ).css("color", redColor);
+        // $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").css("color", redColor);
       }
     }
 
@@ -652,40 +674,6 @@ $(document).ready(function(){
         $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").css("color", redColor);
       }
     }
-
-    $(var_bonusOverride).find("input[type='checkbox']").map(function (index, data) {
-      id = $(data).attr("id").replace("overrideBonusQty_", "");
-      console.log("overrideBonusQty_", id, $(data).is("checked"));
-      if ($(data).is(":checked")) {
-        $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);
-        $("#" + var_qty.replace("td.cell-", "") + "-" + id).removeAttr("readonly");
-        //set value 0.0 for override price + total price
-        $("#netPriceDiscount-" + id).val("0.0").css({ "color": blackColor });
-        $("#netPriceDiscount-" + id).attr("readonly", "readonly");
-        $("#overridePrice_currency-" + id + "-display").val("P0.00").css({ "color": blackColor });
-        $("#overridePrice_currency-" + id + "-display").attr("readonly", "readonly");
-        $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").text("0.0").css({ "color": blackColor });
-      } else {
-        console.log("#" + var_qty.replace("td.cell-", "") + "-" + id);
-        $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", blackColor);
-        $("#" + var_qty.replace("td.cell-", "") + "-" + id).attr("readonly", "readonly");
-      }
-
-      $(data).on("click change", function () {
-        console.log("click change", $(this).is(":checked"));
-        if ($(this).is(":checked")) {
-          $("#" + var_qty.replace("td.cell-", "") + "-" + id).removeAttr("readonly");
-          //set value 0.0 for override price + total price
-          $("#netPriceDiscount-" + id).val("0.0").css({ "color": blackColor });
-          $("#netPriceDiscount-" + id).attr("readonly", "readonly");
-          $("#overridePrice_currency-" + id + "-display").val("P0.00").css({ "color": blackColor });
-          $("#overridePrice_currency-" + id + "-display").attr("readonly", "readonly");
-          $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").text("0.0").css({ "color": blackColor });
-        } else {
-          $("#" + var_qty.replace("td.cell-", "") + "-" + id).attr("readonly", "readonly");
-        }
-      });
-    });
 
     $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_Invoiceoverrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).map(function (index, data) {
 
@@ -713,6 +701,59 @@ $(document).ready(function(){
         }
 
       }
+
+    });
+
+
+    var typeBnsOverride = (isMobile()) ? "select" : "input[type='checkbox']";    
+    $(var_bonusOverride).find(typeBnsOverride).map(function (index, data) {
+      
+      var parentTR = $(data).closest("tr");
+      var qty = $(parentTR).find(".cell-qty").find(".form-field");
+      var overridePrice = $(parentTR).find(".cell-overridePrice_currency").find(".form-field");
+      
+      if (isMobile()) {
+        isChecked = $(data).val();
+        if (isChecked.toLowerCase() == "true") {
+          isChecked = true;
+        } else {
+          isChecked = false;
+        }
+      } else {
+        isChecked = $(data).is(":checked");
+      }
+
+      if(isChecked){
+        $(qty).css("color", redColor);
+      }else{
+        $(qty).css("color", blackColor);
+      }
+
+      $(data).on("click change", function(){
+
+        if (isMobile()) {
+          isChecked = $(data).val();
+          if (isChecked.toLowerCase() == "true") {
+            isChecked = true;
+          } else {
+            isChecked = false;
+          }
+        } else {
+          isChecked = $(data).is(":checked");
+        }
+
+        if (isChecked) {
+          $(qty).removeAttr("readonly");
+          $(qty).css("color", redColor);
+
+        } else {
+          $(qty).attr("readonly", "readonly");
+          $(qty).css("color", blackColor);
+
+        }
+
+      });
+      
 
     });
 
@@ -797,8 +838,7 @@ $(document).ready(function(){
 
       listEditedField[id]["after"] = $(this).val();
       var currentObject = $(this);
-      // var isShowMessage = false;
-      // console.log(listEditedField);
+      
       $.each(listEditedField, function (index, data) {
 
         if (index == id) {
@@ -806,25 +846,14 @@ $(document).ready(function(){
             $(currentObject).css("color", blackColor);
 
             if (id.indexOf("op_") != -1) {
-              current_id = parseInt(id.replace("op_", ""));
-              // $("#qty-" + id.replace("op_", "") ).css("color", blackColor);
-              isOverridePrice(current_id);
-              isOverrideDiscount(current_id);
-            }
-
-            if (id.indexOf("oip_") != -1) {
-              current_id = parseInt(id.replace("oip_", ""));
-              isOverrideDiscount(current_id);
+              isOverridePrice(currentObject);
             }
 
           } else {
             $(currentObject).css("color", redColor);
 
             if (id.indexOf("op_") != -1) {
-              current_id = parseInt(id.replace("op_", ""));
-              // $("#qty-" + id.replace("op_", "")).css("color", redColor);
-              isOverridePrice(current_id);
-              isOverrideDiscount(current_id);
+              isOverridePrice(currentObject);
             }
           }
         }
@@ -872,7 +901,12 @@ $(document).ready(function(){
       $(this).find("span[id*='comment_l']").css({"white-space":"normal"});
     });
   }
-    if (navigator.userAgent.match(/Android/i)  ||
+    
+  var orderPageRestyle = function(){
+    $("#zPUserType").prop("disabled", true).parent().css({ "background": "transparent", "border": "0px" });
+  }
+
+  if (navigator.userAgent.match(/Android/i)  ||
           navigator.userAgent.match(/webOS/i)  ||
           navigator.userAgent.match(/iPhone/i) ||
           navigator.userAgent.match(/iPad/i)   ||
@@ -920,6 +954,7 @@ $(document).ready(function(){
                 File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
                 Layout        :- Both (Desktop/Mobile)
               */
+              orderPageRestyle();
 
             } else {
               loadOrderPageScript();
@@ -938,6 +973,7 @@ $(document).ready(function(){
               /* TW-03 Price hover table columns to be corrected for TW - Quantity, Invoice Price, Unit Price.  */
               tw_tooltip_modelconfiguration();
               /* TW-03 Price hover table columns to be corrected for TW - Quantity, Invoice Price, Unit Price. */
+              remove_NT_currency();
             } else {
               loadShoppingCartScript();
             }
@@ -975,6 +1011,7 @@ $(document).ready(function(){
                   Layout        :- Both (Desktop/Mobile)
                 */
                 resizeTableMaterial();
+                orderPageRestyle();
 
               } else {
                 loadScriptOrderPage();
@@ -992,7 +1029,7 @@ $(document).ready(function(){
                 resizeTableShoppingCart();
                 /* TW-17 Scroll bar adjustment in the Shopping cart page and the Commerce Page., Created By Zainal Arifin, Date : 13 April 2018 */
                 tw_tooltip_modelconfiguration();
-                
+                textColorQty();
               } else {
                 loadShoppingCartScript();
               }
