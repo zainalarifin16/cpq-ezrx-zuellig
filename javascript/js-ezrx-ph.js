@@ -840,6 +840,113 @@ $(document).ready(function(){
             }
         }
 
+        /* 
+          Created By    :- Created By Zainal Arifin, Date : 17 April 2018
+          Task          :- Order View Page: Material description to be shown on hover for  Additional Bonus Materials.
+          Page          :- Model Configuration
+          File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
+          Layout        :- Desktop
+        */
+        var ph_tooltip_modelconfiguration = function(){
+          if(isMobile()){
+            
+            $("td.cell-additionalMaterialDescription").off();
+            $("td.cell-additionalMaterialDescription").each(function (index, data) {
+              var button_helper;
+              var valueOfPromotion = $(this).find('input[name="promotion"]').val();
+              if (valueOfPromotion != '') {
+                button_helper = '<i class="material-lens" aria-hidden="true" ></i>';
+                $(this).find('input[name=promotion]').prop('type', 'text');
+                $(this).find('input[name=promotion]').css('display', 'block !important');
+              } else {
+                button_helper = '-';
+              }
+              $($(this).children().children()).hide();
+              $($(this).children().children()).parent().append(button_helper);
+              $(this).prop("tooltip", valueOfPromotion);
+
+              $(this).on("click", function () {
+                var additionalMaterialDescription = $(this).find('input[name="additionalMaterialDescription"]').val();
+                if (additionalMaterialDescription.trim() != '') {
+                  if ($(this).hasClass('open')) {
+
+                    $(this).removeClass('open');
+                    $('.table-tooltip').remove();
+
+                  } else {
+                    $(this).addClass('open');
+                    $('.table-tooltip').remove();
+
+                    /* if mouse hover on element material description then showing table of Material Description. */
+                    var table = '<table class="table-tooltip" >\
+                              <thead style="padding:5px;font-weight:bold">\
+                                <tr style="background-color:#EEE;">\
+                                  <th style="border: 1px solid #999;padding:5px;">Material Description</th>\
+                                </tr>\
+                              </thead>';
+                    table += "<tbody>";
+                    table += "<tr><td>" + additionalMaterialDescription + "</td></tr>";
+                    table += "</tbody></table>";
+
+                    $(this).parent().parent().parent().parent().append(table);
+                    $('.table-tooltip').css({
+                      right: '50%',
+                      position: 'absolute',
+                      transform: 'translate(50%, -50%)',
+                      top: '50%',
+                      width: '500px'
+                    });
+                  }
+                }
+              });
+            });
+
+          }else{
+            var input_val;
+            /* prepare for tooltip on material description */
+            $('td.cell-additionalMaterialDescription').off();
+            $('td.cell-additionalMaterialDescription').prop("tooltip", function () {
+              var input_text = $(this).find(".attribute-field-container span").text();
+              return input_text;
+            }).mouseenter(function () {
+              /* get text of material desciption */
+              var input_text = $(this).find(".attribute-field-container span").text();
+              /* if mouse hover on element material description then showing table of Material Description. */
+              var table = '<table style="text-align:center;width:100%;border-collapse: collapse;">\
+                        <thead style="padding:5px;font-weight:bold">\
+                          <tr style="background-color:#EEE;">\
+                            <th style="border: 1px solid #999;padding:5px;">Material Description</th>\
+                          <tr></thead>';
+              table += "<tbody>";
+              table += "<tr><td>" + input_text + "</td></tr>";
+              table += "</tbody></table>";
+              // if ($(this).attr('tooltip') != '') {
+              /* always showing table of material description */
+              $('#myModal').addClass('hover-modal-content').html(table);
+              $('#myModal').css("display", "block");
+              // }
+              $('.cell-additionalMaterialDescription').mouseleave(function () {
+                $('#myModal').css("display", "none");
+              });
+            });
+
+            $('td.cell-additionalMaterialDescription')
+              .hover(function (e) {
+                e.preventDefault();
+              })
+              .mousemove(function (e) {
+                $('#myModal').css('top', e.pageY - $(document).scrollTop() + 10 + 'px').css('left', e.pageX - $(document).scrollLeft() + 10 + 'px');
+              });
+          }
+        }
+        /* 
+          Created By    :- Created By Zainal Arifin, Date : 17 April 2018
+          Task          :- Order View Page: Material description to be shown on hover for  Additional Bonus Materials.
+          Page          :- Model Configuration
+          File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
+          Layout        :- Desktop
+        */
+
         if (navigator.userAgent.match(/Android/i) ||
             navigator.userAgent.match(/webOS/i) ||
             navigator.userAgent.match(/iPhone/i) ||
@@ -879,7 +986,8 @@ $(document).ready(function(){
               setTimeout(function(){
                 if (isLoadingDone) {
                   // check_user_change_value(true);
-                  textColorQty();                  
+                  textColorQty();
+                  ph_tooltip_modelconfiguration();        
                 } else {
                   loadShoppingCartScript();
                 }
@@ -935,6 +1043,7 @@ $(document).ready(function(){
                 setTimeout(function () {
                   if (isLoadingDone) {
                     textColorQty();
+                    ph_tooltip_modelconfiguration();
                   } else {
                     loadShoppingCartScript();
                   }
