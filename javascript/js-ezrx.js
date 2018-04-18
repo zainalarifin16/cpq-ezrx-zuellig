@@ -75,7 +75,7 @@
         }
         
         console.log( "countryCode", typeof countryCode, countryCode, typeof countryCode == "undefined" );
-        if (typeof countryCode == "undefined" || countryCode == "" ){
+        if (typeof countryCode == "undefined" || countryCode == "" || isNaN(countryCode) ){
             countryCode = "2601";
         }
         if(nationality == 2600){
@@ -359,7 +359,10 @@
                 */
                 _loadingImage = rootFolder + "/image/images/loading-icon.gif";
                // closeLoadingDialog();
-                $('#jg-overlay').hide();
+                if (url.indexOf('copy_processing') == -1){
+                    $('#jg-overlay').hide();
+                }
+                
                 $("#loading-mask").children("#loading-dialog").children('img').attr("src", rootFolder + "/image/images/loading-icon.gif");
                 desktop_newlayout();
                 hide_navigation();
@@ -1097,6 +1100,25 @@
                 dumpSelectedRow(this);
             }
 
+            if(check_nationality(2800)){
+                if (isMobile()) {
+                    $("#materialArrayset").find("input[name='materialAndDesc']").map(function (index, data) {
+                        var materialDesc = $(data).closest("tr").find("input[name='materialDescription']").val();
+                        var typeMaterialandCode = $(data).val().replace(materialDesc, "").split("-");
+                        console.log( $("select[name='itemBonus']").find("option[value='" + typeMaterialandCode[1] + "']") );
+                        $("select[name='itemBonus']").find("option[value='" + typeMaterialandCode[1] + "']").remove();
+                    });
+                } else {
+                    $("#materialArrayset").find("input[name='type']").map(function (index, data) {
+                        if ($(data).val().toLowerCase() == "bonus") {
+                            var id = $(data).attr("id").replace("type-", "");
+                            var code_material = $("#material-" + id).val();
+                            $("select[name='itemBonus']").find("option[value='" + code_material + "']").remove();
+                        }
+                    });
+                }
+            }
+
         });
     };
     /*
@@ -1311,7 +1333,7 @@
         //userType = null;
 
         console.warn('materialSearch');
-        if (userType !== 'CSTeam' ||  enableOldMaterialSearch == "true") {
+        if (userType !== 'csteam' ||  enableOldMaterialSearch == "true") {
             for (var i = fromIndex; i < toIndex; i++) {
                 colArr = custArr[i].split("$$");
                 console.dir(colArr);
@@ -1365,7 +1387,7 @@
                 title: "Principal Name"
             }];
 
-            if(userType == 'Principal'){
+            if(userType == 'principal'){
                 material_column.splice(3, 0, {title: "Principal Material Code"}); 
             }
         }
@@ -1404,7 +1426,7 @@
         // append loading message after initialised datatable.
         $('.dataTables_scrollBody').prepend(loading);
 
-        if (userType === 'CSTeam' && enableOldMaterialSearch == "false") {
+        if (userType === 'csteam' && enableOldMaterialSearch == "false") {
             //console.info('material search ajax call');
 
             var salesOrg = $('input[name="userSalesOrg_PL"]').val();
@@ -1483,7 +1505,7 @@
 
             //console.log('materialSearch',materialSearch);
 
-            if ((userType === 'CSTeam') && (materialSearch.length > 2) && enableOldMaterialSearch == "false") {
+            if ((userType === 'csteam') && (materialSearch.length > 2) && enableOldMaterialSearch == "false") {
 
                 if (materialSearch.slice(-1) === '%') {
                     materialSearch = materialSearch.substring(0, materialSearch.length - 1);
@@ -1551,7 +1573,7 @@
                     var materialSearch = $(this).val() || '';
 
 
-                    if ((userType === 'CSTeam') && (materialSearch.length > 2)) {
+                    if ((userType === 'csteam') && (materialSearch.length > 2)) {
                         /*
                             Start : 10 Nov 2017
                             Task  : Wildcard material search
@@ -1663,12 +1685,11 @@
         var sub = parts[0];
         var dataSet = [];
 
-        var ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master";
-
-        if(check_nationality(2500)){
+        if(check_nationality(2600)){
+            var ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master";
+        }else if(check_nationality(2500)){
             ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master_2500";
-        }
-        if(check_nationality(2800)){
+        }else if(check_nationality(2800)){
             ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master_2800";
         }
 
@@ -2849,7 +2870,13 @@
         for (var i = fromIndex; i < toIndex; i++) {
             colArr = custArr[i].split("$$");
             var subDataSet;
-            subDataSet = ['', colArr[2], colArr[0], colArr[1], colArr[3]];
+            if(check_nationality(2500)){
+                subDataSet = ['', colArr[2], colArr[0], colArr[1], colArr[3]];                
+            }else if(check_nationality(2800)){
+                subDataSet = ['', colArr[0], colArr[1], colArr[2], colArr[3], colArr[4]];                
+            }else{
+                subDataSet = ['', colArr[2], colArr[0], colArr[1], colArr[3]];
+            }
             dataSet.push(subDataSet);
         }
 
@@ -2860,7 +2887,17 @@
                 { title: "Ship to ID" },
                 { title: "Customer Name" }
             ];
-        }else{
+        }else if( check_nationality(2800)){
+            columnTopCustList = [
+                { title: "" },
+                { title: "Sold to ID" },
+                { title: "Sold to Name" },
+                { title: "Ship to ID" },
+                { title: "Ship to Name" },
+                { title: "Bill to ID" }
+            ];
+        }
+        else{
             var columnTopCustList = [{
                                         title: ""
                                     },
@@ -2896,8 +2933,13 @@
                     if (type === 'display') {
                        // data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '">';
                         if (check_nationality(2500) ){
-                        data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '">';
-                        } else{
+                            data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '">';
+                        }else if(check_nationality(2800)){
+                            console.log(full);
+							//FORMAT soldtoid$$shiptoid$$billtoid
+                            data = '<input type="radio" name="topCust" id= "topCust" value="' + full[1] + '$$' + full[3] + '$$' + full[5] + '" >';
+                        }
+                        else{
                             data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '">';
                         }
                     }
@@ -3063,9 +3105,9 @@
     */
 
     function clearStorageOrderItem(){
-        for (var i = 0; i < localStorage.length; i++) {
-            if (localStorage.key(i).indexOf("orderItem_ZP") != -1) {
-                localStorage.removeItem(localStorage.key(i));
+        for (var i = 0; i < window.localStorage.length; i++) {
+            if (window.localStorage.key(i).indexOf("orderItem_ZP") != -1) {
+                window.localStorage.removeItem(window.localStorage.key(i));
             }
         }
     }
@@ -3334,35 +3376,6 @@
                             Layout        :- Desktop
                         */
 
-                        /* 
-                            Created By    :- Created By Zainal Arifin, Date : 17 April 2018
-                            Task          :- 8000348146 Change Save as template order? attribute value true  to Yes , false to No in order page in Submitted/completed orders
-                            Page          :- Order Page
-                            File Location :- $BASE_PATH$/javascript/js-ezrx.js
-                            Layout        :- Desktop
-                        */
-
-                        if (isMobile()) {
-                            var isCompleteOrSubmitted = $("#attribute-status_t").find("span.form-field").text().trim().toLowerCase();
-                            if (isCompleteOrSubmitted == "completed" || isCompleteOrSubmitted == "submitted") {
-                                var isSaveAsTemplate = $("#attribute-isATestOrder_t").find("span.form-field").text().trim().toLowerCase();
-                                if (isSaveAsTemplate == "true") {
-                                    $("#attribute-isATestOrder_t").find("span.form-field").text("Yes");
-                                } else {
-                                    $("#attribute-isATestOrder_t").find("span.form-field").text("No");
-                                }
-                            }
-                        }
-
-
-                        /* 
-                            Created By    :- Created By Zainal Arifin, Date : 17 April 2018
-                            Task          :- 8000348146 Change Save as template order? attribute value true  to Yes , false to No in order page in Submitted/completed orders
-                            Page          :- Order Page
-                            File Location :- $BASE_PATH$/javascript/js-ezrx.js
-                            Layout        :- Desktop
-                        */
-
                     }
 
                     transform_newcopypage();
@@ -3453,7 +3466,9 @@
         }
 
         // remove white overlay
-        $('#jg-overlay').hide();
+        if (url.indexOf('copy_processing') == -1) {
+            $('#jg-overlay').hide();
+        }
         /*
             End : -
             Task  : -
@@ -5333,7 +5348,7 @@
             Layout        :- Desktop
         */
         trans_id = $("#orderNumber_ML").val();
-        $('.cart-addtoorder, .cart-save').on("click", function(){
+        $('.cart-addtoorder, .cart-save, .cart-cancelshopping').on("click", function(){
             localStorage.setItem("orderItem_" + trans_id, true);
         });
 
@@ -5743,6 +5758,7 @@
                 // transform_loginpage();
             } else {
                 /* if pagetitle commerce then call transform_mainlayout and transform_orderspage */
+                clearStorageOrderItem();
                 if (pagetitle == 'commerce management') {
                     console.log('commerce management');
                     $('html').addClass('jg-mobilelayout');
@@ -5811,9 +5827,9 @@
                         var customerDetails = $("#frequentlyAccessedCustomers_t").val().replace(/~/gi, "");
                         console.log("frequentlyAccessedCustomers_t", customerDetails);
                         if (customerDetails.length > 0) {
-                            localStorage.setItem("frequentlyAccessedCustomers_t", customerDetails);
+                            window.localStorage.setItem("frequentlyAccessedCustomers_t", customerDetails);
                         } else {
-                            customerDetails = (localStorage.getItem("frequentlyAccessedCustomers_t") != null ? localStorage.getItem("frequentlyAccessedCustomers_t") : "");                            
+                            customerDetails = (window.localStorage.getItem("frequentlyAccessedCustomers_t") != null ? window.localStorage.getItem("frequentlyAccessedCustomers_t") : "");                            
                         }
                         $("#frequentlyAccessedCustomers_t").val("");
                         if (customerDetails.length == 0) {
@@ -7785,7 +7801,7 @@
                         if mouse hover on element material description then showing table of Material Description.
                     */
 
-                    if($('input[name="userSalesOrg_PL"]').val()=="2800" || (document.getElementById('userSalesOrg_t').value == '2800')){
+                    if(check_nationality(2800)){
                         // var trNo = parseInt($(this).parent().parent().parent().parent().attr('data-sequence-number-field-index'));
                         // console.log(trNo);
                         // var chineseTxt = $('span[data-varname="chineseDescription_l"]').eq(trNo).text().trim();
@@ -7813,6 +7829,43 @@
                     });
                 });
         });
+
+
+        if(check_nationality(2600)){
+            $('td.cell-additionalMaterialDescription').off();
+            $('td.cell-additionalMaterialDescription').prop("tooltip", function () {
+                var input_text = $(this).find(".attribute-field-container span").text();
+                return input_text;
+            }).mouseenter(function () {
+                /* get text of material desciption */
+                var input_text = $(this).find(".attribute-field-container span").text();
+                /* if mouse hover on element material description then showing table of Material Description. */
+                var table = '<table style="text-align:center;width:100%;border-collapse: collapse;">\
+                        <thead style="padding:5px;font-weight:bold">\
+                          <tr style="background-color:#EEE;">\
+                            <th style="border: 1px solid #999;padding:5px;">Material Description</th>\
+                          <tr></thead>';
+                table += "<tbody>";
+                table += "<tr><td>" + input_text + "</td></tr>";
+                table += "</tbody></table>";
+                // if ($(this).attr('tooltip') != '') {
+                /* always showing table of material description */
+                $('#myModal').addClass('hover-modal-content').html(table);
+                $('#myModal').css("display", "block");
+                // }
+                $('.cell-additionalMaterialDescription').mouseleave(function () {
+                    $('#myModal').css("display", "none");
+                });
+            });
+
+            $('td.cell-additionalMaterialDescription')
+                .hover(function (e) {
+                    e.preventDefault();
+                })
+                .mousemove(function (e) {
+                    $('#myModal').css('top', e.pageY - $(document).scrollTop() + 10 + 'px').css('left', e.pageX - $(document).scrollLeft() + 10 + 'px');
+                });
+        }
 
         /* listen all class in the list, for following position above all code of modal table  */
         $('td.cell-contractBonus, td.cell-promotion, td[id*="part_desc"], td.cell-materialDescription')
@@ -7860,8 +7913,7 @@
 
         });
 
-        if(!check_nationality(2800)){
-            
+        if (check_nationality(2500) || check_nationality(2600)){
             $('td.cell-promotion').off();
             $('td.cell-promotion').attr('tooltip', function() {
                 //console.log(' mobile_adjust_tooltip cell-promotion click 222 =====>>>> ');
@@ -7869,7 +7921,7 @@
                 var valueOfPromotion = $(this).find('input[name=promotion]').val();
                 //console.log(' mobile_adjust_tooltip cell-promotion click 222.111 =====>>>> ', valueOfPromotion);
                 if (valueOfPromotion != '') {
-                     //console.log(' mobile_adjust_tooltip cell-promotion click 222.111.111 =====>>>> ');
+                        //console.log(' mobile_adjust_tooltip cell-promotion click 222.111.111 =====>>>> ');
                     button_helper = '<i class="material-lens" aria-hidden="true" ></i>';
                     $(this).find('input[name=promotion]').attr('type', 'text');
                     $(this).find('input[name=promotion]').css('display', 'block !important');
@@ -7902,7 +7954,7 @@
                         //console.log(' mobile_adjust_tooltip 333 =====>>>> ');
                         var x = $(this).attr('tooltip').trim();
                         if (x != "") {
-                             //console.log(' mobile_adjust_tooltip 444 =====>>>> ');
+                                //console.log(' mobile_adjust_tooltip 444 =====>>>> ');
                             var col = x.trim().split(",");
                             if (col.length > 0) {
                                 table += "<tbody>";
@@ -8096,6 +8148,60 @@
                 });
         });
 
+        
+        if(check_nationality(2600)){
+            $("td.cell-additionalMaterialDescription").off();
+            $("td.cell-additionalMaterialDescription").each(function (index, data) {
+                var button_helper;
+                var valueOfPromotion = $(this).find('input[name="promotion"]').val();
+                if (valueOfPromotion != '') {
+                    button_helper = '<i class="material-lens" aria-hidden="true" ></i>';
+                    $(this).find('input[name=promotion]').prop('type', 'text');
+                    $(this).find('input[name=promotion]').css('display', 'block !important');
+                } else {
+                    button_helper = '-';
+                }
+                $($(this).children().children()).hide();
+                $($(this).children().children()).parent().append(button_helper);
+                $(this).prop("tooltip", valueOfPromotion);
+
+                $(this).on("click", function () {
+                    var additionalMaterialDescription = $(this).find('input[name="additionalMaterialDescription"]').val();
+                    if (additionalMaterialDescription.trim() != '') {
+                        if ($(this).hasClass('open')) {
+
+                            $(this).removeClass('open');
+                            $('.table-tooltip').remove();
+
+                        } else {
+                            $(this).addClass('open');
+                            $('.table-tooltip').remove();
+
+                            /* if mouse hover on element material description then showing table of Material Description. */
+                            var table = '<table class="table-tooltip" >\
+                              <thead style="padding:5px;font-weight:bold">\
+                                <tr style="background-color:#EEE;">\
+                                  <th style="border: 1px solid #999;padding:5px;">Material Description</th>\
+                                </tr>\
+                              </thead>';
+                            table += "<tbody>";
+                            table += "<tr><td>" + additionalMaterialDescription + "</td></tr>";
+                            table += "</tbody></table>";
+
+                            $(this).parent().parent().parent().parent().append(table);
+                            $('.table-tooltip').css({
+                                right: '50%',
+                                position: 'absolute',
+                                transform: 'translate(50%, -50%)',
+                                top: '50%',
+                                width: '500px'
+                            });
+                        }
+                    }
+                });
+            });
+        }
+    
     }
 	
 	
