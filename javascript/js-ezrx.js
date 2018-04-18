@@ -380,7 +380,7 @@
                 if ($('#tab-material-content').length > 0) {
                     pageTitle = "model configuration";
                 }
-                if (($("#actualMasterString").text() !== "") || (userType === 'CSTeam' && pageTitle == "model configuration")) {
+                if (($("#actualMasterString").text() !== "") || (userType === 'csteam' && pageTitle == "model configuration")) {
 					$("#materialResults").parent().parent().parent().parent().hide();
 					$("#attribute-material_s").parent().parent().hide();
 					$("#attribute-enableOldMaterialSearch").hide();
@@ -1144,7 +1144,8 @@
             salesOrg = (salesOrg == 2601)? salesOrg : 2601;
         }
             ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";            
-            ajaxData = "q=\{$and:[{'sales_org':'" + salesOrg + "'},{'masterstring':{$regex:'/" + encodeURIComponent(searchStr)+"/i'}}]}&orderby=material:asc";
+            // ajaxData = "q=\{$and:[{'sales_org':'" + salesOrg + "'},{'masterstring':{$regex:'/" + encodeURIComponent(searchStr)+"/i'}}]}&orderby=material:asc";
+            ajaxData = "q=\{ $and: [ { 'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}, { sales_org: { $eq:" + salesOrg + "} }, { Dwnld_To_DSS: { $eq: 'Y'} } ] }&orderby=material:asc";
             // customMaterial_Master?q={$and:[{'sales_org':'2601'},{'masterstring':{$regex:'/23011537/i'}}]}&orderby=material:asc
         // if (typeof salesOrg != 'undefined') {
             // ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&salesorg=" + salesOrg + "&orderby=material:asc";
@@ -1438,6 +1439,7 @@
             }
                 ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";
             // if (typeof salesOrg != 'undefined') {
+                // ajaxData = "q=\{ $and: [ { sales_org: { $eq:" + salesOrg + "} }, { Dwnld_To_DSS: { $eq: 'Y'} } ] }&orderby=material:asc";
                 ajaxData = "q=\{\"sales_org\":\"" + salesOrg + "\"}&orderby=material:asc";
 
              // var ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";

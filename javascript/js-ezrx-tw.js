@@ -544,8 +544,6 @@ $(document).ready(function(){
             override_redcolor();
             /* TW-05 and TW-13 Override Invoice Price */
 
-            check_user_change_value();
-
             hide_recommended_material();
 
           }
@@ -660,7 +658,7 @@ $(document).ready(function(){
       console.log(overridePriceValue, "==", basic_value, overridePriceValue != basic_value_price);
       if (overridePriceValue != basic_value_price) {
         $(data).css("color", redColor);
-        var totalPrice_currency = $(currentObject).closest("tr").find(".cell-totalPrice_currency").find("span.form-field");
+        var totalPrice_currency = $(data).closest("tr").find(".cell-totalPrice_currency").find("span.form-field");
         $( totalPrice_currency ).css("color", redColor);
         // $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").css("color", redColor);
       }

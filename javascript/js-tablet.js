@@ -1159,7 +1159,7 @@ $(document).ready(function() {
 							Layout        :- Desktop
 						*/
 
-						if ($("#zPUserType").val().toLowerCase() != "csteam") {
+						if ($("input[name='zPUserType']").val().toLowerCase() != "csteam") {
 							$("#order-allorders").hide();
 						}
 
@@ -1200,13 +1200,13 @@ $(document).ready(function() {
 								Layout        :- Desktop
 							*/
 
-							var isCompleteOrSubmitted = $("#attribute-status_t").find("span.form-field").text().trim().toLowerCase();
+							var isCompleteOrSubmitted = $("input[name='status_t']").val().trim().toLowerCase();
 							if (isCompleteOrSubmitted == "completed" || isCompleteOrSubmitted == "submitted" || isCompleteOrSubmitted == "in process") {
-								var isSaveAsTemplate = $("#attribute-isATestOrder_t").find("span.form-field").text().trim().toLowerCase();
+								var isSaveAsTemplate = $("input[name='isATestOrder_t']").val().trim().toLowerCase();
 								if (isSaveAsTemplate == "true") {
-									$("#attribute-isATestOrder_t").find("span.form-field").text("Yes");
+									$($("input[name='isATestOrder_t']").siblings()[0]).text("Yes");
 								} else {
-									$("#attribute-isATestOrder_t").find("span.form-field").text("No");
+									$($("input[name='isATestOrder_t']").siblings()[0]).text("No");
 								}
 							}
 
