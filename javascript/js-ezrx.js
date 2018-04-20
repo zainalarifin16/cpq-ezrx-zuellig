@@ -102,6 +102,16 @@
         return $("#jg-overlay").css("display") == "none" ? true : false;
     }
 
+    function getQueryVariableUrl(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            if (pair[0] == variable) { return pair[1]; }
+        }
+        return (false);
+    }
+
     var isMobile = function () {
         return (navigator.userAgent.match(/Android/i) ||
             navigator.userAgent.match(/webOS/i) ||
@@ -1145,7 +1155,7 @@
         }
             ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";            
             // ajaxData = "q=\{$and:[{'sales_org':'" + salesOrg + "'},{'masterstring':{$regex:'/" + encodeURIComponent(searchStr)+"/i'}}]}&orderby=material:asc";
-            ajaxData = "q=\{ $and: [ { 'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}, { sales_org: { $eq:" + salesOrg + "} }, { Dwnld_To_DSS: { $eq: 'Y'} } ] }&orderby=material:asc";
+            ajaxData = "q=\{ $and: [ { 'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}, { sales_org: { $eq:" + salesOrg + "} }, { dwnld_to_dss: { $eq: 'Y'} } ] }&orderby=material:asc";
             // customMaterial_Master?q={$and:[{'sales_org':'2601'},{'masterstring':{$regex:'/23011537/i'}}]}&orderby=material:asc
         // if (typeof salesOrg != 'undefined') {
             // ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&salesorg=" + salesOrg + "&orderby=material:asc";
@@ -1439,8 +1449,9 @@
             }
                 ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";
             // if (typeof salesOrg != 'undefined') {
-                // ajaxData = "q=\{ $and: [ { sales_org: { $eq:" + salesOrg + "} }, { Dwnld_To_DSS: { $eq: 'Y'} } ] }&orderby=material:asc";
-                ajaxData = "q=\{\"sales_org\":\"" + salesOrg + "\"}&orderby=material:asc";
+                // ajaxData = "q=\{ $and: [ { sales_org: { $eq:" + salesOrg + "} }, { dwnld_to_dss: { $eq: 'Y'} } ] }&orderby=material:asc";
+                ajaxData = "q=\{ $and: [ { sales_org: { $eq:" + salesOrg + "} }, { dwnld_to_dss: { $eq: 'Y'} } ] }&orderby=material:asc";
+                // ajaxData = "q=\{\"sales_org\":\"" + salesOrg + "\"}&orderby=material:asc";
 
              // var ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";
             // var ajaxData = "orderby=material_desc:asc";
@@ -3184,6 +3195,7 @@
                             }
                             $('#jg-overlay').hide();
                         });
+                        $('#jg-overlay').hide();                        
                     }
                     hideMenuForCreditControlUser();
                     clearStorageOrderItem();
@@ -3378,6 +3390,55 @@
                             Layout        :- Desktop
                         */
 
+                    }
+
+                    /* 
+                        Created By    :- Created By Zainal Arifin, Date : 17 April 2018
+                        Task          :- Disable user submit order repeatly
+                        Page          :- Order Page
+                        File Location :- $BASE_PATH$/javascript/js-ezrx.js
+                        Layout        :- Desktop
+                    */
+                    
+                    try {
+
+                        var handleDisableSubmitBtn = function(){
+                            setTimeout(function(){
+                                if(isLoadingDone()){
+                                    $("a[name='submit_order']").on("click", function () {
+                                        $("a[name='submit_order']")
+                                            .closest(".button-middle")
+                                            .css({ "background": "grey" })
+                                            .closest(".form-action")
+                                            .css({ "pointer-events": "none", "cursor": "default" });
+                                        $("a[name='submit_order']").on("click", function (e) {
+                                            e.preventDefault();
+                                        });
+                                    });
+                                }else{
+                                    handleDisableSubmitBtn();
+                                }
+                            }, 500);
+                        }
+
+                        handleDisableSubmitBtn();
+
+                    } catch (error) {
+                        console.log(error);
+                    }
+      
+                    /* 
+                        Created By    :- Created By Zainal Arifin, Date : 17 April 2018
+                        Task          :- Disable user submit order repeatly
+                        Page          :- Order Page
+                        File Location :- $BASE_PATH$/javascript/js-ezrx.js
+                        Layout        :- Desktop
+                    */
+
+                    if (getQueryVariableUrl("flag") == "rightnow") {
+                        $("a[name='home']").closest("table").show();
+                    }else{
+                        $("a[name='home']").closest("table").hide();
                     }
 
                     transform_newcopypage();
@@ -5496,17 +5557,6 @@
         Layout : BOTH
     */
 
-    function getQueryVariableUrl(variable)
-    {
-           var query = window.location.search.substring(1);
-           var vars = query.split("&");
-           for (var i=0;i<vars.length;i++) {
-                   var pair = vars[i].split("=");
-                   if(pair[0] == variable){return pair[1];}
-           }
-           return(false);
-    }
-
     var hide_navigation = function(layout){
         var siteUrl = window.location.href;
         layout = layout || 'Desktop';//Tablet
@@ -5530,7 +5580,9 @@
             $("#"+target_button).on("click", function(e){
                 e.preventDefault();
                 localStorage.removeItem("flag");
-                window.close();
+                setTimeout(function(){
+                    window.close();
+                }, 1000);
             });
 
              var jg_box_mainarea = document.querySelector('.jg-box-mainarea');
@@ -7865,7 +7917,27 @@
                     e.preventDefault();
                 })
                 .mousemove(function (e) {
-                    $('#myModal').css('top', e.pageY - $(document).scrollTop() + 10 + 'px').css('left', e.pageX - $(document).scrollLeft() + 10 + 'px');
+                    /* console.log(e.pageY, $(document).scrollTop(), e.pageY - $(document).scrollTop());
+                        console.log(e.pageX, $(document).scrollLeft(), e.pageX - $(document).scrollLeft());
+                        console.log( $("#myModal").css("width").replace("px", ""), $("#myModal").css("height").replace("px", "") ); */
+                    var offSetWidth = 0;
+                    var offsetHeight = 0;
+                    var diffWidth = (e.pageX - $(document).scrollLeft() + 10) + parseInt($("#myModal").css("width").replace("px", ""));
+                    var diffHeight = (e.pageY - $(document).scrollTop() + 10) + parseInt($("#myModal").css("height").replace("px", ""));
+                    // console.log( diffWidth , diffHeight );
+                    if (diffWidth > window.innerWidth) {
+                        offSetWidth = (window.innerWidth - diffWidth);
+                        offSetWidth = Math.abs(offSetWidth) + 50;
+                    }
+                    if (diffHeight > window.innerHeight) {
+                        offsetHeight = window.innerHeight - diffHeight;
+                        offsetHeight = Math.abs(offsetHeight) + 10 + parseInt($("#myModal").css("height").replace("px", ""));
+                    }
+                    var currentTop = (e.pageY - $(document).scrollTop() + 10) - offsetHeight;
+                    var currentLeft = (e.pageX - $(document).scrollLeft() + 10) - offSetWidth;
+                    $('#myModal')
+                        .css('top', currentTop + 'px')
+                        .css('left', currentLeft + 'px');
                 });
         }
 
@@ -7875,7 +7947,27 @@
                 e.preventDefault();
             })
             .mousemove(function(e) {
-                $('#myModal').css('top', e.pageY - $(document).scrollTop() + 10 + 'px').css('left', e.pageX - $(document).scrollLeft() + 10 + 'px');
+                /* console.log(e.pageY, $(document).scrollTop(), e.pageY - $(document).scrollTop());
+                console.log(e.pageX, $(document).scrollLeft(), e.pageX - $(document).scrollLeft());
+                console.log( $("#myModal").css("width").replace("px", ""), $("#myModal").css("height").replace("px", "") ); */
+                var offSetWidth = 0;
+                var offsetHeight = 0;
+                var diffWidth = (e.pageX - $(document).scrollLeft() + 10) + parseInt($("#myModal").css("width").replace("px", ""));
+                var diffHeight = (e.pageY - $(document).scrollTop() + 10) + parseInt($("#myModal").css("height").replace("px", ""));
+                // console.log( diffWidth , diffHeight );
+                if ( diffWidth > window.innerWidth ){
+                    offSetWidth = (window.innerWidth - diffWidth);
+                    offSetWidth = Math.abs( offSetWidth ) + 50;
+                }
+                if ( diffHeight > window.innerHeight ){
+                    offsetHeight = window.innerHeight - diffHeight;
+                    offsetHeight = Math.abs( offsetHeight ) + 10 + parseInt($("#myModal").css("height").replace("px", ""));
+                }
+                var currentTop = (e.pageY - $(document).scrollTop() + 10) - offsetHeight;
+                var currentLeft = (e.pageX - $(document).scrollLeft() + 10) - offSetWidth;
+                $('#myModal')
+                    .css('top', currentTop + 'px')
+                    .css('left', currentLeft + 'px');
             });
     }
 

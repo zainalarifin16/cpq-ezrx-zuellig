@@ -401,7 +401,7 @@ $(document).ready(function(){
             $("#update-alert").css("padding-bottom", "30px");
             if ($("#btn-cart-save").length > 0) {
               if(isMobile()){
-                $(".button-save").attr("disabled");
+                $(".button-save").attr("disabled", true);
               }else{
                 $("#btn-cart-save").attr("disabled", true).css({ "background-color": "grey" });
               }
@@ -935,7 +935,27 @@ $(document).ready(function(){
                 e.preventDefault();
               })
               .mousemove(function (e) {
-                $('#myModal').css('top', e.pageY - $(document).scrollTop() + 10 + 'px').css('left', e.pageX - $(document).scrollLeft() + 10 + 'px');
+                  /* console.log(e.pageY, $(document).scrollTop(), e.pageY - $(document).scrollTop());
+                  console.log(e.pageX, $(document).scrollLeft(), e.pageX - $(document).scrollLeft());
+                  console.log( $("#myModal").css("width").replace("px", ""), $("#myModal").css("height").replace("px", "") ); */
+                  var offSetWidth = 0;
+                  var offsetHeight = 0;
+                  var diffWidth = (e.pageX - $(document).scrollLeft() + 10) + parseInt($("#myModal").css("width").replace("px", ""));
+                  var diffHeight = (e.pageY - $(document).scrollTop() + 10) + parseInt($("#myModal").css("height").replace("px", ""));
+                  // console.log( diffWidth , diffHeight );
+                  if (diffWidth > window.innerWidth) {
+                    offSetWidth = (window.innerWidth - diffWidth);
+                    offSetWidth = Math.abs(offSetWidth) + 50;
+                  }
+                  if (diffHeight > window.innerHeight) {
+                    offsetHeight = window.innerHeight - diffHeight;
+                    offsetHeight = Math.abs(offsetHeight) + 10 + parseInt($("#myModal").css("height").replace("px", ""));
+                  }
+                  var currentTop = (e.pageY - $(document).scrollTop() + 10) - offsetHeight;
+                  var currentLeft = (e.pageX - $(document).scrollLeft() + 10) - offSetWidth;
+                  $('#myModal')
+                    .css('top', currentTop + 'px')
+                    .css('left', currentLeft + 'px');
               });
           }
         }
