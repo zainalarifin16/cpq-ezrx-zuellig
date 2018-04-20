@@ -1446,17 +1446,25 @@
         if (userType === 'csteam' && enableOldMaterialSearch == "false") {
             console.info('material search ajax call');
 
-            var salesOrg = $('input[name="userSalesOrg_PL"]').val();
-            ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";
-            var ajaxData = "orderby=material_desc:asc";
+            if (check_nationality(2600)) {
+                var salesOrg = 2601;
+            } else {
+                salesOrg = getZPUserType();
+            }
 
-            if (salesOrg != 2600 && typeof salesOrg != 'undefined') {
+            ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";
+            ajaxData = "q=\{ $and: [ { sales_org: { $eq:" + salesOrg + "} }, { dwnld_to_dss: { $eq: 'Y'} } ] }&orderby=material:asc";
+            
+            /* ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";
+            var ajaxData = "orderby=material_desc:asc"; */
+
+            /* if (salesOrg != 2600 && typeof salesOrg != 'undefined') {
                 ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";
                 // if (typeof salesOrg != 'undefined') {
                 ajaxData = "q=\{ $and: [ { sales_org: { $eq:" + salesOrg + "} }, { dwnld_to_dss: { $eq: 'Y'} } ] }&orderby=material:asc";
                 // ajaxData = "q=\{ $and: [ { sales_org: { $eq:" + salesOrg + "} }, { dwnld_to_dss: { $eq: 'Y'} } ] }&orderby=material:asc";
                 // ajaxData = "q=\{\"sales_org\":\"" + salesOrg + "\"}&orderby=material:asc";
-            }
+            } */
 
              // var ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";
             // var ajaxData = "orderby=material_desc:asc";
