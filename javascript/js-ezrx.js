@@ -2109,6 +2109,12 @@
         var line_items_no = exitingDataItemsObj.children.length;
         //console.log('line_items_no',line_items_no);
         ///checking existing order items end
+        if(check_nationality(2800)){
+            selectedCustomerDetail = selectedCustShipID;
+        }else{
+            selectedCustomerDetail = parseInt(selectedCustShipID);            
+        }
+
         var selectedCustShipID = parseInt(selectedCustShipID);
         var currentCust = parseInt($('input[name="customerShipToId_t"]').val());
 
@@ -2180,7 +2186,7 @@
             }
 
         } else {
-            $("#selectedCustomerDetail").val(selectedCustShipID);
+            $("#selectedCustomerDetail").val(selectedCustomerDetail);            
             $("#customerMasterString_t").val("");
             setTimeout(function() {
                 console.log('save button clicked');
