@@ -1146,19 +1146,25 @@
         var searchStr = materialSearchStr.trim();
         var dataSet2 = [];
 
-        var salesOrg = $('input[name="userSalesOrg_PL"]').val();
-/*         ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";
-        var ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&orderby=material_desc:asc"; */
-        
+        var salesOrg = $('input[name="userSalesOrg_PL"]').val();        
         if ( check_nationality(2600) ) {
             salesOrg = (salesOrg == 2601)? salesOrg : 2601;
         }
-            ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";            
-            // ajaxData = "q=\{$and:[{'sales_org':'" + salesOrg + "'},{'masterstring':{$regex:'/" + encodeURIComponent(searchStr)+"/i'}}]}&orderby=material:asc";
+
+        ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";
+        ajaxData = "q=\{ $and: [ { 'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}, { sales_org: { $eq:" + salesOrg + "} }, { dwnld_to_dss: { $eq: 'Y'} } ] }&orderby=material:asc";
+
+        /*ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";
+        var ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&orderby=material_desc:asc";
+        
+        if (salesOrg != 2600 && typeof salesOrg != 'undefined' ) {
+            ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";  
+            // ajaxData = "q=\{$and:[{'sales_org':'" + salesOrg + "'},{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}]}&orderby=material:asc";
             ajaxData = "q=\{ $and: [ { 'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}, { sales_org: { $eq:" + salesOrg + "} }, { dwnld_to_dss: { $eq: 'Y'} } ] }&orderby=material:asc";
-            // customMaterial_Master?q={$and:[{'sales_org':'2601'},{'masterstring':{$regex:'/23011537/i'}}]}&orderby=material:asc
+                      
         // if (typeof salesOrg != 'undefined') {
             // ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&salesorg=" + salesOrg + "&orderby=material:asc";
+        }*/
 
         // var ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";
         // var ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&orderby=material_desc:asc";
@@ -1438,20 +1444,19 @@
         $('.dataTables_scrollBody').prepend(loading);
 
         if (userType === 'csteam' && enableOldMaterialSearch == "false") {
-            //console.info('material search ajax call');
+            console.info('material search ajax call');
 
             var salesOrg = $('input[name="userSalesOrg_PL"]').val();
-            /* ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";
-            var ajaxData = "orderby=material_desc:asc"; */
-            
-            if ( check_nationality(2600) ) {
-                salesOrg = (salesOrg == 2601) ? salesOrg : 2601;                
-            }
+            ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";
+            var ajaxData = "orderby=material_desc:asc";
+
+            if (salesOrg != 2600 && typeof salesOrg != 'undefined') {
                 ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";
-            // if (typeof salesOrg != 'undefined') {
-                // ajaxData = "q=\{ $and: [ { sales_org: { $eq:" + salesOrg + "} }, { dwnld_to_dss: { $eq: 'Y'} } ] }&orderby=material:asc";
+                // if (typeof salesOrg != 'undefined') {
                 ajaxData = "q=\{ $and: [ { sales_org: { $eq:" + salesOrg + "} }, { dwnld_to_dss: { $eq: 'Y'} } ] }&orderby=material:asc";
+                // ajaxData = "q=\{ $and: [ { sales_org: { $eq:" + salesOrg + "} }, { dwnld_to_dss: { $eq: 'Y'} } ] }&orderby=material:asc";
                 // ajaxData = "q=\{\"sales_org\":\"" + salesOrg + "\"}&orderby=material:asc";
+            }
 
              // var ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";
             // var ajaxData = "orderby=material_desc:asc";
@@ -1712,6 +1717,7 @@
           //data: "q={'custmasterstring':{$regex:'/" + encodeURIComponent($('#searchCustomerInput').val()) + "/i'}}&orderby=customer_name:asc"
             data: 'q={"custmasterstring":{$regex:"/' + encodeURIComponent($("#searchCustomerInput").val()) + '/i"}}&orderby=customer_name:asc'
         }).done(function(response) {
+            console.log('jquery done');            
             var data = response.items;
             $.each(data, function(i, item) {
                 var subDataSet = [
@@ -1760,7 +1766,7 @@
                 /*if(userCountry === 'PH'){
                     subDataSet = ["", item.customer_soldto_id, item.customer_name, item.customer_corp_group, item.cust_shpto_add1, item.cust_shpto_addr2, item.customer_ship_phone, item.customer_shpto_pcode];
                 }*/
-                console.log('jquery done', subDataSet);
+
                 dataSet.push(subDataSet);
             });
 
@@ -5879,7 +5885,7 @@
                     mobile_customerSearch();
                     if ($('#frequentlyAccessedCustomers_t').length) {
                         var customerDetails = $("#frequentlyAccessedCustomers_t").val().replace(/~/gi, "");
-                        console.log("frequentlyAccessedCustomers_t", customerDetails);
+                        console.log("frequentlyAccessedCustomers_t is", (customerDetails.length > 0) ? "Not Empty" : "Empty", "The data is : " + customerDetails);                        
                         if (customerDetails.length > 0) {
                             window.localStorage.setItem("frequentlyAccessedCustomers_t", customerDetails);
                         } else {
@@ -6293,9 +6299,9 @@
                 mobile_orderpage();
                 mobile_customerSearch();
 
-                if ($('#frequentlyAccessedCustomers_t').length) {
+                if ($('#frequentlyAccessedCustomers_t').length > 0) {
                     var customerDetails = $("#frequentlyAccessedCustomers_t").val().replace(/~/gi, "");
-                    // console.log("frequentlyAccessedCustomers_t", customerDetails);
+                    console.log("frequentlyAccessedCustomers_t is", (customerDetails.length > 0) ? "Not Empty" : "Empty", "The data is : " + customerDetails);
                     if (customerDetails.length > 0) {
                         localStorage.setItem("frequentlyAccessedCustomers_t", customerDetails);
                     } else {
