@@ -413,7 +413,13 @@ var loadAjax = function() {
 	var sub = parts[0];
 	var dataSet = [];
 	var fileAttachmentBSID_t = $("input[name='fileAttachmentBSID_t']").val();
-	var ajaxUrl = "https://"+sub+".bigmachines.com/rest/v1/commerceProcesses/oraclecpqo/transactions/" + fileAttachmentBSID_t + "/attachments/customerDetails?docId=36244074&docNum=1";
+	var ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master";
+	//NEW AJAX URL FOR TAIWAN CSTEAM START
+	if (userCountry === 'TW') {
+		ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master_2800";
+	} else if (userCountry == "PH") {
+		ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master_2500";
+	}
 	/*
 	var ajaxUrl = "https://"+sub+".bigmachines.com/rest/v3/customCustomer_Master";
 	//NEW AJAX URL FOR TAIWAN CSTEAM START
