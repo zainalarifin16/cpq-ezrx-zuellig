@@ -391,27 +391,28 @@
                     pageTitle = "model configuration";
                 }
                 // if ( (userType === 'csteam' && pageTitle == "model configuration") ) {
-                if ( pageTitle == "model configuration" ) {
-					$("#materialResults").parent().parent().parent().parent().hide();
-					$("#attribute-material_s").parent().parent().hide();
-					$("#attribute-enableOldMaterialSearch").hide();
-                    $('#attribute-materialSearch').append().html(materialHTML);
-                    console.log("pageTitle=================" + pageTitle)
 
-                    var fileAttachmentID = ($("input[name='fileAttachmentID']").length >0 )? $("input[name='fileAttachmentID']").val() : $("input[name='fileAttachmentBSID_t']").val();
-                    var ajaxUrl = "https://" + instanceName + ".bigmachines.com/rest/v1/commerceProcesses/oraclecpqo/transactions/" + fileAttachmentID + "/attachments/materialDetails?docId=36244074&docNum=1";
-                    
-                    $.ajax({
-                        type: "GET",
-                        url: ajaxUrl,
-                        dataType: "text",
-                        success: function (materialDetails) {
+                var fileAttachmentID = ($("input[name='fileAttachmentID']").length >0 )? $("input[name='fileAttachmentID']").val() : $("input[name='fileAttachmentBSID_t']").val();
+                var ajaxUrl = "https://" + instanceName + ".bigmachines.com/rest/v1/commerceProcesses/oraclecpqo/transactions/" + fileAttachmentID + "/attachments/materialDetails?docId=36244074&docNum=1";
+                
+                $.ajax({
+                    type: "GET",
+                    url: ajaxUrl,
+                    dataType: "text",
+                    success: function (materialDetails) {
+
+                        if (( materialDetails !== "") || (userType === 'csteam' && pageTitle == "model configuration")) {
+                            $("#materialResults").parent().parent().parent().parent().hide();
+                            $("#attribute-material_s").parent().parent().hide();
+                            $("#attribute-enableOldMaterialSearch").hide();
+                            $('#attribute-materialSearch').append().html(materialHTML);
+                            console.log("pageTitle=================" + pageTitle)
                             materialSearch(materialDetails);
                         }
-                    });
+                        
+                    }
+                });
 
-
-                }
                 materialAddItem();
                 // bonusQtyOverride();
                 updateErrorMsg();
