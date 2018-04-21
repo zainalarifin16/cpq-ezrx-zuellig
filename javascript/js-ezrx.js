@@ -390,13 +390,25 @@
                 if ($('#tab-material-content').length > 0) {
                     pageTitle = "model configuration";
                 }
-                if (($("#actualMasterString").text() !== "") || (userType === 'csteam' && pageTitle == "model configuration")) {
+                // if ( (userType === 'csteam' && pageTitle == "model configuration") ) {
+                if ( pageTitle == "model configuration" ) {
 					$("#materialResults").parent().parent().parent().parent().hide();
 					$("#attribute-material_s").parent().parent().hide();
 					$("#attribute-enableOldMaterialSearch").hide();
                     $('#attribute-materialSearch').append().html(materialHTML);
                     console.log("pageTitle=================" + pageTitle)
-                    materialSearch();
+
+                    var fileAttachmentID = ($("input[name='fileAttachmentID']").length >0 )? $("input[name='fileAttachmentID']").val() : $("input[name='fileAttachmentBSID_t']").val();
+                    var ajaxUrl = "https://" + instanceName + ".bigmachines.com/rest/v1/commerceProcesses/oraclecpqo/transactions/" + fileAttachmentID + "/attachments/materialDetails?docId=36244074&docNum=1";
+                    
+                    $.ajax({
+                        type: "GET",
+                        url: ajaxUrl,
+                        dataType: "text",
+                        success: function (materialDetails) {
+                            materialSearch(materialDetails);
+                        }
+                    });
 
 
                 }
@@ -1270,14 +1282,14 @@
 
     */
 
-    var materialSearch = function() {
+    var materialSearch = function(dataMaterialAjax) {
         console.log('materialSearch function');
         var userCountryMS = null;
         if($('input[name="userSalesOrg_PL"]').val()=="2800"){
         var userCountryMS = null;
             userCountryMS = 'TW'; 
         }
-		var customerDetails = null;
+		var materialDetails = dataMaterialAjax;
 		var custArr = null;
         var totalRecs = null;
 		var userType = ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();        
@@ -1285,41 +1297,13 @@
 
             /* 
 				Created By    :- Created By Zainal Arifin, Date : 18 March 2018
-				Task          :- Search Customer from customerDetails.txt From URL
+				Task          :- Search Customer from materialDetails.txt From URL
 				Page          :- Shopping Cart
 				File Location :- $BASE_PATH$/javascript/js-ezrx.js
 				Layout        :- Global
             */
             
-            var isPHCountry = check_nationality(2500);
-            // var isSGCountry = check_nationality(2600);
-            var usernameGetCustomer = "CPQAPIUser";
-            var passwordGetCustomer = "csC(#15^14";
-
-            // if (isPHCountry) {
-
-                // var isCPQAPIUSER = (window._BM_USER_LOGIN == "CPQAPIUser") ? true : false;
-
-                // if(isCPQAPIUSER){
-                    /* var fileAttachmentBSID_t = localStorage.getItem("fileAttachmentBSID_t");
-                    $.ajax({
-                        type: "GET",
-                        url: "/rest/v1/commerceProcesses/oraclecpqo/transactions/" + fileAttachmentBSID_t + "/attachments/materialDetails?docId=36244074&docNum=1",
-                        dataType: "text",
-                        success: function (actualMasterString) {
-                            customerDetails = actualMasterString;
-                        },
-                        beforeSend: function (xhr) {
-                            xhr.setRequestHeader("Authorization", "Basic " + btoa(usernameGetCustomer + ":" + passwordGetCustomer));
-                        }
-                    }); */
-                /*}else{
-                    customerDetails = $("#actualMasterString").html();
-                }*/
-
-            // } else {
-                customerDetails = $("#actualMasterString").html();
-            // }
+            // materialDetails = $("#actualMasterString").html();
 
             /* 
 				Created By    :- Created By Zainal Arifin, Date : 18 March 2018
@@ -1329,7 +1313,7 @@
 				Layout        :- Global
 			*/
 
-            custArr = customerDetails.split("##");
+            custArr = materialDetails.split("##");
 			totalRecs = custArr.length;
 		}
                 
