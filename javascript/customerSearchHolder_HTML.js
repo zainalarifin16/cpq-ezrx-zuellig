@@ -133,10 +133,28 @@ $(document).ready(function(js2){
 				Layout        :- Global
 			*/
 
-			var isPHCountry = check_nationality(2500);
+			// var isPHCountry = check_nationality(2500);
 			// var isSGCountry = check_nationality(2600);
-			var usernameGetCustomer = "CPQAPIUser";
-			var passwordGetCustomer = "csC(#15^14";
+			/* var usernameGetCustomer = "CPQAPIUser";
+			var passwordGetCustomer = "csC(#15^14"; */
+
+			var fileAttachmentBSID_t = $("input[name='fileAttachmentBSID_t']").val();
+			var ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v1/commerceProcesses/oraclecpqo/transactions/" + fileAttachmentBSID_t + "/attachments/customerDetails?docId=36244074&docNum=1";
+
+			$.ajax({
+				// header: { "Authorization": "Basic " + btoa(usernameGetCustomer + ":" + passwordGetCustomer) },
+				type: "GET",
+				url: ajaxUrl,
+				dataType: "text",
+				success: function (customerDetails) {
+					// console.log(response);
+					var seachCustomer;
+					searchCustList(customerDetails, seachCustomer);
+					searchCustomerList(seachCustomer);
+					$('.search-cust_wrapper').hide();
+
+				}
+			});
 
 			/* if (isPHCountry){
 
@@ -164,6 +182,7 @@ $(document).ready(function(js2){
 				}, 5000);
 
 			}else{ */
+				/*
 				if ($('#customerMasterString_t').length > 0) {
 					var customerDetails = $("#customerMasterString_t").val();
 					// if (customerDetails === "" && $('#fileAttachmentBSID_t').val() == "") {
@@ -179,6 +198,7 @@ $(document).ready(function(js2){
 					}
 
 				}
+				*/
 			// }
 
 			/* 
@@ -392,6 +412,9 @@ var loadAjax = function() {
 	var parts = fullUrl.split('.');
 	var sub = parts[0];
 	var dataSet = [];
+	var fileAttachmentBSID_t = $("input[name='fileAttachmentBSID_t']").val();
+	var ajaxUrl = "https://"+sub+".bigmachines.com/rest/v1/commerceProcesses/oraclecpqo/transactions/" + fileAttachmentBSID_t + "/attachments/customerDetails?docId=36244074&docNum=1";
+	/*
 	var ajaxUrl = "https://"+sub+".bigmachines.com/rest/v3/customCustomer_Master";
 	//NEW AJAX URL FOR TAIWAN CSTEAM START
 	if(userCountry === 'TW'){
@@ -399,7 +422,7 @@ var loadAjax = function() {
 	}else if(userCountry == "PH"){
 		ajaxUrl = "https://"+sub+".bigmachines.com/rest/v3/customCustomer_Master_2500";
 	}
-
+	*/
 	//NEW AJAX URL FOR TAIWAN CSTEAM END
 	var param = 'q={"custmasterstring":{$regex:"/' + encodeURIComponent($("#searchCustomerInput").val()) + '/i"}}&orderby=customer_name:asc';
 	var ua = window.navigator.userAgent;
