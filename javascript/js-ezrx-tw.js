@@ -457,6 +457,8 @@ $(document).ready(function(){
 
             $($("#field_wrapper_1_customerShipToId_t").closest(".column-layout").children()[0]).css("display", "block"); //clone spacer to element
 
+            $("#readonly_1__soldTo_t_address_2").css("white-space", "normal");
+
             /* 
               Created By    :- Created By Zainal Arifin, Date : 19 Feb 2018
               Task          :- TW-07 Address set layout correction.
