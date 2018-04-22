@@ -225,7 +225,7 @@ $(document).ready(function(js2){
 			}
 			$("#frequentlyAccessedCustomers_t").val("");
 			//console.log('frequentlyAccessedCustomers_t customerDetails  PR 1.0  =====>>>>>>> ', customerDetails);
-			if(customerDetails.length == 0){
+			if ( customerDetails == null || customerDetails.length == 0 ){
 				return true;
 			} else {
 				showCustomerList(customerDetails);
@@ -308,6 +308,29 @@ var changeCust = function(){
 		*/
 		$("#selectedCustomerDetail").val(newCustId);
 		//PH-47 : Only once to change customer 6/4/2018, Zainal Arifin
+		var check_nationality = function (nationality) {
+			var countryEle = document.getElementById('userSalesOrg_t');
+			if (countryEle == null) { //this is for material page.
+				countryEle = $('input[name="userSalesOrg_PL"]').val();
+				countryCode = countryEle;
+			} else {
+				var countryCode = parseInt(countryEle.value);
+			}
+
+			if (typeof countryCode == "undefined") {
+				countryCode = "2601";
+			}
+			if (nationality == 2600) {
+				nationality = 2601;
+			}
+
+			var valid = false;
+			if (nationality == countryCode || countryCode == 2601) {
+				valid = true;
+			}
+
+			return valid;
+		}
 		if(!check_nationality(2500)){
 			$("#customerMasterString_t").val("");
 		}
