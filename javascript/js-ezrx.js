@@ -404,33 +404,56 @@
                         var fileAttachmentID = ($("input[name='fileAttachmentID']").length >0 )? $("input[name='fileAttachmentID']").val() : $("input[name='fileAttachmentBSID_t']").val();
                         console.log( "materialDetails in desktop", fileAttachmentID );
 						var ajaxUrl = "https://" + instanceName + ".bigmachines.com/rest/v1/commerceProcesses/oraclecpqo/transactions/" + fileAttachmentID + "/attachments/materialDetails?docId=36244074&docNum=1";
-                    
+                        var ajaxUrl2 = "https://" + instanceName + ".bigmachines.com/rest/v1/commerceProcesses/oraclecpqo/transactions/" + fileAttachmentID + "/attachments/materialDetails2?docId=36244074&docNum=1";
+                        var sumResult = "";
 						$.ajax({
 							type: "GET",
 							url: ajaxUrl,
 							dataType: "text",
-							success: function (materialDetails) {
+							/* success: function (materialDetails) {
 								materialSearch(materialDetails);
-							}
-						});
+							}*/
+						}).done(function(materialDetails) {
+                                sumResult = materialDetails;
+								//materialSearch(materialDetails);
+                            $.ajax({
+                                type: "GET",
+                                url: ajaxUrl2,
+                                dataType: "text",
+                                /* success: function (materialDetails) {
+                                    materialSearch(materialDetails);
+                                } */
+                            }).done(function (materialDetails2) {
+
+                                if (sumResult.length > 0) {
+                                    sumResult += materialDetails2;
+                                    console.log(sumResult, "long of material details", sumResult.length);
+                                    materialSearch(sumResult);
+                                } else {
+                                    console.log("materialDetails is empty");
+                                }
+                            });
+                            
+                            
+                        });
 					}
                    
 
+                    var isDataTableCreated = function () {
+                        console.log("isDataTableCreated");
+                        setTimeout(function () {
+                            if ($('.materialSearchWrapper .dataTables_scroll').length > 0) {
+                                materialAddItem();
+                            } else {
+                                isDataTableCreated();
+                            }
+                        }, 500);
+                    }
+    
+                    isDataTableCreated(); 
 
                 }
                 
-                var isDataTableCreated = function () {
-                    console.log("isDataTableCreated");
-                    setTimeout(function () {
-                        if ($('.materialSearchWrapper .dataTables_scroll').length > 0) {
-                            materialAddItem();
-                        } else {
-                            isDataTableCreated();
-                        }
-                    }, 500);
-                }
-
-                isDataTableCreated(); 
 
                 // bonusQtyOverride();
                 updateErrorMsg();
@@ -1206,7 +1229,7 @@
             /* ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v3/customMaterial_Master";
             var ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&orderby=material:asc"; */
         // }
-        if (searchStr.slice(-1) === '%') {
+        /* if (searchStr.slice(-1) === '%') {
             //console.log(searchStr);
             searchStr = searchStr.substring(0, searchStr.length - 1);
             //console.log(searchStr);
@@ -1234,7 +1257,7 @@
             }
             console.warn(ajaxData);
 
-        }
+        } */
         //console.warn('searchMaterialAjax');
 
         $.ajax({
@@ -1368,7 +1391,7 @@
                      //debugger;
                     //  console.log('userType',userType);
                     if(userType == 'principal'){
-                        subDataSet = ["", colArr[0], colArr[1], colArr[5], colArr[2].toString(), colArr[3], colArr[4]]; 
+                        subDataSet = ["", colArr[0], colArr[1], colArr[5], colArr[2], colArr[3], colArr[4]]; 
                     }
                     // console.log(subDataSet);
                 }
@@ -2920,14 +2943,34 @@
             var fileAttachmentID = ($("input[name='fileAttachmentID']").length > 0) ? $("input[name='fileAttachmentID']").val() : $("input[name='fileAttachmentBSID_t']").val();
             console.log("materialDetails in mobile", fileAttachmentID);
             var ajaxUrl = "https://" + instanceName + ".bigmachines.com/rest/v1/commerceProcesses/oraclecpqo/transactions/" + fileAttachmentID + "/attachments/materialDetails?docId=36244074&docNum=1";
-
+            var ajaxUrl2 = "https://" + instanceName + ".bigmachines.com/rest/v1/commerceProcesses/oraclecpqo/transactions/" + fileAttachmentID + "/attachments/materialDetails2?docId=36244074&docNum=1";
+            var sumResult = "";
             $.ajax({
                 type: "GET",
                 url: ajaxUrl,
                 dataType: "text",
-                success: function (materialDetails) {
-                    materialSearch(materialDetails);
-                }
+                /* success: function (materialDetails) {
+                    
+                } */
+            }).done(function(materialDetails){
+                sumResult = materialDetails;
+                console.log(sumResult, "long of material details", sumResult.length);
+                $.ajax({
+                    type: "GET",
+                    url: ajaxUrl2,
+                    dataType: "text",
+                    success: function (materialDetails2) {
+                        
+                    }
+                }).done(function(materialDetails2){
+                    if(sumResult.length > 0){
+                        sumResult += materialDetails2;
+                        console.log(sumResult, "long of material details", sumResult.length);
+                        materialSearch(sumResult);
+                    }else{
+                        console.log("materialDetails is empty");
+                    }
+                })
             });
         }
 
