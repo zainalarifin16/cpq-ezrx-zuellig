@@ -65,6 +65,41 @@
 
     */
 
+    function Interceptor(nativeOpenWrapper, nativeSendWrapper) {
+        XMLHttpRequest.prototype.open = function () {
+            // Code here to intercept XHR
+            console.log(this, arguments);
+            return nativeOpenWrapper.apply(this, arguments);
+        }
+        XMLHttpRequest.prototype.send = function () {
+            this.onloadend = function () {
+                if (this.capture) {
+                    console.log(this.responseText);
+                }
+            }
+            console.log(this, arguments);
+            var xhr = this,
+                waiter = setInterval(function () {
+                    if (xhr.readyState && xhr.readyState == 4) {
+                        var checkingUrl = xhr.responseURL.split("/");
+                        if( checkingUrl[ checkingUrl.length - 1 ] == "ConfigDwr.updateArraySize.dwr" ){
+                            $('#update')[0].click();
+                        }
+                        clearInterval(waiter);
+                    }
+                }, 50);
+            return nativeSendWrapper.apply(this, arguments);
+        }
+    }
+
+    //	Injects the code via a dynamic script tag
+
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.textContent = "(" + Interceptor + ")(XMLHttpRequest.prototype.open, XMLHttpRequest.prototype.send);";
+
+    document.documentElement.appendChild(script);
+
     var check_nationality = function (nationality) {
         var countryEle = document.getElementById('userSalesOrg_t');
         if (countryEle == null) { //this is for material page.
@@ -83,7 +118,7 @@
         }
 
         var valid = false;
-        if (nationality == countryCode || countryCode == 2601 || countryCode == 2600 ) {
+        if ( nationality == countryCode ) {
             valid = true;
         }
 
@@ -414,27 +449,32 @@
 								materialSearch(materialDetails);
 							}*/
 						}).done(function(materialDetails) {
-                                sumResult = materialDetails;
-								//materialSearch(materialDetails);
-                            $.ajax({
-                                type: "GET",
-                                url: ajaxUrl2,
-                                dataType: "text",
-                                /* success: function (materialDetails) {
-                                    materialSearch(materialDetails);
-                                } */
-                            }).done(function (materialDetails2) {
+                            sumResult = materialDetails;
 
-                                if (sumResult.length > 0) {
-                                    sumResult += materialDetails2;
-                                    console.log(sumResult, "long of material details", sumResult.length);
+                            if ( check_nationality(2800) ){
+                                $.ajax({
+                                    type: "GET",
+                                    url: ajaxUrl2,
+                                    dataType: "text",
+                                    /* success: function (materialDetails) {
+                                        materialSearch(materialDetails);
+                                    } */
+                                }).done(function (materialDetails2) {
+
+                                    if (sumResult.length > 0) {
+                                        sumResult += materialDetails2;
+                                        console.log(sumResult, "long of material details", sumResult.length);
+                                    } else {
+                                        console.log("materialDetails is empty");
+                                    }
+
                                     materialSearch(sumResult);
-                                } else {
-                                    console.log("materialDetails is empty");
-                                }
-                            });
-                            
-                            
+
+                                });
+                            }else{
+                                materialSearch(sumResult);                                
+                            }
+
                         });
 					}
                    
@@ -625,17 +665,17 @@
                     // alert('REMOVE MOBILE');
                     //set all materials tab to collapse
                     localStorage.setItem('allMaterialsTabState', 'collapsed');
-                    setTimeout(function() {
+                    /* setTimeout(function() {
                         $('#update')[0].click();
                         // alert('UPDATE IS CLICK');
-                    }, 3000);
+                    }, 5000); */
                 });
                 $("#additionalMaterialArrayset .array-remove").click(function() { //auto update when material is deleted
                     //set all materials tab to collapse
                     localStorage.setItem('allMaterialsTabState', 'collapsed');
-                    setTimeout(function() {
+                    /* setTimeout(function() {
                         $('#update')[0].click();
-                    }, 3000);
+                    }, 5000); */
                 });
 
 
@@ -1194,6 +1234,8 @@
 
     */
 
+    var ajaxSearchMaterial = null;
+
     var searchMaterialAjax = function(materialSearchStr, materialList) {
 
         //console.info(materialSearchStr);
@@ -1263,8 +1305,6 @@
         $.ajax({
             url: ajaxURL,
             data: ajaxData,
-
-
         }).done(function(response) {
             //console.dir(response);
             var data = response.items;
@@ -1287,13 +1327,9 @@
                     subDataSet2 = ["", item.material, item.description, promo, item.principal_code, item.principal_name];
                 }
                 dataSet2.push(subDataSet2);
-                //console.log(subDataSet2);
             });
-            //console.dir(dataSet2);
-
-
-
         }).always(function() {
+            console.log(dataSet2);
             materialList.clear().draw();
             materialList.rows.add(dataSet2);
             if (searchStr.indexOf("%") !== -1) {
@@ -1559,7 +1595,7 @@
             //console.log('materialSearch',materialSearch);
 
             if ((userType === 'csteam') && (materialSearch.length > 2) && enableOldMaterialSearch == "false") {
-
+                console.log( materialSearch.slice(-1) );
                 if (materialSearch.slice(-1) === '%') {
                     materialSearch = materialSearch.substring(0, materialSearch.length - 1);
                     materialSearch = materialSearch.replace(/%/g, ' ');
@@ -2955,22 +2991,26 @@
             }).done(function(materialDetails){
                 sumResult = materialDetails;
                 console.log(sumResult, "long of material details", sumResult.length);
-                $.ajax({
-                    type: "GET",
-                    url: ajaxUrl2,
-                    dataType: "text",
-                    success: function (materialDetails2) {
-                        
-                    }
-                }).done(function(materialDetails2){
-                    if(sumResult.length > 0){
-                        sumResult += materialDetails2;
-                        console.log(sumResult, "long of material details", sumResult.length);
+                if( check_nationality(2800) ){
+                    $.ajax({
+                        type: "GET",
+                        url: ajaxUrl2,
+                        dataType: "text",
+                        /* success: function (materialDetails2) {
+                            
+                        } */
+                    }).done(function (materialDetails2) {
+                        if (sumResult.length > 0) {
+                            sumResult += materialDetails2;
+                            console.log(sumResult, "long of material details", sumResult.length);
+                        } else {
+                            console.log("materialDetails is empty");
+                        }
                         materialSearch(sumResult);
-                    }else{
-                        console.log("materialDetails is empty");
-                    }
-                })
+                    });
+                }else{
+                    materialSearch(sumResult);                    
+                }
             });
         }
 
@@ -5277,7 +5317,7 @@
         $(tabelFavFreqReq).css({
             'position': 'fixed',
             'right': rightValue + 'px',
-            'height': '800px'
+            'height': 'auto'
         });
         // $(rightPanel).css({'position': 'absolute', 'right': rightValue+'px', 'height': '800px'});
 
