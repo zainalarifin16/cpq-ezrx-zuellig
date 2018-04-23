@@ -449,11 +449,11 @@ $(document).ready(function(){
             $("#attr_wrapper_1_customerShipToId_t").closest(".column-layout").before( element_column_layout.clone() ); //move cloned a row Label to correct row
             $("#attr_wrapper_1_shipToAddress_html_t").remove(); //remove first element Ship To Address
 
-            $("#attr_wrapper_1_customerSoldToId_New").closest(".column-layout").children()[0].remove(); //remove spacer from element
+            $( $("#attr_wrapper_1_customerSoldToId_New").closest(".column-layout").children()[0] ).remove(); //remove spacer from element
 
-            $("#attr_wrapper_1_shipToAddress_html_t").closest(".column-layout").children()[0].remove(); //remove element Draft order detail on cloned
+            $( $("#attr_wrapper_1_shipToAddress_html_t").closest(".column-layout").children()[0] ).remove(); //remove element Draft order detail on cloned
             $("#attr_wrapper_1_shipToAddress_html_t").closest(".column-layout").prepend( $($(".spacer-column")[0]).clone() ); //clone spacer to element
-            $("#attr_wrapper_1_shipToAddress_html_t").closest(".column").children()[0].remove(); //remove label Ship To Address
+            $( $("#attr_wrapper_1_shipToAddress_html_t").closest(".column").children()[0] ).remove(); //remove label Ship To Address
 
             $($("#field_wrapper_1_customerShipToId_t").closest(".column-layout").children()[0]).css("display", "block"); //clone spacer to element
 
@@ -480,7 +480,7 @@ $(document).ready(function(){
             */
 
             //remove duplicate of frequentlyAccessedCustomers_t
-            $("textarea[name='frequentlyAccessedCustomers_t']")[1].remove();
+            $( $("textarea[name='frequentlyAccessedCustomers_t']")[1] ).remove();
 
             //remove duplicate of saveQuoteRequired_t
             $($("input[name='saveQuoteRequired_t']")[1]).remove();
@@ -897,21 +897,24 @@ $(document).ready(function(){
   }
 
   var resizeTableShoppingCart = function(){
-    $("td.cell-overrideInvoicePrice").find(".text-field").each(function(index, fieldText){
-      $(fieldText).css({ "max-width" : "80px", "min-width" : "80px" });
-    });
     
-    $("td.cell-overridePrice_currency").find(".text-field").each(function(index, fieldText){
-      $(fieldText).css({ "max-width" : "80px", "min-width" : "80px" });
-    });
-    
-    $("td.cell-pPAApprovalNo").find(".text-field").each(function(index, fieldText){
-      $(fieldText).css({"width": "60px"});
-    });
-    
-    $("td.cell-comments").find(".text-field").each(function(index, fieldText){
-      $(fieldText).css({"width": "80px"});
-    });
+    setTimeout(function(){
+      $("td.cell-overrideInvoicePrice").find(".text-field").each(function (index, fieldText) {
+        $(fieldText).css({ "max-width": "80px", "min-width": "80px" });
+      });
+
+      $("td.cell-overridePrice_currency").find(".text-field").each(function (index, fieldText) {
+        $(fieldText).css({ "max-width": "80px", "min-width": "80px" });
+      });
+
+      $("td.cell-pPAApprovalNo").find(".text-field").each(function (index, fieldText) {
+        $(fieldText).css({ "width": "60px" });
+      });
+
+      $("td.cell-comments").find(".text-field").each(function (index, fieldText) {
+        $(fieldText).css({ "width": "80px" });
+      });
+    }, 1000);
 
   }
    
