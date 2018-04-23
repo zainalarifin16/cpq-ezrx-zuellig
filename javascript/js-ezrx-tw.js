@@ -898,7 +898,11 @@ $(document).ready(function(){
 
   var resizeTableShoppingCart = function(){
     $("td.cell-overrideInvoicePrice").find(".text-field").each(function(index, fieldText){
-      $(fieldText).css({"width": "60px"});
+      $(fieldText).css({ "max-width" : "80px", "min-width" : "80px" });
+    });
+    
+    $("td.cell-overridePrice_currency").find(".text-field").each(function(index, fieldText){
+      $(fieldText).css({ "max-width" : "80px", "min-width" : "80px" });
     });
     
     $("td.cell-pPAApprovalNo").find(".text-field").each(function(index, fieldText){
@@ -939,7 +943,8 @@ $(document).ready(function(){
               var $child = $(this).children('td');
               var isBonusOverride = $($child).find('input[name*="bonusOverideFlag_l"]').val().trim().toLowerCase();
               var isPriceOverride = $($child).find('input[name*="isPriceOverride"]').val();
-              var isInvoiceOverridePrice = $($child).find('input[name*="invoicePrice_l"]');
+              var isInvoiceOverridePrice = $($child).find('input[name*="invoicePriceFlag_l"]');
+              var InvoiceOverridePrice = $($child).find('input[name*="invoicePrice_l"]');
               var isInStockMaterial = $($child).find('input[name*="inStock_l"]').val().trim().toLowerCase();
 
               var qty_text = $($child).find('input[name*="qty_l"]');
@@ -955,8 +960,8 @@ $(document).ready(function(){
                 $($(qty_text).siblings()[0]).css("color", redColor);
               }
 
-              if (isInvoiceOverridePrice.val().toLowerCase() != "0.00") {              
-                $($(isInvoiceOverridePrice).siblings()[0]).css("color", redColor);
+              if (isInvoiceOverridePrice.val().toLowerCase() == "true") {              
+                $($(InvoiceOverridePrice).siblings()[0]).css("color", redColor);
               }
 
               if (type_material == "bonus") {
@@ -1033,13 +1038,13 @@ $(document).ready(function(){
         }
       });
 
-      $("td[id*='invoicePrice_l']").each(function (i, data) {
+      $("td[id*='invoicePriceFlag_l']").each(function (i, data) {
         var parent = $(this).closest(".line-item");
         var type_material = $(parent).find("span[id*='refNO_text']").text().trim().toLowerCase();
         if (type_material != "bonus") {
-          var invoicePrice_lVal = $(this).find("span[id*='invoicePrice_l']").text().trim().toLowerCase();
-          if (invoicePrice_lVal.length > 0) {
-            if (invoicePrice_lVal != "nt$0.00") {
+          var invoicepriceflag_lVal = $(this).find("span[id*='invoicePriceFlag_l']").text().trim().toLowerCase();
+          if (invoicepriceflag_lVal.length > 0) {
+            if (invoicepriceflag_lVal == "true") {
               var unitPriceSpan = $(parent).find("span[id*='invoicePrice_l']");
               $(unitPriceSpan).css("color", "red");
             }
