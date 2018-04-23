@@ -68,22 +68,24 @@
     function Interceptor(nativeOpenWrapper, nativeSendWrapper) {
         XMLHttpRequest.prototype.open = function () {
             // Code here to intercept XHR
-            console.log(this, arguments);
+            // console.log(this, arguments);
             return nativeOpenWrapper.apply(this, arguments);
         }
         XMLHttpRequest.prototype.send = function () {
             this.onloadend = function () {
                 if (this.capture) {
-                    console.log(this.responseText);
+                    // console.log(this.responseText);
                 }
             }
-            console.log(this, arguments);
+            // console.log(this, arguments);
             var xhr = this,
                 waiter = setInterval(function () {
                     if (xhr.readyState && xhr.readyState == 4) {
-                        var checkingUrl = xhr.responseURL.split("/");
-                        if( checkingUrl[ checkingUrl.length - 1 ] == "ConfigDwr.updateArraySize.dwr" ){
-                            $('#update')[0].click();
+                        if(xhr.responseURL != null){
+                            var checkingUrl = xhr.responseURL.split("/");
+                            if( checkingUrl[ checkingUrl.length - 1 ] == "ConfigDwr.updateArraySize.dwr" ){
+                                $('#update')[0].click();
+                            }
                         }
                         clearInterval(waiter);
                     }
@@ -1234,12 +1236,12 @@
 
     */
 
-    var ajaxSearchMaterial = null;
+    var ajaxSearchMaterialProcess = [];
 
     var searchMaterialAjax = function(materialSearchStr, materialList) {
 
         //console.info(materialSearchStr);
-        var searchStr = materialSearchStr.trim();
+        var searchStr = materialSearchStr.trim();        
         var dataSet2 = [];
 
         var salesOrg = $('input[name="userSalesOrg_PL"]').val();        
@@ -1248,7 +1250,7 @@
         }
 
         ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";
-        ajaxData = "q=\{ $and: [ { 'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}, { sales_org: { $eq:" + salesOrg + "} }, { dwnld_to_dss: { $eq: 'Y'} } ] }&orderby=material:asc";
+        ajaxData = 'q=\{ $and: [ { "masterstring":{$regex:"/' + encodeURIComponent(searchStr).replace(/%27/g, "%5C%27") + '/i"}}, { sales_org: { $eq:' + salesOrg + '} }, { dwnld_to_dss: { $eq: "Y"} } ] }&orderby=material:asc';
 
         /*ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";
         var ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&orderby=material_desc:asc";
@@ -1330,6 +1332,8 @@
             });
         }).always(function() {
             console.log(dataSet2);
+
+            ajaxSearchMaterialProcess = [];            
             materialList.clear().draw();
             materialList.rows.add(dataSet2);
             if (searchStr.indexOf("%") !== -1) {
@@ -1348,6 +1352,13 @@
                 //var materialResult = materialList.search(searchStr).order([2, 'asc']);
             }
 
+        });
+
+        $( window ).ajaxSend(function(event, jqxhr, settings){
+            console.log(jqxhr, settings);
+            if (settings.url.indexOf("customMaterial_Master") != -1 ){
+                ajaxSearchMaterialProcess.push( jqxhr );
+            }
         });
 
     };
@@ -1423,11 +1434,12 @@
                 }
                 var subDataSet = ["", colArr[0], colArr[1], colArr[2]];
                 if(userCountryMS === 'TW'){
-                     subDataSet = ["", colArr[0], colArr[1], colArr[2], colArr[3], colArr[4]];
+
+                    subDataSet = ["", colArr[0], colArr[6], colArr[1], colArr[2], colArr[3], colArr[4] ];
                      //debugger;
                     //  console.log('userType',userType);
                     if(userType == 'principal'){
-                        subDataSet = ["", colArr[0], colArr[1], colArr[5], colArr[2], colArr[3], colArr[4]]; 
+                        subDataSet = ["", colArr[0], colArr[6], colArr[1], colArr[5], colArr[2], colArr[3], colArr[4]]; 
                     }
                     // console.log(subDataSet);
                 }
@@ -1455,6 +1467,9 @@
                 title: "Material Number"
             },
             {
+                title: "Material Description (ZH)"
+            },
+            {
                 title: "Material Description"
             },
             {
@@ -1468,7 +1483,7 @@
             }];
 
             if(userType == 'principal'){
-                material_column.splice(3, 0, {title: "Principal Material Code"}); 
+                material_column.splice(4, 0, {title: "Principal Material Code"}); 
             }
         }
 		
@@ -1553,8 +1568,9 @@
                     var subDataSet = [
                                         "", 
                                         (item.material != null)? item.material : "", 
+                                        (item.alt_lang_desc != null)? item.alt_lang_desc : "",
                                         (item.description != null)? item.description : "", 
-                                        (item.principal_name != null)? item.principal_name : ""
+                                        (item.principal_name != null)? item.principal_name : "",
                                     ];
                     if($('input[name="userSalesOrg_PL"]').val()=="2800"){
                         if(item.material_group_5 == 500 && item.materialgroup != "ZGM"){
@@ -1566,6 +1582,7 @@
                         subDataSet = [
                                         "", 
                                         (item.material != null)? item.material : "", 
+                                        (item.alt_lang_desc != null) ? item.alt_lang_desc : "",                                        
                                         (item.description != null)? item.description : "", 
                                         (promo != null)? promo : "", 
                                         (item.principal_code != null)? item.principal_code : "", 
@@ -1601,6 +1618,10 @@
                     materialSearch = materialSearch.replace(/%/g, ' ');
                     materialList.search(materialSearch).order([2, 'asc']).draw();
                 } else {
+                    var i = 0;
+                    while (ajaxSearchMaterialProcess.length) {
+                        ajaxSearchMaterialProcess[i++].abort();
+                    }
                     $('.dataTables_scrollBody .loader-material').show();
                     $('.dataTables_scrollBody #resultsTable').hide();
                     searchMaterialAjax(materialSearch, materialList);
