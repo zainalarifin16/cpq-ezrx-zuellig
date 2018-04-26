@@ -421,8 +421,9 @@
 
                 var pageTitle = $('#tab-material-content #group-39792374 .group-header span').text(); //commented by suresh
                 var materialHTML = '<div class="materialSearchWrapper"> <div class="normalPopupCont flLeft" id="leftPanel"> <table id="resultsTable" style="width: 100%;"></table> </div><div class="normalPopupCont1 flRight" id="rightPanel"> <div class="popupHeader1 bigHeader">Selected Materials</div><div class="accountstable" id="selectedResultsTable"> <div class="accountstable" id="selectedMatTableDiv" style="overflow-y: auto;height: 400px;"> <table id="selectedMatTable" style="background-color: white !important;"> <thead> <tr> <th style="width:5%">Qty</th><th style="width:18%">Material Number</th> <th style="width:50%">Material Description</th><th style="width:22%">Comm. Item for Bonus</th> <th style="width:5%"></th> </tr></thead> <tbody id="selectedMatTableBody"> </tbody> </table> <a href="#" id="addMaterialBtn" name="addMaterialBtn" class="jg-btn addMat-btn" style="width: auto; margin-top: 50px; display: inline-block;">Add</a> </div></div></div></div>';
-                var userType = ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();
+                var userType = getZPUserType();
 
+                // var userType = ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();
 
                 if ($('#tab-material-content').length > 0) {
                     pageTitle = "model configuration";
@@ -452,27 +453,33 @@
 							}*/
 						}).done(function(materialDetails) {
                             sumResult = materialDetails;
-
                             if ( check_nationality(2800) ){
-                                $.ajax({
-                                    type: "GET",
-                                    url: ajaxUrl2,
-                                    dataType: "text",
-                                    /* success: function (materialDetails) {
-                                        materialSearch(materialDetails);
-                                    } */
-                                }).done(function (materialDetails2) {
 
-                                    if (sumResult.length > 0) {
-                                        sumResult += materialDetails2;
-                                        console.log(sumResult, "long of material details", sumResult.length);
-                                    } else {
-                                        console.log("materialDetails is empty");
-                                    }
+                                var materialDetailsFlag2 = $("input[name='materialDetailsFlag2']").val().toLowerCase();
+                                if (materialDetailsFlag2 == "true") {
+                                    $.ajax({
+                                        type: "GET",
+                                        url: ajaxUrl2,
+                                        dataType: "text",
+                                        /* success: function (materialDetails) {
+                                            materialSearch(materialDetails);
+                                        } */
+                                    }).done(function (materialDetails2) {
 
+                                        if (sumResult.length > 0) {
+                                            sumResult += materialDetails2;
+                                            console.log(sumResult, "long of material details", sumResult.length);
+                                        } else {
+                                            console.log("materialDetails is empty");
+                                        }
+
+                                        materialSearch(sumResult);
+
+                                    });
+                                } else {
                                     materialSearch(sumResult);
+                                }
 
-                                });
                             }else{
                                 materialSearch(sumResult);                                
                             }
@@ -480,14 +487,17 @@
                         });
 					}
                    
-
+                    maxCheckingDataTable = 100;
                     var isDataTableCreated = function () {
-                        console.log("isDataTableCreated");
+                        
                         setTimeout(function () {
                             if ($('.materialSearchWrapper .dataTables_scroll').length > 0) {
                                 materialAddItem();
                             } else {
-                                isDataTableCreated();
+                                if (maxCheckingDataTable > 0){
+                                    maxCheckingDataTable--;
+                                    isDataTableCreated();
+                                }
                             }
                         }, 500);
                     }
@@ -929,9 +939,10 @@
             var tableObj = document.getElementById("selectedMatTableBody"); //Selected Materials Table
             var clonedTrObj = trObj.cloneNode(true); //Clone ROW
 
-            var zPUserType = ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();            
-            
+            var zPUserType = getZPUserType();
 
+            
+            // var zPUserType = ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();            
             console.log('clonedTrObj', clonedTrObj);
 
             var itemBonusObj = clonedTrObj.insertCell(-1);
@@ -942,15 +953,18 @@
 
             // console.log('tabNum', tabNum);
             clonedTrObj.deleteCell(0); //Delete 1st column
-            clonedTrObj.deleteCell(3);
             if($('input[name="userSalesOrg_PL"]').val()=="2800"){
                 console.log('taiwan only ,delete last 2 column');
+                clonedTrObj.deleteCell(2); // 
+                clonedTrObj.deleteCell(3); 
                 clonedTrObj.deleteCell(3);
                 clonedTrObj.deleteCell(3);
                 if(zPUserType=='principal'){
                     clonedTrObj.deleteCell(3);
                 }
                 
+            }else{
+                clonedTrObj.deleteCell(3);                
             }
             tableObj.appendChild(clonedTrObj);
             itemBonusObj.innerHTML = '<select name="itemBonus" id="itemBonus" style="width:100%"><option value=""></option>' + optionHtml + '</select>';
@@ -1250,6 +1264,7 @@
         }
 
         ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";
+        console.log( encodeURIComponent(searchStr) , encodeURIComponent(searchStr).replace(/%27/g, "%5C%27") );
         ajaxData = 'q=\{ $and: [ { "masterstring":{$regex:"/' + encodeURIComponent(searchStr).replace(/%27/g, "%5C%27") + '/i"}}, { sales_org: { $eq:' + salesOrg + '} }, { dwnld_to_dss: { $eq: "Y"} } ] }&orderby=material:asc';
 
         /*ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";
@@ -1316,7 +1331,7 @@
                // console.log(item);
                 var subDataSet2 = [
                                     "", 
-                                    (item.material != null)? item.material : "", 
+                                    (item.material != null)? item.material : "",
                                     (item.description != null)? item.description : "", 
                                     (item.principal_name != null)? item.principal_name : ""
                                 ];
@@ -1326,7 +1341,15 @@
                     } else {
                         var promo = "";
                     }
-                    subDataSet2 = ["", item.material, item.description, promo, item.principal_code, item.principal_name];
+                    subDataSet2 = [ 
+                                    "", 
+                                    (item.material != null) ? item.material : "", 
+                                    (item.alt_lang_desc != null) ? item.alt_lang_desc : "", 
+                                    (item.description != null)? item.description : "", 
+                                    promo, 
+                                    (item.principal_code != null) ? item.principal_code : "", 
+                                    (item.principal_name != null) ? item.principal_name : ""
+                                  ];
                 }
                 dataSet2.push(subDataSet2);
             });
@@ -1381,7 +1404,7 @@
 		var materialDetails = dataMaterialAjax;
 		var custArr = null;
         var totalRecs = null;
-		var userType = ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();        
+		var userType = getZPUserType();
 		if (userType !== 'csteam'){
 
             /* 
@@ -1568,7 +1591,6 @@
                     var subDataSet = [
                                         "", 
                                         (item.material != null)? item.material : "", 
-                                        (item.alt_lang_desc != null)? item.alt_lang_desc : "",
                                         (item.description != null)? item.description : "", 
                                         (item.principal_name != null)? item.principal_name : "",
                                     ];
@@ -1654,8 +1676,9 @@
                     File Location : $BASE_PATH$/image/javascript/js-ezrx.js
                     Layout : Desktop
                 */
-                materialSearch.trim();
-                materialList.search(materialSearch).order([2, 'asc']).draw();
+                materialList.search(materialSearch.trim(), true, true).order([2, 'asc']).draw();
+                // materialSearch.trim();
+                // materialList.search(materialSearch).order([2, 'asc']).draw();
                 /*
                     Start : 10 Nov 2017
                     Task  : Material Type-ahead Search: Sorting should be in Alphabetical Order
@@ -1747,7 +1770,8 @@
             }
         });
 
-        var zPUserType = ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();        
+        var zPUserType = getZPUserType();
+        // var zPUserType = ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();        
 
         if (zPUserType === 'csteam') {
             $('#searchCustomerInput').keyup(function() {
@@ -1870,7 +1894,8 @@
     var searchCustList = function(dataSet, seachCustomer) {
         console.log('searchCustList');
 
-        var zPUserType = ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();
+        var zPUserType = getZPUserType();
+        // var zPUserType = ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();
 
         if (zPUserType !== 'csteam') {
             // console.log('split table');
@@ -1951,7 +1976,7 @@
             $('#searchCustomerInput').keyup(function() {
                 var inputLength = $('#searchCustomerInput').val().length;
                 if (inputLength === 3 || inputLength > 3) {
-                    seachCustomer.search($(this).val()).draw();
+                    seachCustomer.search($(this).val(), true, true).draw();
                     $('.search-cust_wrapper').show();
                 } else {
                     $('.search-cust_wrapper').hide();
@@ -2982,8 +3007,10 @@
                                     </div>\
                                 </div>\
                             </div>';
-        var userType = ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();
+        var userType = getZPUserType();
+        // var userType = ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();
         $('#attribute-materialSearch').append().html(materialHTML);
+        $('#attribute-materialSearch').hide();
 
         if ( userType === 'csteam') {
             /* 4 April 2018, Zainal : Add localstorage for scroll to shopping cart */
@@ -2994,6 +3021,7 @@
             /* 4 April 2018, Zainal : Add localstorage for scroll to shopping cart */
 
             console.log('mobile_materialSearch');
+            $('#attribute-materialSearch').show();            
             materialSearch();
 
         }else{
@@ -3013,37 +3041,52 @@
                 sumResult = materialDetails;
                 console.log(sumResult, "long of material details", sumResult.length);
                 if( check_nationality(2800) ){
-                    $.ajax({
-                        type: "GET",
-                        url: ajaxUrl2,
-                        dataType: "text",
-                        /* success: function (materialDetails2) {
-                            
-                        } */
-                    }).done(function (materialDetails2) {
-                        if (sumResult.length > 0) {
-                            sumResult += materialDetails2;
-                            console.log(sumResult, "long of material details", sumResult.length);
-                        } else {
-                            console.log("materialDetails is empty");
-                        }
-                        materialSearch(sumResult);
-                    });
+
+                    var materialDetailsFlag2 = $("input[name='materialDetailsFlag2']").val().toLowerCase();
+
+                    if(materialDetailsFlag2 == "true"){
+                        $.ajax({
+                            type: "GET",
+                            url: ajaxUrl2,
+                            dataType: "text",
+                            /* success: function (materialDetails2) {
+                                
+                            } */
+                        }).done(function (materialDetails2) {
+                            if (sumResult.length > 0) {
+                                sumResult += materialDetails2;
+                                console.log(sumResult, "long of material details", sumResult.length);
+                            } else {
+                                console.log("materialDetails is empty");
+                            }
+                            materialSearch(sumResult);
+                            $('#attribute-materialSearch').show();                                        
+                        });
+                    }else{
+                        materialSearch(sumResult);                        
+                        $('#attribute-materialSearch').show();                        
+                    }
+
                 }else{
-                    materialSearch(sumResult);                    
+                    materialSearch(sumResult);
+                    $('#attribute-materialSearch').show();                        
                 }
             });
         }
 
 
         //mobile_hide_unwanted_arrow();
+        var maxCheckingDataTable = 100;
         var isDataTableCreated = function(){
             console.log( "isDataTableCreated" );
             setTimeout(function(){
                 if( $('.materialSearchWrapper .dataTables_scroll').length > 0 ){
                     materialAddItem();
                 }else{
-                    isDataTableCreated();
+                    if (maxCheckingDataTable > 0){
+                        maxCheckingDataTable--;
+                        isDataTableCreated();
+                    }
                 }
             }, 500);
         }
@@ -3173,7 +3216,8 @@
 
         $("#attribute-customerSearchHolder_HTML").html(searchCustomerWrapper);
 
-        var zPUserType = ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();        
+        var zPUserType = getZPUserType();
+        // var zPUserType = ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();        
 
         if (zPUserType === 'csteam') {
             searchCustomerList();
@@ -3352,6 +3396,7 @@
                     $('#jg-submenu-myorders').addClass('active');
                     localStorage.removeItem("frequentlyAccessedCustomers_t");
                     transform_orderspage();
+                    $(".jg-box-topbar").append("<div style='position:absolute; right: 30px; top: 20px;font-size: 17px;' >" + window._BM_USER_LOGIN + "</div>");
                     
                     var hideMenuForCreditControlUser = function(){
                         $('#jg-overlay').show();
@@ -3543,7 +3588,8 @@
                         File Location :- $BASE_PATH$/javascript/js-ezrx.js
                         Layout        :- Desktop
                     */
-                    var zpUserType = ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();                    
+                    var zpUserType = getZPUserType();
+
                     if ( zpUserType.length > 0 ){
                         if ( zpUserType != "csteam"){
                             $("#order-allorders").hide();
@@ -4848,7 +4894,7 @@
                 localStorage.setItem("orderItem_" + trans_id, isUserHaveModifySC);
             }
 
-            var zpUserType = ( $("#zPUserType").length > 0 )? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();
+            var zpUserType = getZPUserType();
 
             if ( zpUserType != "csteam") {
                 if ( $("#line-item-grid").find(".line-item-show:not(.parent-line-item)").length > 0 ){
@@ -6018,6 +6064,9 @@
                     transform_orderspage();
                     mobile_commerce_management();
                     mobile_modifyMenu();
+                    $(".topMenuModified").css("float", "none");
+                    $(".jg-item-mainmenu").css("width", "70px");
+                    $(".jg-box-topbar").append("<div style='float:right; font-size: 14px; padding: 20px;' >" + window._BM_USER_LOGIN + "</div>");                    
                 } else if (pagetitle == "zuellig pharma products" || pagetitle == "zuellig pharma order processData") {
                     console.log('zuellig pharma products');
                 } else if (pagetitle == 'zuellig pharma order process') {

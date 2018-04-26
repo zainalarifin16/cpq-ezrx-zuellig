@@ -813,7 +813,34 @@ var searchCustList = function(dataSet, seachCustomer) {
 				    File Location : $BASE_PATH$/image/javascript/js-ezrx.js
 				    Layout : Tablet
 				*/
-				seachCustomer.search(js2(this).val()).draw();
+
+				var keywordCustomer = js2(this).val();
+				if(keywordCustomer.indexOf("%") != -1){
+					keywordCustomer = keywordCustomer.replace(/%/g, " ");
+					// var keywordCustomer = $.grep(keywordCustomer.split("%"), function (word) { return word != ""; });
+					// if(keywordCustomer.length > 1){
+						
+						// var convertKeywordtoRegex = "";
+						// var convertKeywordtoRegex = "(";
+						// $.each(keywordCustomer, function(index, data){
+							// console.log(data);
+							// convertKeywordtoRegex += "(?=.*?\b"+data+"\b)";
+							// convertKeywordtoRegex += data + ")|(";
+						// });
+						// convertKeywordtoRegex = convertKeywordtoRegex.substring(0, convertKeywordtoRegex.length - 3);
+						// convertKeywordtoRegex += ")";
+						// convertKeywordtoRegex = "^" + convertKeywordtoRegex + "$";
+						// console.log(convertKeywordtoRegex);
+					console.log( keywordCustomer );
+					seachCustomer.search( keywordCustomer, true, true).draw();
+
+					/* }else{
+						seachCustomer.search(keywordCustomer[0]).draw();						
+					} */
+
+				}else{
+					seachCustomer.search(keywordCustomer).draw();
+				}
 				/*
 				    End : 15 Nov 2017
 				    Task  : Customer Type-ahead Search
