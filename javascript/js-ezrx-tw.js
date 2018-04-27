@@ -925,7 +925,9 @@ $(document).ready(function(){
   }
     
   var orderPageRestyle = function(){
+    
     $("#zPUserType").prop("disabled", true).parent().css({ "background": "transparent", "border": "0px" });
+
   }
 
   var reset_color_lineitemgrid = function () {
@@ -1054,6 +1056,18 @@ $(document).ready(function(){
           }
         }
       });
+
+      $("td[id*='refNO_text']").each(function(i, data){
+        var parent = $(this).closest(".line-item");        
+        var type_material = $(this).find("span[id*='refNO_text']").text().trim().toLowerCase();
+
+        if(type_material == "bonus"){
+          var checkbox_action = $(parent).find("td[data-colid='checker']").find("input[type='checkbox']");
+          $(checkbox_action).attr("disabled", true);
+        }
+
+      });
+
     }
 
   }
