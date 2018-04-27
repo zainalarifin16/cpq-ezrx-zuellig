@@ -4183,16 +4183,29 @@
             }
         });
         $('#jg-tool-select').html($('select[name=new_search_id]').html());
-        $('#jg-tool-select').change(function() {
+        $('#jg-tool-select').change(function () {
             var selectval = $(this).val();
             $('select[name=new_search_id]').val(selectval);
             $('a.list-field')[0].click();
+            window.localStorage.setItem("new_search_id", "true");
         });
-        
-        var selectedNewSearchId = $('select[name=new_search_id] option:selected').text().trim().toLowerCase();
-        if(selectedNewSearchId == "search by date ranges"){
-            
+
+        var readyOrderPage = function () {
+            setTimeout(function () {
+                if (isLoadingDone()) {
+                    var selectedNewSearchId = $('select[name=new_search_id] option:selected').text().trim().toLowerCase();
+                    if (selectedNewSearchId == "search by date ranges" || selectedNewSearchId == "search by customer and status") {
+                        window.localStorage.setItem("new_search_id", "false");
+                        eval($(".jg-linkbtn.refine").attr("href"));
+                    }
+                } else {
+                    readyOrderPage();
+                }
+            }, 1000);
         }
+        if (window.localStorage.getItem("new_search_id") == "true") {
+            readyOrderPage();
+        }      
 
         /*
             Start : 8 March 2017
