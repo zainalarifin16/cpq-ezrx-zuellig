@@ -925,7 +925,39 @@ $(document).ready(function(){
   }
     
   var orderPageRestyle = function(){
+    
     $("#zPUserType").prop("disabled", true).parent().css({ "background": "transparent", "border": "0px" });
+
+    $("input[name='_line_item_list']").change(function () {
+      
+      var currTr = $(this).parent().parent();
+      var checked = $(this).is(":checked");
+      var type = currTr.find('[name*=bonusType_l]').val();
+      var type2 = currTr.find('td:nth-child(3)').find('input').val();
+
+      if (type2 === 'Comm') {
+        var childTr = currTr.nextUntil("tr.child-line-item").find('td:first-child').find('input[name*=_line_item_list]');
+        if (checked === true) {
+          childTr.prop('checked', true);
+          childTr.prop('disabled', true);
+        } else {
+          childTr.prop('checked', false);
+          childTr.prop('disabled', false);          
+        }
+      } else if (type2 == 'Bonus') {
+        /* var parentCheckbox = currTr.prevAll('tr.child-line-item').eq(0).find('input[name*=_line_item_list]');
+        if (type == 'System Bonus') {
+        } else if (type == 'Additional Bonus') {
+          console.warn(type);
+        } */
+      }
+
+    });
+
+    $("a[name='delete_line_items']").on("click", function(){
+      $("input[name='_line_item_list']:checked:disabled").attr("disabled", false);
+    });
+
   }
 
   var reset_color_lineitemgrid = function () {
@@ -1054,6 +1086,18 @@ $(document).ready(function(){
           }
         }
       });
+
+      /* $("td[id*='refNO_text']").each(function(i, data){
+        var parent = $(this).closest(".line-item");        
+        var type_material = $(this).find("span[id*='refNO_text']").text().trim().toLowerCase();
+
+        if(type_material == "bonus"){
+          var checkbox_action = $(parent).find("td[data-colid='checker']").find("input[type='checkbox']");
+          $(checkbox_action).attr("disabled", true);
+        }
+
+      }); */
+
     }
 
   }

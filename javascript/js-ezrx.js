@@ -4177,13 +4177,35 @@
             .append($("<li class='jg-item-tool'><a href='#' id='jg-submenu-copyorder' class='jg-linkbtn new_order'>Copy Order</a></li>"));
 
         // dropdown
+        $('select[name=new_search_id]').find("option").each(function (index, data) {
+            if ($(data).text().trim().toLowerCase() == "my approval search") {
+                $(data).remove();
+            }
+        });
         $('#jg-tool-select').html($('select[name=new_search_id]').html());
-        $('#jg-tool-select').change(function() {
+        $('#jg-tool-select').change(function () {
             var selectval = $(this).val();
             $('select[name=new_search_id]').val(selectval);
-
             $('a.list-field')[0].click();
+            window.localStorage.setItem("new_search_id", "true");
         });
+
+        var readyOrderPage = function () {
+            setTimeout(function () {
+                if (isLoadingDone()) {
+                    var selectedNewSearchId = $('select[name=new_search_id] option:selected').text().trim().toLowerCase();
+                    if (selectedNewSearchId == "search by date ranges" || selectedNewSearchId == "search by customer and status") {
+                        window.localStorage.setItem("new_search_id", "false");
+                        eval($(".jg-linkbtn.refine").attr("href"));
+                    }
+                } else {
+                    readyOrderPage();
+                }
+            }, 1000);
+        }
+        if (window.localStorage.getItem("new_search_id") == "true") {
+            readyOrderPage();
+        }      
 
         /*
             Start : 8 March 2017
@@ -6097,6 +6119,74 @@
                       File Location :- $BASE_PATH$/javascript/js-ezrx.js
                       Layout        :- Desktop
                     */
+                } else if (pagetitle == "change password"){
+                   /* 
+                    Created By    :- Created By Zainal Arifin, Date : 27 Feb 2018
+                    Task          :- Hide Feature "Enable Old Material"
+                    Page          :- Model Configuration
+                    File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
+                    Layout        :- Desktop
+                */
+
+                console.log("change password script");
+                
+                var readyChangePasswordPage = function(){
+                    setTimeout(function(){
+                        if (isLoadingDone()) {
+                            $("h1.ui-title").css({ "background": "#00575d", "color": "#ffffff" });
+                            $("#main-content").attr("style", "margin-top: 70px!important");
+                            $("#change-pw-form").css("height", "450px");
+                            $("#errors").after($("<div id='error_js' style='width: 41%;margin: auto auto 10px;' ></div>"));
+                            $("#submit").attr("style", "background: #005E63!important;color: #ffffff;padding: 5px 10px;font-size: 20px;");
+
+                            $("#change-pw-form").on("submit", function (e) {
+                                // e.preventDefault();
+                                var oldPassword = $("input[name='_oldPassword']").val();
+                                var newPassword = $("input[name='_newPassword']").val();
+                                var newPassword2 = $("input[name='_retypedPassword']").val();
+                                var divError = $("#error_js");
+                                $(divError).html("");
+                                if (newPassword.length > 0 && oldPassword.length > 0) {
+
+                                    if (newPassword == newPassword2) {
+                                        if (newPassword.length >= 8 && newPassword.length <= 30) {
+                                            if (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z_\-!\"@;,.:]{8,30}$/.test(newPassword) == false) {
+                                                console.log("Password must have at least one upper case letter, at least one number and at least one special character.");
+                                                $(divError).append("<div class='error'>Password must have at least one upper case letter, at least one number and at least one special character.</div>");
+                                            } else {
+                                                console.log("Submitted to system");
+                                                return true;
+                                            }
+                                        } else {
+                                            console.log("Password must be between 8 and 30 characters.");
+                                            $(divError).append("<div class='error'>Password must be between 8 and 30 characters.</div>");
+                                        }
+                                    }
+
+                                    /* if (newPassword != newPassword2) {
+                                        console.log("New Password and Retype New Password not match");
+                                        $(divError).append("<div class='error'>New Password and Retype New Password not match</div>");
+                                    } else {
+                                        
+                                    } */
+                                }
+                                e.preventDefault();
+                            });
+                        } else {
+                            readyChangePasswordPage();
+                        }
+                    }, 500);
+                }
+
+                readyChangePasswordPage();
+
+                /* 
+                    Created By    :- Created By Zainal Arifin, Date : 27 Feb 2018
+                    Task          :- Hide Feature "Enable Old Material"
+                    Page          :- Model Configuration
+                    File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
+                    Layout        :- Desktop
+                */
                 }
 
                 mobile_adjustcontenttop();
@@ -6568,6 +6658,74 @@
             } else if (filterPage.search("edit_profile.jsp") != -1) {
                 //Profile
                 console.log("Profile page");
+            } else if (filterPage.search("change-password") != -1){
+                /* 
+                    Created By    :- Created By Zainal Arifin, Date : 27 Feb 2018
+                    Task          :- Hide Feature "Enable Old Material"
+                    Page          :- Model Configuration
+                    File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
+                    Layout        :- Desktop
+                */
+
+                console.log("change password script");
+
+                var readyChangePasswordPage = function () {
+                    setTimeout(function () {
+                        if (isLoadingDone()) {
+                            $("h1.ui-title").css({ "background": "#00575d", "color": "#ffffff" });
+                            $("#main-content").attr("style", "margin-top: 70px!important");
+                            $("#change-pw-form").css("height", "450px");
+                            $("#errors").after($("<div id='error_js' style='width: 41%;margin: auto auto 10px;' ></div>"));
+                            $("#submit").attr("style", "background: #005E63!important;color: #ffffff;padding: 5px 10px;font-size: 20px;");
+
+                            $("#change-pw-form").on("submit", function (e) {
+                                // e.preventDefault();
+                                var oldPassword = $("input[name='_oldPassword']").val();
+                                var newPassword = $("input[name='_newPassword']").val();
+                                var newPassword2 = $("input[name='_retypedPassword']").val();
+                                var divError = $("#error_js");
+                                $(divError).html("");
+                                if (newPassword.length > 0 && oldPassword.length > 0) {
+
+                                    if (newPassword == newPassword2) {
+                                        if (newPassword.length >= 8 && newPassword.length <= 30) {
+                                            if (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z_\-!\"@;,.:]{8,30}$/.test(newPassword) == false) {
+                                                console.log("Password must have at least one upper case letter, at least one number and at least one special character.");
+                                                $(divError).append("<div class='error'>Password must have at least one upper case letter, at least one number and at least one special character.</div>");
+                                            } else {
+                                                console.log("Submitted to system");                                                
+                                                return true;
+                                            }
+                                        } else {
+                                            console.log("Password must be between 8 and 30 characters.");
+                                            $(divError).append("<div class='error'>Password must be between 8 and 30 characters.</div>");
+                                        }
+                                    }
+
+                                    /* if (newPassword != newPassword2) {
+                                        console.log("New Password and Retype New Password not match");
+                                        $(divError).append("<div class='error'>New Password and Retype New Password not match</div>");
+                                    } else {
+                                        
+                                    } */
+                                }
+                                e.preventDefault();                                
+                            });
+                        } else {
+                            readyChangePasswordPage();
+                        }
+                    }, 500);
+                }
+
+                readyChangePasswordPage();
+
+                /* 
+                    Created By    :- Created By Zainal Arifin, Date : 27 Feb 2018
+                    Task          :- Hide Feature "Enable Old Material"
+                    Page          :- Model Configuration
+                    File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
+                    Layout        :- Desktop
+                */
             }
 
         }
