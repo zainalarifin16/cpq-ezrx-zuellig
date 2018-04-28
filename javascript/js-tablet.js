@@ -1021,9 +1021,25 @@ $(document).ready(function() {
 											$(".ui-loader").css({ "background-color": "rgb(255,255,255)", "opacity": "1" });
 											$(".ui-loader").find("h1").after(popup);
 
-											$("#loading_moving").animate({
-												width: "440px"
-											}, 4000);
+											var base_loading_progress = 100;
+
+											var loadingProgressBar = function(){
+												base_loading_progress = (base_loading_progress == 450)? base_loading_progress-20 : base_loading_progress;
+												$("#loading_moving").animate({
+													width: base_loading_progress+"px"
+												}, 2000);
+											}
+											loadingProgressBar();
+											var loopUntilComplete = function(){
+												setTimeout(function(){
+													if(base_loading_progress < 380){
+														base_loading_progress += 70;
+														loadingProgressBar();
+														loopUntilComplete();
+													}
+												},1500);
+											}
+											loopUntilComplete();
 										});
 									} else {
 										handleDisableSubmitBtn();
