@@ -3650,6 +3650,67 @@
                             setTimeout(function(){
                                 if(isLoadingDone()){
                                     $("a[name='submit_order']").on("click", function () {
+
+                                        var text_order_submission = "<p style='font-size: 30px;font-weight: bold;font-style: normal;font-stretch: normal;line-height: 0.87;letter-spacing: normal;text-align: center;color: #005e63;' >Order submission is in progress ...</p>";
+
+                                        var text_please_wait = "<p style='font-size: 22px;font-weight: bold;font-style: normal;font-stretch: normal;line-height: 1.18;letter-spacing: normal;text-align: center;color: #9b9b9b; margin-bottom: 70px;' >Please wait</p>";
+
+                                        var loading_bar = "<div style='width: 450px;height: 30px;object-fit: contain;border-radius: 15px;background-color: #d2d2d2;border: solid 1px #898989;margin: 20px auto;' ><div id='loading_moving' style='width: 0px;height: 30px;object-fit: contain;border-radius: 15px;background-color: #005e63;' ></div></div>";
+
+                                        var text_dont_close = "<p style='font-size: 26px;font-weight: bold;font-style: normal;font-stretch: normal;line-height: normal;letter-spacing: normal;text-align: center;color: #005e63;' >Do not close the browser or click back button</p>";
+
+                                        var popup = $("<div style='width: 632px;height: 180px;border-radius: 8px;background-color: #ffffff;margin: 250px auto;' >" + text_order_submission + text_please_wait + loading_bar + text_dont_close + "</div>");
+                                        $("#jg-overlay").css({ "background-color": "rgb(255,255,255)", "opacity": "1", "background-image": "none" });
+                                        $("#jg-overlay").append(popup);
+
+                                        var setLoadingDialog = function(){
+
+                                            setTimeout(function(){
+
+                                                if ($("#loading-dialog").length > 0){
+                                                    $("#loading-dialog").find("img").remove();
+                                                    $("#loading-dialog").css({
+                                                        "background-color": "rgb(255,255,255)",
+                                                        "opacity": "1",
+                                                        "background-image": "none",
+                                                        "width": "100%",
+                                                        "left": "0px",
+                                                        "top": "0px",
+                                                        "right": "0px",
+                                                        "bottom": "0px",
+                                                        "margin": "0px"
+                                                    });
+                                                    $("#loading-dialog").append(popup);
+                                                }else{
+                                                    setLoadingDialog();
+                                                }
+
+                                            }, 500);
+
+                                        }
+
+                                        setLoadingDialog();
+
+                                        var base_loading_progress = 100;
+
+                                        var loadingProgressBar = function () {
+                                            base_loading_progress = (base_loading_progress == 450) ? base_loading_progress - 20 : base_loading_progress;
+                                            $("#loading_moving").animate({
+                                                width: base_loading_progress + "px"
+                                            }, 2000);
+                                        }
+                                        loadingProgressBar();
+                                        var loopUntilComplete = function () {
+                                            setTimeout(function () {
+                                                if (base_loading_progress < 380) {
+                                                    base_loading_progress += 70;
+                                                    loadingProgressBar();
+                                                    loopUntilComplete();
+                                                }
+                                            }, 1500);
+                                        }
+                                        loopUntilComplete();
+
                                         $("a[name='submit_order']")
                                             .closest(".button-middle")
                                             .css({ "background": "grey" })
