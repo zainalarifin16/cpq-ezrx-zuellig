@@ -8,6 +8,11 @@
 $(document).ready(function(){
     console.log(' <===== Loded TW =====>');  
     
+    var fullUrl = window.location.host;
+    //window.location.host is subdomain.domain.com
+    var parts = fullUrl.split('.');
+    var sub = parts[0];
+
     var isLoadingDone = function () {
       return $("#jg-overlay").css("display") == "none" ? true : false;
     }
@@ -22,6 +27,14 @@ $(document).ready(function(){
         navigator.userAgent.match(/Windows Phone/i)) ? true : false;
 
     }
+
+    var getZPUserType = function() {
+      if ($("#zPUserType").length > 0 || $("input[name='zPUserType']").length > 0 ){
+          return ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();
+      }else{
+          return "";
+      }
+  }
 
     /* 
       Created By    :- Created By Zainal Arifin, Date : 21 Feb 2018
@@ -60,6 +73,262 @@ $(document).ready(function(){
       }
     }
     */    
+
+    /* 
+        Created By    :- Created By Zainal Arifin, Date : 02 May 2018
+        Task          :- New Search Customer for TW
+        Page          :- Global
+        File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
+        Layout        :- Both (Desktop/Mobile)
+    */
+
+    function search_customer()
+    {
+      if(isMobile()){
+
+      }else{
+        var fileAttachmentBSID_t = $("input[name='fileAttachmentBSID_t']").val();
+        var ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v1/commerceProcesses/oraclecpqo/transactions/" + fileAttachmentBSID_t + "/attachments/customerDetails?docId=36244074&docNum=1";
+
+        $.ajax({
+          // header: { "Authorization": "Basic " + btoa(usernameGetCustomer + ":" + passwordGetCustomer) },
+          type: "GET",
+          url: ajaxUrl,
+          dataType: "text",
+          success: function (customerDetails) {
+            // console.log(response);
+            /* var seachCustomer;
+            searchCustList(customerDetails, seachCustomer);
+            searchCustomerList(seachCustomer);
+            $('.search-cust_wrapper').hide(); */
+            data_table_customer(customerDetails);
+          }
+        });
+      }
+    }
+
+    function data_table_customer(dataSet){
+      if(isMobile()){
+
+      }else{
+
+          var userCountry =  userDetectFunc();
+          var firstDrawData = true;
+
+          dataSet = dataSet.replace("null","");
+          var custArr = dataSet.split("##");
+          
+          var totalRecs = custArr.length;
+          var fromIndex = 0;
+          var toIndex = totalRecs;
+          var dataSet = [];
+    
+          for(var i = fromIndex; i< toIndex;i++){
+            colArr = custArr[i].split("$$");
+            
+            if(typeof colArr != 'undefined' ){
+              var subDataSet = [ 	'',
+                        colArr[0],  //1 SOLD TO ID
+                        colArr[2],  //2 SOLD TO NAME
+                        colArr[1],  //3 SHIP TO ID
+                        colArr[13], //4 SHIP TO NAME
+                        colArr[17], //5 SHIP TO ADDRESS 1
+                        colArr[18], //6 SHIP TO ADDRESS 2
+                        colArr[20], //7 SHIP TO DISTRICT
+                        colArr[22], //8 SHIP TO CITY
+                        colArr[21], //9 SHIP TO POSTAL CODE
+                        colArr[14], //10 BILL TO ID
+                        colArr[15], //11 BIILL TO NAME
+                      ];
+
+              dataSet.push(subDataSet);
+            }
+    
+          }
+          var userColumn = [];
+      
+          userColumn.push( { title: "" } );
+  
+          coloumn = $("#applicableColumnsForCustomerSearch").val().split("$$");
+  
+          coloumn.forEach(function(nameColoumn, index){
+            if(typeof nameColoumn != 'undefined' ){
+              userColumn.push( {title: nameColoumn} );
+            }
+          });
+          
+          seachCustomer = js2('#searchCustomer').DataTable({
+          destroy: true,
+          scrollY: "400px",
+          scrollCollapse: true,
+          data: dataSet,
+          deferRender: true,
+          order: [[3, 'asc']],
+          columnDefs: [
+            {
+              targets: 0,
+              searchable: true,
+              orderable: false,
+              render: function(data, type, full, meta){
+                
+                data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1]+ '$$' + full[3] + '$$' +full[10] +'">'; 
+                return data;
+
+              }
+            }
+          ],
+          
+          "fnDrawCallback": function (oSettings) {
+            $( $("#searchCustomer_wrapper").find(".dataTable")[0] ).css("table-layout", "fixed");
+          },
+          columns: userColumn
+      
+          });
+      
+          seachCustomer.on( 'draw', function () {
+              console.log("draw dt");
+              $("input[name='searchCust']").off();
+              $("input[name='searchCust']").on('click', function() {
+                delete_line_item_func($(this).val());
+              });
+          });
+      
+          js2('#searchCustomerInput').keyup(function(){
+            var inputLength = js2('#searchCustomerInput').val().length;
+            if( inputLength === 3 || inputLength > 3 ) {
+              // console.log('show table');
+              /*
+                  Start : 15 Nov 2017
+                  Task  : Customer Type-ahead Search
+                  Page  : shopping cart 
+                  File Location : $BASE_PATH$/image/javascript/js-ezrx.js
+                  Layout : Tablet
+              */
+      
+              var keywordCustomer = js2(this).val();
+              if(keywordCustomer.indexOf("%") != -1){
+                keywordCustomer = keywordCustomer.replace(/%/g, " ");
+                seachCustomer.search( keywordCustomer, true, true).draw();
+              }else{
+                seachCustomer.search(keywordCustomer).draw();
+              }
+              /*
+                  End : 15 Nov 2017
+                  Task  : Customer Type-ahead Search
+                  Page  : shopping cart 
+                  File Location : $BASE_PATH$/image/javascript/js-ezrx.js
+                  Layout : Tablet
+              */
+              js2('.search-cust_wrapper').show();
+      
+              var customerName = $($(".dataTables_scroll").find("thead")[0]).find("th")[3]; // for trigger customer name sorting
+                
+              if(firstDrawData){
+                $(customerName).click();
+                firstDrawData = false;
+              }
+      
+            } else {
+              js2('.search-cust_wrapper').hide();
+            }
+          });
+      
+          var searchCust99 = seachCustomer.column(3).search($('#searchCustomerInput').val(),true,true).draw();
+          var info = searchCust99.page.info();
+          
+          if(info.recordsDisplay===0){
+            
+            seachCustomer2 = js2('#searchCustomer').DataTable({
+              destroy: true,
+              scrollY: "400px",
+              scrollCollapse: true,
+              data: dataSet,
+              deferRender: true,
+              columnDefs: [
+                {
+                  targets: 0,
+                  searchable: true,
+                  orderable: false,
+                  render: function(data, type, full, meta){
+
+                    if(type === 'display'){
+                      data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1]+ '$$' + full[3] + '$$' +full[10] +'">';
+                    }
+        
+                    return data;
+                  }
+                }
+              ],
+              columns: userColumn
+        
+            });
+          }
+      }
+    }
+
+    var delete_line_item_func = function(selectedCustShipID){
+
+      var selectedCustShipID_TW = selectedCustShipID;
+      var selectedCustShipID = parseInt(selectedCustShipID);
+      var currentCust = parseInt($("span[id*=customerShipToId]").text());
+      var line_items_no = $('input[type="checkbox"][name="_line_item_list"]').length;
+
+      if((selectedCustShipID != currentCust) && (selectedCustShipID>0) && (currentCust>0) && (line_items_no>0)) {
+        
+        if(confirm('The line items will be deleted from order on change of customer. Do you want to proceed?.')){
+    
+          sessionStorage.setItem('selectedCustShipID', selectedCustShipID);
+          sessionStorage.setItem('selectedCustShipID', selectedCustShipID_TW);
+          $('input[type="checkbox"][name="_line_item_list"]').prop("checked","checked");
+          $('#delete_line_items').on("click",function(){
+          }).click();
+        }
+    
+      } else {
+        
+        $("#selectedCustomerDetail").val(selectedCustShipID);
+        $("#selectedCustomerDetail").val(selectedCustShipID_TW);
+        var check_nationality = function (nationality) {
+          var countryEle = document.getElementById('userSalesOrg_t');
+          if (countryEle == null) { //this is for material page.
+            countryEle = $('input[name="userSalesOrg_PL"]').val();
+            countryCode = countryEle;
+          } else {
+            var countryCode = parseInt(countryEle.value);
+          }
+          
+          if (typeof countryCode == "undefined") {
+            countryCode = "2601";
+          }
+          if (nationality == 2600) {
+            nationality = 2601;
+          }
+    
+          var valid = false;
+          if (nationality == countryCode || countryCode == 2601) {
+            valid = true;
+          }
+    
+          return valid;
+        }
+        if(!check_nationality(2500)){
+          $("#customerMasterString_t").val("");
+        }
+        setTimeout(function(){
+          $("#save").click();
+        }, 500);
+      }    
+    
+    };
+
+    /* 
+        Created By    :- Created By Zainal Arifin, Date : 02 May 2018
+        Task          :- New Search Customer for TW
+        Page          :- Global
+        File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
+        Layout        :- Both (Desktop/Mobile)
+    */
+
     /* TW-05 and TW-13 Override Invoice Price */
     function override_redcolor(){
       var redColor = "rgb(255, 0, 0)";
@@ -1226,6 +1495,9 @@ $(document).ready(function(){
                 orderPageRestyle();
                 reset_color_lineitemgrid();
                 order_page_stock_color();
+                if(getZPUserType() == "csteam"){
+                  search_customer();
+                }
 
               } else {
                 loadScriptOrderPage();

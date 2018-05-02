@@ -423,6 +423,59 @@
                 var materialHTML = '<div class="materialSearchWrapper"> <div class="normalPopupCont flLeft" id="leftPanel"> <table id="resultsTable" style="width: 100%;"></table> </div><div class="normalPopupCont1 flRight" id="rightPanel"> <div class="popupHeader1 bigHeader">Selected Materials</div><div class="accountstable" id="selectedResultsTable"> <div class="accountstable" id="selectedMatTableDiv" style="overflow-y: auto;height: 400px;"> <table id="selectedMatTable" style="background-color: white !important;"> <thead> <tr> <th style="width:5%">Qty</th><th style="width:18%">Material Number</th> <th style="width:50%">Material Description</th><th style="width:22%">Comm. Item for Bonus</th> <th style="width:5%"></th> </tr></thead> <tbody id="selectedMatTableBody"> </tbody> </table> <a href="#" id="addMaterialBtn" name="addMaterialBtn" class="jg-btn addMat-btn" style="width: auto; margin-top: 50px; display: inline-block;">Add</a> </div></div></div></div>';
                 var userType = getZPUserType();
 
+                var searchMaterialFAID = function(){
+                    var fileAttachmentID = ($("input[name='fileAttachmentID']").length >0 )? $("input[name='fileAttachmentID']").val() : $("input[name='fileAttachmentBSID_t']").val();
+                    console.log( "materialDetails in desktop", fileAttachmentID );
+                    var ajaxUrl = "https://" + instanceName + ".bigmachines.com/rest/v1/commerceProcesses/oraclecpqo/transactions/" + fileAttachmentID + "/attachments/materialDetails?docId=36244074&docNum=1";
+                    var ajaxUrl2 = "https://" + instanceName + ".bigmachines.com/rest/v1/commerceProcesses/oraclecpqo/transactions/" + fileAttachmentID + "/attachments/materialDetails2?docId=36244074&docNum=1";
+                    var sumResult = "";
+                    $.ajax({
+                        type: "GET",
+                        url: ajaxUrl,
+                        dataType: "text",
+                        /* success: function (materialDetails) {
+                            materialSearch(materialDetails);
+                        }*/
+                    }).done(function(materialDetails) {
+                        sumResult = materialDetails;
+                        if ( check_nationality(2800) ){
+
+                            var materialDetailsFlag2 = "true";                            
+                            if(getZPUserType() != "csteam"){
+                                materialDetailsFlag2 = $("input[name='materialDetailsFlag2']").val().toLowerCase();                                
+                            }
+
+                            if (materialDetailsFlag2 == "true") {
+                                $.ajax({
+                                    type: "GET",
+                                    url: ajaxUrl2,
+                                    dataType: "text",
+                                    /* success: function (materialDetails) {
+                                        materialSearch(materialDetails);
+                                    } */
+                                }).done(function (materialDetails2) {
+
+                                    if (sumResult.length > 0) {
+                                        sumResult += materialDetails2;
+                                        console.log(sumResult, "long of material details", sumResult.length);
+                                    } else {
+                                        console.log("materialDetails is empty");
+                                    }
+
+                                    materialSearch(sumResult);
+
+                                });
+                            } else {
+                                materialSearch(sumResult);
+                            }
+
+                        }else{
+                            materialSearch(sumResult);                                
+                        }
+
+                    });
+                }
+
                 // var userType = ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();
 
                 if ($('#tab-material-content').length > 0) {
@@ -435,56 +488,15 @@
 					$("#attribute-enableOldMaterialSearch").hide();
                     $('#attribute-materialSearch').append().html(materialHTML);
                     console.log("pageTitle=================" + pageTitle)
-
+                    
 					if(userType === 'csteam'){
-						materialSearch();
-					}else{
-                        var fileAttachmentID = ($("input[name='fileAttachmentID']").length >0 )? $("input[name='fileAttachmentID']").val() : $("input[name='fileAttachmentBSID_t']").val();
-                        console.log( "materialDetails in desktop", fileAttachmentID );
-						var ajaxUrl = "https://" + instanceName + ".bigmachines.com/rest/v1/commerceProcesses/oraclecpqo/transactions/" + fileAttachmentID + "/attachments/materialDetails?docId=36244074&docNum=1";
-                        var ajaxUrl2 = "https://" + instanceName + ".bigmachines.com/rest/v1/commerceProcesses/oraclecpqo/transactions/" + fileAttachmentID + "/attachments/materialDetails2?docId=36244074&docNum=1";
-                        var sumResult = "";
-						$.ajax({
-							type: "GET",
-							url: ajaxUrl,
-							dataType: "text",
-							/* success: function (materialDetails) {
-								materialSearch(materialDetails);
-							}*/
-						}).done(function(materialDetails) {
-                            sumResult = materialDetails;
-                            if ( check_nationality(2800) ){
-
-                                var materialDetailsFlag2 = $("input[name='materialDetailsFlag2']").val().toLowerCase();
-                                if (materialDetailsFlag2 == "true") {
-                                    $.ajax({
-                                        type: "GET",
-                                        url: ajaxUrl2,
-                                        dataType: "text",
-                                        /* success: function (materialDetails) {
-                                            materialSearch(materialDetails);
-                                        } */
-                                    }).done(function (materialDetails2) {
-
-                                        if (sumResult.length > 0) {
-                                            sumResult += materialDetails2;
-                                            console.log(sumResult, "long of material details", sumResult.length);
-                                        } else {
-                                            console.log("materialDetails is empty");
-                                        }
-
-                                        materialSearch(sumResult);
-
-                                    });
-                                } else {
-                                    materialSearch(sumResult);
-                                }
-
-                            }else{
-                                materialSearch(sumResult);                                
-                            }
-
-                        });
+                        if(!check_nationality(2800)){
+						    materialSearch();                            
+                        }else{
+                            searchMaterialFAID();
+                        }
+                    }else{
+                        searchMaterialFAID();
 					}
                    
                     maxCheckingDataTable = 100;
@@ -5910,9 +5922,29 @@
                 e.preventDefault();
                 localStorage.removeItem("flag");
                 setTimeout(function(){
+                    window.open('', '_self', '');
                     window.close();
                 }, 1000);
             });
+
+            if($("#readonly_1_status_t").text().toLowerCase() == "in process"){
+                var table_home = $("#"+target_button).closest("table");
+                var href_create_order = "https://"+instanceName+".bigmachines.com/commerce/buyside/document.jsp?formaction=create&process=oraclecpqo&sso=Post&flag=rightnow#";
+                var html_create_order = '<table class="form-action" cellspacing="0" cellpadding="0" style="margin: 0px 10px; cursor: pointer;">\
+                                            <tbody>\
+                                                <tr>\
+                                                    <td class="button-left">&nbsp;</td>\
+                                                    <td class="button-middle" nowrap="true">\
+                                                        <div style="margin:0px 0px 1px 0px;">\
+                                                            <a class="button-text" name="create_order" id="create_order" href="'+href_create_order+'">Create Order</a>\
+                                                        </div>\
+                                                    </td>\
+                                                    <td class="button-right">&nbsp;</td>\
+                                                </tr>\
+                                            </tbody>\
+                                        </table>';
+                $(table_home).after( html_create_order );
+            }
 
              var jg_box_mainarea = document.querySelector('.jg-box-mainarea');
              if(jg_box_mainarea !== null){

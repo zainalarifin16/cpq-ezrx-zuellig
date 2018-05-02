@@ -967,6 +967,37 @@ $(document).ready(function(){
           Layout        :- Desktop
         */
 
+        /* 
+          Created By    :- Created By Zainal Arifin, Date : 02 May 2018
+          Task          :- Change View Datepicker
+          Page          :- Model Configuration
+          File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
+          Layout        :- Desktop
+        */
+        
+        var date_picker_podate = function(){
+          var form_date_podate_before = $("#attr_wrapper_1_pODate").find(".form-date");                    
+          $( form_date_podate_before ).hide();
+          $( form_date_podate_before ).after("<input id='datepickerpodate' >");
+          var $j = jQuery.noConflict();
+          $j( "#datepickerpodate" ).datepicker({
+            showOn: "button",
+            buttonImage: "/gwt/gxt/images/default/form/date-trigger.gif",
+            buttonImageOnly: true,
+            buttonText: "Select date"
+          });
+        }
+        
+        /* 
+          Created By    :- Created By Zainal Arifin, Date : 02 May 2018
+          Task          :- Change View Datepicker
+          Page          :- Model Configuration
+          File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
+          Layout        :- Desktop
+        */
+
+        
+
         if (navigator.userAgent.match(/Android/i) ||
             navigator.userAgent.match(/webOS/i) ||
             navigator.userAgent.match(/iPhone/i) ||
@@ -1050,6 +1081,7 @@ $(document).ready(function(){
                         Layout : Both
                     */
                     orderPageComponent();
+                    date_picker_podate();
                   } else {
                     loadOderPageScript();
                   }

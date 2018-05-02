@@ -316,19 +316,18 @@ var changeCust = function(){
 			} else {
 				var countryCode = parseInt(countryEle.value);
 			}
-
 			if (typeof countryCode == "undefined") {
 				countryCode = "2601";
 			}
 			if (nationality == 2600) {
 				nationality = 2601;
 			}
-
+	
 			var valid = false;
 			if (nationality == countryCode || countryCode == 2601) {
 				valid = true;
 			}
-
+	
 			return valid;
 		}
 		if(!check_nationality(2500)){
@@ -972,7 +971,31 @@ var searchCustomerList = function(seachCustomer) {
 			timer = setTimeout(function() { //then give it a second to see if the user is finished
 				if( inputLength === 3 || inputLength > 3 ) {
 					//ajax
-					loadAjax();
+					var check_nationality = function (nationality) {
+						var countryEle = document.getElementById('userSalesOrg_t');
+						if (countryEle == null) { //this is for material page.
+							countryEle = $('input[name="userSalesOrg_PL"]').val();
+							countryCode = countryEle;
+						} else {
+							var countryCode = parseInt(countryEle.value);
+						}
+						if (typeof countryCode == "undefined") {
+							countryCode = "2601";
+						}
+						if (nationality == 2600) {
+							nationality = 2601;
+						}
+				
+						var valid = false;
+						if (nationality == countryCode || countryCode == 2601) {
+							valid = true;
+						}
+				
+						return valid;
+					}
+					if(!check_nationality(2800)){
+						loadAjax();						
+					}
 					setTimeout( function(){
 						$('.search-cust_wrapper').show();
 					}, 1000);
