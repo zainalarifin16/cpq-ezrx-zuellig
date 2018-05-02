@@ -1017,9 +1017,12 @@ $(document).ready(function() {
 
 											var text_dont_close = "<p style='font-size: 26px;font-weight: bold;font-style: normal;font-stretch: normal;line-height: normal;letter-spacing: normal;text-align: center;color: #005e63;' >Do not close the browser or click back button</p>";
 
-											var popup = $("<div style='width: 632px;height: 180px;border-radius: 8px;background-color: #ffffff;margin: 250px auto;' >" + text_order_submission + text_please_wait + loading_bar + text_dont_close + "</div>");
-											$(".ui-loader").css({ "background-color": "rgb(255,255,255)", "opacity": "1" });
+											var popup = $("<div style='width: 632px;height: 250px;border-radius: 8px;background-color: #ffffff;margin: 195px auto;padding:50px;' >" + text_order_submission + text_please_wait + loading_bar + text_dont_close + "</div>");
+											$(".ui-loader").css({ "background-color": "transparent", "opacity": "1" });
 											$(".ui-loader").find("h1").after(popup);
+
+											var bgloading = "<div id='bgloading' style='position: fixed;top: 0;right: 0;bottom: 0;left: 0;background-color: rgb(250, 255, 189);opacity: 0.35;' ></div>";
+											$(".ui-loader").find("h1").after(bgloading);
 
 											var base_loading_progress = 100;
 

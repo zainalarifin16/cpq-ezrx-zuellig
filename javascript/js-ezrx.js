@@ -3659,7 +3659,7 @@
 
                                         var text_dont_close = "<p style='font-size: 26px;font-weight: bold;font-style: normal;font-stretch: normal;line-height: normal;letter-spacing: normal;text-align: center;color: #005e63;' >Do not close the browser or click back button</p>";
 
-                                        var popup = $("<div style='width: 632px;height: 180px;border-radius: 8px;background-color: #ffffff;margin: 250px auto;' >" + text_order_submission + text_please_wait + loading_bar + text_dont_close + "</div>");
+                                        var popup = $("<div style='width: 632px;height: 250px;border-radius: 8px;background-color: #ffffff;margin: 195px auto;padding:50px;' >" + text_order_submission + text_please_wait + loading_bar + text_dont_close + "</div>");
                                         $("#jg-overlay").css({ "background-color": "rgb(255,255,255)", "opacity": "1", "background-image": "none" });
                                         $("#jg-overlay").append(popup);
 
@@ -3670,7 +3670,7 @@
                                                 if ($("#loading-dialog").length > 0){
                                                     $("#loading-dialog").find("img").remove();
                                                     $("#loading-dialog").css({
-                                                        "background-color": "rgb(255,255,255)",
+                                                        "background-color": "transparent",
                                                         "opacity": "1",
                                                         "background-image": "none",
                                                         "width": "100%",
@@ -3680,7 +3680,7 @@
                                                         "bottom": "0px",
                                                         "margin": "0px"
                                                     });
-                                                    $("#loading-dialog").append(popup);
+                                                    $("#loading-dialog").append(popup);                                              
                                                 }else{
                                                     setLoadingDialog();
                                                 }
@@ -6182,72 +6182,77 @@
                     */
                 } else if (pagetitle == "change password"){
                    /* 
-                    Created By    :- Created By Zainal Arifin, Date : 27 Feb 2018
-                    Task          :- Hide Feature "Enable Old Material"
-                    Page          :- Model Configuration
-                    File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
-                    Layout        :- Desktop
-                */
+                        Created By    :- Created By Zainal Arifin, Date : 27 Feb 2018
+                        Task          :- Hide Feature "Enable Old Material"
+                        Page          :- Model Configuration
+                        File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
+                        Layout        :- Desktop
+                    */
 
-                console.log("change password script");
-                
-                var readyChangePasswordPage = function(){
-                    setTimeout(function(){
-                        if (isLoadingDone()) {
-                            $("h1.ui-title").css({ "background": "#00575d", "color": "#ffffff" });
-                            $("#main-content").attr("style", "margin-top: 70px!important");
-                            $("#change-pw-form").css("height", "450px");
-                            $("#errors").after($("<div id='error_js' style='width: 41%;margin: auto auto 10px;' ></div>"));
-                            $("#submit").attr("style", "background: #005E63!important;color: #ffffff;padding: 5px 10px;font-size: 20px;");
+                    console.log("change password script");
+                    
+                    var readyChangePasswordPage = function(){
+                        setTimeout(function(){
+                            if (isLoadingDone()) {
+                                $("h1.ui-title").css({ "background": "#00575d", "color": "#ffffff" });
+                                $("#main-content").attr("style", "margin-top: 70px!important");
+                                $("#change-pw-form").css("height", "550px");
+                                $("#errors").after($("<div id='error_js' style='width: 41%;margin: auto auto 10px;' ></div>"));
+                                $("#submit").attr("style", "background: #005E63!important;color: #ffffff;padding: 5px 10px;font-size: 20px;");
+                                var html_password_restriction = '<fieldset style="margin-left: 5px;margin-top: 100px;position:relative;border-top-width: 2px;border-right-width: 2px;border-bottom-width: 2px;border-left-width: 2px;border-top-style: groove;border-right-style: groove;border-bottom-style: groove;border-left-style: groove;padding: 10px;">\
+                                                                    <legend class="form-label" style="font-weight: bold;" >&nbsp;Password Restrictions&nbsp;</legend>\
+                                                                    Password must be between 8 to 30 characters long and it should start with a letter. Password must have at least one upper case letter, at least one number and at least one special character.\
+                                                                </fieldset>';
+                                $("#submit").after(html_password_restriction);
 
-                            $("#change-pw-form").on("submit", function (e) {
-                                // e.preventDefault();
-                                var oldPassword = $("input[name='_oldPassword']").val();
-                                var newPassword = $("input[name='_newPassword']").val();
-                                var newPassword2 = $("input[name='_retypedPassword']").val();
-                                var divError = $("#error_js");
-                                $(divError).html("");
-                                if (newPassword.length > 0 && oldPassword.length > 0) {
+                                $("#change-pw-form").on("submit", function (e) {
+                                    // e.preventDefault();
+                                    var oldPassword = $("input[name='_oldPassword']").val();
+                                    var newPassword = $("input[name='_newPassword']").val();
+                                    var newPassword2 = $("input[name='_retypedPassword']").val();
+                                    var divError = $("#error_js");
+                                    $(divError).html("");
+                                    if (newPassword.length > 0 && oldPassword.length > 0) {
 
-                                    if (newPassword == newPassword2) {
-                                        if (newPassword.length >= 8 && newPassword.length <= 30) {
-                                            if (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z_\-!\"@;,.:]{8,30}$/.test(newPassword) == false) {
-                                                console.log("Password must have at least one upper case letter, at least one number and at least one special character.");
-                                                $(divError).append("<div class='error'>Password must have at least one upper case letter, at least one number and at least one special character.</div>");
+                                        if (newPassword == newPassword2) {
+                                            if (newPassword.length >= 8 && newPassword.length <= 30) {
+                                                if (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z_\-!\"@;,.:]{8,30}$/.test(newPassword) == false) {
+                                                    console.log("Password must have at least one upper case letter, at least one number and at least one special character.");
+                                                    $(divError).append("<div class='error'>Password must have at least one upper case letter, at least one number and at least one special character.</div>");
+                                                } else {
+                                                    console.log("Submitted to system");
+                                                    return true;
+                                                }
                                             } else {
-                                                console.log("Submitted to system");
-                                                return true;
+                                                console.log("Password must be between 8 and 30 characters.");
+                                                $(divError).append("<div class='error'>Password must be between 8 and 30 characters.</div>");
                                             }
-                                        } else {
-                                            console.log("Password must be between 8 and 30 characters.");
-                                            $(divError).append("<div class='error'>Password must be between 8 and 30 characters.</div>");
                                         }
+
+                                        /* if (newPassword != newPassword2) {
+                                            console.log("New Password and Retype New Password not match");
+                                            $(divError).append("<div class='error'>New Password and Retype New Password not match</div>");
+                                        } else {
+                                            
+                                        } */
                                     }
+                                    e.preventDefault();
+                                });
+                            } else {
+                                readyChangePasswordPage();
+                            }
+                        }, 500);
+                    }
 
-                                    /* if (newPassword != newPassword2) {
-                                        console.log("New Password and Retype New Password not match");
-                                        $(divError).append("<div class='error'>New Password and Retype New Password not match</div>");
-                                    } else {
-                                        
-                                    } */
-                                }
-                                e.preventDefault();
-                            });
-                        } else {
-                            readyChangePasswordPage();
-                        }
-                    }, 500);
-                }
+                    readyChangePasswordPage();
 
-                readyChangePasswordPage();
-
-                /* 
-                    Created By    :- Created By Zainal Arifin, Date : 27 Feb 2018
-                    Task          :- Hide Feature "Enable Old Material"
-                    Page          :- Model Configuration
-                    File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
-                    Layout        :- Desktop
-                */
+                    /* 
+                        Created By    :- Created By Zainal Arifin, Date : 27 Feb 2018
+                        Task          :- Hide Feature "Enable Old Material"
+                        Page          :- Model Configuration
+                        File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
+                        Layout        :- Desktop
+                    */
                 }
 
                 mobile_adjustcontenttop();
@@ -6735,9 +6740,15 @@
                         if (isLoadingDone()) {
                             $("h1.ui-title").css({ "background": "#00575d", "color": "#ffffff" });
                             $("#main-content").attr("style", "margin-top: 70px!important");
-                            $("#change-pw-form").css("height", "450px");
+                            $("#change-pw-form").css("height", "550px");
                             $("#errors").after($("<div id='error_js' style='width: 41%;margin: auto auto 10px;' ></div>"));
                             $("#submit").attr("style", "background: #005E63!important;color: #ffffff;padding: 5px 10px;font-size: 20px;");
+
+                            var html_password_restriction = '<fieldset style="margin-left: 5px;margin-top: 100px;position:relative;border-top-width: 2px;border-right-width: 2px;border-bottom-width: 2px;border-left-width: 2px;border-top-style: groove;border-right-style: groove;border-bottom-style: groove;border-left-style: groove;padding: 10px;">\
+                                                                    <legend class="form-label" style="font-weight: bold;" >&nbsp;Password Restrictions&nbsp;</legend>\
+                                                                    Password must be between 8 to 30 characters long and it should start with a letter. Password must have at least one upper case letter, at least one number and at least one special character.\
+                                                                </fieldset>';
+                            $("#submit").after(html_password_restriction);
 
                             $("#change-pw-form").on("submit", function (e) {
                                 // e.preventDefault();
