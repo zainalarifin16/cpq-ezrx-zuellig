@@ -440,8 +440,8 @@
                         sumResult = materialDetails;
                         if ( check_nationality(2800) ){
 
-                            var materialDetailsFlag2 = "true";                            
-                            if(getZPUserType() != "csteam"){
+                            var materialDetailsFlag2 = "false";                           
+                            if ($("input[name='materialDetailsFlag2']").length > 0){
                                 materialDetailsFlag2 = $("input[name='materialDetailsFlag2']").val().toLowerCase();                                
                             }
 
