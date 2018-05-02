@@ -1724,8 +1724,8 @@
                             Task  : Wildcard material search
                             Page  : Shopping Cart
                             File Location : $BASE_PATH$/image/javascript/js-ezrx.js
+                            */
                             Layout : Both
-                        */
                         } else {
                             $('.dataTables_scrollBody .loader-material').show();
                             $('.dataTables_scrollBody #resultsTable').hide();
@@ -1737,8 +1737,10 @@
                         if (materialSearch.indexOf("%") !== -1) {
                             materialSearch = materialSearch.replace(/%/g, ' ');
                         }
-                        materialSearch.trim();
-                        materialList.search(materialSearch).order([2, 'asc']).draw();
+                        // materialSearch.trim();
+                        // materialList.search(materialSearch).order([2, 'asc']).draw();
+                        materialList.search(materialSearch.trim(), true, true).order([2, 'asc']).draw();
+
                     }
 
 

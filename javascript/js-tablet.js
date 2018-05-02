@@ -32,6 +32,14 @@ $(document).ready(function() {
 		return $("#jg-overlay").css("display") == "none"? true : false;
 	}
 
+	var getZPUserType = function() {
+        if ($("#zPUserType").length > 0 || $("input[name='zPUserType']").length > 0 ){
+            return ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();
+        }else{
+            return "";
+        }
+    }
+
 	function getQueryVariableUrl(variable) {
 		var query = window.location.search.substring(1);
 		var vars = query.split("&");
@@ -1239,7 +1247,10 @@ $(document).ready(function() {
 							Layout        :- Desktop
 						*/
 
-						if ($("input[name='zPUserType']").val().toLowerCase() != "csteam") {
+						var zpUserType = getZPUserType();
+            			// var zpUserType = ( $("#zPUserType").length > 0 )? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();
+						
+						if (zpUserType != "csteam") {
 							$("#order-allorders").hide();
 						}
 
