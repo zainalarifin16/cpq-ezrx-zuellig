@@ -6250,7 +6250,7 @@
 
                                         if (newPassword == newPassword2) {
                                             if (newPassword.length >= 8 && newPassword.length <= 30) {
-                                                if (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z_\-!\"@;,.:]{8,30}$/.test(newPassword) == false) {
+                                                if (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,30}$/.test(newPassword) == false) {
                                                     console.log("Password must have at least one upper case letter, at least one number and at least one special character.");
                                                     $(divError).append("<div class='error'>Password must have at least one upper case letter, at least one number and at least one special character.</div>");
                                                 } else {
@@ -6795,7 +6795,7 @@
 
                                     if (newPassword == newPassword2) {
                                         if (newPassword.length >= 8 && newPassword.length <= 30) {
-                                            if (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z_\-!\"@;,.:]{8,30}$/.test(newPassword) == false) {
+                                            if (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,30}$/.test(newPassword) == false) {
                                                 console.log("Password must have at least one upper case letter, at least one number and at least one special character.");
                                                 $(divError).append("<div class='error'>Password must have at least one upper case letter, at least one number and at least one special character.</div>");
                                             } else {
