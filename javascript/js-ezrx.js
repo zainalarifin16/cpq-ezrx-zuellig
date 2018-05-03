@@ -1557,83 +1557,94 @@
         $('.dataTables_scrollBody').prepend(loading);
 
         if (userType === 'csteam' && enableOldMaterialSearch == "false") {
-            console.info('material search ajax call');
 
-            if (check_nationality(2600)) {
-                var salesOrg = 2601;
-            } else {
-                salesOrg = $('input[name="userSalesOrg_PL"]').val();
-            }
+            if(!check_nationality( 2800 )){
+                if (check_nationality(2600)) {
+                    var salesOrg = 2601;
+                } else {
+                    salesOrg = $('input[name="userSalesOrg_PL"]').val();
+                }
 
-            ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";
-            ajaxData = "q=\{ $and: [ { sales_org: { $eq:" + salesOrg + "} }, { dwnld_to_dss: { $eq: 'Y'} } ] }&orderby=material:asc";
-            
-            /* ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";
-            var ajaxData = "orderby=material_desc:asc"; */
-
-            /* if (salesOrg != 2600 && typeof salesOrg != 'undefined') {
                 ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";
-                // if (typeof salesOrg != 'undefined') {
                 ajaxData = "q=\{ $and: [ { sales_org: { $eq:" + salesOrg + "} }, { dwnld_to_dss: { $eq: 'Y'} } ] }&orderby=material:asc";
-                // ajaxData = "q=\{ $and: [ { sales_org: { $eq:" + salesOrg + "} }, { dwnld_to_dss: { $eq: 'Y'} } ] }&orderby=material:asc";
-                // ajaxData = "q=\{\"sales_org\":\"" + salesOrg + "\"}&orderby=material:asc";
-            } */
 
-             // var ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";
-            // var ajaxData = "orderby=material_desc:asc";
-            // if($('input[name="userSalesOrg_PL"]').val()=="2800"){
-                // ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";
-                // ajaxData = "q=\{\"sales_org\":\"2800\"}&orderby=material:asc";
-                /* ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v3/customMaterial_Master";
-                ajaxData = "orderby=material:asc"; */
-            // }    
-
-            $.ajax({
-                url: ajaxURL,
-                data: ajaxData,
+                $.ajax({
+                    url: ajaxURL,
+                    data: ajaxData,
 
 
-            }).done(function(response) {
-                //console.dir(response);
-                var data = response.items;
+                }).done(function (response) {
+                    //console.dir(response);
+                    var data = response.items;
 
-                $.each(data, function(i, item) {
-                    //console.log(item.material_number, item.material_desc, item.principal_name);
-                    //console.log(item);
-                    var subDataSet = [
-                                        "", 
-                                        (item.material != null)? item.material : "", 
-                                        (item.description != null)? item.description : "", 
-                                        (item.principal_name != null)? item.principal_name : "",
-                                    ];
-                    if($('input[name="userSalesOrg_PL"]').val()=="2800"){
-                        if(item.material_group_5 == 500 && item.materialgroup != "ZGM"){
-                            var promo = "P";
-                        } else {
-                            var promo = "";
+                    $.each(data, function (i, item) {
+                        //console.log(item.material_number, item.material_desc, item.principal_name);
+                        //console.log(item);
+                        var subDataSet = [
+                            "",
+                            (item.material != null) ? item.material : "",
+                            (item.description != null) ? item.description : "",
+                            (item.principal_name != null) ? item.principal_name : "",
+                        ];
+                        if ($('input[name="userSalesOrg_PL"]').val() == "2800") {
+                            if (item.material_group_5 == 500 && item.materialgroup != "ZGM") {
+                                var promo = "P";
+                            } else {
+                                var promo = "";
+                            }
+
+                            subDataSet = [
+                                "",
+                                (item.material != null) ? item.material : "",
+                                (item.alt_lang_desc != null) ? item.alt_lang_desc : "",
+                                (item.description != null) ? item.description : "",
+                                (promo != null) ? promo : "",
+                                (item.principal_code != null) ? item.principal_code : "",
+                                (item.principal_name != null) ? item.principal_name : ""
+                            ];
                         }
-                        
-                        subDataSet = [
-                                        "", 
-                                        (item.material != null)? item.material : "", 
-                                        (item.alt_lang_desc != null) ? item.alt_lang_desc : "",                                        
-                                        (item.description != null)? item.description : "", 
-                                        (promo != null)? promo : "", 
-                                        (item.principal_code != null)? item.principal_code : "", 
-                                        (item.principal_name != null)? item.principal_name : ""
-                                    ];
+                        dataSet.push(subDataSet);
+                        //console.log(subDataSet);
+                    });
+
+                    //console.log('ajax data loaded');
+
+                }).always(function () {
+                    materialList.clear().draw();
+                    materialList.rows.add(dataSet);
+                    materialList.columns.adjust().draw();
+                });
+            }else{
+                // console.log(materialDetails);
+                custArr = materialDetails.split("##");
+                totalRecs = custArr.length;
+
+                var fromIndex = 0;
+                var toIndex = totalRecs;
+                var dataSet = [];
+                
+                for (var i = fromIndex; i < toIndex; i++) {
+                    colArr = custArr[i].split("$$");
+                    // console.dir(colArr);
+                    for (var t = 0; t < 3; t++) {
+                        if (typeof colArr[t] === 'undefined') {
+                            colArr[t] = '';
+                        }
+                    }
+                    subDataSet = ["", colArr[0], colArr[6], colArr[1], colArr[2], colArr[3], colArr[4]];
+                    //debugger;
+                    //  console.log('userType',userType);
+                    if (userType == 'principal') {
+                        subDataSet = ["", colArr[0], colArr[6], colArr[1], colArr[5], colArr[2], colArr[3], colArr[4]];
                     }
                     dataSet.push(subDataSet);
-                    //console.log(subDataSet);
-                });
-
-                //console.log('ajax data loaded');
-
-            }).always(function() {
+                }
+                // console.log(dataSet);
                 materialList.clear().draw();
                 materialList.rows.add(dataSet);
                 materialList.columns.adjust().draw();
-            });
+
+            }
 
         }
 
@@ -1652,13 +1663,17 @@
                     materialSearch = materialSearch.replace(/%/g, ' ');
                     materialList.search(materialSearch).order([2, 'asc']).draw();
                 } else {
-                    var i = 0;
-                    while (ajaxSearchMaterialProcess.length) {
-                        ajaxSearchMaterialProcess[i++].abort();
+                    if(!check_nationality(2800)){
+                        var i = 0;
+                        while (ajaxSearchMaterialProcess.length) {
+                            ajaxSearchMaterialProcess[i++].abort();
+                        }
+                        $('.dataTables_scrollBody .loader-material').show();
+                        $('.dataTables_scrollBody #resultsTable').hide();
+                        searchMaterialAjax(materialSearch, materialList);
+                    }else{
+                        materialList.search(materialSearch.trim(), true, true).order([2, 'asc']).draw();                        
                     }
-                    $('.dataTables_scrollBody .loader-material').show();
-                    $('.dataTables_scrollBody #resultsTable').hide();
-                    searchMaterialAjax(materialSearch, materialList);
                 }
 
             } else {
@@ -1736,12 +1751,16 @@
                             Task  : Wildcard material search
                             Page  : Shopping Cart
                             File Location : $BASE_PATH$/image/javascript/js-ezrx.js
-                            */
                             Layout : Both
+                        */
                         } else {
-                            $('.dataTables_scrollBody .loader-material').show();
-                            $('.dataTables_scrollBody #resultsTable').hide();
-                            searchMaterialAjax(materialSearch, materialList);
+                            if(!check_nationality(2800)){
+                                $('.dataTables_scrollBody .loader-material').show();
+                                $('.dataTables_scrollBody #resultsTable').hide();
+                                searchMaterialAjax(materialSearch, materialList);
+                            }else{
+                                materialList.search(materialSearch.trim(), true, true).order([2, 'asc']).draw();                                
+                            }
                         }
 
                     } else {
@@ -5914,10 +5933,12 @@
                 desktopMenu.style.display = "none";
             }
            if(layout == 'Desktop'){
+               
 
             $("#"+target_button).off();
             $("#home").closest("table").removeAttr("onclick").css("margin", "0px 10px");
-            $("#"+target_button).closest(".button-middle").show();
+            $("#"+target_button).closest("table").show();
+            $("#"+target_button).closest("table").css({"float": "right"});
             $("#"+target_button).on("click", function(e){
                 e.preventDefault();
                 localStorage.removeItem("flag");
@@ -6216,8 +6237,8 @@
                     */
                 } else if (pagetitle == "change password"){
                    /* 
-                        Created By    :- Created By Zainal Arifin, Date : 27 Feb 2018
-                        Task          :- Hide Feature "Enable Old Material"
+                        Created By    :- Created By Zainal Arifin, Date : 27 April 2018
+                        Task          :- Change Password for mobile
                         Page          :- Model Configuration
                         File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
                         Layout        :- Desktop
@@ -6250,7 +6271,7 @@
 
                                         if (newPassword == newPassword2) {
                                             if (newPassword.length >= 8 && newPassword.length <= 30) {
-                                                if (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#?!@$%^&*-])[A-Za-z\d#?!@$%^&*-]{8,30}$/.test(newPassword) == false) {
+                                                if (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()-_=+])[A-Za-z\d!@#$%^&*()-_=+]{8,30}$/.test(newPassword) == false) {
                                                     console.log("Password must have at least one upper case letter, at least one number and at least one special character.");
                                                     $(divError).append("<div class='error'>Password must have at least one upper case letter, at least one number and at least one special character.</div>");
                                                 } else {
@@ -6281,8 +6302,8 @@
                     readyChangePasswordPage();
 
                     /* 
-                        Created By    :- Created By Zainal Arifin, Date : 27 Feb 2018
-                        Task          :- Hide Feature "Enable Old Material"
+                        Created By    :- Created By Zainal Arifin, Date : 27 April 2018
+                        Task          :- Change Password for mobile
                         Page          :- Model Configuration
                         File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
                         Layout        :- Desktop
@@ -6760,8 +6781,8 @@
                 console.log("Profile page");
             } else if (filterPage.search("change-password") != -1){
                 /* 
-                    Created By    :- Created By Zainal Arifin, Date : 27 Feb 2018
-                    Task          :- Hide Feature "Enable Old Material"
+                    Created By    :- Created By Zainal Arifin, Date : 27 April 2018
+                    Task          :- Change Password for mobile
                     Page          :- Model Configuration
                     File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
                     Layout        :- Desktop
@@ -6795,7 +6816,7 @@
 
                                     if (newPassword == newPassword2) {
                                         if (newPassword.length >= 8 && newPassword.length <= 30) {
-                                            if (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#?!@$%^&*-])[A-Za-z\d#?!@$%^&*-]{8,30}$/.test(newPassword) == false) {
+                                            if (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()-_=+])[A-Za-z\d!@#$%^&*()-_=+]{8,30}$/.test(newPassword) == false) {
                                                 console.log("Password must have at least one upper case letter, at least one number and at least one special character.");
                                                 $(divError).append("<div class='error'>Password must have at least one upper case letter, at least one number and at least one special character.</div>");
                                             } else {
@@ -6826,8 +6847,8 @@
                 readyChangePasswordPage();
 
                 /* 
-                    Created By    :- Created By Zainal Arifin, Date : 27 Feb 2018
-                    Task          :- Hide Feature "Enable Old Material"
+                    Created By    :- Created By Zainal Arifin, Date : 27 April 2018
+                    Task          :- Change Password for mobile
                     Page          :- Model Configuration
                     File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
                     Layout        :- Desktop
