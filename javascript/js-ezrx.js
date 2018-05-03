@@ -490,11 +490,7 @@
                     console.log("pageTitle=================" + pageTitle)
                     
 					if(userType === 'csteam'){
-                        if(!check_nationality(2800)){
-						    materialSearch();                            
-                        }else{
-                            searchMaterialFAID();
-                        }
+						materialSearch();
                     }else{
                         searchMaterialFAID();
 					}
@@ -1276,8 +1272,8 @@
         }
 
         ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";
-        console.log( encodeURIComponent(searchStr) , encodeURIComponent(searchStr).replace(/%27/g, "%5C%27") );
-        ajaxData = 'q=\{ $and: [ { "masterstring":{$regex:"/' + encodeURIComponent(searchStr).replace(/%27/g, "%5C%27") + '/i"}}, { sales_org: { $eq:' + salesOrg + '} }, { dwnld_to_dss: { $eq: "Y"} } ] }&orderby=material:asc';
+        // console.log( encodeURIComponent(searchStr) , encodeURIComponent(searchStr).replace(/%27/g, "%5C%27").replace(/ /gi, "%") );
+        ajaxData = 'q=\{ $and: [ { "masterstring":{$regex:"/' + encodeURIComponent( searchStr.replace(/ /gi, "%") ).replace(/%27/g, "%5C%27") + '/i"}}, { sales_org: { $eq:' + salesOrg + '} }, { dwnld_to_dss: { $eq: "Y"} } ] }&orderby=material:asc';
 
         /*ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";
         var ajaxData = "q=\{'masterstring':{$regex:'/" + encodeURIComponent(searchStr) + "/i'}}&orderby=material_desc:asc";
@@ -1558,7 +1554,6 @@
 
         if (userType === 'csteam' && enableOldMaterialSearch == "false") {
 
-            if(!check_nationality( 2800 )){
                 if (check_nationality(2600)) {
                     var salesOrg = 2601;
                 } else {
@@ -1614,37 +1609,6 @@
                     materialList.rows.add(dataSet);
                     materialList.columns.adjust().draw();
                 });
-            }else{
-                // console.log(materialDetails);
-                custArr = materialDetails.split("##");
-                totalRecs = custArr.length;
-
-                var fromIndex = 0;
-                var toIndex = totalRecs;
-                var dataSet = [];
-                
-                for (var i = fromIndex; i < toIndex; i++) {
-                    colArr = custArr[i].split("$$");
-                    // console.dir(colArr);
-                    for (var t = 0; t < 3; t++) {
-                        if (typeof colArr[t] === 'undefined') {
-                            colArr[t] = '';
-                        }
-                    }
-                    subDataSet = ["", colArr[0], colArr[6], colArr[1], colArr[2], colArr[3], colArr[4]];
-                    //debugger;
-                    //  console.log('userType',userType);
-                    if (userType == 'principal') {
-                        subDataSet = ["", colArr[0], colArr[6], colArr[1], colArr[5], colArr[2], colArr[3], colArr[4]];
-                    }
-                    dataSet.push(subDataSet);
-                }
-                // console.log(dataSet);
-                materialList.clear().draw();
-                materialList.rows.add(dataSet);
-                materialList.columns.adjust().draw();
-
-            }
 
         }
 
@@ -1656,24 +1620,22 @@
 
             //console.log('materialSearch',materialSearch);
 
-            if ((userType === 'csteam') && (materialSearch.length > 2) && enableOldMaterialSearch == "false") {
+            var rulesMaterialSearch = ( !check_nationality(2800) )? 3 : 2;
+
+            if ((userType === 'csteam') && (materialSearch.length >= rulesMaterialSearch) && enableOldMaterialSearch == "false") {
                 console.log( materialSearch.slice(-1) );
                 if (materialSearch.slice(-1) === '%') {
                     materialSearch = materialSearch.substring(0, materialSearch.length - 1);
                     materialSearch = materialSearch.replace(/%/g, ' ');
                     materialList.search(materialSearch).order([2, 'asc']).draw();
                 } else {
-                    if(!check_nationality(2800)){
-                        var i = 0;
-                        while (ajaxSearchMaterialProcess.length) {
-                            ajaxSearchMaterialProcess[i++].abort();
-                        }
-                        $('.dataTables_scrollBody .loader-material').show();
-                        $('.dataTables_scrollBody #resultsTable').hide();
-                        searchMaterialAjax(materialSearch, materialList);
-                    }else{
-                        materialList.search(materialSearch.trim(), true, true).order([2, 'asc']).draw();                        
+                    var i = 0;
+                    while (ajaxSearchMaterialProcess.length) {
+                        ajaxSearchMaterialProcess[i++].abort();
                     }
+                    $('.dataTables_scrollBody .loader-material').show();
+                    $('.dataTables_scrollBody #resultsTable').hide();
+                    searchMaterialAjax(materialSearch, materialList);
                 }
 
             } else {
@@ -1754,13 +1716,9 @@
                             Layout : Both
                         */
                         } else {
-                            if(!check_nationality(2800)){
-                                $('.dataTables_scrollBody .loader-material').show();
-                                $('.dataTables_scrollBody #resultsTable').hide();
-                                searchMaterialAjax(materialSearch, materialList);
-                            }else{
-                                materialList.search(materialSearch.trim(), true, true).order([2, 'asc']).draw();                                
-                            }
+                            $('.dataTables_scrollBody .loader-material').show();
+                            $('.dataTables_scrollBody #resultsTable').hide();
+                            searchMaterialAjax(materialSearch, materialList);
                         }
 
                     } else {

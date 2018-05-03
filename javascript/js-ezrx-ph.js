@@ -975,18 +975,7 @@ $(document).ready(function(){
           Layout        :- Desktop
         */
         
-        var date_picker_podate = function(){
-          var form_date_podate_before = $("#attr_wrapper_1_pODate").find(".form-date");                    
-          $( form_date_podate_before ).hide();
-          
-          var valPoDate = $("#pODate").val();
-          var currentPODate = new Date(valPoDate);
-          var monthCurrentPODate = currentPODate.getMonth() + 1;
-          var formatHtml5PODate = currentPODate.getFullYear() + "-" + ((monthCurrentPODate < 10) ? "0" + monthCurrentPODate : monthCurrentPODate) + "-" + ((currentPODate.getDate() < 10) ? "0" + currentPODate.getDate() : currentPODate.getDate());
-          $( form_date_podate_before ).after("<input id='datepickerpodate' type='date' >");
-
-          $("#datepickerpodate").val( formatHtml5PODate );
-
+        var func_setup_date = function(){
           var today = new Date();
           var mm = today.getMonth()+1;
           var maxDate = today.getFullYear() + "-" + ((mm < 10)? "0"+mm : mm) + "-" + ((today.getDate() < 10)? "0"+today.getDate() : today.getDate() );
@@ -1000,6 +989,50 @@ $(document).ready(function(){
             var d = date[2];
             $("#pODate").val(m+"/"+d+"/"+y);
           });
+
+          $("#datepickerpodate").on("blur", function(){
+            var podate = $(this).val();
+            if(podate.length == 0){
+              $("#datepickerpodate").prop("type", "input");
+            }
+          });
+
+        }
+
+        var date_picker_podate = function(){
+          var form_date_podate_before = $("#attr_wrapper_1_pODate").find(".form-date");                    
+          $( form_date_podate_before ).hide();
+          
+          var valPoDate = $("#pODate").val();
+          $( form_date_podate_before ).after("<input id='datepickerpodate' type='input' style='float: left;' >");
+          var date_btn = '<div class="form-date">\
+                            <a class="form-date-trigger" id="date_btn" style="left: 135px;float: left;margin: 1px;"></a>\
+                         </div>';
+          $( "#datepickerpodate" ).after( date_btn );
+          
+          $("#date_btn").on("click", function(){
+            $("#datepickerpodate").prop("type", "date");    
+            $( "#datepickerpodate::-webkit-calendar-picker-indicator" ).trigger("focus");
+          });
+
+          if(valPoDate.length > 0){
+
+            var currentPODate = new Date(valPoDate);
+            var monthCurrentPODate = currentPODate.getMonth() + 1;
+            var formatHtml5PODate = currentPODate.getFullYear() + "-" + ((monthCurrentPODate < 10) ? "0" + monthCurrentPODate : monthCurrentPODate) + "-" + ((currentPODate.getDate() < 10) ? "0" + currentPODate.getDate() : currentPODate.getDate());
+            $("#datepickerpodate").prop("type", "date");
+            $("#datepickerpodate").val( formatHtml5PODate );
+
+            func_setup_date();
+
+          }else{
+
+            $("#datepickerpodate").on("click", function(){
+              $("#datepickerpodate").prop("type", "date");
+              func_setup_date();
+            });
+
+          }
 
         }
         

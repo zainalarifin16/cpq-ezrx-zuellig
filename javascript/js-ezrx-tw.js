@@ -1495,9 +1495,9 @@ $(document).ready(function(){
                 orderPageRestyle();
                 reset_color_lineitemgrid();
                 order_page_stock_color();
-                if(getZPUserType() == "csteam"){
+                /* if(getZPUserType() == "csteam"){
                   search_customer();
-                }
+                } */
 
               } else {
                 loadScriptOrderPage();

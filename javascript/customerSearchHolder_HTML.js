@@ -217,7 +217,7 @@ $(document).ready(function(js2){
 
 		if( $('#frequentlyAccessedCustomers_t').length ) {
 			var customerDetails = $("#frequentlyAccessedCustomers_t").val().replace(/~/gi, "");
-			console.log("frequentlyAccessedCustomers_t", customerDetails);
+			console.log("frequentlyAccessedCustomers_t is", (customerDetails.length > 0) ? "Not Empty" : "Empty", "The data is : " + customerDetails );
 			if (customerDetails.length > 0) {
 				localStorage.setItem("frequentlyAccessedCustomers_t", customerDetails);
 			} else {
@@ -451,13 +451,14 @@ var loadAjax = function() {
 		ajaxUrl = "https://"+sub+".bigmachines.com/rest/v3/customCustomer_Master_2500";
 	}
 	*/
+	searchKeyword = $("#searchCustomerInput").val().replace(/ /gi, "%");	
 	//NEW AJAX URL FOR TAIWAN CSTEAM END
-	var param = 'q={"custmasterstring":{$regex:"/' + encodeURIComponent($("#searchCustomerInput").val()) + '/i"}}&orderby=customer_name:asc';
+	var param = 'q={"custmasterstring":{$regex:"/' + encodeURIComponent( searchKeyword ) + '/i"}}&orderby=customer_name:asc';
 	var ua = window.navigator.userAgent;
    //	console.log("ua====="+ua);
     if (ua.indexOf("MSIE") > 0 || ua.indexOf("Trident") > 0){ // If Internet Explorer, return version number
 		
-		param = 'q={%22custmasterstring%22:{$regex:%22/' + encodeURIComponent($("#searchCustomerInput").val()) + '/i%22}}&orderby=customer_name:asc';
+		param = 'q={%22custmasterstring%22:{$regex:%22/' + encodeURIComponent( searchKeyword ) + '/i%22}}&orderby=customer_name:asc';
 	}
 	//console.log("param====="+param);
 	$.ajax({
@@ -812,33 +813,12 @@ var searchCustList = function(dataSet, seachCustomer) {
 				    File Location : $BASE_PATH$/image/javascript/js-ezrx.js
 				    Layout : Tablet
 				*/
-
 				var keywordCustomer = js2(this).val();
-				if(keywordCustomer.indexOf("%") != -1){
+				if (keywordCustomer.indexOf("%") != -1) {
 					keywordCustomer = keywordCustomer.replace(/%/g, " ");
-					// var keywordCustomer = $.grep(keywordCustomer.split("%"), function (word) { return word != ""; });
-					// if(keywordCustomer.length > 1){
-						
-						// var convertKeywordtoRegex = "";
-						// var convertKeywordtoRegex = "(";
-						// $.each(keywordCustomer, function(index, data){
-							// console.log(data);
-							// convertKeywordtoRegex += "(?=.*?\b"+data+"\b)";
-							// convertKeywordtoRegex += data + ")|(";
-						// });
-						// convertKeywordtoRegex = convertKeywordtoRegex.substring(0, convertKeywordtoRegex.length - 3);
-						// convertKeywordtoRegex += ")";
-						// convertKeywordtoRegex = "^" + convertKeywordtoRegex + "$";
-						// console.log(convertKeywordtoRegex);
-					console.log( keywordCustomer );
-					seachCustomer.search( keywordCustomer, true, true).draw();
-
-					/* }else{
-						seachCustomer.search(keywordCustomer[0]).draw();						
-					} */
-
+					seachCustomer.column(3).search(keywordCustomer, true, true).draw();	
 				}else{
-					seachCustomer.search(keywordCustomer).draw();
+					seachCustomer.column(3).search(keywordCustomer).draw();					
 				}
 				/*
 				    End : 15 Nov 2017
@@ -914,9 +894,9 @@ var searchCustomerList = function(seachCustomer) {
 
 				if (inputLength === ruleMaxChar || inputLength > ruleMaxChar ) {
 					//ajax
-					if(!check_nationality(2800)){
+					// if(!check_nationality(2800)){
 						loadAjax();						
-					}
+					// }
 					setTimeout( function(){
 						$('.search-cust_wrapper').show();
 					}, 1000);
