@@ -886,30 +886,34 @@ var searchCustomerList = function(seachCustomer) {
 			// console.log('keyup', inputLength);
 			clearTimeout(timer);
 			timer = setTimeout(function() { //then give it a second to see if the user is finished
-				if( inputLength === 3 || inputLength > 3 ) {
-					//ajax
-					var check_nationality = function (nationality) {
-						var countryEle = document.getElementById('userSalesOrg_t');
-						if (countryEle == null) { //this is for material page.
-							countryEle = $('input[name="userSalesOrg_PL"]').val();
-							countryCode = countryEle;
-						} else {
-							var countryCode = parseInt(countryEle.value);
-						}
-						if (typeof countryCode == "undefined") {
-							countryCode = "2601";
-						}
-						if (nationality == 2600) {
-							nationality = 2601;
-						}
-				
-						var valid = false;
-						if (nationality == countryCode || countryCode == 2601) {
-							valid = true;
-						}
-				
-						return valid;
+
+				var check_nationality = function (nationality) {
+					var countryEle = document.getElementById('userSalesOrg_t');
+					if (countryEle == null) { //this is for material page.
+						countryEle = $('input[name="userSalesOrg_PL"]').val();
+						countryCode = countryEle;
+					} else {
+						var countryCode = parseInt(countryEle.value);
 					}
+					if (typeof countryCode == "undefined") {
+						countryCode = "2601";
+					}
+					if (nationality == 2600) {
+						nationality = 2601;
+					}
+
+					var valid = false;
+					if (nationality == countryCode || countryCode == 2601) {
+						valid = true;
+					}
+
+					return valid;
+				}
+
+				var ruleMaxChar = ( !check_nationality(2800) )? 3 : 2;
+
+				if (inputLength === ruleMaxChar || inputLength > ruleMaxChar ) {
+					//ajax
 					if(!check_nationality(2800)){
 						loadAjax();						
 					}
