@@ -978,14 +978,29 @@ $(document).ready(function(){
         var date_picker_podate = function(){
           var form_date_podate_before = $("#attr_wrapper_1_pODate").find(".form-date");                    
           $( form_date_podate_before ).hide();
-          $( form_date_podate_before ).after("<input id='datepickerpodate' >");
-          var $j = jQuery.noConflict();
-          $j( "#datepickerpodate" ).datepicker({
-            showOn: "button",
-            buttonImage: "/gwt/gxt/images/default/form/date-trigger.gif",
-            buttonImageOnly: true,
-            buttonText: "Select date"
+          
+          var valPoDate = $("#pODate").val();
+          var currentPODate = new Date(valPoDate);
+          var monthCurrentPODate = currentPODate.getMonth() + 1;
+          var formatHtml5PODate = currentPODate.getFullYear() + "-" + ((monthCurrentPODate < 10) ? "0" + monthCurrentPODate : monthCurrentPODate) + "-" + ((currentPODate.getDate() < 10) ? "0" + currentPODate.getDate() : currentPODate.getDate());
+          $( form_date_podate_before ).after("<input id='datepickerpodate' type='date' >");
+
+          $("#datepickerpodate").val( formatHtml5PODate );
+
+          var today = new Date();
+          var mm = today.getMonth()+1;
+          var maxDate = today.getFullYear() + "-" + ((mm < 10)? "0"+mm : mm) + "-" + ((today.getDate() < 10)? "0"+today.getDate() : today.getDate() );
+          $('#datepickerpodate').attr("max", maxDate);
+
+          $("#datepickerpodate").on("change", function(){
+            var podate = $(this).val();
+            date = podate.split("-");
+            var y = date[0];
+            var m = date[1];
+            var d = date[2];
+            $("#pODate").val(m+"/"+d+"/"+y);
           });
+
         }
         
         /* 
