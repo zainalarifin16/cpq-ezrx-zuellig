@@ -488,6 +488,7 @@
 					$("#attribute-enableOldMaterialSearch").hide();
                     $('#attribute-materialSearch').append().html(materialHTML);
                     console.log("pageTitle=================" + pageTitle)
+          materialSearch("init")
                     
 					if(userType === 'csteam'){
 						materialSearch();
@@ -1393,6 +1394,46 @@
         });
 
     };
+
+    var initMaterialList = function(dataSet, pageLen, lenMenu, material_column){
+      var material_column = [{
+        title: ""
+      },
+      {
+        title: "Material Number"
+      },
+      {
+        title: "Material Description"
+      },
+      {
+        title: "Principal Name"
+      }];
+      var materialList = $('#resultsTable').DataTable({
+        scrollY: "400px",
+        scrollCollapse: true,
+        data: dataSet,
+        deferRender: true,
+        pageLength:pageLen,
+        lengthMenu: lenMenu,
+        order: [
+          [1, 'asc']
+        ],
+        columnDefs: [{
+          targets: 0,
+          searchable: false,
+          orderable: false,
+          render: function(data, type, full, meta) {
+              if (type === 'display') {
+                  data = '<input type="radio" name="selectMat" id= "selectMat">';
+              }
+
+              return data;
+          }
+        }],
+        columns: material_column
+      });
+      return materialList;
+    }
     /*
         End : 05 Dec 2017
         Task  : Ajax based material search for CSteam user
@@ -1404,10 +1445,15 @@
 
     var materialSearch = function(dataMaterialAjax) {
         console.log('materialSearch function');
+        var materialList = null;
+        if(dataMaterialAjax === "init"){
+          return materialList = initMaterialList([], 0, 0, []);
+        }
+        $('#resultsTable').DataTable().clear().destroy();
         var userCountryMS = null;
         if($('input[name="userSalesOrg_PL"]').val()=="2800"){
-			var userCountryMS = null;
-            userCountryMS = 'TW'; 
+          var userCountryMS = null;
+          userCountryMS = 'TW'; 
         }
 		var materialDetails = dataMaterialAjax;
 		var custArr = null;
@@ -1524,30 +1570,7 @@
 			pageLen = 5;
 			lenMenu = [3,5, 10, 25, 50, 75, 100];
 		}
-        var materialList = $('#resultsTable').DataTable({
-            scrollY: "400px",
-            scrollCollapse: true,
-            data: dataSet,
-            deferRender: true,
-			pageLength:pageLen,
-			lengthMenu: lenMenu,
-            order: [
-                [1, 'asc']
-            ],
-            columnDefs: [{
-                targets: 0,
-                searchable: false,
-                orderable: false,
-                render: function(data, type, full, meta) {
-                    if (type === 'display') {
-                        data = '<input type="radio" name="selectMat" id= "selectMat">';
-                    }
-
-                    return data;
-                }
-            }],
-            columns: material_column
-        });
+      materialList = initMaterialList(dataSet, pageLen, lenMenu, material_column);
 
         // append loading message after initialised datatable.
         $('.dataTables_scrollBody').prepend(loading);
