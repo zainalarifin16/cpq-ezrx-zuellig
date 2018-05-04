@@ -814,11 +814,14 @@ var searchCustList = function(dataSet, seachCustomer) {
 				    Layout : Tablet
 				*/
 				var keywordCustomer = js2(this).val();
+				seachCustomer.search('');				
 				if (keywordCustomer.indexOf("%") != -1) {
 					keywordCustomer = keywordCustomer.replace(/%/g, " ");
-					seachCustomer.column(3).search(keywordCustomer, true, true).draw();	
+					// seachCustomer.column(3).search(keywordCustomer, true, true).draw();	
+					seachCustomer.search(keywordCustomer, true, true).draw();
 				}else{
-					seachCustomer.column(3).search(keywordCustomer).draw();					
+					seachCustomer.search(keywordCustomer).draw();										
+					// seachCustomer.column(3).search(keywordCustomer).draw();					
 				}
 				/*
 				    End : 15 Nov 2017

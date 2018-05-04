@@ -975,64 +975,43 @@ $(document).ready(function(){
           Layout        :- Desktop
         */
         
-        var func_setup_date = function(){
-          var today = new Date();
-          var mm = today.getMonth()+1;
-          var maxDate = today.getFullYear() + "-" + ((mm < 10)? "0"+mm : mm) + "-" + ((today.getDate() < 10)? "0"+today.getDate() : today.getDate() );
-          $('#datepickerpodate').attr("max", maxDate);
-
-          $("#datepickerpodate").on("change", function(){
-            var podate = $(this).val();
-            date = podate.split("-");
-            var y = date[0];
-            var m = date[1];
-            var d = date[2];
-            $("#pODate").val(m+"/"+d+"/"+y);
-          });
-
-          $("#datepickerpodate").on("blur", function(){
-            var podate = $(this).val();
-            if(podate.length == 0){
-              $("#datepickerpodate").prop("type", "input");
-            }
-          });
-
-        }
-
-        var date_picker_podate = function(){
+        var datetime_picker = function(){
           var form_date_podate_before = $("#attr_wrapper_1_pODate").find(".form-date");                    
           $( form_date_podate_before ).hide();
           
           var valPoDate = $("#pODate").val();
-          $( form_date_podate_before ).after("<input id='datepickerpodate' type='input' style='float: left;' >");
-          var date_btn = '<div class="form-date">\
-                            <a class="form-date-trigger" id="date_btn" style="left: 135px;float: left;margin: 1px;"></a>\
-                         </div>';
-          $( "#datepickerpodate" ).after( date_btn );
-          
-          $("#date_btn").on("click", function(){
-            $("#datepickerpodate").prop("type", "date");    
-            $( "#datepickerpodate::-webkit-calendar-picker-indicator" ).trigger("focus");
-          });
-
-          if(valPoDate.length > 0){
-
-            var currentPODate = new Date(valPoDate);
-            var monthCurrentPODate = currentPODate.getMonth() + 1;
-            var formatHtml5PODate = currentPODate.getFullYear() + "-" + ((monthCurrentPODate < 10) ? "0" + monthCurrentPODate : monthCurrentPODate) + "-" + ((currentPODate.getDate() < 10) ? "0" + currentPODate.getDate() : currentPODate.getDate());
-            $("#datepickerpodate").prop("type", "date");
-            $("#datepickerpodate").val( formatHtml5PODate );
-
-            func_setup_date();
-
-          }else{
-
-            $("#datepickerpodate").on("click", function(){
-              $("#datepickerpodate").prop("type", "date");
-              func_setup_date();
+          $.getScript('https://zuelligpharmatest1.bigmachines.com/bmfsweb/zuelligpharmatest1/image/javascript/jquery-ui.min.js', function() {
+            
+            $( form_date_podate_before ).after("<input id='datepickerpodate' type='text' style='float: left;' >");
+            $.noConflict(true);
+            $( "#datepickerpodate" ).datepicker({
+              showOn: "button",
+              buttonImage: "https://zuelligpharmatest1.bigmachines.com/bmfsweb/zuelligpharmatest1/image/images/calendar_black.png",
+              buttonImageOnly: true,
+              maxDate: '0',
             });
 
-          }
+            if(valPoDate.length > 0){
+              $("#datepickerpodate").datepicker("setDate", new Date( valPoDate ) );
+            }
+
+            $(".ui-datepicker-trigger").css({"width":"20px"});
+
+            $(".ui-datepicker-trigger").on("click", function(){
+              $(".ui-widget-header").css({ "background": "#1d727b","border": "0px", "color": "#ffffff"});
+
+              $(".ui-datepicker-calendar").find("thead").find("tr").css({"color": "#005e63"});
+
+              $(".ui-state-default, .ui-widget-content .ui-state-default").css({"background": "#1d727b", "font-weight": "bold","font-style": "normal","font-stretch": "normal", "line-height": "normal", "letter-spacing": "normal","text-align": "left", "color": "#ffffff"});
+
+              $(".ui-state-highlight, .ui-widget-content .ui-state-highlight").css({ "background": "#c3d500", "font-weight": "bold", "font-style": "normal", "font-stretch": "normal", "line-height": "normal","letter-spacing": "normal", "text-align": "left", "color": "#ffffff", });
+            });
+            
+            $("#datepickerpodate").on("change", function(){
+              $("#pODate").val( $(this).val() );
+            });
+            
+          });
 
         }
         
@@ -1043,8 +1022,46 @@ $(document).ready(function(){
           File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
           Layout        :- Desktop
         */
-
         
+        /* 
+          Created By    :- Created By Zainal Arifin, Date : 02 May 2018
+          Task          :- Trigger Save after user enter value of "Customer PO Ref" and "PO Date"
+          Page          :- Model Configuration
+          File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
+          Layout        :- Desktop
+        */
+        
+        var trigger_save = function(){
+
+          var typingTimer;                //timer identifier
+          var doneTypingInterval = 3000;  //time in ms, 5 second for example
+          var input = "#datepickerpodate, #customerPORef_t";
+
+          $( input ).on("keyup", function(){
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(doneTyping, doneTypingInterval);
+          });
+          
+          $( input ).on("keydown", function(){
+            clearTimeout(typingTimer);
+          });
+
+          function doneTyping () {
+            if( $("#datepickerpodate").val().length > 0 && $("#orderingRequestNoMoreThan90Characters_t").val().length > 0 )
+            {
+              $("a[name='save']").click();
+            }
+          }
+
+        }
+        
+        /* 
+          Created By    :- Created By Zainal Arifin, Date : 02 May 2018
+          Task          :- Trigger Save after user enter value of "Customer PO Ref" and "PO Date"
+          Page          :- Model Configuration
+          File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
+          Layout        :- Desktop
+        */
 
         if (navigator.userAgent.match(/Android/i) ||
             navigator.userAgent.match(/webOS/i) ||
@@ -1120,7 +1137,8 @@ $(document).ready(function(){
                         get full url split it to get subdomain, and generate url of assets.
                     */
 
-                            sold_to_address();
+                    sold_to_address();
+
                     /*
                         End   : 03 Jan 2018
                         Task  : Ship To Address header name to Sold to Address for PH.
@@ -1129,7 +1147,8 @@ $(document).ready(function(){
                         Layout : Both
                     */
                     orderPageComponent();
-                    date_picker_podate();
+                    datetime_picker();
+                    trigger_save();
                   } else {
                     loadOderPageScript();
                   }
