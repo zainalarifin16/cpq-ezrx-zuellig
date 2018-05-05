@@ -1396,18 +1396,6 @@
     };
 
     var initMaterialList = function(dataSet, pageLen, lenMenu, material_column){
-      var material_column = [{
-        title: ""
-      },
-      {
-        title: "Material Number"
-      },
-      {
-        title: "Material Description"
-      },
-      {
-        title: "Principal Name"
-      }];
       var materialList = $('#resultsTable').DataTable({
         scrollY: "400px",
         scrollCollapse: true,
@@ -1446,8 +1434,20 @@
     var materialSearch = function(dataMaterialAjax) {
         console.log('materialSearch function');
         var materialList = null;
+        var material_column = [{
+          title: ""
+        },
+        {
+          title: "Material Number"
+        },
+        {
+          title: "Material Description"
+        },
+        {
+          title: "Principal Name"
+        }];
         if(dataMaterialAjax === "init"){
-          return materialList = initMaterialList([], 0, 0, []);
+          return materialList = initMaterialList([], 0, 0, material_column);
         }
         $('#resultsTable').DataTable().clear().destroy();
         var userCountryMS = null;
@@ -1523,18 +1523,6 @@
                 dataSet.push(subDataSet);
             }
         }
-        var material_column = [{
-            title: ""
-        },
-        {
-            title: "Material Number"
-        },
-        {
-            title: "Material Description"
-        },
-        {
-            title: "Principal Name"
-        }];
 
         if(userCountryMS === 'TW'){
             material_column = [{
@@ -3025,6 +3013,7 @@
         // var userType = ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();
         $('#attribute-materialSearch').append().html(materialHTML);
         $('#attribute-materialSearch').hide();
+        materialSearch("init");
 
         if ( userType === 'csteam') {
             /* 4 April 2018, Zainal : Add localstorage for scroll to shopping cart */
