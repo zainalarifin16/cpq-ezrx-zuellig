@@ -8,7 +8,7 @@ $(document).ready(function() {
         var countryCode = parseInt(countryEle.value);
     }
 
-    if(countryEle !== null){
+    if(countryEle !== null && (countryEle != 2601 || countryEle != 2601) ){
         
         var url_script;
 
