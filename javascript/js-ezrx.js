@@ -423,7 +423,7 @@
                 var materialHTML = '<div class="materialSearchWrapper"> <div class="normalPopupCont flLeft" id="leftPanel"> <table id="resultsTable" style="width: 100%;"></table> </div><div class="normalPopupCont1 flRight" id="rightPanel"> <div class="popupHeader1 bigHeader">Selected Materials</div><div class="accountstable" id="selectedResultsTable"> <div class="accountstable" id="selectedMatTableDiv" style="overflow-y: auto;height: 400px;"> <table id="selectedMatTable" style="background-color: white !important;"> <thead> <tr> <th style="width:5%">Qty</th><th style="width:18%">Material Number</th> <th style="width:50%">Material Description</th><th style="width:22%">Comm. Item for Bonus</th> <th style="width:5%"></th> </tr></thead> <tbody id="selectedMatTableBody"> </tbody> </table> <a href="#" id="addMaterialBtn" name="addMaterialBtn" class="jg-btn addMat-btn" style="width: auto; margin-top: 50px; display: inline-block;">Add</a> </div></div></div></div>';
                 var userType = getZPUserType();
 
-                var searchMaterialFAID = function(){
+                var searchMaterialFAID = function(materialList){
                     var fileAttachmentID = ($("input[name='fileAttachmentID']").length >0 )? $("input[name='fileAttachmentID']").val() : $("input[name='fileAttachmentBSID_t']").val();
                     console.log( "materialDetails in desktop", fileAttachmentID );
                     var ajaxUrl = "https://" + instanceName + ".bigmachines.com/rest/v1/commerceProcesses/oraclecpqo/transactions/" + fileAttachmentID + "/attachments/materialDetails?docId=36244074&docNum=1";
@@ -462,15 +462,15 @@
                                         console.log("materialDetails is empty");
                                     }
 
-                                    materialSearch(sumResult);
+                                    materialSearch(materialList, sumResult);
 
                                 });
                             } else {
-                                materialSearch(sumResult);
+                                materialSearch(materialList, sumResult);
                             }
 
                         }else{
-                            materialSearch(sumResult);                                
+                            materialSearch(materialList, sumResult);                                
                         }
 
                     });
@@ -488,12 +488,12 @@
 					$("#attribute-enableOldMaterialSearch").hide();
                     $('#attribute-materialSearch').append().html(materialHTML);
                     console.log("pageTitle=================" + pageTitle)
-          materialSearch("init")
+                    var materialList = initMaterialList([]);
                     
 					if(userType === 'csteam'){
-						materialSearch();
+						materialSearch(materialList);
                     }else{
-                        searchMaterialFAID();
+                        searchMaterialFAID(materialList);
 					}
                    
                     maxCheckingDataTable = 100;
@@ -1395,32 +1395,92 @@
 
     };
 
-    var initMaterialList = function(dataSet, pageLen, lenMenu, material_column){
-      var materialList = $('#resultsTable').DataTable({
-        scrollY: "400px",
-        scrollCollapse: true,
-        data: dataSet,
-        deferRender: true,
-        pageLength:pageLen,
-        lengthMenu: lenMenu,
-        order: [
-          [1, 'asc']
-        ],
-        columnDefs: [{
-          targets: 0,
-          searchable: false,
-          orderable: false,
-          render: function(data, type, full, meta) {
-              if (type === 'display') {
-                  data = '<input type="radio" name="selectMat" id= "selectMat">';
-              }
+    var initMaterialList = function(dataSet){
 
-              return data;
-          }
-        }],
-        columns: material_column
-      });
-      return materialList;
+        var userCountryMS = null;
+        if($('input[name="userSalesOrg_PL"]').val()=="2800"){
+          var userCountryMS = null;
+          userCountryMS = 'TW'; 
+        }
+
+        if(userCountryMS === 'TW'){
+            material_column = [{
+                title: ""
+            },
+            {
+                title: "Material Number"
+            },
+            {
+                title: "Material Description (ZH)"
+            },
+            {
+                title: "Material Description"
+            },
+            {
+                title: "Promo"
+            },
+            {
+                title: "Principal Code"
+            },
+            {
+                title: "Principal Name"
+            }
+            ];
+
+            if(userType == 'principal'){
+                material_column.splice(4, 0, {title: "Principal Material Code"}); 
+            }
+        }else{
+            material_column = [{
+                title: ""
+              },
+              {
+                title: "Material Number"
+              },
+              {
+                title: "Material Description"
+              },
+              {
+                title: "Principal Name"
+              }];
+        }
+		
+		var pageLen = 10;
+		var lenMenu = [ 10, 25, 50, 75, 100];
+		if(isMobileVersion){//added for mobile version
+			pageLen = 5;
+			lenMenu = [3,5, 10, 25, 50, 75, 100];
+        }
+        
+        var loading = '<p class="loader-material" style="text-align: center; margin: 10px 0; display: none;">Loading...</p>';        
+        // append loading message after initialised datatable.
+        $('.dataTables_scrollBody').prepend(loading);
+
+        var materialList = $('#resultsTable').DataTable({
+            scrollY: "400px",
+            scrollCollapse: true,
+            data: dataSet,
+            deferRender: true,
+            pageLength:pageLen,
+            lengthMenu: lenMenu,
+            order: [
+            [1, 'asc']
+            ],
+            columnDefs: [{
+            targets: 0,
+            searchable: false,
+            orderable: false,
+            render: function(data, type, full, meta) {
+                if (type === 'display') {
+                    data = '<input type="radio" name="selectMat" id= "selectMat">';
+                }
+
+                return data;
+            }
+            }],
+            columns: material_column
+        });
+        return materialList;
     }
     /*
         End : 05 Dec 2017
@@ -1431,25 +1491,14 @@
 
     */
 
-    var materialSearch = function(dataMaterialAjax) {
+    var materialSearch = function(materialList, dataMaterialAjax) {
         console.log('materialSearch function');
-        var materialList = null;
-        var material_column = [{
-          title: ""
-        },
-        {
-          title: "Material Number"
-        },
-        {
-          title: "Material Description"
-        },
-        {
-          title: "Principal Name"
-        }];
-        if(dataMaterialAjax === "init"){
+        // var materialList = null;
+        
+        /* if(dataMaterialAjax === "init"){
           return materialList = initMaterialList([], 0, 0, material_column);
-        }
-        $('#resultsTable').DataTable().clear().destroy();
+        } */
+        //$('#resultsTable').DataTable().clear().destroy();
         var userCountryMS = null;
         if($('input[name="userSalesOrg_PL"]').val()=="2800"){
           var userCountryMS = null;
@@ -1460,24 +1509,6 @@
         var totalRecs = null;
 		var userType = getZPUserType();
 		if (userType !== 'csteam'){
-
-            /* 
-				Created By    :- Created By Zainal Arifin, Date : 18 March 2018
-				Task          :- Search Customer from materialDetails.txt From URL
-				Page          :- Shopping Cart
-				File Location :- $BASE_PATH$/javascript/js-ezrx.js
-				Layout        :- Global
-            */
-            
-            // materialDetails = $("#actualMasterString").html();
-
-            /* 
-				Created By    :- Created By Zainal Arifin, Date : 18 March 2018
-				Task          :- Search Material from MaterialDetails.txt From URL
-				Page          :- Shopping Cart
-				File Location :- $BASE_PATH$/javascript/js-ezrx.js
-				Layout        :- Global
-			*/
 
             custArr = materialDetails.split("##");
 			totalRecs = custArr.length;
@@ -1524,106 +1555,71 @@
             }
         }
 
-        if(userCountryMS === 'TW'){
-            material_column = [{
-                title: ""
-            },
-            {
-                title: "Material Number"
-            },
-            {
-                title: "Material Description (ZH)"
-            },
-            {
-                title: "Material Description"
-            },
-            {
-                title: "Promo"
-            },
-            {
-                title: "Principal Code"
-            },
-            {
-                title: "Principal Name"
-            }];
-
-            if(userType == 'principal'){
-                material_column.splice(4, 0, {title: "Principal Material Code"}); 
-            }
-        }
-		
-		var pageLen = 10;
-		var lenMenu = [ 10, 25, 50, 75, 100];
-		if(isMobileVersion){//added for mobile version
-			pageLen = 5;
-			lenMenu = [3,5, 10, 25, 50, 75, 100];
-		}
-      materialList = initMaterialList(dataSet, pageLen, lenMenu, material_column);
-
-        // append loading message after initialised datatable.
-        $('.dataTables_scrollBody').prepend(loading);
-
         if (userType === 'csteam' && enableOldMaterialSearch == "false") {
 
-                if (check_nationality(2600)) {
-                    var salesOrg = 2601;
-                } else {
-                    salesOrg = $('input[name="userSalesOrg_PL"]').val();
-                }
+            if (check_nationality(2600)) {
+                var salesOrg = 2601;
+            } else {
+                salesOrg = $('input[name="userSalesOrg_PL"]').val();
+            }
 
-                ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";
-                ajaxData = "q=\{ $and: [ { sales_org: { $eq:" + salesOrg + "} }, { dwnld_to_dss: { $eq: 'Y'} } ] }&orderby=material:asc";
+            ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";
+            ajaxData = "q=\{ $and: [ { sales_org: { $eq:" + salesOrg + "} }, { dwnld_to_dss: { $eq: 'Y'} } ] }&orderby=material:asc";
 
-                $.ajax({
-                    url: ajaxURL,
-                    data: ajaxData,
+            $.ajax({
+                url: ajaxURL,
+                data: ajaxData,
 
 
-                }).done(function (response) {
-                    //console.dir(response);
-                    var data = response.items;
+            }).done(function (response) {
+                //console.dir(response);
+                var data = response.items;
 
-                    $.each(data, function (i, item) {
-                        //console.log(item.material_number, item.material_desc, item.principal_name);
-                        //console.log(item);
-                        var subDataSet = [
+                $.each(data, function (i, item) {
+                    //console.log(item.material_number, item.material_desc, item.principal_name);
+                    //console.log(item);
+                    var subDataSet = [
+                        "",
+                        (item.material != null) ? item.material : "",
+                        (item.description != null) ? item.description : "",
+                        (item.principal_name != null) ? item.principal_name : "",
+                    ];
+                    if ($('input[name="userSalesOrg_PL"]').val() == "2800") {
+                        if (item.material_group_5 == 500 && item.materialgroup != "ZGM") {
+                            var promo = "P";
+                        } else {
+                            var promo = "";
+                        }
+
+                        subDataSet = [
                             "",
                             (item.material != null) ? item.material : "",
+                            (item.alt_lang_desc != null) ? item.alt_lang_desc : "",
                             (item.description != null) ? item.description : "",
-                            (item.principal_name != null) ? item.principal_name : "",
+                            (promo != null) ? promo : "",
+                            (item.principal_code != null) ? item.principal_code : "",
+                            (item.principal_name != null) ? item.principal_name : ""
                         ];
-                        if ($('input[name="userSalesOrg_PL"]').val() == "2800") {
-                            if (item.material_group_5 == 500 && item.materialgroup != "ZGM") {
-                                var promo = "P";
-                            } else {
-                                var promo = "";
-                            }
-
-                            subDataSet = [
-                                "",
-                                (item.material != null) ? item.material : "",
-                                (item.alt_lang_desc != null) ? item.alt_lang_desc : "",
-                                (item.description != null) ? item.description : "",
-                                (promo != null) ? promo : "",
-                                (item.principal_code != null) ? item.principal_code : "",
-                                (item.principal_name != null) ? item.principal_name : ""
-                            ];
-                        }
-                        dataSet.push(subDataSet);
-                        //console.log(subDataSet);
-                    });
-
-                    //console.log('ajax data loaded');
-
-                }).always(function () {
-                    materialList.clear().draw();
-                    materialList.rows.add(dataSet);
-                    materialList.columns.adjust().draw();
+                    }
+                    dataSet.push(subDataSet);
+                    //console.log(subDataSet);
                 });
 
+                //console.log('ajax data loaded');
+
+            }).always(function () {
+                materialList.clear().draw();
+                materialList.rows.add(dataSet);
+                materialList.columns.adjust().draw();
+            });
+
+        }else{
+            materialList.clear().draw();
+            materialList.rows.add(dataSet);
+            materialList.columns.adjust().draw();
         }
 
-        //console.dir(dataSet);
+        
 
         $('#resultsTable_filter').find('input').on('keyup', function() {
             //console.info('desktop ss');
@@ -3013,7 +3009,7 @@
         // var userType = ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();
         $('#attribute-materialSearch').append().html(materialHTML);
         $('#attribute-materialSearch').hide();
-        materialSearch("init");
+        var materialList = initMaterialList([]);
 
         if ( userType === 'csteam') {
             /* 4 April 2018, Zainal : Add localstorage for scroll to shopping cart */
@@ -3025,7 +3021,7 @@
 
             console.log('mobile_materialSearch');
             $('#attribute-materialSearch').show();            
-            materialSearch();
+            materialSearch(materialList);
 
         }else{
             var fileAttachmentID = ($("input[name='fileAttachmentID']").length > 0) ? $("input[name='fileAttachmentID']").val() : $("input[name='fileAttachmentBSID_t']").val();
@@ -3062,16 +3058,16 @@
                             } else {
                                 console.log("materialDetails is empty");
                             }
-                            materialSearch(sumResult);
+                            materialSearch(materialList, sumResult);
                             $('#attribute-materialSearch').show();                                        
                         });
                     }else{
-                        materialSearch(sumResult);                        
+                        materialSearch(materialList, sumResult);                        
                         $('#attribute-materialSearch').show();                        
                     }
 
                 }else{
-                    materialSearch(sumResult);
+                    materialSearch(materialList, sumResult);
                     $('#attribute-materialSearch').show();                        
                 }
             });
@@ -7503,7 +7499,7 @@
                     console.log(qty_l, "isInStock", isInStock);                
                     if (isInStock == "yes") {
                         console.log($(qty_l).val(), ">", $("input[id='stockQty-" + id + "']").val());
-                        if ($(qty_l).val() > $("input[id='stockQty-" + id + "']").val()) {
+                        if (parseInt($(qty_l).val()) > parseInt($("input[id='stockQty-" + id + "']").val()) ) {
                             $(qty_l).css("color", redColor);
                         }
                     } else {
@@ -7521,11 +7517,11 @@
                 }
                 if (overridePriceValue != basic_value_price) {
                     $("#" + overridePriceString + id + "-display").css("color", redColor);
-                    if (!isMobile()) {
+                    /* if (!isMobile()) {
                         $("#totalPrice_currency-" + id).css("color", redColor);
                     } else {
                         $("#" + var_totalPrice_Currency.replace("td.", "") + "-" + id).find(".form-field").css({ "color": redColor });
-                    }
+                    } */
                     // $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);                
                 } else {
                     $("#" + overridePriceValue + id + "-display").css("color", blackColor);
@@ -7539,7 +7535,7 @@
                 var typeMaterial = $(parent).find("input[id='type-"+ id +"']").val().trim().toLowerCase();
                 if(typeMaterial != "bonus"){
                     if (isInStock == "yes") {
-                        if ($(data).val() > $("input[id='stockQty-" + id + "']").val()) {
+                        if (parseInt($(data).val()) > parseInt($("input[id='stockQty-" + id + "']").val())) {
                             $(data).css("color", redColor);
                         }
                     } else {
@@ -7558,12 +7554,12 @@
                 console.log(overridePriceValue, "==", basic_value_price, overridePriceValue != basic_value_price);
                 if (overridePriceValue != basic_value_price) {
                     $(data).css("color", redColor);
-                    if (!isMobile()) {
+                    /* if (!isMobile()) {
                         $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").css("color", redColor);
                     } else {
                         console.log("#" + var_totalPrice_Currency.replace("td.", "") + "-" + id);
                         $("#" + var_totalPrice_Currency.replace("td.", "") + "-" + id).find(".form-field").css({ "color": redColor });
-                    }
+                    } */
                 }
             }
 

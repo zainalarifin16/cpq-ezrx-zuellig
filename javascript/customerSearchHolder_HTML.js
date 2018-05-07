@@ -769,6 +769,14 @@ var searchCustList = function(dataSet, seachCustomer) {
 				});
 			}
 
+			console.log("draw dt");
+			$("input[name='searchCust']").off();
+		    $("input[name='searchCust']").on('click', function() {
+	             //console.log('777.111111 ===>>> ',$(this).val());
+				delete_line_item_func($(this).val());
+				
+			});
+
 			/*if(userCountry === 'PH'){
 				$('.dataTables_scrollHeadInner').css('width','125%').find('table.dataTable').css('width','100%').find('th').css('text-align','left');
 				$('.dataTables_scrollBody').css('width','125%');
