@@ -27,6 +27,14 @@ $(document).ready(function(js2){
 		return valid;
 	}
 
+	var getZPUserType = function () {
+		if ($("#zPUserType").length > 0 || $("input[name='zPUserType']").length > 0) {
+			return ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();
+		} else {
+			return "";
+		}
+	}
+
 	// debugger;
 	// $.noConflict();
 	// console.log('inside', $.noConflict() );
@@ -118,6 +126,10 @@ $(document).ready(function(js2){
 		var zPUserType = $('#zPUserType').val();
 		var fileAttachmentBSID_t = $('#fileAttachmentBSID_t').val();
 		// localStorage.setItem("fileAttachmentBSID_t", fileAttachmentBSID_t);
+
+		if (getZPUserType() == "customer"){
+			return true;
+		}
 
 		if (zPUserType === 'CSTeam') {
 			//loadAjax();
