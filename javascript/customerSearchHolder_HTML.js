@@ -451,7 +451,11 @@ var loadAjax = function() {
 		ajaxUrl = "https://"+sub+".bigmachines.com/rest/v3/customCustomer_Master_2500";
 	}
 	*/
-	searchKeyword = $("#searchCustomerInput").val().replace(/ /gi, "%");	
+	if(userCountry === "TW"){
+		searchKeyword = $("#searchCustomerInput").val().replace(/ /gi, "%");
+	}else{
+		searchKeyword = $("#searchCustomerInput").val();		
+	}
 	//NEW AJAX URL FOR TAIWAN CSTEAM END
 	var param = 'q={"custmasterstring":{$regex:"/' + encodeURIComponent( searchKeyword ) + '/i"}}&orderby=customer_name:asc';
 	var ua = window.navigator.userAgent;
