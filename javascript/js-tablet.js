@@ -1012,7 +1012,7 @@ $(document).ready(function() {
 
 						/* 
 							Created By    :- Created By Zainal Arifin, Date : 17 April 2018
-							Task          :- Disable user submit order repeatly
+							Task          :- row#39 Disable user submit order repeatly
 							Page          :- Order Page
 							File Location :- $BASE_PATH$/javascript/js-ezrx.js
 							Layout        :- Desktop
@@ -1073,7 +1073,7 @@ $(document).ready(function() {
 
 						/* 
 							Created By    :- Created By Zainal Arifin, Date : 17 April 2018
-							Task          :- Disable user submit order repeatly
+							Task          :- row#39 Disable user submit order repeatly
 							Page          :- Order Page
 							File Location :- $BASE_PATH$/javascript/js-ezrx.js
 							Layout        :- Desktop
@@ -1354,7 +1354,7 @@ $(document).ready(function() {
 
 										/* 
 											Created By    :- Created By Zainal Arifin, Date : 2 April 2018
-											Task          :- Reorder button in order page
+											Task          :- SG-18 Reorder button in order page
 											Page          :- Order Page
 											File Location :- $BASE_PATH$/javascript/js-ezrx.js
 											Layout        :- Desktop
@@ -1370,7 +1370,7 @@ $(document).ready(function() {
 
 										/* 
 											Created By    :- Created By Zainal Arifin, Date : 2 April 2018
-											Task          :- Reorder button in order page
+											Task          :- SG-18 Reorder button in order page
 											Page          :- Order Page
 											File Location :- $BASE_PATH$/javascript/js-ezrx.js
 											Layout        :- Desktop

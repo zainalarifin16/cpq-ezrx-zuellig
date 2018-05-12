@@ -4249,6 +4249,13 @@
             $('a.list-field')[0].click();
             window.localStorage.setItem("new_search_id", "true");
         });
+        /* 
+            Start : 27 April 2017
+            Task  : SG-42 - 8000349641 On selection of "Search By Date Ranges" or "Search By Customer and Status" from search views drop dow open Refine popup(Trigger click even on Refine icon).
+            Page  : Add Material Page
+            File Location : $BASE_PATH$/image/javascript/js-ezrx.js
+            Layout : Desktop
+        */
 
         var readyOrderPage = function () {
             setTimeout(function () {
@@ -4265,7 +4272,15 @@
         }
         if (window.localStorage.getItem("new_search_id") == "true") {
             readyOrderPage();
-        }      
+        }     
+        
+        /* 
+            Start : 27 April 2017
+            Task  : SG-42 - 8000349641 On selection of "Search By Date Ranges" or "Search By Customer and Status" from search views drop dow open Refine popup(Trigger click even on Refine icon).
+            Page  : Add Material Page
+            File Location : $BASE_PATH$/image/javascript/js-ezrx.js
+            Layout : Desktop
+        */
 
         /*
             Start : 8 March 2017
@@ -4969,19 +4984,21 @@
         */
         if(check_nationality(2600)){
 
-            var trans_id = $("#readonly_1_transactionID_t").text();
-            var isUserHaveModifySC = localStorage.getItem("orderItem_" + trans_id);
-            if (typeof isUserHaveModifySC == 'undefined') {
-                isUserHaveModifySC = false;
-                localStorage.setItem("orderItem_" + trans_id, isUserHaveModifySC);
+            var trans_id = ($("#readonly_1_transactionID_t").text().length > 0)? $("#readonly_1_transactionID_t").text() : $("#transactionID_t").val();
+            var isUserHaveModifySC = window.localStorage.getItem("orderItem_" + trans_id);
+            console.log( "readonly_1_transactionID_t", isUserHaveModifySC, window.localStorage );
+            if (typeof isUserHaveModifySC == 'undefined' || isUserHaveModifySC == null ) {
+                isUserHaveModifySC = "false";
+                window.localStorage.setItem("orderItem_" + trans_id, isUserHaveModifySC);
             }
 
             var zpUserType = getZPUserType();
 
             if ( zpUserType != "csteam") {
                 if ( $("#line-item-grid").find(".line-item-show:not(.parent-line-item)").length > 0 ){
-                    if(!isUserHaveModifySC){
+                    if(isUserHaveModifySC == "false"){
                         setTimeout(function(){
+                            console.log("Redirect");
                             $("#edit_shopping_cart").click();
                         }, 1000);
                     }
@@ -5000,6 +5017,24 @@
     }
 
     function transform_modelconfig() {
+
+        /* 
+            Created By    :- Created By Zainal Arifin, Date : 09 Mei 2018
+            Task          :- Remove flag redirect to Shopping Cart
+            Page          :- Order Page
+            File Location :- $BASE_PATH$/javascript/js-ezrx.js
+            Layout        :- Desktop
+        */
+       trans_id = $("#orderNumber_ML").val();
+       window.localStorage.setItem("orderItem_" + trans_id, true);
+       /* 
+           Created By    :- Created By Zainal Arifin, Date : 09 Mei 2018
+           Task          :- Remove flag redirect to Shopping Cart
+           Page          :- Order Page
+           File Location :- $BASE_PATH$/javascript/js-ezrx.js
+           Layout        :- Desktop
+       */
+
         /* add class jg-page-cartpage to body */
         $('body').addClass('jg-page-cartpage');
         /*$('#jg-topbar-title').text("Shopping Cart");
@@ -5736,10 +5771,10 @@
             File Location :- $BASE_PATH$/javascript/js-ezrx.js
             Layout        :- Desktop
         */
-        trans_id = $("#orderNumber_ML").val();
+        /* trans_id = $("#orderNumber_ML").val();
         $('.cart-addtoorder, .cart-save, .cart-cancelshopping').on("click", function(){
             localStorage.setItem("orderItem_" + trans_id, true);
-        });
+        }); */
 
         //END OF transfrom_config
     }
