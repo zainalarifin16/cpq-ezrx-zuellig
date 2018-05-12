@@ -186,7 +186,7 @@ tfoot .jg-btn { margin:10px; }
 .jg-item-tool.jg-separator { height:60px; border-right:1px solid #e8ff00; }
 .jg-box-toolbar.invert .jg-separator { border-color:#ecff26; }
 .jg-item-tool.jg-spacer { width:50px; height:10px; }
-.jg-tool-select { width:220px; height:41px; padding:10px; font-weight:100; color:white; font-size:14px; border:none; background:url('../images/dk-tool-search.png') 0 0 no-repeat; -webkit-appearance:none; }
+.jg-tool-select { width:220px; height:41px; padding:10px; font-weight:100; color:white; font-size:14px; border:none; background:url('../images/dk-tool-search.png') 0 0 no-repeat; -webkit-appearance:none; -moz-appearance: none; }
 .jg-item-tool option, .jg-item-tool option:hover { color:#000; }
 .jg-item-tool .jg-tool-select { margin-top:11px; }
 .jg-item-tool .jg-linkbtn { min-width:25px; margin-top:8px; padding-top:34px; color:white; text-align:center; font-weight:100; background-position:top center; background-repeat:no-repeat; }
