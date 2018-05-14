@@ -370,6 +370,24 @@ $(document).ready(function() {
              || navigator.userAgent.match(/BlackBerry/i)
              || navigator.userAgent.match(/Windows Phone/i)
              ){
+				var disableScrollUp = function(){
+					setTimeout(function(){
+						
+						if(isLoadingDone()){
+							// try to remove auto scroll up, Zainal Arifin 13 May 2018
+							if( $("#commerce.ui-page.ui-page-theme-a.ui-page-header-fixed.ui-page-footer-fixed.ui-page-active").length > 0 ){
+								$("#commerce.ui-page.ui-page-theme-a.ui-page-header-fixed.ui-page-footer-fixed.ui-page-active").off();
+							}
+							// try to remove auto scroll up, Zainal Arifin 13 May 2018
+						}else{
+							disableScrollUp();
+						}
+
+					}, 500)
+				}
+
+				disableScrollUp();
+								 
 				 var pageTitle = "";
 				 if($("#materialArrayset").length > 0){
 					 pageTitle = "model configuration";
@@ -626,7 +644,18 @@ $(document).ready(function() {
 								*/
 
 								if (check_nationality(2600) || check_nationality(2500)) {								
-									$($(elementToMove[2])).hide();
+									var hide_recomended_material = function(){
+										setTimeout(function(){
+											$($(elementToMove[2])).hide();
+											console.log( "Recomend Material", $(elementToMove[2]).css("display") );
+											if( $(elementToMove[2]).css("display") != "none" || typeof $(elementToMove[2]).css("display") == "undefined" ){											
+												hide_recomended_material();
+											}
+										}, 500);
+									}
+
+									hide_recomended_material();
+									
 								}else{
 									$( $(elementToMove[2]) ).appendTo("#swipe-sidebar-content");
 								}
@@ -1387,7 +1416,7 @@ $(document).ready(function() {
 											$(this).closest(".group-content").css("height", "1000px");
 										});
 
-										$("#attribute-orderingRequestNoMoreThan90Characters_t").on("blur", function(){
+										$("#attribute-orderingRequestNoMoreThan90Characters_t, #pODate, #customerPORef_t").on("blur", function(){
 											$(this).closest(".ui-collapsible-content").css("height", "auto");											
 										});
 										/* SG-15 : Customer PO Ref is hiding behing keyboard when typing letters in order page, by Zainal Arifin */

@@ -3637,7 +3637,7 @@
 
                     /* 
                         Created By    :- Created By Zainal Arifin, Date : 17 April 2018
-                        Task          :- Disable user submit order repeatly
+                        Task          :- row#39 Disable user submit order repeatly                        
                         Page          :- Order Page
                         File Location :- $BASE_PATH$/javascript/js-ezrx.js
                         Layout        :- Desktop
@@ -3733,7 +3733,7 @@
       
                     /* 
                         Created By    :- Created By Zainal Arifin, Date : 17 April 2018
-                        Task          :- Disable user submit order repeatly
+                        Task          :- row#39 Disable user submit order repeatly                        
                         Page          :- Order Page
                         File Location :- $BASE_PATH$/javascript/js-ezrx.js
                         Layout        :- Desktop
@@ -4249,6 +4249,7 @@
             $('a.list-field')[0].click();
             window.localStorage.setItem("new_search_id", "true");
         });
+
         /* 
             Start : 27 April 2017
             Task  : SG-42 - 8000349641 On selection of "Search By Date Ranges" or "Search By Customer and Status" from search views drop dow open Refine popup(Trigger click even on Refine icon).
@@ -4977,7 +4978,7 @@
 
         /* 
             Created By    :- Created By Zainal Arifin, Date : 2 April 2018
-            Task          :- Open Shopping Cart after open order
+            Task          :- SG-17 Open Shopping Cart after open order            
             Page          :- Order Page
             File Location :- $BASE_PATH$/javascript/js-ezrx.js
             Layout        :- Desktop
@@ -5008,7 +5009,7 @@
 
         /* 
             Created By    :- Created By Zainal Arifin, Date : 2 April 2018
-            Task          :- Open Shopping Cart after open order
+            Task          :- SG-17 Open Shopping Cart after open order            
             Page          :- Order Page
             File Location :- $BASE_PATH$/javascript/js-ezrx.js
             Layout        :- Desktop
@@ -6239,7 +6240,7 @@
                 } else if (pagetitle == "change password"){
                    /* 
                         Created By    :- Created By Zainal Arifin, Date : 27 April 2018
-                        Task          :- Change Password for mobile
+                        Task          :- SG-40 Change Password for mobile                        
                         Page          :- Model Configuration
                         File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
                         Layout        :- Desktop
@@ -6304,7 +6305,7 @@
 
                     /* 
                         Created By    :- Created By Zainal Arifin, Date : 27 April 2018
-                        Task          :- Change Password for mobile
+                        Task          :- SG-40 Change Password for mobile
                         Page          :- Model Configuration
                         File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
                         Layout        :- Desktop
@@ -6334,24 +6335,42 @@
                 if ($("#tab-draftOrder").exists()) {
                     //[new] order
                     console.log("New order");
-                    mobile_orderpage();
-                    mobile_customerSearch();
-                    if ($('#frequentlyAccessedCustomers_t').length) {
-                        var customerDetails = $("#frequentlyAccessedCustomers_t").val().replace(/~/gi, "");
-                        console.log("frequentlyAccessedCustomers_t is", (customerDetails.length > 0) ? "Not Empty" : "Empty", "The data is : " + customerDetails);                        
-                        if (customerDetails.length > 0) {
-                            window.localStorage.setItem("frequentlyAccessedCustomers_t", customerDetails);
-                        } else {
-                            customerDetails = (window.localStorage.getItem("frequentlyAccessedCustomers_t") != null ? window.localStorage.getItem("frequentlyAccessedCustomers_t") : "");                            
-                        }
-                        $("#frequentlyAccessedCustomers_t").val("");
-                        if (customerDetails.length == 0) {
-                            return true;
-                        } else {
-                            mobile_topCustomerList(customerDetails);
-                            mobile_toggleTopCustomer();
+
+                    var customer_selection = function(){
+                        mobile_orderpage();
+                        mobile_customerSearch();
+                        if ($('#frequentlyAccessedCustomers_t').length) {
+                            var customerDetails = $("#frequentlyAccessedCustomers_t").val().replace(/~/gi, "");
+                            console.log("frequentlyAccessedCustomers_t is", (customerDetails.length > 0) ? "Not Empty" : "Empty", "The data is : " + customerDetails);                        
+                            if (customerDetails.length > 0) {
+                                window.localStorage.setItem("frequentlyAccessedCustomers_t", customerDetails);
+                            } else {
+                                customerDetails = (window.localStorage.getItem("frequentlyAccessedCustomers_t") != null ? window.localStorage.getItem("frequentlyAccessedCustomers_t") : "");                            
+                            }
+                            $("#frequentlyAccessedCustomers_t").val("");
+                            if (customerDetails.length == 0) {
+                                return true;
+                            } else {
+                                mobile_topCustomerList(customerDetails);
+                                mobile_toggleTopCustomer();
+                            }
                         }
                     }
+
+                    $("body").on("click touchend","#tab-draftOrder",function(e){
+                        function draftOrder(){
+                          setTimeout(function(){
+                            if( $(".ui-loader.ui-corner-all").css("display") == "none" ){
+                                customer_selection();
+                            }else{
+                              draftOrder();
+                            }
+                          }, 1000);
+                        }
+                        draftOrder();
+                    });
+                    
+                    customer_selection();
 
                     //VMLSINOZP-61 start
                     //console.log('VMLSINOZP-61',1);
@@ -6783,7 +6802,7 @@
             } else if (filterPage.search("change-password") != -1){
                 /* 
                     Created By    :- Created By Zainal Arifin, Date : 27 April 2018
-                    Task          :- Change Password for mobile
+                    Task          :- SG-40 Change Password for mobile                    
                     Page          :- Model Configuration
                     File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
                     Layout        :- Desktop
@@ -6849,7 +6868,7 @@
 
                 /* 
                     Created By    :- Created By Zainal Arifin, Date : 27 April 2018
-                    Task          :- Change Password for mobile
+                    Task          :- SG-40 Change Password for mobile                    
                     Page          :- Model Configuration
                     File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
                     Layout        :- Desktop
@@ -7173,11 +7192,13 @@
                     //recursive checking table has load data
                     waitShoppingCartLoad();
                 }
+                /* SG-20, On click of Edit Shopping cart throws 500 error. Created by Zainal Arifin */                                
                 if ($("#line-item-grid table tr.parent").length > 0){
                     var docNum = $("#line-item-grid table tr.parent").find("input[name=_line_item_list]").val();
                 }else{
                     var docNum = $("#line-item-grid table").find("input[name=_line_item_list]").val();
                 }
+                /* SG-20, On click of Edit Shopping cart throws 500 error. Created by Zainal Arifin */                                
 				if(docNum != undefined){
 					currentModelNumber = docNum;
                 }
@@ -7229,6 +7250,7 @@
 				if(isLineGirdOpen){
 					//if( $("#line-item-grid table tr.parent").legth > 0){
                         //documentNumber2 = $("#line-item-grid table tr.parent").clone();//$("tr[data-document-number='2']").clone();
+                    /* SG-20, On click of Edit Shopping cart throws 500 error. Created by Zainal Arifin */                                            
                     if ($("#line-item-grid table tr.parent").length > 0 ){
 						currentModelNumber = $("#line-item-grid table tr.parent").find("input[name=_line_item_list]").val();
                     }else{
@@ -7236,6 +7258,7 @@
                     }
                     $("#line-item-grid table tr.parent").find("input[name=_line_item_list]").hide();
                     documentNumber2 = $("#line-item-grid table tr.parent").html();
+                    /* SG-20, On click of Edit Shopping cart throws 500 error. Created by Zainal Arifin */                                            
 					console.log(">>>>"+currentModelNumber);
 					//}
 					mobile_checkItemOnCart();
@@ -7512,6 +7535,7 @@
             var var_qtyBonus = ($("td.cell-additionalMaterialQty").length > 0) ? "td.cell-additionalMaterialQty" : "td.cell-additionalMaterialQty";
             var var_bonusOverride = ($("td.cell-overrideBonusQty").length > 0) ? "td.cell-overrideBonusQty" : "td.cell-overrideBonusQty";
             var var_totalPrice_Currency = "td.cell-totalPrice_currency";
+            var var_comments = ($("td.cell-comments").length > 0) ? "td.cell-comments" : "td.cell-comments";            
 
             var redColor = "rgb(255, 0, 0)";
             var blackColor = "rgb(0, 0, 0)";
@@ -7521,7 +7545,7 @@
             var listEditedField = {};
             var var_find_text = (isMobile()) ? ".form-field" : ".text-field";
 
-            $(var_qty + ", " + var_overrideprice + ", " + var_qtyBonus + ", " + var_bonusOverride).off();
+            $(var_qty + ", " + var_overrideprice + ", " + var_qtyBonus + ", " + var_bonusOverride + ", " + var_comments).off();            
 
             function isStockAvailable(id){
                 id = Math.abs(id);
@@ -7705,7 +7729,7 @@
 
             });
 
-            $( var_qty + ", " + var_overrideprice + ", " + var_qtyBonus).find(var_find_text).on("click focus focusin", function () {
+            $( var_qty + ", " + var_overrideprice + ", " + var_qtyBonus + ", " + var_comments).find(var_find_text).on("click focus focusin", function () {            
 
                 var id = "";
                 if ($(this).closest(var_qty.replace("td", "")).length > 0) {
@@ -7735,7 +7759,7 @@
 
             });
 
-            $( var_qty + ", " + var_overrideprice + ", " + var_qtyBonus).find(var_find_text).on("keyup blur", function () {
+            $( var_qty + ", " + var_overrideprice + ", " + var_qtyBonus + ", " + var_comments).find(var_find_text).on("keyup blur", function () {            
 
                 var id = "";
                 if ($(this).closest(var_qty.replace("td", "")).length > 0) {
