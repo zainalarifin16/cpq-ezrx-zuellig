@@ -1051,43 +1051,45 @@ $(document).ready(function() {
 							var handleDisableSubmitBtn = function () {
 								setTimeout(function () {
 									if (isLoadingDone()) {
-										$(".action.action-type-modify:contains('Submit Order')").on("click", function () {
-											$(this).attr("disabled", true);
-											var text_order_submission = "<p style='font-size: 22px;font-weight: bold;font-style: normal;font-stretch: normal;line-height: 0.87;letter-spacing: normal;text-align: center;color: #005e63;' >Order submission is in progress ...</p>";
+										setTimeout(function(){
+											$(".action.action-type-modify:contains('Submit Order')").on("click", function () {
+												$(this).attr("disabled", true);
+												var text_order_submission = "<p style='font-size: 22px;font-weight: bold;font-style: normal;font-stretch: normal;line-height: 0.87;letter-spacing: normal;text-align: center;color: #005e63;' >Order submission is in progress ...</p>";
 
-											var text_please_wait = "<p style='font-size: 16px;font-weight: bold;font-style: normal;font-stretch: normal;line-height: 1.18;letter-spacing: normal;text-align: center;color: #9b9b9b; margin-bottom: 70px;' >Please wait</p>";
+												var text_please_wait = "<p style='font-size: 16px;font-weight: bold;font-style: normal;font-stretch: normal;line-height: 1.18;letter-spacing: normal;text-align: center;color: #9b9b9b; margin-bottom: 70px;' >Please wait</p>";
 
-											var loading_bar = "<div style='width: 450px;height: 20px;object-fit: contain;border-radius: 15px;background-color: #d2d2d2;border: solid 1px #898989;margin: 20px auto;' ><div id='loading_moving' style='width: 0px;height: 20px;object-fit: contain;border-radius: 15px;background-color: #005e63;' ></div></div>";
+												var loading_bar = "<div style='width: 450px;height: 20px;object-fit: contain;border-radius: 15px;background-color: #d2d2d2;border: solid 1px #898989;margin: 20px auto;' ><div id='loading_moving' style='width: 0px;height: 20px;object-fit: contain;border-radius: 15px;background-color: #005e63;' ></div></div>";
 
-											var text_dont_close = "<p style='font-size: 20px;font-weight: bold;font-style: normal;font-stretch: normal;line-height: normal;letter-spacing: normal;text-align: center;color: #005e63;' >Do not close the browser or click back button</p>";
+												var text_dont_close = "<p style='font-size: 20px;font-weight: bold;font-style: normal;font-stretch: normal;line-height: normal;letter-spacing: normal;text-align: center;color: #005e63;' >Do not close the browser or click back button</p>";
 
-											var popup = $("<div style='width: 500px;height: 190px;border-radius: 8px;background-color: #ffffff;margin: 220px auto;padding:50px;z-index: -1;position: relative;' >" + text_order_submission + text_please_wait + loading_bar + text_dont_close + "</div>");
-											$(".ui-loader").css({ "background-color": "transparent", "opacity": "1" });
-											$(".ui-loader").find("h1").after(popup);
+												var popup = $("<div style='width: 500px;height: 190px;border-radius: 8px;background-color: #ffffff;margin: 158px auto;padding:50px;z-index: -1;position: relative;' >" + text_order_submission + text_please_wait + loading_bar + text_dont_close + "</div>");
+												$(".ui-loader").css({ "background-color": "transparent", "opacity": "1" });
+												$(".ui-loader").find("h1").after(popup);
 
-											var bgloading = "<div id='bgloading' style='position: fixed;top: 0;right: 0;bottom: 0;left: 0;background-color: rgb(250, 255, 189);opacity: 0.35;z-index: -5;' ></div>";
-											$(".ui-loader").find("h1").after(bgloading);
+												var bgloading = "<div id='bgloading' style='position: fixed;top: 0;right: 0;bottom: 0;left: 0;background-color: rgb(250, 255, 189);opacity: 0.35;z-index: -5;' ></div>";
+												$(".ui-loader").find("h1").after(bgloading);
 
-											var base_loading_progress = 100;
+												var base_loading_progress = 100;
 
-											var loadingProgressBar = function(){
-												base_loading_progress = (base_loading_progress == 450)? base_loading_progress-20 : base_loading_progress;
-												$("#loading_moving").animate({
-													width: base_loading_progress+"px"
-												}, 2000);
-											}
-											loadingProgressBar();
-											var loopUntilComplete = function(){
-												setTimeout(function(){
-													if(base_loading_progress < 380){
-														base_loading_progress += 70;
-														loadingProgressBar();
-														loopUntilComplete();
-													}
-												},1500);
-											}
-											loopUntilComplete();
-										});
+												var loadingProgressBar = function () {
+													base_loading_progress = (base_loading_progress == 450) ? base_loading_progress - 20 : base_loading_progress;
+													$("#loading_moving").animate({
+														width: base_loading_progress + "px"
+													}, 2000);
+												}
+												loadingProgressBar();
+												var loopUntilComplete = function () {
+													setTimeout(function () {
+														if (base_loading_progress < 380) {
+															base_loading_progress += 70;
+															loadingProgressBar();
+															loopUntilComplete();
+														}
+													}, 1500);
+												}
+												loopUntilComplete();
+											});
+										}, 1000);
 									} else {
 										handleDisableSubmitBtn();
 									}
