@@ -1052,7 +1052,7 @@ $(document).ready(function() {
 								setTimeout(function () {
 									if (isLoadingDone()) {
 										setTimeout(function(){
-											$(".action.action-type-modify:contains('Submit Order')").on("click", function () {
+											$("button:contains('Submit Order')").on("click", function () {
 												$(this).attr("disabled", true);
 												var text_order_submission = "<p style='font-size: 22px;font-weight: bold;font-style: normal;font-stretch: normal;line-height: 0.87;letter-spacing: normal;text-align: center;color: #005e63;' >Order submission is in progress ...</p>";
 
@@ -1063,7 +1063,7 @@ $(document).ready(function() {
 												var text_dont_close = "<p style='font-size: 20px;font-weight: bold;font-style: normal;font-stretch: normal;line-height: normal;letter-spacing: normal;text-align: center;color: #005e63;' >Do not close the browser or click back button</p>";
 
 												var popup = $("<div style='width: 500px;height: 190px;border-radius: 8px;background-color: #ffffff;margin: 158px auto;padding:50px;z-index: -1;position: relative;' >" + text_order_submission + text_please_wait + loading_bar + text_dont_close + "</div>");
-												$(".ui-loader").css({ "background-color": "transparent", "opacity": "1" });
+												$(".ui-loader").css({ "background-color": "transparent", "opacity": "1", "-webkit-transform": "rotateX(0)" });
 												$(".ui-loader").find("h1").after(popup);
 
 												var bgloading = "<div id='bgloading' style='position: fixed;top: 0;right: 0;bottom: 0;left: 0;background-color: rgb(250, 255, 189);opacity: 0.35;z-index: -5;' ></div>";
