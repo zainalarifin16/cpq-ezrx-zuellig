@@ -2053,7 +2053,7 @@
                                 disabled = "disabled";
                             }
                             console.log(full);
-							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '" data-suspended="'+full[13]+'" '+disabled+' >';
+							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '" data-suspended="'+full[13]+'" data-customersold="'+full[1]+'" '+disabled+' >';
                         }else if(check_nationality(2800)){
                             if( zPUserType == "principal" ){
 								data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2]+ '$$' + full[4] + '$$' +full[11] +'">';
@@ -2096,6 +2096,13 @@
 			console.log("draw dt");
 			$("input[name='searchCust']").off();
 		    $("input[name='searchCust']").on('click', function() {
+                var selectCustomerSoldID = function(customersold){
+                    $("#selectedCustomerSoldtoID").val( customersold );					                    
+                }
+    
+                if( check_nationality(2500) ){
+                    selectCustomerSoldID( $(this).attr("data-customersold")  );
+                }
 	             //console.log('777.111111 ===>>> ',$(this).val());
 				delete_line_item_func($(this).val());
 				
@@ -2105,6 +2112,13 @@
 
         $("#searchCustomer").on('click',"input[name='searchCust']", function() {
         //$("input[name='searchCust']").on('click', function() {
+            var selectCustomerSoldID = function(customersold){
+                $("#selectedCustomerSoldtoID").val( customersold );					                    
+            }
+
+            if( check_nationality(2500) ){
+                selectCustomerSoldID( $(this).attr("data-customersold")  );
+            }
             mobile_delete_line_item_func($(this).val());
 
             /*var selectedCustShipID = $(this).val();
@@ -2187,7 +2201,13 @@
 
             });
             $("input[name='searchCust']").on('click', function() {
-
+                var selectCustomerSoldID = function(customersold){
+                    $("#selectedCustomerSoldtoID").val( customersold );					                    
+                }
+    
+                if( check_nationality(2500) ){
+                    selectCustomerSoldID( $(this).attr("data-customersold")  );
+                }
                 mobile_delete_line_item_func($(this).val());
                 /*var selectedCustShipID = $(this).val();
                 $("#selectedCustomerDetail").val(selectedCustShipID);
@@ -6335,42 +6355,24 @@
                 if ($("#tab-draftOrder").exists()) {
                     //[new] order
                     console.log("New order");
-
-                    var customer_selection = function(){
-                        mobile_orderpage();
-                        mobile_customerSearch();
-                        if ($('#frequentlyAccessedCustomers_t').length) {
-                            var customerDetails = $("#frequentlyAccessedCustomers_t").val().replace(/~/gi, "");
-                            console.log("frequentlyAccessedCustomers_t is", (customerDetails.length > 0) ? "Not Empty" : "Empty", "The data is : " + customerDetails);                        
-                            if (customerDetails.length > 0) {
-                                window.localStorage.setItem("frequentlyAccessedCustomers_t", customerDetails);
-                            } else {
-                                customerDetails = (window.localStorage.getItem("frequentlyAccessedCustomers_t") != null ? window.localStorage.getItem("frequentlyAccessedCustomers_t") : "");                            
-                            }
-                            $("#frequentlyAccessedCustomers_t").val("");
-                            if (customerDetails.length == 0) {
-                                return true;
-                            } else {
-                                mobile_topCustomerList(customerDetails);
-                                mobile_toggleTopCustomer();
-                            }
+                    mobile_orderpage();
+                    mobile_customerSearch();
+                    if ($('#frequentlyAccessedCustomers_t').length) {
+                        var customerDetails = $("#frequentlyAccessedCustomers_t").val().replace(/~/gi, "");
+                        console.log("frequentlyAccessedCustomers_t is", (customerDetails.length > 0) ? "Not Empty" : "Empty", "The data is : " + customerDetails);                        
+                        if (customerDetails.length > 0) {
+                            window.localStorage.setItem("frequentlyAccessedCustomers_t", customerDetails);
+                        } else {
+                            customerDetails = (window.localStorage.getItem("frequentlyAccessedCustomers_t") != null ? window.localStorage.getItem("frequentlyAccessedCustomers_t") : "");                            
+                        }
+                        $("#frequentlyAccessedCustomers_t").val("");
+                        if (customerDetails.length == 0) {
+                            return true;
+                        } else {
+                            mobile_topCustomerList(customerDetails);
+                            mobile_toggleTopCustomer();
                         }
                     }
-
-                    $("body").on("click touchend","#tab-draftOrder",function(e){
-                        function draftOrder(){
-                          setTimeout(function(){
-                            if( $(".ui-loader.ui-corner-all").css("display") == "none" ){
-                                customer_selection();
-                            }else{
-                              draftOrder();
-                            }
-                          }, 1000);
-                        }
-                        draftOrder();
-                    });
-                    
-                    customer_selection();
 
                     //VMLSINOZP-61 start
                     //console.log('VMLSINOZP-61',1);

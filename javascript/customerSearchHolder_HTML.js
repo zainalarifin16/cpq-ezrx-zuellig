@@ -747,7 +747,7 @@ var searchCustList = function(dataSet, seachCustomer) {
 							if(full[13] == "Y"){
 								disabled = "disabled";
 							}
-							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '" data-suspended="' + full[13] + '" '+disabled+'>';
+							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '" data-suspended="' + full[13] + '" data-customersold="'+full[1]+'" '+disabled+'>';
 						} 
 						else if(userCountry === 'TW'){
 
@@ -788,6 +788,15 @@ var searchCustList = function(dataSet, seachCustomer) {
 			console.log("draw dt");
 			$("input[name='searchCust']").off();
 		    $("input[name='searchCust']").on('click', function() {
+				var selectCustomerSoldID = function(customersold){
+					// console.log( "input[name='searchCust']", customersold);
+					$("#selectedCustomerSoldtoID").val( customersold );
+					// console.log("#selectedCustomerSoldtoID", $("#selectedCustomerSoldtoID").val() );
+				}
+
+				if(userCountry == "PH"){
+					selectCustomerSoldID( $(this).data("customersold") );
+				}
 	             //console.log('777.111111 ===>>> ',$(this).val());
 				delete_line_item_func($(this).val());
 				
@@ -819,6 +828,15 @@ var searchCustList = function(dataSet, seachCustomer) {
 			console.log("draw dt");
 			$("input[name='searchCust']").off();
 		    $("input[name='searchCust']").on('click', function() {
+				var selectCustomerSoldID = function(customersold){
+					// console.log( "input[name='searchCust']", customersold);
+					$("#selectedCustomerSoldtoID").val( customersold );
+					// console.log("#selectedCustomerSoldtoID", $("#selectedCustomerSoldtoID").val() );
+				}
+
+				if(userCountry == "PH"){
+					selectCustomerSoldID( $(this).data("customersold") );
+				}
 	             //console.log('777.111111 ===>>> ',$(this).val());
 				delete_line_item_func($(this).val());
 				
