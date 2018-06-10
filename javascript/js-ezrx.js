@@ -1829,7 +1829,7 @@
             //url: 'https://zuelligpharmatest1.bigmachines.com/rest/v3/customCustomer_Master?q={"contact_firstname":"Biomedical Science Institutes"}',
             url: ajaxUrl,
           //data: "q={'custmasterstring':{$regex:'/" + encodeURIComponent($('#searchCustomerInput').val()) + "/i'}}&orderby=customer_name:asc"
-            data: 'q={"custmasterstring":{$regex:"/' + encodeURIComponent($("#searchCustomerInput").val()) + '/i"}}&orderby=customer_name:asc'
+            data: 'q={"custmasterstring":{$regex:"/' + encodeURIComponent($("#searchCustomerInput").val()) + '/i"}}&{RecrdFlag:{eq:{A}}&{Control_Flag:{ne:{N}}&orderby=customer_name:asc'
         }).done(function(response) {
             console.log('jquery done');            
             var data = response.items;
@@ -3186,7 +3186,7 @@
                     if (type === 'display') {
                        // data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '">';
                         if (check_nationality(2500) ){
-                            data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '">';
+                            data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '" data-customersold="' + full[1] +'" >';
                         }else if(check_nationality(2800)){
                             console.log(full);
 							//FORMAT soldtoid$$shiptoid$$billtoid
@@ -3205,6 +3205,14 @@
         });
 
         $("input[name='topCust']").on('click', function() {
+
+            var selectCustomerSoldID = function (customersold) {
+                $("#selectedCustomerSoldtoID").val(customersold);
+            }
+
+            if (check_nationality(2500)) {
+                selectCustomerSoldID($(this).attr("data-customersold"));
+            }
 
             mobile_delete_line_item_func($(this).val());
 
@@ -3418,46 +3426,10 @@
                     $(".jg-box-topbar").append("<div style='position:absolute; right: 30px; top: 20px;font-size: 17px;' >" + window._BM_USER_LOGIN + "</div>");
                     
                     var hideMenuForCreditControlUser = function(){
-                        $('#jg-overlay').show();
-
-                        var userName = window._BM_USER_LOGIN;
-                        var fullUrl = window.location.host;
-                        var parts = fullUrl.split('.');
-                        var instanceName = parts[0];
-                        var identificationUser = "https://" + instanceName + ".bigmachines.com/rest/v4/customBU_Identification";
-                        var datauser = "q={%22login_id%22:%20%22" + userName + "%22}";
-
-                        $.ajax({
-                            url: identificationUser,
-                            data: datauser,
-                            contentType: "application/json; charset=utf-8",
-                            type: 'GET'
-                        }).done(function (resultIdentification) {
-                            if (resultIdentification.items.length > 0) {
-                                var user = resultIdentification.items[0];
-                                if (user.sales_org == "2800") {
-                                    var urlProfileUser = 'https://' + instanceName + '.bigmachines.com/rest/v4/customTW_User_Hierarchy';
-                                    var dataUser = 'q={"user":"' + userName + '"}';
-                                    $.ajax({
-                                        url: urlProfileUser,
-                                        data: dataUser,
-                                        contentType: "application/json; charset=utf-8",
-                                        type: 'GET'
-                                    }).done(function (resultProfileUser) {
-                                        if (resultProfileUser.items.length > 0) {
-                                            var detailUser = resultProfileUser.items[0];
-                                            if (detailUser.role.toLowerCase() == "credit control rep") {
-                                                $(".jg-linkbtn.new_order").hide();
-                                                $(".jg-linkbtn.copy_order").hide();
-                                            }
-                                        }
-                                        $('#jg-overlay').hide();
-                                    });
-                                }
-                            }
-                            $('#jg-overlay').hide();
-                        });
-                        $('#jg-overlay').hide();                        
+                        if ($("table[onclick*='newTransaction']").length == 0) {
+                            $(".jg-linkbtn.new_order").hide();
+                            $(".jg-linkbtn.copy_order").hide();
+                        }                       
                     }
                     hideMenuForCreditControlUser();
                     clearStorageOrderItem();

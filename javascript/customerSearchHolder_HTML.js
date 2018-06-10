@@ -445,6 +445,7 @@ var loadAjax = function() {
 	//window.location.host is subdomain.domain.com
 	var parts = fullUrl.split('.');
 	var sub = parts[0];
+
 	var dataSet = [];
 	var fileAttachmentBSID_t = $("input[name='fileAttachmentBSID_t']").val();
 	var ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master";
@@ -462,6 +463,8 @@ var loadAjax = function() {
 	}else if(userCountry == "PH"){
 		ajaxUrl = "https://"+sub+".bigmachines.com/rest/v3/customCustomer_Master_2500";
 	}
+
+
 	*/
 	if(userCountry === "TW"){
 		searchKeyword = $("#searchCustomerInput").val().replace(/ /gi, "%");
@@ -469,12 +472,12 @@ var loadAjax = function() {
 		searchKeyword = $("#searchCustomerInput").val();		
 	}
 	//NEW AJAX URL FOR TAIWAN CSTEAM END
-	var param = 'q={"custmasterstring":{$regex:"/' + encodeURIComponent( searchKeyword ) + '/i"}}&orderby=customer_name:asc';
+	var param = 'q={"custmasterstring":{$regex:"/' + encodeURIComponent( searchKeyword ) + '/i"}}&{RecrdFlag:{eq:{A}}&{Control_Flag:{ne:{N}}&orderby=customer_name:asc';
 	var ua = window.navigator.userAgent;
    //	console.log("ua====="+ua);
     if (ua.indexOf("MSIE") > 0 || ua.indexOf("Trident") > 0){ // If Internet Explorer, return version number
 		
-		param = 'q={%22custmasterstring%22:{$regex:%22/' + encodeURIComponent( searchKeyword ) + '/i%22}}&orderby=customer_name:asc';
+		param = 'q={%22custmasterstring%22:{$regex:%22/' + encodeURIComponent( searchKeyword ) + '/i%22}}&{RecrdFlag:{eq:{A}}&{Control_Flag:{ne:{N}}&orderby=customer_name:asc';
 	}
 	//console.log("param====="+param);
 	$.ajax({
@@ -1053,7 +1056,7 @@ var showCustomerList = function(customerDetails) {
 						////////////
 						if(userCountry === 'PH'){
 							console.log("PH - topCust");
-							data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '" >';
+							data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '" data-customersold="' + full[1] +'" >';
 						}else if(userCountry === 'TW'){
 							 //console.log(' 88 TW ======>>>> ',full[2]+ '$$' + full[4] + '$$' +full[6]);
 								//FORMAT soldtoid$$shiptoid$$billtoid
@@ -1099,6 +1102,15 @@ var showCustomerList = function(customerDetails) {
 		    File Location : $BASE_PATH$/image/javascript/js-ezrx.js
 		    Layout : Both
 			*/
+
+			var selectCustomerSoldID = function (customersold) {
+				$("#selectedCustomerSoldtoID").val(customersold);
+			}
+
+			if (userCountry === "PH") {
+				selectCustomerSoldID($(this).attr("data-customersold"));
+			}
+
             delete_line_item_func($(this).val());
             /*
 			    End : 11 Dec 2017
