@@ -977,60 +977,146 @@ $(document).ready(function(){
         
         var datetime_picker = function(){
           
-          if(isMobile()){
-            
-            var today = new Date();
-            var dd = today.getDate();
-            var mm = today.getMonth()+1; //January is 0!
-            var yyyy = today.getFullYear();
-            if(dd<10){
-                    dd='0'+dd
-                } 
-                if(mm<10){
-                    mm='0'+mm
-                } 
+          var fullUrl = window.location.host; //window.location.host is subdomain.domain.com
+        var parts = fullUrl.split('.');
+        var instanceName = parts[0];
 
-            today = yyyy+'-'+mm+'-'+dd;
-            $("#pODate").prop("max", today);
+        var mobile_datepicker = function(){
+          var today = new Date();
+          var dd = today.getDate();
+          var mm = today.getMonth()+1; //January is 0!
+          var yyyy = today.getFullYear();
+          if(dd<10){
+                  dd='0'+dd
+              } 
+              if(mm<10){
+                  mm='0'+mm
+              } 
 
-          }else{
-            var form_date_podate_before = $("#attr_wrapper_1_pODate").find(".form-date");                    
-            $( form_date_podate_before ).hide();
-            
-            var valPoDate = $("#pODate").val();
-            $.getScript('https://zuelligpharmatest1.bigmachines.com/bmfsweb/zuelligpharmatest1/image/javascript/jquery-ui.min.js', function() {
-              
-              $( form_date_podate_before ).after("<input id='datepickerpodate' type='text' style='float: left;' >");
-              $.noConflict(true);
-              $( "#datepickerpodate" ).datepicker({
-                showOn: "button",
-                buttonImage: "https://zuelligpharmatest1.bigmachines.com/bmfsweb/zuelligpharmatest1/image/images/calendar_black.png",
-                buttonImageOnly: true,
-                maxDate: '0',
-              });
-
-              if(valPoDate.length > 0){
-                $("#datepickerpodate").datepicker("setDate", new Date( valPoDate ) );
-              }
-
-              $(".ui-datepicker-trigger").css({"width":"20px"});
-
-              $(".ui-datepicker-trigger").on("click", function(){
-                $(".ui-widget-header").css({ "background": "#1d727b","border": "0px", "color": "#ffffff"});
-
-                $(".ui-datepicker-calendar").find("thead").find("tr").css({"color": "#005e63"});
-
-                $(".ui-state-default, .ui-widget-content .ui-state-default").css({"background": "#1d727b", "font-weight": "bold","font-style": "normal","font-stretch": "normal", "line-height": "normal", "letter-spacing": "normal","text-align": "left", "color": "#ffffff"});
-
-                $(".ui-state-highlight, .ui-widget-content .ui-state-highlight").css({ "background": "#c3d500", "font-weight": "bold", "font-style": "normal", "font-stretch": "normal", "line-height": "normal","letter-spacing": "normal", "text-align": "left", "color": "#ffffff", });
-              });
-              
-              $("#datepickerpodate").on("change", function(){
-                $("#pODate").val( $(this).val() );
-              });
-              
-            });
+          today = yyyy+'-'+mm+'-'+dd;
+          $("#pODate").prop("max", today);
+          if( $("#pODate").val().length == 0 ){
+            $("#pODate").val( today );
           }
+          $("#pODate").css({"background":'url("https://'+instanceName+'.bigmachines.com/bmfsweb/'+instanceName+'/image/images/calendar_black.png") no-repeat scroll 7px 7px', "background-position": "99%"});
+        }
+
+        var mobile_datepicker_jquery = function(){
+          var form_date_podate_before = $("#pODate");
+          $( form_date_podate_before ).hide();
+          
+          var valPoDate = $("#pODate").val();
+          $.getScript('https://'+instanceName+'.bigmachines.com/bmfsweb/'+instanceName+'/image/javascript/jquery-ui.min.js', function() {
+            
+            $( form_date_podate_before ).after("<input id='datepickerpodate' type='text' style='float: left;' readonly >");
+            jQuery.noConflict(true);
+            $( "#datepickerpodate" ).datepicker({
+              showOn: "button",
+              buttonImage: "https://"+instanceName+".bigmachines.com/bmfsweb/"+instanceName+"/image/images/calendar_black.png",
+              buttonImageOnly: true,
+              maxDate: '0',
+            });
+
+            if(valPoDate.length > 0){
+              $("#datepickerpodate").datepicker("setDate", new Date( valPoDate ) );
+            }else{
+              $("#datepickerpodate").datepicker("setDate", new Date() );
+              today = new Date();
+              $("#pODate").val((today.getMonth() + 1) + "/" + today.getDate() + "/" + today.getFullYear());
+            }
+
+            $("#datepickerpodate").css({"width": "95%"});
+
+            $(".ui-datepicker-trigger").css({"width":"20px"});
+
+            $(".ui-datepicker-trigger").on("click", function(){
+              $("#ui-datepicker-div").css({"background":"#ffffff"});
+
+              $(".ui-datepicker-calendar").css({"background": "#ffffff"});
+
+              $(".ui-widget-header").css({ "background": "#1d727b","border": "0px", "color": "#ffffff"});
+              $(".ui-datepicker-prev").css({"background-color": "#1d727b"});
+              $(".ui-datepicker-next").css({"background-color": "#1d727b", "opacity": "1"});
+
+              $(".ui-datepicker-calendar").find("thead").find("tr").css({"color": "#005e63"});
+
+              $(".ui-state-default, .ui-widget-content .ui-state-default").css({"background": "#1d727b", "font-weight": "bold","font-style": "normal","font-stretch": "normal", "line-height": "normal", "letter-spacing": "normal","text-align": "left", "color": "#ffffff"});
+
+              $(".ui-state-highlight, .ui-widget-content .ui-state-highlight").css({ "background": "#c3d500", "font-weight": "bold", "font-style": "normal", "font-stretch": "normal", "line-height": "normal","letter-spacing": "normal", "text-align": "left", "color": "#ffffff", });
+            });
+            
+            $("#datepickerpodate").on("change", function(){
+
+              $("#pODate").prop("type", "input");
+
+              var selectedDate = new Date( $(this).val() );
+              var date = selectedDate.getDate();
+              var month = selectedDate.getMonth() + 1;
+              var year = selectedDate.getFullYear();
+              $("#pODate").val( month+"/"+date+"/"+year );
+            });
+            
+          });
+        }
+
+        var desktop_datepicker = function(){
+          var form_date_podate_before = $("#attr_wrapper_1_pODate").find(".form-date");                    
+          $( form_date_podate_before ).hide();
+          
+          var valPoDate = $("#pODate").val();
+          $.getScript('https://'+instanceName+'.bigmachines.com/bmfsweb/'+instanceName+'/image/javascript/jquery-ui.min.js', function() {
+            
+            $("#pODate").prop("type", "input");            
+            $( form_date_podate_before ).after("<input id='datepickerpodate' type='text' style='float: left;' >");
+            $.noConflict(true);
+            $( "#datepickerpodate" ).datepicker({
+              showOn: "button",
+              buttonImage: "https://"+instanceName+".bigmachines.com/bmfsweb/"+instanceName+"/image/images/calendar_black.png",
+              buttonImageOnly: true,
+              maxDate: '0',
+            });
+
+            if(valPoDate.length > 0){
+              $("#datepickerpodate").datepicker("setDate", new Date( valPoDate ) );
+            }else{
+              $("#datepickerpodate").datepicker("setDate", new Date() );
+              today = new Date();
+              $("#pODate").val( (today.getMonth() + 1)+"/"+ today.getDate() +"/"+ today.getFullYear() );
+            }
+
+            $(".ui-datepicker-trigger").css({"width":"20px"});
+
+            $(".ui-datepicker-trigger").on("click", function(){
+              $(".ui-widget-header").css({ "background": "#1d727b","border": "0px", "color": "#ffffff"});
+
+              $(".ui-datepicker-calendar").find("thead").find("tr").css({"color": "#005e63"});
+
+              $(".ui-state-default, .ui-widget-content .ui-state-default").css({"background": "#1d727b", "font-weight": "bold","font-style": "normal","font-stretch": "normal", "line-height": "normal", "letter-spacing": "normal","text-align": "left", "color": "#ffffff"});
+
+              $(".ui-state-highlight, .ui-widget-content .ui-state-highlight").css({ "background": "#c3d500", "font-weight": "bold", "font-style": "normal", "font-stretch": "normal", "line-height": "normal","letter-spacing": "normal", "text-align": "left", "color": "#ffffff", });
+            });
+            
+            $("#datepickerpodate").on("change", function(){
+              var selectedDate = new Date( $(this).val() );
+              var date = selectedDate.getDate();
+              var month = selectedDate.getMonth() + 1;
+              var year = selectedDate.getFullYear();
+              $("#pODate").val( month+"/"+date+"/"+year );
+            });
+            
+          });
+        }
+
+        if(isMobile()){
+          mobile_datepicker_jquery();          
+          /* f(navigator.userAgent.match(/Android/i)){
+            mobile_datepicker_jquery();
+          }else{
+            mobile_datepicker();
+          } */
+        }else{
+          desktop_datepicker();
+        }
 
         }
         

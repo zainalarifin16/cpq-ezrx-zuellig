@@ -1829,7 +1829,9 @@
             //url: 'https://zuelligpharmatest1.bigmachines.com/rest/v3/customCustomer_Master?q={"contact_firstname":"Biomedical Science Institutes"}',
             url: ajaxUrl,
           //data: "q={'custmasterstring':{$regex:'/" + encodeURIComponent($('#searchCustomerInput').val()) + "/i'}}&orderby=customer_name:asc"
-            data: 'q={"custmasterstring":{$regex:"/' + encodeURIComponent($("#searchCustomerInput").val()) + '/i"}}&orderby=customer_name:asc'
+          //data: 'q={"custmasterstring":{$regex:"/' + encodeURIComponent($("#searchCustomerInput").val()) + '/i"}}&{RecrdFlag:{eq:{A}}&{Control_Flag:{ne:{N}}&orderby=customer_name:asc'
+          //data:  'q={$and:[{"custmasterstring":{$regex:"/' + encodeURIComponent( $("#searchCustomerInput").val() ) + '/i"}},{"recrdflag" :{$ne: "I"}},{"control_flag" :{$ne: "N"}}]}&orderby=customer_name:asc'
+            data: 'q={$and:[{"custmasterstring":{$regex:"/' + encodeURIComponent( searchKeyword ) + '/i"}},{$or:[{"recrdflag" :{$eq: "A"}}, {"recrdflag" :{$exists:false}}]},{$or:[{"control_flag" :{$eq: "Y"}}, {"control_flag" :{$exists:false}}]}]}&orderby=customer_name:asc'
         }).done(function(response) {
             console.log('jquery done');            
             var data = response.items;
@@ -2053,7 +2055,7 @@
                                 disabled = "disabled";
                             }
                             console.log(full);
-							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '" data-suspended="'+full[13]+'" '+disabled+' >';
+							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '" data-suspended="'+full[13]+'" data-customersold="'+full[1]+'" '+disabled+' >';
                         }else if(check_nationality(2800)){
                             if( zPUserType == "principal" ){
 								data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2]+ '$$' + full[4] + '$$' +full[11] +'">';
@@ -2096,6 +2098,13 @@
 			console.log("draw dt");
 			$("input[name='searchCust']").off();
 		    $("input[name='searchCust']").on('click', function() {
+                var selectCustomerSoldID = function(customersold){
+                    $("#selectedCustomerSoldtoID").val( customersold );					                    
+                }
+    
+                if( check_nationality(2500) ){
+                    selectCustomerSoldID( $(this).attr("data-customersold")  );
+                }
 	             //console.log('777.111111 ===>>> ',$(this).val());
 				delete_line_item_func($(this).val());
 				
@@ -2105,6 +2114,13 @@
 
         $("#searchCustomer").on('click',"input[name='searchCust']", function() {
         //$("input[name='searchCust']").on('click', function() {
+            var selectCustomerSoldID = function(customersold){
+                $("#selectedCustomerSoldtoID").val( customersold );					                    
+            }
+
+            if( check_nationality(2500) ){
+                selectCustomerSoldID( $(this).attr("data-customersold")  );
+            }
             mobile_delete_line_item_func($(this).val());
 
             /*var selectedCustShipID = $(this).val();
@@ -2187,7 +2203,13 @@
 
             });
             $("input[name='searchCust']").on('click', function() {
-
+                var selectCustomerSoldID = function(customersold){
+                    $("#selectedCustomerSoldtoID").val( customersold );					                    
+                }
+    
+                if( check_nationality(2500) ){
+                    selectCustomerSoldID( $(this).attr("data-customersold")  );
+                }
                 mobile_delete_line_item_func($(this).val());
                 /*var selectedCustShipID = $(this).val();
                 $("#selectedCustomerDetail").val(selectedCustShipID);
@@ -3166,7 +3188,7 @@
                     if (type === 'display') {
                        // data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '">';
                         if (check_nationality(2500) ){
-                            data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '">';
+                            data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '" data-customersold="' + full[1] +'" >';
                         }else if(check_nationality(2800)){
                             console.log(full);
 							//FORMAT soldtoid$$shiptoid$$billtoid
@@ -3185,6 +3207,14 @@
         });
 
         $("input[name='topCust']").on('click', function() {
+
+            var selectCustomerSoldID = function (customersold) {
+                $("#selectedCustomerSoldtoID").val(customersold);
+            }
+
+            if (check_nationality(2500)) {
+                selectCustomerSoldID($(this).attr("data-customersold"));
+            }
 
             mobile_delete_line_item_func($(this).val());
 
@@ -3398,46 +3428,10 @@
                     $(".jg-box-topbar").append("<div style='position:absolute; right: 30px; top: 20px;font-size: 17px;' >" + window._BM_USER_LOGIN + "</div>");
                     
                     var hideMenuForCreditControlUser = function(){
-                        $('#jg-overlay').show();
-
-                        var userName = window._BM_USER_LOGIN;
-                        var fullUrl = window.location.host;
-                        var parts = fullUrl.split('.');
-                        var instanceName = parts[0];
-                        var identificationUser = "https://" + instanceName + ".bigmachines.com/rest/v4/customBU_Identification";
-                        var datauser = "q={%22login_id%22:%20%22" + userName + "%22}";
-
-                        $.ajax({
-                            url: identificationUser,
-                            data: datauser,
-                            contentType: "application/json; charset=utf-8",
-                            type: 'GET'
-                        }).done(function (resultIdentification) {
-                            if (resultIdentification.items.length > 0) {
-                                var user = resultIdentification.items[0];
-                                if (user.sales_org == "2800") {
-                                    var urlProfileUser = 'https://' + instanceName + '.bigmachines.com/rest/v4/customTW_User_Hierarchy';
-                                    var dataUser = 'q={"user":"' + userName + '"}';
-                                    $.ajax({
-                                        url: urlProfileUser,
-                                        data: dataUser,
-                                        contentType: "application/json; charset=utf-8",
-                                        type: 'GET'
-                                    }).done(function (resultProfileUser) {
-                                        if (resultProfileUser.items.length > 0) {
-                                            var detailUser = resultProfileUser.items[0];
-                                            if (detailUser.role.toLowerCase() == "credit control rep") {
-                                                $(".jg-linkbtn.new_order").hide();
-                                                $(".jg-linkbtn.copy_order").hide();
-                                            }
-                                        }
-                                        $('#jg-overlay').hide();
-                                    });
-                                }
-                            }
-                            $('#jg-overlay').hide();
-                        });
-                        $('#jg-overlay').hide();                        
+                        if ($("table[onclick*='newTransaction']").length == 0) {
+                            $(".jg-linkbtn.new_order").hide();
+                            $(".jg-linkbtn.copy_order").hide();
+                        }                       
                     }
                     hideMenuForCreditControlUser();
                     clearStorageOrderItem();
@@ -6335,42 +6329,24 @@
                 if ($("#tab-draftOrder").exists()) {
                     //[new] order
                     console.log("New order");
-
-                    var customer_selection = function(){
-                        mobile_orderpage();
-                        mobile_customerSearch();
-                        if ($('#frequentlyAccessedCustomers_t').length) {
-                            var customerDetails = $("#frequentlyAccessedCustomers_t").val().replace(/~/gi, "");
-                            console.log("frequentlyAccessedCustomers_t is", (customerDetails.length > 0) ? "Not Empty" : "Empty", "The data is : " + customerDetails);                        
-                            if (customerDetails.length > 0) {
-                                window.localStorage.setItem("frequentlyAccessedCustomers_t", customerDetails);
-                            } else {
-                                customerDetails = (window.localStorage.getItem("frequentlyAccessedCustomers_t") != null ? window.localStorage.getItem("frequentlyAccessedCustomers_t") : "");                            
-                            }
-                            $("#frequentlyAccessedCustomers_t").val("");
-                            if (customerDetails.length == 0) {
-                                return true;
-                            } else {
-                                mobile_topCustomerList(customerDetails);
-                                mobile_toggleTopCustomer();
-                            }
+                    mobile_orderpage();
+                    mobile_customerSearch();
+                    if ($('#frequentlyAccessedCustomers_t').length) {
+                        var customerDetails = $("#frequentlyAccessedCustomers_t").val().replace(/~/gi, "");
+                        console.log("frequentlyAccessedCustomers_t is", (customerDetails.length > 0) ? "Not Empty" : "Empty", "The data is : " + customerDetails);                        
+                        if (customerDetails.length > 0) {
+                            window.localStorage.setItem("frequentlyAccessedCustomers_t", customerDetails);
+                        } else {
+                            customerDetails = (window.localStorage.getItem("frequentlyAccessedCustomers_t") != null ? window.localStorage.getItem("frequentlyAccessedCustomers_t") : "");                            
+                        }
+                        $("#frequentlyAccessedCustomers_t").val("");
+                        if (customerDetails.length == 0) {
+                            return true;
+                        } else {
+                            mobile_topCustomerList(customerDetails);
+                            mobile_toggleTopCustomer();
                         }
                     }
-
-                    $("body").on("click touchend","#tab-draftOrder",function(e){
-                        function draftOrder(){
-                          setTimeout(function(){
-                            if( $(".ui-loader.ui-corner-all").css("display") == "none" ){
-                                customer_selection();
-                            }else{
-                              draftOrder();
-                            }
-                          }, 1000);
-                        }
-                        draftOrder();
-                    });
-                    
-                    customer_selection();
 
                     //VMLSINOZP-61 start
                     //console.log('VMLSINOZP-61',1);

@@ -445,6 +445,7 @@ var loadAjax = function() {
 	//window.location.host is subdomain.domain.com
 	var parts = fullUrl.split('.');
 	var sub = parts[0];
+
 	var dataSet = [];
 	var fileAttachmentBSID_t = $("input[name='fileAttachmentBSID_t']").val();
 	var ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master";
@@ -462,6 +463,8 @@ var loadAjax = function() {
 	}else if(userCountry == "PH"){
 		ajaxUrl = "https://"+sub+".bigmachines.com/rest/v3/customCustomer_Master_2500";
 	}
+
+
 	*/
 	if(userCountry === "TW"){
 		searchKeyword = $("#searchCustomerInput").val().replace(/ /gi, "%");
@@ -469,12 +472,15 @@ var loadAjax = function() {
 		searchKeyword = $("#searchCustomerInput").val();		
 	}
 	//NEW AJAX URL FOR TAIWAN CSTEAM END
-	var param = 'q={"custmasterstring":{$regex:"/' + encodeURIComponent( searchKeyword ) + '/i"}}&orderby=customer_name:asc';
+	var param = 'q={$and:[{"custmasterstring":{$regex:"/' + encodeURIComponent( searchKeyword ) + '/i"}},{$or:[{"recrdflag" :{$eq: "A"}}, {"recrdflag" :{$exists:false}}]},{$or:[{"control_flag" :{$eq: "Y"}}, {"control_flag" :{$exists:false}}]}]}&orderby=customer_name:asc';
+	// var param = 'q={$and:[{"custmasterstring":{$regex:"/' + encodeURIComponent( searchKeyword ) + '/i"}},{"recrdflag" :{$ne: "I"}},{"control_flag" :{$ne: "N"}}]}&orderby=customer_name:asc';
+	// var param = 'q={"custmasterstring":{$regex:"/' + encodeURIComponent( searchKeyword ) + '/i"}}&{recrdflag:{eq:{A}}&{Control_Flag:{ne:{N}}&orderby=customer_name:asc'; 
 	var ua = window.navigator.userAgent;
    //	console.log("ua====="+ua);
-    if (ua.indexOf("MSIE") > 0 || ua.indexOf("Trident") > 0){ // If Internet Explorer, return version number
-		
-		param = 'q={%22custmasterstring%22:{$regex:%22/' + encodeURIComponent( searchKeyword ) + '/i%22}}&orderby=customer_name:asc';
+	if (ua.indexOf("MSIE") > 0 || ua.indexOf("Trident") > 0){ // If Internet Explorer, return version number
+		param = 'q={$and:[{%22custmasterstring%22:{$regex:%22/' + encodeURIComponent( searchKeyword ) + '/i%22}},{$or:[{%22recrdflag%22 :{$eq:%20%22A%22}},%20{%22recrdflag%22%20:{$eq:%20%22null%22}}]},{$or:[{%22control_flag%22%20:{$eq:%20%22Y%22}},%20{%22control_flag%22%20:{$eq: %22null%22}}]}]}&orderby=customer_name:asc';
+		// param = 'q={$and:[{%22custmasterstring%22:{$regex:%22/' + encodeURIComponent( searchKeyword ) + '/i%22}},{%22recrdflag%22%20:{$ne: %22I%22}},{%22control_flag%22%20:{$ne:%20%22N%22}}]}&orderby=customer_name:asc';
+		// param = 'q={%22custmasterstring%22:{$regex:%22/' + encodeURIComponent( searchKeyword ) + '/i%22}}&{RecrdFlag:{eq:{A}}&{Control_Flag:{ne:{N}}&orderby=customer_name:asc';
 	}
 	//console.log("param====="+param);
 	$.ajax({
@@ -747,7 +753,7 @@ var searchCustList = function(dataSet, seachCustomer) {
 							if(full[13] == "Y"){
 								disabled = "disabled";
 							}
-							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '" data-suspended="' + full[13] + '" '+disabled+'>';
+							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '" data-suspended="' + full[13] + '" data-customersold="'+full[1]+'" '+disabled+'>';
 						} 
 						else if(userCountry === 'TW'){
 
@@ -788,6 +794,15 @@ var searchCustList = function(dataSet, seachCustomer) {
 			console.log("draw dt");
 			$("input[name='searchCust']").off();
 		    $("input[name='searchCust']").on('click', function() {
+				var selectCustomerSoldID = function(customersold){
+					// console.log( "input[name='searchCust']", customersold);
+					$("#selectedCustomerSoldtoID").val( customersold );
+					// console.log("#selectedCustomerSoldtoID", $("#selectedCustomerSoldtoID").val() );
+				}
+
+				if(userCountry == "PH"){
+					selectCustomerSoldID( $(this).data("customersold") );
+				}
 	             //console.log('777.111111 ===>>> ',$(this).val());
 				delete_line_item_func($(this).val());
 				
@@ -819,6 +834,15 @@ var searchCustList = function(dataSet, seachCustomer) {
 			console.log("draw dt");
 			$("input[name='searchCust']").off();
 		    $("input[name='searchCust']").on('click', function() {
+				var selectCustomerSoldID = function(customersold){
+					// console.log( "input[name='searchCust']", customersold);
+					$("#selectedCustomerSoldtoID").val( customersold );
+					// console.log("#selectedCustomerSoldtoID", $("#selectedCustomerSoldtoID").val() );
+				}
+
+				if(userCountry == "PH"){
+					selectCustomerSoldID( $(this).data("customersold") );
+				}
 	             //console.log('777.111111 ===>>> ',$(this).val());
 				delete_line_item_func($(this).val());
 				
@@ -1035,7 +1059,7 @@ var showCustomerList = function(customerDetails) {
 						////////////
 						if(userCountry === 'PH'){
 							console.log("PH - topCust");
-							data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '" >';
+							data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '" data-customersold="' + full[1] +'" >';
 						}else if(userCountry === 'TW'){
 							 //console.log(' 88 TW ======>>>> ',full[2]+ '$$' + full[4] + '$$' +full[6]);
 								//FORMAT soldtoid$$shiptoid$$billtoid
@@ -1081,6 +1105,15 @@ var showCustomerList = function(customerDetails) {
 		    File Location : $BASE_PATH$/image/javascript/js-ezrx.js
 		    Layout : Both
 			*/
+
+			var selectCustomerSoldID = function (customersold) {
+				$("#selectedCustomerSoldtoID").val(customersold);
+			}
+
+			if (userCountry === "PH") {
+				selectCustomerSoldID($(this).attr("data-customersold"));
+			}
+
             delete_line_item_func($(this).val());
             /*
 			    End : 11 Dec 2017
