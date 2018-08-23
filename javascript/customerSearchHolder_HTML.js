@@ -4,29 +4,6 @@ var pagetitle;
  
 $(document).ready(function(js2){
 
-	var check_nationality = function (nationality) {
-		var countryEle = document.getElementById('userSalesOrg_t');
-		if (countryEle == null) { //this is for material page.
-			countryEle = $('input[name="userSalesOrg_PL"]').val();
-			countryCode = countryEle;
-		} else {
-			var countryCode = parseInt(countryEle.value);
-		}
-		if (typeof countryCode == "undefined") {
-			countryCode = "2601";
-		}
-		if (nationality == 2600) {
-			nationality = 2601;
-		}
-
-		var valid = false;
-		if (nationality == countryCode || countryCode == 2601) {
-			valid = true;
-		}
-
-		return valid;
-	}
-
 	window.check_country = function(country){
 		var countryEle = document.getElementById('userSalesOrg_t');
 		if (countryEle == null) { //this is for material page.
@@ -204,9 +181,6 @@ $(document).ready(function(js2){
 				File Location :- $BASE_PATH$/javascript/customerSearchHolder_HTML.js
 				Layout        :- Global
 			*/
-
-			// var isPHCountry = check_nationality(2500);
-			// var isSGCountry = check_nationality(2600);
 			/* var usernameGetCustomer = "CPQAPIUser";
 			var passwordGetCustomer = "csC(#15^14"; */
 
@@ -380,29 +354,7 @@ var changeCust = function(){
 		*/
 		$("#selectedCustomerDetail").val(newCustId);
 		//PH-47 : Only once to change customer 6/4/2018, Zainal Arifin
-		var check_nationality = function (nationality) {
-			var countryEle = document.getElementById('userSalesOrg_t');
-			if (countryEle == null) { //this is for material page.
-				countryEle = $('input[name="userSalesOrg_PL"]').val();
-				countryCode = countryEle;
-			} else {
-				var countryCode = parseInt(countryEle.value);
-			}
-			if (typeof countryCode == "undefined") {
-				countryCode = "2601";
-			}
-			if (nationality == 2600) {
-				nationality = 2601;
-			}
-	
-			var valid = false;
-			if (nationality == countryCode || countryCode == 2601) {
-				valid = true;
-			}
-	
-			return valid;
-		}
-		if(!check_nationality(2500)){
+		if(!window.check_country("PH")){
 			$("#customerMasterString_t").val("");
 		}
 		setTimeout(function(){
@@ -455,30 +407,7 @@ var delete_line_item_func = function(selectedCustShipID){
 		}
 		// console.log('showCustomerList selectedCustomerDetail value', $("#selectedCustomerDetail").val());
 		//PH-47 : Only once to change customer 6/4/2018, Zainal Arifin
-		var check_nationality = function (nationality) {
-			var countryEle = document.getElementById('userSalesOrg_t');
-			if (countryEle == null) { //this is for material page.
-				countryEle = $('input[name="userSalesOrg_PL"]').val();
-				countryCode = countryEle;
-			} else {
-				var countryCode = parseInt(countryEle.value);
-			}
-			
-			if (typeof countryCode == "undefined") {
-				countryCode = "2601";
-			}
-			if (nationality == 2600) {
-				nationality = 2601;
-			}
-
-			var valid = false;
-			if (nationality == countryCode || countryCode == 2601) {
-				valid = true;
-			}
-
-			return valid;
-		}
-		if(!check_nationality(2500)){
+		if(!window.check_country("PH")){
 			$("#customerMasterString_t").val("");
 		}
 		setTimeout(function(){
@@ -849,6 +778,13 @@ var searchCustList = function(dataSet, seachCustomer) {
 				});
 			}
 
+			if(window.check_country("TH")){
+				$($("#searchCustomer").find("tbody").children("tr")).each(function(index, data){
+					var columnShipToID = $( data ).find("td.sorting_1");
+					$( columnShipToID ).css({"font-size": "15px","font-weight": "bold", "color": "#007077"});
+				});
+			}
+
 			console.log("draw dt");
 			$("input[name='searchCust']").off();
 		    $("input[name='searchCust']").on('click', function() {
@@ -975,36 +911,11 @@ var searchCustomerList = function(seachCustomer) {
 			clearTimeout(timer);
 			timer = setTimeout(function() { //then give it a second to see if the user is finished
 
-				var check_nationality = function (nationality) {
-					var countryEle = document.getElementById('userSalesOrg_t');
-					if (countryEle == null) { //this is for material page.
-						countryEle = $('input[name="userSalesOrg_PL"]').val();
-						countryCode = countryEle;
-					} else {
-						var countryCode = parseInt(countryEle.value);
-					}
-					if (typeof countryCode == "undefined") {
-						countryCode = "2601";
-					}
-					if (nationality == 2600) {
-						nationality = 2601;
-					}
-
-					var valid = false;
-					if (nationality == countryCode || countryCode == 2601) {
-						valid = true;
-					}
-
-					return valid;
-				}
-
-				var ruleMaxChar = ( !check_nationality(2800) )? 3 : 2;
+				var ruleMaxChar = ( !window.check_country("TW") )? 3 : 2;
 
 				if (inputLength === ruleMaxChar || inputLength > ruleMaxChar ) {
 					//ajax
-					// if(!check_nationality(2800)){
-						loadAjax();						
-					// }
+					loadAjax();						
 					setTimeout( function(){
 						$('.search-cust_wrapper').show();
 					}, 1000);

@@ -1300,7 +1300,7 @@ window.check_country = function(country){
               dumpSelectedRow(this);
           }
 
-          if(check_nationality(2800)){
+          if( window.check_country("TW") ){
               if (isMobile()) {
                   $("#materialArrayset").find("input[name='materialAndDesc']").map(function (index, data) {
                       var materialDesc = $(data).closest("tr").find("input[name='materialDescription']").val();
@@ -1339,7 +1339,7 @@ window.check_country = function(country){
       var dataSet2 = [];
 
       var salesOrg = $('input[name="userSalesOrg_PL"]').val();        
-      if ( check_nationality(2600) ) {
+      if ( window.check_country("SG") ) {
           salesOrg = (salesOrg == 2601)? salesOrg : 2601;
       }
 
@@ -1629,7 +1629,7 @@ window.check_country = function(country){
 
       if (userType === 'csteam' && enableOldMaterialSearch == "false") {
 
-          if (check_nationality(2600)) {
+          if ( window.check_country("SG") ) {
               var salesOrg = 2601;
           } else {
               salesOrg = $('input[name="userSalesOrg_PL"]').val();
@@ -1851,29 +1851,6 @@ window.check_country = function(country){
               console.log('keyup', inputLength);
               clearTimeout(timer);
               timer = setTimeout(function() { //then give it a second to see if the user is finished
-
-                var check_nationality = function (nationality) {
-					var countryEle = document.getElementById('userSalesOrg_t');
-					if (countryEle == null) { //this is for material page.
-						countryEle = $('input[name="userSalesOrg_PL"]').val();
-						countryCode = countryEle;
-					} else {
-						var countryCode = parseInt(countryEle.value);
-					}
-					if (typeof countryCode == "undefined") {
-						countryCode = "2601";
-					}
-					if (nationality == 2600) {
-						nationality = 2601;
-					}
-
-					var valid = false;
-					if (nationality == countryCode || countryCode == 2601) {
-						valid = true;
-					}
-
-					return valid;
-				}
 
 				var ruleMaxChar = ( !window.check_country("TW") )? 3 : 2;
 
@@ -2776,7 +2753,7 @@ var mobile_renameButton = function() {
   */
   function order_page_stock_color() {
       console.log('order_page_stock_color');
-      if (check_nationality(2600)) {
+      if (window.check_country("SG")) {
           $('#line-item-grid .lig-side-scroller>table tr.lig-row.child').each(function () {
               var $child = $(this).children('td');
               var $stock = $child.find('input[name*="inStock_l"]');
@@ -3330,7 +3307,7 @@ var mobile_renameButton = function() {
               $("#selectedCustomerSoldtoID").val(customersold);
           }
 
-          if (check_nationality(2500)) {
+          if (window.check_country("PH")) {
               selectCustomerSoldID($(this).attr("data-customersold"));
           }
 
@@ -3778,7 +3755,7 @@ var mobile_renameButton = function() {
 
                   mobile_pricingChange();
 
-                  if(check_nationality(2600)){
+                  if(window.check_country("SG")){
                       /* 
                           Created By    :- Created By Zainal Arifin, Date : 17 April 2018
                           Task          :- SG-37 Hide Customer Search and Top 10 Customers if ZP User Type = Customer
@@ -5094,7 +5071,7 @@ var mobile_renameButton = function() {
           Layout : Desktop
       */
       /* find column with id is bonusOverideFlag_l when the value is True then give red color on text  */
-      if(!check_nationality(2500)){
+      if(!window.check_country("PH")){
           $("td[id*='bonusOverideFlag_l']").each(function(i, data) {
               var refNo = $(this).attr("id").split("attr_wrapper");
               var object_span = $("#readonly" + refNo[1]);
@@ -5250,7 +5227,7 @@ var mobile_renameButton = function() {
           File Location :- $BASE_PATH$/javascript/js-ezrx.js
           Layout        :- Desktop
       */
-      if(check_nationality(2600)){
+      if( window.check_country("SG") ){
 
           var trans_id = ($("#readonly_1_transactionID_t").text().length > 0)? $("#readonly_1_transactionID_t").text() : $("#transactionID_t").val();
           var isUserHaveModifySC = window.localStorage.getItem("orderItem_" + trans_id);
@@ -5830,7 +5807,7 @@ var mobile_renameButton = function() {
           Layout        :- Both Dekstop
       */
 
-      if(check_nationality(2600)){
+      if( window.check_country("SG") ){
           var FavRecFreqSection = $("#attribute-pastOrders").parent().parent().parent().parent().parent().parent('.column-1');
           $(FavRecFreqSection.children()[1]).hide();
       }
@@ -5988,7 +5965,7 @@ var mobile_renameButton = function() {
           File Location :- $BASE_PATH$/javascript/js-ezrx.js
           Layout        :- Desktop
       */
-      if(check_nationality(2600)){
+      if( window.check_country("SG") ){
 
           var redColor = "rgb(255, 0, 0)";            
           var blackColor = "#000000";            
@@ -7780,7 +7757,7 @@ var mobile_renameButton = function() {
           Layout        :- Global
       */
       console.log("check_nationality", check_nationality(2601) );
-      if(check_nationality(2601)){
+      if( window.check_country("SG") ){
 
           function disabled_btn_save_show_alert() {
               if ($("#update-alert").length == 0) {
@@ -8724,7 +8701,7 @@ var mobile_renameButton = function() {
       });
 
 
-      if(check_nationality(2600)){
+      if(window.check_country("SG")){
           $('td.cell-additionalMaterialDescription').off();
           $('td.cell-additionalMaterialDescription').prop("tooltip", function () {
               var input_text = $(this).find(".attribute-field-container span").text();
@@ -8846,7 +8823,7 @@ var mobile_renameButton = function() {
 
       });
 
-      if (check_nationality(2500) || check_nationality(2600)){
+      if (window.check_country("SG") || window.check_country("PH")){
           $('td.cell-promotion').off();
           $('td.cell-promotion').attr('tooltip', function() {
               //console.log(' mobile_adjust_tooltip cell-promotion click 222 =====>>>> ');
@@ -9088,7 +9065,7 @@ var mobile_renameButton = function() {
       });
 
       
-      if(check_nationality(2600)){
+      if( window.check_country("SG") ){
           $("td.cell-additionalMaterialDescription").off();
           $("td.cell-additionalMaterialDescription").each(function (index, data) {
               var button_helper;
