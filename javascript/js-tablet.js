@@ -217,6 +217,18 @@ $(document).ready(function() {
 				$(".config-array #attribute-stockQty").css("width", "initial");
 				$(".config-array #attribute-addAdditionalMaterial").css("width", "initial");
 				*/
+
+				if(check_nationality(2800)){
+					$("#attribute-pPAApprovalNo").addClass("hidden");
+					$(".cell-pPAApprovalNo").addClass("hidden");
+
+					$("#attribute-addAdditionalMaterial").addClass("hidden");
+					$(".cell-addAdditionalMaterial").addClass("hidden");
+
+					$("#attribute-invoicePrice").css("width", "70px");
+
+				}
+
 			}else{
 				/* 
 						Created By    :- Created By Zainal Arifin, Date : 26 March 2018
@@ -236,22 +248,22 @@ $(document).ready(function() {
 						$(".cell-promotion").removeClass("hidden");
 					}
           
-          $(".config-array #attribute-materialDescription").css("width", "200px");
-          $("#attribute-materialDescription").removeClass("hidden");
-          if($("#attribute-material").hasClass("hidden") === false){
-            $("#attribute-materialDescription").insertAfter($("#attribute-material"));
-            $(".cell-materialDescription").map(function (index, data) {
-              var id = $(data).attr("id").replace("cell-materialDescription-", "");
-              $("#cell-materialDescription-" + id).insertAfter($("#cell-material-" + id));
-            });
-          }else if($("#attribute-addToFav").hasClass("hidden") === false){
-            $("#attribute-materialDescription").insertBefore($("#attribute-addToFav"));
-            $(".cell-materialDescription").map(function (index, data) {
-              var id = $(data).attr("id").replace("cell-materialDescription-", "");
-              $("#cell-materialDescription-" + id).insertBefore($("#cell-addToFav-" + id));
-            });
-          }
-          $(".cell-materialDescription").removeClass("hidden");          
+					$(".config-array #attribute-materialDescription").css("width", "200px");
+					$("#attribute-materialDescription").removeClass("hidden");
+					if($("#attribute-material").hasClass("hidden") === false){
+						$("#attribute-materialDescription").insertAfter($("#attribute-material"));
+						$(".cell-materialDescription").map(function (index, data) {
+						var id = $(data).attr("id").replace("cell-materialDescription-", "");
+						$("#cell-materialDescription-" + id).insertAfter($("#cell-material-" + id));
+						});
+					}else if($("#attribute-addToFav").hasClass("hidden") === false){
+						$("#attribute-materialDescription").insertBefore($("#attribute-addToFav"));
+						$(".cell-materialDescription").map(function (index, data) {
+						var id = $(data).attr("id").replace("cell-materialDescription-", "");
+						$("#cell-materialDescription-" + id).insertBefore($("#cell-addToFav-" + id));
+						});
+					}
+					$(".cell-materialDescription").removeClass("hidden");          
 				}
 
 				/* 
@@ -370,24 +382,6 @@ $(document).ready(function() {
              || navigator.userAgent.match(/BlackBerry/i)
              || navigator.userAgent.match(/Windows Phone/i)
              ){
-				var disableScrollUp = function(){
-					setTimeout(function(){
-						
-						if(isLoadingDone()){
-							// try to remove auto scroll up, Zainal Arifin 13 May 2018
-							if( $("#commerce.ui-page.ui-page-theme-a.ui-page-header-fixed.ui-page-footer-fixed.ui-page-active").length > 0 ){
-								$("#commerce.ui-page.ui-page-theme-a.ui-page-header-fixed.ui-page-footer-fixed.ui-page-active").off();
-							}
-							// try to remove auto scroll up, Zainal Arifin 13 May 2018
-						}else{
-							disableScrollUp();
-						}
-
-					}, 500)
-				}
-
-				disableScrollUp();
-								 
 				 var pageTitle = "";
 				 if($("#materialArrayset").length > 0){
 					 pageTitle = "model configuration";
@@ -643,22 +637,25 @@ $(document).ready(function() {
 									Layout        :- Desktop
 								*/
 
-								if (check_nationality(2600) || check_nationality(2500)) {								
-									var hide_recomended_material = function(){
-										setTimeout(function(){
-											$($(elementToMove[2])).hide();
-											console.log( "Recomend Material", $(elementToMove[2]).css("display") );
-											if( $(elementToMove[2]).css("display") != "none" || typeof $(elementToMove[2]).css("display") == "undefined" ){											
-												hide_recomended_material();
-											}
-										}, 500);
-									}
-
-									hide_recomended_material();
-									
-								}else{
-									$( $(elementToMove[2]) ).appendTo("#swipe-sidebar-content");
+								// if (check_nationality(2600) || check_nationality(2500)) {								
+								var maxLimitAttemp = 100;
+								var hide_recomended_material = function( elementRecomendMaterial ){
+									setTimeout(function(){
+										$($( elementRecomendMaterial )).hide();
+										console.log( "Recomend Material", $( elementRecomendMaterial ).css("display") );
+										if( $( elementRecomendMaterial ).css("display") != "none" || 
+												typeof $( elementRecomendMaterial ).css("display") == "undefined" && 
+												maxLimitAttemp > 0){											
+											maxLimitAttemp--;
+											hide_recomended_material( elementRecomendMaterial );
+										}
+									}, 500);
 								}
+
+								hide_recomended_material( elementToMove[2] );
+								// }else{
+								// 	$( $(elementToMove[2]) ).appendTo("#swipe-sidebar-content");
+								// }
 								
 								/* 
 									Created By    :- Created By Zainal Arifin, Date : 19 March 2018
@@ -1041,7 +1038,7 @@ $(document).ready(function() {
 
 						/* 
 							Created By    :- Created By Zainal Arifin, Date : 17 April 2018
-							Task          :- row#39 Disable user submit order repeatly
+							Task          :- Disable user submit order repeatly
 							Page          :- Order Page
 							File Location :- $BASE_PATH$/javascript/js-ezrx.js
 							Layout        :- Desktop
@@ -1051,45 +1048,43 @@ $(document).ready(function() {
 							var handleDisableSubmitBtn = function () {
 								setTimeout(function () {
 									if (isLoadingDone()) {
-										setTimeout(function(){
-											$("button:contains('Submit Order')").on("click", function () {
-												$(this).attr("disabled", true);
-												var text_order_submission = "<p style='font-size: 22px;font-weight: bold;font-style: normal;font-stretch: normal;line-height: 0.87;letter-spacing: normal;text-align: center;color: #005e63;' >Order submission is in progress ...</p>";
+										$(".action.action-type-modify:contains('Submit Order')").on("click", function () {
+											$(this).attr("disabled", true);
+											var text_order_submission = "<p style='font-size: 22px;font-weight: bold;font-style: normal;font-stretch: normal;line-height: 0.87;letter-spacing: normal;text-align: center;color: #005e63;' >Order submission is in progress ...</p>";
 
-												var text_please_wait = "<p style='font-size: 16px;font-weight: bold;font-style: normal;font-stretch: normal;line-height: 1.18;letter-spacing: normal;text-align: center;color: #9b9b9b; margin-bottom: 70px;' >Please wait</p>";
+											var text_please_wait = "<p style='font-size: 16px;font-weight: bold;font-style: normal;font-stretch: normal;line-height: 1.18;letter-spacing: normal;text-align: center;color: #9b9b9b; margin-bottom: 70px;' >Please wait</p>";
 
-												var loading_bar = "<div style='width: 450px;height: 20px;object-fit: contain;border-radius: 15px;background-color: #d2d2d2;border: solid 1px #898989;margin: 20px auto;' ><div id='loading_moving' style='width: 0px;height: 20px;object-fit: contain;border-radius: 15px;background-color: #005e63;' ></div></div>";
+											var loading_bar = "<div style='width: 450px;height: 20px;object-fit: contain;border-radius: 15px;background-color: #d2d2d2;border: solid 1px #898989;margin: 20px auto;' ><div id='loading_moving' style='width: 0px;height: 20px;object-fit: contain;border-radius: 15px;background-color: #005e63;' ></div></div>";
 
-												var text_dont_close = "<p style='font-size: 20px;font-weight: bold;font-style: normal;font-stretch: normal;line-height: normal;letter-spacing: normal;text-align: center;color: #005e63;' >Do not close the browser or click back button</p>";
+											var text_dont_close = "<p style='font-size: 20px;font-weight: bold;font-style: normal;font-stretch: normal;line-height: normal;letter-spacing: normal;text-align: center;color: #005e63;' >Do not close the browser or click back button</p>";
 
-												var popup = $("<div style='width: 500px;height: 190px;border-radius: 8px;background-color: #ffffff;margin: 158px auto;padding:50px;z-index: -1;position: relative;' >" + text_order_submission + text_please_wait + loading_bar + text_dont_close + "</div>");
-												$(".ui-loader").css({ "background-color": "transparent", "opacity": "1", "-webkit-transform": "rotateX(0)" });
-												$(".ui-loader").find("h1").after(popup);
+											var popup = $("<div style='width: 500px;height: 190px;border-radius: 8px;background-color: #ffffff;margin: 220px auto;padding:50px;z-index: -1;position: relative;' >" + text_order_submission + text_please_wait + loading_bar + text_dont_close + "</div>");
+											$(".ui-loader").css({ "background-color": "transparent", "opacity": "1" });
+											$(".ui-loader").find("h1").after(popup);
 
-												var bgloading = "<div id='bgloading' style='position: fixed;top: 0;right: 0;bottom: 0;left: 0;background-color: rgb(250, 255, 189);opacity: 0.35;z-index: -5;' ></div>";
-												$(".ui-loader").find("h1").after(bgloading);
+											var bgloading = "<div id='bgloading' style='position: fixed;top: 0;right: 0;bottom: 0;left: 0;background-color: rgb(250, 255, 189);opacity: 0.35;z-index: -5;' ></div>";
+											$(".ui-loader").find("h1").after(bgloading);
 
-												var base_loading_progress = 100;
+											var base_loading_progress = 100;
 
-												var loadingProgressBar = function () {
-													base_loading_progress = (base_loading_progress == 450) ? base_loading_progress - 20 : base_loading_progress;
-													$("#loading_moving").animate({
-														width: base_loading_progress + "px"
-													}, 2000);
-												}
-												loadingProgressBar();
-												var loopUntilComplete = function () {
-													setTimeout(function () {
-														if (base_loading_progress < 380) {
-															base_loading_progress += 70;
-															loadingProgressBar();
-															loopUntilComplete();
-														}
-													}, 1500);
-												}
-												loopUntilComplete();
-											});
-										}, 1000);
+											var loadingProgressBar = function(){
+												base_loading_progress = (base_loading_progress == 450)? base_loading_progress-20 : base_loading_progress;
+												$("#loading_moving").animate({
+													width: base_loading_progress+"px"
+												}, 2000);
+											}
+											loadingProgressBar();
+											var loopUntilComplete = function(){
+												setTimeout(function(){
+													if(base_loading_progress < 380){
+														base_loading_progress += 70;
+														loadingProgressBar();
+														loopUntilComplete();
+													}
+												},1500);
+											}
+											loopUntilComplete();
+										});
 									} else {
 										handleDisableSubmitBtn();
 									}
@@ -1104,7 +1099,7 @@ $(document).ready(function() {
 
 						/* 
 							Created By    :- Created By Zainal Arifin, Date : 17 April 2018
-							Task          :- row#39 Disable user submit order repeatly
+							Task          :- Disable user submit order repeatly
 							Page          :- Order Page
 							File Location :- $BASE_PATH$/javascript/js-ezrx.js
 							Layout        :- Desktop
@@ -1169,16 +1164,16 @@ $(document).ready(function() {
 						}else{
 							
 							$("#sticky-actions").append("<button class='ui-btn ui-btn-inline' id='order-allorders'>All Orders</button><button class='ui-btn ui-btn-inline' id='order-showshoppingcart'>Show Shopping Cart</button><button class='ui-btn ui-btn-inline' id='order-neworder'>New Order</button>");
-						}						
-
+						}	
+						
 						$("body").on("click touchend","#order-allorders",function(e){
 								e.preventDefault();
 								var url = "/commerce/buyside/commerce_manager.jsp?bm_cm_process_id=36244034&from_hp=true&_bm_trail_refresh_=true";
 								window.location.href = url;
 						});
 						$("body").on("click touchend","#order-showshoppingcart",function(e){
-								e.preventDefault();		
-								$(".sidebar-handle").trigger("click");		
+							e.preventDefault();
+							$(".sidebar-handle").trigger("click");		
 								//$(".sidebar-handle-icon").trigger("swipeleft");
 						});
 						$("body").on("click touchend","#order-neworder",function(e){
@@ -1310,10 +1305,16 @@ $(document).ready(function() {
 							*/
 
 							var isCompleteOrSubmitted = $("input[name='status_t']").val().trim().toLowerCase();
+							var isSaveAsTemplate = false;
+							
+							if($("input[name='isATestOrder_t']").length > 0){
+								isSaveAsTemplate = $("input[name='isATestOrder_t']").val().trim().toLowerCase();
+							}
+							
 							if (isCompleteOrSubmitted == "completed" || isCompleteOrSubmitted == "submitted" || isCompleteOrSubmitted == "in process") {
-								var isSaveAsTemplate = $("input[name='isATestOrder_t']").val().trim().toLowerCase();
 								if (isSaveAsTemplate == "true") {
 									$($("input[name='isATestOrder_t']").siblings()[0]).text("Yes");
+
 								} else {
 									$($("input[name='isATestOrder_t']").siblings()[0]).text("No");
 								}
@@ -1327,6 +1328,19 @@ $(document).ready(function() {
 								Layout        :- Desktop
 							*/
 						}
+
+						setTimeout(function(){
+							var isCompleteOrSubmitted = $("input[name='status_t']").val().trim().toLowerCase();
+							var isSaveAsTemplate = false;
+							if($("select[name='isATestOrder_t']").length > 0){
+								isSaveAsTemplate = $("select[name='isATestOrder_t']").val().trim().toLowerCase();
+							}
+
+							if(isCompleteOrSubmitted == "not submitted" && isSaveAsTemplate == "true"){
+								$(".action.action-type-modify:contains('Submit Order'), button:contains('Submit Order')").hide();
+							}
+						}, 2000);
+
 
 						$("body").on("click touchend","#order-showorderdetails",function(e){
 									e.preventDefault();			
@@ -1385,7 +1399,7 @@ $(document).ready(function() {
 
 										/* 
 											Created By    :- Created By Zainal Arifin, Date : 2 April 2018
-											Task          :- SG-18 Reorder button in order page
+											Task          :- Reorder button in order page
 											Page          :- Order Page
 											File Location :- $BASE_PATH$/javascript/js-ezrx.js
 											Layout        :- Desktop
@@ -1401,7 +1415,7 @@ $(document).ready(function() {
 
 										/* 
 											Created By    :- Created By Zainal Arifin, Date : 2 April 2018
-											Task          :- SG-18 Reorder button in order page
+											Task          :- Reorder button in order page
 											Page          :- Order Page
 											File Location :- $BASE_PATH$/javascript/js-ezrx.js
 											Layout        :- Desktop
@@ -1418,7 +1432,7 @@ $(document).ready(function() {
 											$(this).closest(".group-content").css("height", "1000px");
 										});
 
-										$("#attribute-orderingRequestNoMoreThan90Characters_t, #pODate, #customerPORef_t").on("blur", function(){
+										$("#attribute-orderingRequestNoMoreThan90Characters_t").on("blur", function(){
 											$(this).closest(".ui-collapsible-content").css("height", "auto");											
 										});
 										/* SG-15 : Customer PO Ref is hiding behing keyboard when typing letters in order page, by Zainal Arifin */

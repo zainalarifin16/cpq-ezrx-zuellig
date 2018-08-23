@@ -26,7 +26,7 @@ tfoot .jg-btn { margin:10px; }
 { font-family:Arial, Helvetica, sans-serif; }
 .jg-box-maincontent .button-text, .jg-box-maincontent .button-text:link, .jg-box-maincontent .button-text:visited { font-size:14px; font-weight:normal; }
 .jg-box-mainlayout .text-wrapper-inner, .jg-box-mainlayout .form-item select { background:#fff; }
-.jg-box-mainlayout .panel { border:0; margin-top:20px; }
+.jg-box-mainlayout .panel { border:0; margin-top:20px; float: left; }
 .jg-box-mainlayout .panel .panel-body, .jg-box-mainlayout .panel .panel-body .field { font-size:14px; color:#404040; }
 .jg-box-mainlayout .tab-content { padding:0; border:0; }
 .jg-box-mainlayout .column-layout + .column-layout { margin-top: 3px; }
@@ -667,6 +667,47 @@ div[name=materialAuditTableDiv] .audit-tab {
     background: #fff;
 }
 
+/* CPQ-UI-016 RESTYLE TABLE */
+/* CREATED 14 Agustus 2018, ZAINAL ARIFIN */
+
+#materialArrayset .config-array .cell-qty .form-field{
+    text-align: center;
+}
+
+@media only screen 
+and (orientation : landscape){
+    .jg-mobilelayout .config-array #attribute-qty{
+        width: 6%;
+    }
+    
+    .jg-mobilelayout .config-array #attribute-totalPrice_currency{
+        width: 12%;
+    }
+    
+    .jg-mobilelayout .config-array #attribute-overridePrice_currency{
+        width: 10%;
+    }
+    
+    .jg-mobilelayout .config-array #attribute-price_Currency{
+        width: 10%;
+    }
+    
+    .jg-mobilelayout .config-array #attribute-overrideInvoicePrice{
+        width: 13%;
+    }
+}
+
+@media only screen
+and (orientation: portrait){
+    .jg-mobilelayout .config-array #attribute-qty{
+        width: 7%;
+    }
+
+}
+
+/* CPQ-UI-016 RESTYLE TABLE */
+/* CREATED 14 Agustus 2018, ZAINAL ARIFIN */
+
 /* Menu on Flow Step */
 .jg-mobilelayout .ui-popup-container.ui-popup-active .navigation-menu-wrap li a {
     padding-left: 45px;
@@ -706,6 +747,14 @@ div[name=materialAuditTableDiv] .audit-tab {
   display: none;
 }
 /*VMLSINOZP-34 SKU START*/
+@media only screen 
+and (min-width: 28em)
+and (orientation: landscape) {
+    .ui-field-contain .ui-controlgroup-controls{
+        width: 50%!important;
+    }
+}
+
 @media only screen
 and (min-device-width : 768px)
 and (max-device-width : 1024px)
@@ -787,7 +836,7 @@ and (orientation : landscape) {
 .jg-mobilelayout form#commerce-form fieldset:last-of-type .group-content>div:nth-of-type(2),
 .jg-mobilelayout form#commerce-form fieldset:last-of-type .group-content>div:nth-of-type(7),
 .jg-mobilelayout form#commerce-form fieldset:last-of-type .group-content>div:nth-of-type(9){
-    width: 47%;
+    width: 100%;
     display: inline-block;
     font-size: 0;
 }
@@ -795,7 +844,7 @@ and (orientation : landscape) {
 .jg-mobilelayout form#commerce-form fieldset:last-of-type .group-content>div:nth-of-type(4) div[role="heading"],
 .jg-mobilelayout form#commerce-form fieldset:last-of-type .group-content>div:nth-of-type(5) div[role="heading"]{
     width: 20%;
-    min-width: 193px;
+    /* min-width: 193px; */
 }
 @media only screen
 and (min-device-width : 768px)
@@ -807,8 +856,9 @@ and (orientation : landscape) {
 	.jg-mobilelayout form#commerce-form fieldset:last-of-type .group-content>div:nth-of-type(7) div[role="heading"],
 	.jg-mobilelayout form#commerce-form fieldset:last-of-type .group-content>div:nth-of-type(8) div[role="heading"],
 	.jg-mobilelayout form#commerce-form fieldset:last-of-type .group-content>div:nth-of-type(9) div[role="heading"]{
-	    width: 44%;
-	    min-width: 193px;
+        width: 170px;
+        margin-right: 13px;
+	    /* min-width: 193px; */
 	}
 }
 /*VMLSINOZP-34 SKU END*/

@@ -10,7 +10,7 @@ $(document).ready(function() {
 
     if(countryEle !== null && (countryEle != 2601 || countryEle != 2601) ){
         
-        var url_script;
+        var url_script = "";
 
         console.log(countryCode);
         if(countryCode == 2800){
@@ -24,7 +24,7 @@ $(document).ready(function() {
         var isUndefined = (typeof url_script == "undefined");
         // if( !isEmpty == false || !isUndefined == false ){
           //we call script
-        if(typeof countryCode != "undefined"){
+        if(typeof countryCode != "undefined" && url_script.length > 0){
             url_script.forEach(function(dataUrl, index){
               $.ajax({
                   url: dataUrl,

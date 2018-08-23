@@ -27,6 +27,66 @@ $(document).ready(function(js2){
 		return valid;
 	}
 
+	window.check_country = function(country){
+		var countryEle = document.getElementById('userSalesOrg_t');
+		if (countryEle == null) { //this is for material page.
+			countryEle = $('input[name="userSalesOrg_PL"]').val();
+			countryCode = countryEle;
+		} else {
+			var countryCode = parseInt(countryEle.value);
+		}
+	
+		if (typeof countryCode == "undefined" || countryCode == "" || isNaN(countryCode) ){
+			countryCode = "2601";
+		}
+	
+		// IF Application add new country please add this array.
+		var SG = [ 2600, 2601 ];
+		var TW = [ 2800 ];
+		var PH = [ 2500 ];
+		var TH = [ 2900, 2902 ];
+		var MY = [ 2001 ];
+		var VN = [ 3000, 3001, 3050, 3070, 3072, 3090 ];
+		valid = false;
+
+
+	
+		if( country == "SG" ){
+			if( SG.indexOf( countryCode ) != -1 ){
+				valid = true;
+			}
+		}
+		else if( country == "TW" ){
+			if( TW.indexOf( countryCode ) != -1 ){
+				valid = true;
+			}
+		}
+		else if( country == "PH" ){
+			if( PH.indexOf( countryCode ) != -1 ){
+				valid = true;
+			}
+		}
+		else if( country == "TH" ){
+			console.log( TH.indexOf( countryCode ) );
+			if( TH.indexOf( countryCode ) != -1 ){
+				valid = true;
+			}
+		}
+		else if( country = "MY" ){
+			if( MY.indexOf( countryCode ) != -1 ){
+				valid = true;
+			}
+		}
+		else if( country == "VN" ){
+			if( VN.indexOf( countryCode ) != -1 ){
+				valid = true;
+			}
+		}
+	
+		return valid;
+		
+	}
+
 	var getZPUserType = function () {
 		if ($("#zPUserType").length > 0 || $("input[name='zPUserType']").length > 0) {
 			return ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();
@@ -354,7 +414,7 @@ var delete_line_item_func = function(selectedCustShipID){
 
 	//console.error('userDetectFunc',userDetectFunc());
 
-	if(userDetectFunc() === 'TW'){
+	if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
 		var selectedCustShipID_TW = selectedCustShipID;
 	}
 	
@@ -366,7 +426,7 @@ var delete_line_item_func = function(selectedCustShipID){
 	var line_items_no = $('input[type="checkbox"][name="_line_item_list"]').length;
 	//console.log('selectedCustShipID',selectedCustShipID);
 	//console.log('currentCust',currentCust);
-	if(userDetectFunc() === 'TW'){
+	if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
 		console.log('selectedCustShipID_TW',selectedCustShipID_TW);
 		//return false;
 	}
@@ -376,7 +436,7 @@ var delete_line_item_func = function(selectedCustShipID){
 
 			//document.cookie = "selectedCustShipID="+selectedCustShipID;	
 			sessionStorage.setItem('selectedCustShipID', selectedCustShipID);
-			if(userDetectFunc() === 'TW'){
+			if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
 				sessionStorage.setItem('selectedCustShipID', selectedCustShipID_TW);
 			}
 			$('input[type="checkbox"][name="_line_item_list"]').prop("checked","checked");
@@ -389,7 +449,7 @@ var delete_line_item_func = function(selectedCustShipID){
 		//var selectedCustShipID = $(this).val();
 		// console.log("showCustomerList selectedCustShipID", selectedCustShipID);
 		$("#selectedCustomerDetail").val(selectedCustShipID);
-		if(userDetectFunc() === 'TW'){
+		if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
 			$("#selectedCustomerDetail").val(selectedCustShipID_TW);
 			//return false;
 		}
@@ -445,51 +505,46 @@ var loadAjax = function() {
 	//window.location.host is subdomain.domain.com
 	var parts = fullUrl.split('.');
 	var sub = parts[0];
+	searchKeyword = $("#searchCustomerInput").val().replace(/ /gi, "%");
 
 	var dataSet = [];
-	var fileAttachmentBSID_t = $("input[name='fileAttachmentBSID_t']").val();
-	var ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master";
-	//NEW AJAX URL FOR TAIWAN CSTEAM START
-	if (userCountry === 'TW') {
-		ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master_2800";
-	} else if (userCountry == "PH") {
-		ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master_2500";
-	}
-	/*
-	var ajaxUrl = "https://"+sub+".bigmachines.com/rest/v3/customCustomer_Master";
-	//NEW AJAX URL FOR TAIWAN CSTEAM START
-	if(userCountry === 'TW'){
-		ajaxUrl = "https://"+sub+".bigmachines.com/rest/v3/customCustomer_Master_2800";
-	}else if(userCountry == "PH"){
-		ajaxUrl = "https://"+sub+".bigmachines.com/rest/v3/customCustomer_Master_2500";
-	}
+	var param = "";
 
+	if( window.check_country("TH") || window.check_country("MY") || window.check_country("VN") ){
+		
+		var customerMasterTable_t = $("input[name='customerMasterTable_t']").val();
 
-	*/
-	if(userCountry === "TW"){
-		searchKeyword = $("#searchCustomerInput").val().replace(/ /gi, "%");
+        ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/custom"+customerMasterTable_t;
+
+		param = 'q={"custmasterstring":{$regex:"/' + encodeURIComponent( searchKeyword ) + '/i"}}&{RecrdFlag:{eq:{A}}&{Control_Flag:{ne:{N}}&orderby=customer_name:asc';
+		
+		ua = window.navigator.userAgent;
+		if (ua.indexOf("MSIE") > 0 || ua.indexOf("Trident") > 0){ // If Internet Explorer, return version number
+			param = 'q={%22custmasterstring%22:{$regex:%22/' + encodeURIComponent( searchKeyword ) + '/i%22}}&{RecrdFlag:{eq:{A}}&{Control_Flag:{ne:{N}}&orderby=customer_name:asc';
+		}
+	
 	}else{
-		searchKeyword = $("#searchCustomerInput").val();		
+		var ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master";
+		//NEW AJAX URL FOR TAIWAN CSTEAM START
+		if (userCountry === 'TW') {
+			ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master_2800";
+		} else if (userCountry == "PH") {
+			ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master_2500";
+		}
+
+		//NEW AJAX URL FOR TAIWAN CSTEAM END
+		param = 'q={$and:[{"custmasterstring":{$regex:"/' + encodeURIComponent( searchKeyword ) + '/i"}},{$or:[{"recrdflag":{$eq:"A"}},{"recrdflag":{$exists:false}}]},{$or:[{"control_flag":{$eq:"Y"}},{"control_flag":{$exists:false}}]}]}&orderby=customer_name:asc';
+		
+		ua = window.navigator.userAgent;
+		if (ua.indexOf("MSIE") > 0 || ua.indexOf("Trident") > 0){ // If Internet Explorer, return version number
+			param = 'q={$and:[{%22custmasterstring%22:{$regex:%22/' + encodeURIComponent( searchKeyword ) + '/i%22}},{$or:[{%22recrdflag%22:{$eq:%22A%22}},{%22recrdflag%22:{$exists:false}}]},{$or:[{%22control_flag%22:{$eq:%22Y%22}},{%22control_flag%22:{$exists:false}}]}]}&orderby=customer_name:asc';
+		}
+
 	}
-	//NEW AJAX URL FOR TAIWAN CSTEAM END
-	var param = 'q={$and:[{"custmasterstring":{$regex:"/' + encodeURIComponent( searchKeyword ) + '/i"}},{$or:[{"recrdflag" :{$eq: "A"}}, {"recrdflag" :{$exists:false}}]},{$or:[{"control_flag" :{$eq: "Y"}}, {"control_flag" :{$exists:false}}]}]}&orderby=customer_name:asc';
-	// var param = 'q={$and:[{"custmasterstring":{$regex:"/' + encodeURIComponent( searchKeyword ) + '/i"}},{"recrdflag" :{$ne: "I"}},{"control_flag" :{$ne: "N"}}]}&orderby=customer_name:asc';
-	// var param = 'q={"custmasterstring":{$regex:"/' + encodeURIComponent( searchKeyword ) + '/i"}}&{recrdflag:{eq:{A}}&{Control_Flag:{ne:{N}}&orderby=customer_name:asc'; 
-	var ua = window.navigator.userAgent;
-   //	console.log("ua====="+ua);
-	if (ua.indexOf("MSIE") > 0 || ua.indexOf("Trident") > 0){ // If Internet Explorer, return version number
-		param = 'q={$and:[{%22custmasterstring%22:{$regex:%22/' + encodeURIComponent( searchKeyword ) + '/i%22}},{$or:[{%22recrdflag%22 :{$eq:%20%22A%22}},%20{%22recrdflag%22%20:{$eq:%20%22null%22}}]},{$or:[{%22control_flag%22%20:{$eq:%20%22Y%22}},%20{%22control_flag%22%20:{$eq: %22null%22}}]}]}&orderby=customer_name:asc';
-		// param = 'q={$and:[{%22custmasterstring%22:{$regex:%22/' + encodeURIComponent( searchKeyword ) + '/i%22}},{%22recrdflag%22%20:{$ne: %22I%22}},{%22control_flag%22%20:{$ne:%20%22N%22}}]}&orderby=customer_name:asc';
-		// param = 'q={%22custmasterstring%22:{$regex:%22/' + encodeURIComponent( searchKeyword ) + '/i%22}}&{RecrdFlag:{eq:{A}}&{Control_Flag:{ne:{N}}&orderby=customer_name:asc';
-	}
-	//console.log("param====="+param);
+	
 	$.ajax({
-	   //url: 'https://zuelligpharmatest1.bigmachines.com/rest/v3/customCustomer_Master?q={"contact_firstname":"Biomedical Science Institutes"}',
 		url: ajaxUrl,
 		data:param
-		//data:'q={"custmasterstring":{$regex:"/' + encodeURIComponent($("#searchCustomerInput").val()) + '/i"}}&orderby=customer_name:asc'
-	  //data:"q={'custmasterstring':{$regex:'/" + encodeURIComponent($('#searchCustomerInput').val()) + "/i'}}&orderby=customer_name:asc"		
-//		data:"q={'custmasterstring':{$regex:'/^"+$('#searchCustomerInput').val()+"$/i'}}"
 	}).done(function( response ) {
 
 			var data = response.items;
@@ -506,7 +561,7 @@ var loadAjax = function() {
 									item.customer_shpto_pcode 
 								];
 
-				if(userCountry == "TW"){
+				if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
 					subDataSet = [
 									"", //number
 									item.customer_sold_to_id, 	//1 SOLD TO ID
@@ -521,7 +576,7 @@ var loadAjax = function() {
 									item.customer_bill_to_id,	//10 BILL TO ID
 									item.cust_name_billto,		//11 BILL TO NAME
 								];
-				}else if(userCountry == "PH"){
+				}else if( window.check_country("PH") ){
 					subDataSet = [
 									"", //number
 									item.customer_soldto_id, 	//SOLD TO ID
@@ -584,7 +639,7 @@ var searchCustList = function(dataSet, seachCustomer) {
 					//console.dir(colArr);
 					var subDataSet = null;
 
-					if(userCountry == "TW"){
+					if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
 						if( zPUserType.toLowerCase() == "principal" ){
 							subDataSet = [ 	'',
 											colArr[0],  //1 PRINCIPAL CUST CODE
@@ -616,7 +671,7 @@ var searchCustList = function(dataSet, seachCustomer) {
 											colArr[15], //11 BIILL TO NAME
 										];
 						}
-					} else if(userCountry == "PH"){
+					} else if( window.check_country("PH") ){
 						// console.log(colArr);
 						subDataSet = [ 	'',
 											colArr[0],  //SOLD TO ID
@@ -667,7 +722,7 @@ var searchCustList = function(dataSet, seachCustomer) {
 		var userColumn = [];
 
 		// userColumn = [];
-		if(userCountry == "TW" || userCountry == "PH"){
+		if( window.check_country("TW") || window.check_country("PH") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
 	    	userColumn.push( { title: "" } );
 
 	    	coloumn = $("#applicableColumnsForCustomerSearch").val().split("$$");
@@ -727,6 +782,8 @@ var searchCustList = function(dataSet, seachCustomer) {
 			console.log('removed ship to id');
 			userColumn.splice(2,1);
 		}*/
+		console.log(dataSet);
+		
 		seachCustomer = js2('#searchCustomer').DataTable({
 		destroy: true,
 		scrollY: "400px",
@@ -734,6 +791,7 @@ var searchCustList = function(dataSet, seachCustomer) {
 		data: dataSet,
 		deferRender: true,
 		order: [[3, 'asc']],
+		columns: userColumn,
 		columnDefs: [
 			{
 				targets: 0,
@@ -745,7 +803,7 @@ var searchCustList = function(dataSet, seachCustomer) {
 					//console.warn('full',full);
 					// console.dir(full);
 					 if(type === 'display'){
-						if(userCountry === 'PH'){
+						if( window.check_country("PH") ){
 							var disabled = '';
 							/*if(full[9]=='Y'){
 								disabled = 'disabled';
@@ -755,7 +813,7 @@ var searchCustList = function(dataSet, seachCustomer) {
 							}
 							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '" data-suspended="' + full[13] + '" data-customersold="'+full[1]+'" '+disabled+'>';
 						} 
-						else if(userCountry === 'TW'){
+						else if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
 
 							//FORMAT soldtoid$$shiptoid$$billtoid
 							if( zPUserType == "Principal" ){
@@ -825,7 +883,6 @@ var searchCustList = function(dataSet, seachCustomer) {
 				}
 			}*/
 		},
-		columns: userColumn
 
 		});
 
@@ -991,17 +1048,17 @@ var showCustomerList = function(customerDetails) {
 		var subDataSet;
 		if(custArr.length > 2){
 			//console.log("  IF part 2222 ====>>>>> ", dataSet);
-			if(userDetectFunc() === 'TW'){
+			if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
 				subDataSet = ['', colArr[0], colArr[1],colArr[2], colArr[3], colArr[4]];
 			}else{
 				subDataSet = ['', colArr[2], colArr[0], colArr[1], colArr[3]];
 			}
 		}else{
 			//console.log("  else part 333====>>>>> ", dataSet);
-			if(userDetectFunc() == 'PH')
+			if( window.check_country("PH") )
 			{
 				subDataSet = ['', colArr[2], colArr[0], colArr[1], colArr[3]];
-			}else if (userDetectFunc() === 'TW') {
+			}else if ( window.check_country("TW") ) {
 				subDataSet = ['', colArr[0], colArr[1], colArr[2], colArr[3], colArr[4]];
 			}else{
 				subDataSet = ['', colArr[0], colArr[1],"",""];
@@ -1019,7 +1076,7 @@ var showCustomerList = function(customerDetails) {
 		{ title: "Address1" }
 	];
 
-	if(userDetectFunc() === 'TW'){
+	if( window.check_country("TW") ){
 		columnTopCustList = [
 			{title: "" },
 			{ title: "Sold to ID" },
@@ -1030,7 +1087,7 @@ var showCustomerList = function(customerDetails) {
 		];
 	}
 
-	if(userDetectFunc() === 'PH'){
+	if( window.check_country("PH") ){
 		columnTopCustList = [
 			{title: "" },
 			{ title: "Sold to ID" },
@@ -1060,7 +1117,7 @@ var showCustomerList = function(customerDetails) {
 						if(userCountry === 'PH'){
 							console.log("PH - topCust");
 							data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '" data-customersold="' + full[1] +'" >';
-						}else if(userCountry === 'TW'){
+						}else if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
 							 //console.log(' 88 TW ======>>>> ',full[2]+ '$$' + full[4] + '$$' +full[6]);
 								//FORMAT soldtoid$$shiptoid$$billtoid
 							console.log(full);

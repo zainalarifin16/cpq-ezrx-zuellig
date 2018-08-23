@@ -1008,6 +1008,7 @@ $(document).ready(function(){
           var valPoDate = $("#pODate").val();
           $.getScript('https://'+instanceName+'.bigmachines.com/bmfsweb/'+instanceName+'/image/javascript/jquery-ui.min.js', function() {
             
+            $("#pODate").prop("type", "input");
             $( form_date_podate_before ).after("<input id='datepickerpodate' type='text' style='float: left;' readonly >");
             jQuery.noConflict(true);
             $( "#datepickerpodate" ).datepicker({
