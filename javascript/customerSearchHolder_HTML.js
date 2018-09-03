@@ -4,67 +4,67 @@ var pagetitle;
  
 $(document).ready(function(js2){
 
-	window.check_country = function(country){
-		var countryEle = document.getElementById('userSalesOrg_t');
-		if (countryEle == null) { //this is for material page.
-			countryEle = $('input[name="userSalesOrg_PL"]').val();
-			countryCode = countryEle;
-		} else {
-			var countryCode = parseInt(countryEle.value);
-		}
+	// window.check_country = function(country){
+	// 	var countryEle = document.getElementById('userSalesOrg_t');
+	// 	if (countryEle == null) { //this is for material page.
+	// 		countryEle = $('input[name="userSalesOrg_PL"]').val();
+	// 		countryCode = countryEle;
+	// 	} else {
+	// 		var countryCode = parseInt(countryEle.value);
+	// 	}
 	
-		if (typeof countryCode == "undefined" || countryCode == "" || isNaN(countryCode) ){
-			countryCode = "2601";
-		}
+	// 	if (typeof countryCode == "undefined" || countryCode == "" || isNaN(countryCode) ){
+	// 		countryCode = "2601";
+	// 	}
 	
-		// IF Application add new country please add this array.
-		var SG = [ 2600, 2601 ];
-		var TW = [ 2800 ];
-		var PH = [ 2500 ];
-		var TH = [ 2900, 2902 ];
-		var MY = [ 2001 ];
-		var VN = [ 3000, 3001, 3050, 3070, 3072, 3090 ];
-		valid = false;
+	// 	// IF Application add new country please add this array.
+	// 	var SG = [ 2600, 2601 ];
+	// 	var TW = [ 2800 ];
+	// 	var PH = [ 2500 ];
+	// 	var TH = [ 2900, 2902 ];
+	// 	var MY = [ 2001 ];
+	// 	var VN = [ 3000, 3001, 3050, 3070, 3072, 3090 ];
+	// 	valid = false;
 
 
 	
-		if( country == "SG" ){
-			if( SG.indexOf( countryCode ) != -1 ){
-				valid = true;
-			}
-		}
-		else if( country == "TW" ){
-			if( TW.indexOf( countryCode ) != -1 ){
-				valid = true;
-			}
-		}
-		else if( country == "PH" ){
-			if( PH.indexOf( countryCode ) != -1 ){
-				valid = true;
-			}
-		}
-		else if( country == "TH" ){
-			console.log( TH.indexOf( countryCode ) );
-			if( TH.indexOf( countryCode ) != -1 ){
-				valid = true;
-			}
-		}
-		else if( country = "MY" ){
-			if( MY.indexOf( countryCode ) != -1 ){
-				valid = true;
-			}
-		}
-		else if( country == "VN" ){
-			if( VN.indexOf( countryCode ) != -1 ){
-				valid = true;
-			}
-		}
+	// 	if( country == "SG" ){
+	// 		if( SG.indexOf( countryCode ) != -1 ){
+	// 			valid = true;
+	// 		}
+	// 	}
+	// 	else if( country == "TW" ){
+	// 		if( TW.indexOf( countryCode ) != -1 ){
+	// 			valid = true;
+	// 		}
+	// 	}
+	// 	else if( country == "PH" ){
+	// 		if( PH.indexOf( countryCode ) != -1 ){
+	// 			valid = true;
+	// 		}
+	// 	}
+	// 	else if( country == "TH" ){
+	// 		console.log( TH.indexOf( countryCode ) );
+	// 		if( TH.indexOf( countryCode ) != -1 ){
+	// 			valid = true;
+	// 		}
+	// 	}
+	// 	else if( country = "MY" ){
+	// 		if( MY.indexOf( countryCode ) != -1 ){
+	// 			valid = true;
+	// 		}
+	// 	}
+	// 	else if( country == "VN" ){
+	// 		if( VN.indexOf( countryCode ) != -1 ){
+	// 			valid = true;
+	// 		}
+	// 	}
 	
-		return valid;
+	// 	return valid;
 		
-	}
+	// }
 
-	var getZPUserType = function () {
+	window.getZPUserType = function () {
 		if ($("#zPUserType").length > 0 || $("input[name='zPUserType']").length > 0) {
 			return ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();
 		} else {
@@ -164,7 +164,7 @@ $(document).ready(function(js2){
 		var fileAttachmentBSID_t = $('#fileAttachmentBSID_t').val();
 		// localStorage.setItem("fileAttachmentBSID_t", fileAttachmentBSID_t);
 
-		if (getZPUserType() == "customer"){
+		if (window.getZPUserType() == "customer"){
 			return true;
 		}
 
@@ -778,12 +778,12 @@ var searchCustList = function(dataSet, seachCustomer) {
 				});
 			}
 
-			if(window.check_country("TH")){
+			/* if(window.check_country("TH")){
 				$($("#searchCustomer").find("tbody").children("tr")).each(function(index, data){
 					var columnShipToID = $( data ).find("td.sorting_1");
 					$( columnShipToID ).css({"font-size": "15px","font-weight": "bold", "color": "#007077"});
 				});
-			}
+			} */
 
 			console.log("draw dt");
 			$("input[name='searchCust']").off();
@@ -911,7 +911,11 @@ var searchCustomerList = function(seachCustomer) {
 			clearTimeout(timer);
 			timer = setTimeout(function() { //then give it a second to see if the user is finished
 
-				var ruleMaxChar = ( !window.check_country("TW") )? 3 : 2;
+				var ruleMaxChar = 3;
+				
+				if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+					ruleMaxChar = 2;
+				}
 
 				if (inputLength === ruleMaxChar || inputLength > ruleMaxChar ) {
 					//ajax
@@ -969,7 +973,7 @@ var showCustomerList = function(customerDetails) {
 			if( window.check_country("PH") )
 			{
 				subDataSet = ['', colArr[2], colArr[0], colArr[1], colArr[3]];
-			}else if ( window.check_country("TW") ) {
+			}else if ( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ) {
 				subDataSet = ['', colArr[0], colArr[1], colArr[2], colArr[3], colArr[4]];
 			}else{
 				subDataSet = ['', colArr[0], colArr[1],"",""];
@@ -987,7 +991,7 @@ var showCustomerList = function(customerDetails) {
 		{ title: "Address1" }
 	];
 
-	if( window.check_country("TW") ){
+	if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
 		columnTopCustList = [
 			{title: "" },
 			{ title: "Sold to ID" },

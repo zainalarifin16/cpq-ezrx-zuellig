@@ -102,32 +102,7 @@ var isMobileVersion = false;
 
   document.documentElement.appendChild(script);
 
-  var check_nationality = function (nationality) {
-      var countryEle = document.getElementById('userSalesOrg_t');
-      if (countryEle == null) { //this is for material page.
-          countryEle = $('input[name="userSalesOrg_PL"]').val();
-          countryCode = countryEle;
-      } else {
-          var countryCode = parseInt(countryEle.value);
-      }
-      
-      console.log( "countryCode", typeof countryCode, countryCode, typeof countryCode == "undefined" );
-      if (typeof countryCode == "undefined" || countryCode == "" || isNaN(countryCode) ){
-          countryCode = "2601";
-      }
-      if(nationality == 2600){
-          nationality = 2601;
-      }
-
-      var valid = false;
-      if ( nationality == countryCode ) {
-          valid = true;
-      }
-
-      return valid;
-  }
-
-window.check_country = function(country){
+  window.check_country = function(country){
     var countryEle = document.getElementById('userSalesOrg_t');
     if (countryEle == null) { //this is for material page.
         countryEle = $('input[name="userSalesOrg_PL"]').val();
@@ -140,6 +115,8 @@ window.check_country = function(country){
         countryCode = "2601";
     }
 
+    countryCode = parseInt(countryCode);
+
     // IF Application add new country please add this array.
     var SG = [ 2600, 2601 ];
     var TW = [ 2800 ];
@@ -148,7 +125,7 @@ window.check_country = function(country){
     var MY = [ 2001 ];
     var VN = [ 3000, 3001, 3050, 3070, 3072, 3090 ];
     valid = false;
-
+    // console.log( "CHECK_COUNTRY", country, countryCode );
     if( country == "SG" ){
         if( SG.indexOf( countryCode ) != -1 ){
             valid = true;
@@ -169,7 +146,8 @@ window.check_country = function(country){
             valid = true;
         }
     }
-    else if( country = "MY" ){
+    else if( country == "MY" ){
+        console.log( "CHECK_COUNTRY", country, countryCode, MY, MY.indexOf( countryCode ) );
         if( MY.indexOf( countryCode ) != -1 ){
             valid = true;
         }
@@ -184,7 +162,7 @@ window.check_country = function(country){
     
   }
 
-  var getZPUserType = function() {
+  window.getZPUserType = function() {
       if ($("#zPUserType").length > 0 || $("input[name='zPUserType']").length > 0 ){
           return ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();
       }else{
@@ -478,7 +456,7 @@ window.check_country = function(country){
 
               var pageTitle = $('#tab-material-content #group-39792374 .group-header span').text(); //commented by suresh
               var materialHTML = '<div class="materialSearchWrapper"> <div class="normalPopupCont flLeft" id="leftPanel"> <table id="resultsTable" style="width: 100%;"></table> </div><div class="normalPopupCont1 flRight" id="rightPanel"> <div class="popupHeader1 bigHeader">Selected Materials</div><div class="accountstable" id="selectedResultsTable"> <div class="accountstable" id="selectedMatTableDiv" style="overflow-y: auto;height: 400px;"> <table id="selectedMatTable" style="background-color: white !important;"> <thead> <tr> <th style="width:5%">Qty</th><th style="width:18%">Material Number</th> <th style="width:50%">Material Description</th><th style="width:22%">Comm. Item for Bonus</th> <th style="width:5%"></th> </tr></thead> <tbody id="selectedMatTableBody"> </tbody> </table> <a href="#" id="addMaterialBtn" name="addMaterialBtn" class="jg-btn addMat-btn" style="width: auto; margin-top: 50px; display: inline-block;">Add</a> </div></div></div></div>';
-              var userType = getZPUserType();
+              var userType = window.getZPUserType();
 
               var searchMaterialFAID = function(materialList){
                   var fileAttachmentID = ($("input[name='fileAttachmentID']").length >0 )? $("input[name='fileAttachmentID']").val() : $("input[name='fileAttachmentBSID_t']").val();
@@ -1019,7 +997,7 @@ window.check_country = function(country){
           var tableObj = document.getElementById("selectedMatTableBody"); //Selected Materials Table
           var clonedTrObj = trObj.cloneNode(true); //Clone ROW
 
-          var zPUserType = getZPUserType();
+          var zPUserType = window.getZPUserType();
 
           
           // var zPUserType = ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();            
@@ -1033,7 +1011,8 @@ window.check_country = function(country){
 
           // console.log('tabNum', tabNum);
           clonedTrObj.deleteCell(0); //Delete 1st column
-          if($('input[name="userSalesOrg_PL"]').val()=="2800"){
+        //   if($('input[name="userSalesOrg_PL"]').val()=="2800"){
+          if( window.check_country("TW") ){
               console.log('taiwan only ,delete last 2 column');
               clonedTrObj.deleteCell(2); // 
               clonedTrObj.deleteCell(3); 
@@ -1043,7 +1022,16 @@ window.check_country = function(country){
                   clonedTrObj.deleteCell(3);
               }
               
-          }else{
+          }else if( window.check_country("TH") || 
+                    window.check_country("VN") || 
+                    window.check_country("MY")){
+                clonedTrObj.deleteCell(2); // 
+                clonedTrObj.deleteCell(3); 
+                clonedTrObj.deleteCell(3);
+                if(zPUserType=='principal'){
+                    clonedTrObj.deleteCell(3);
+                }
+            }else{
               clonedTrObj.deleteCell(3);                
           }
           tableObj.appendChild(clonedTrObj);
@@ -1415,7 +1403,8 @@ window.check_country = function(country){
                                   (item.description != null)? item.description : "", 
                                   (item.principal_name != null)? item.principal_name : ""
                               ];
-              if($('input[name="userSalesOrg_PL"]').val()=="2800"){
+            //   if($('input[name="userSalesOrg_PL"]').val()=="2800"){
+                if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
                   if(item.material_group_5 == 500 && item.materialgroup != "ZGM"){
                       var promo = "P";
                   } else {
@@ -1469,13 +1458,14 @@ window.check_country = function(country){
   var initMaterialList = function(dataSet){
 
       var userCountryMS = null;
-      if($('input[name="userSalesOrg_PL"]').val()=="2800"){
+      if( window.check_country("TW") ){
         var userCountryMS = null;
         userCountryMS = 'TW'; 
-        var userType = getZPUserType();
+        var userType = window.getZPUserType();
       }
 
-      if(userCountryMS === 'TW'){
+    //   if(userCountryMS === 'TW'){
+        if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
           material_column = [{
               title: ""
           },
@@ -1498,6 +1488,10 @@ window.check_country = function(country){
               title: "Principal Name"
           }
           ];
+
+          if( window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+              delete material_column.splice(5, 1);
+          }
 
           if(userType == 'principal'){
               material_column.splice(4, 0, {title: "Principal Material Code"}); 
@@ -1572,14 +1566,14 @@ window.check_country = function(country){
       } */
       //$('#resultsTable').DataTable().clear().destroy();
       var userCountryMS = null;
-      if($('input[name="userSalesOrg_PL"]').val()=="2800"){
+      if( window.check_country("TW") ){
         var userCountryMS = null;
         userCountryMS = 'TW'; 
       }
   var materialDetails = dataMaterialAjax;
   var custArr = null;
       var totalRecs = null;
-  var userType = getZPUserType();
+  var userType = window.getZPUserType();
   if (userType !== 'csteam'){
 
           custArr = materialDetails.split("##");
@@ -1840,7 +1834,7 @@ window.check_country = function(country){
           }
       });
 
-      var zPUserType = getZPUserType();
+      var zPUserType = window.getZPUserType();
       // var zPUserType = ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();        
 
       if (zPUserType === 'csteam') {
@@ -1989,7 +1983,7 @@ window.check_country = function(country){
   var searchCustList = function(dataSet, seachCustomer) {
       console.log('searchCustList');
 
-      var zPUserType = getZPUserType();
+      var zPUserType = window.getZPUserType();
       // var zPUserType = ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();
 
       if (zPUserType !== 'csteam') {
@@ -2187,6 +2181,13 @@ window.check_country = function(country){
                         $(data).removeClass("ui-radio");
                         $(data).removeClass("ui-state-disabled");
                     }));
+                }
+
+                if(window.check_country("TH")){
+                    $($("#searchCustomer").find("tbody").children("tr")).each(function(index, data){
+                        var columnShipToID = $( data ).find("td.sorting_1");
+                        $( columnShipToID ).css({"font-size": "15px","font-weight": "bold", "color": "#007077"});
+                    });
                 }
 
                 console.log("draw dt");
@@ -3122,7 +3123,7 @@ var mobile_renameButton = function() {
                                   </div>\
                               </div>\
                           </div>';
-      var userType = getZPUserType();
+      var userType = window.getZPUserType();
       // var userType = ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();
       $('#attribute-materialSearch').append().html(materialHTML);
       $('#attribute-materialSearch').hide();
@@ -3340,7 +3341,7 @@ var mobile_renameButton = function() {
 
       $("#attribute-customerSearchHolder_HTML").html(searchCustomerWrapper);
 
-      var zPUserType = getZPUserType();
+      var zPUserType = window.getZPUserType();
       // var zPUserType = ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();        
 
       if (zPUserType === 'csteam') {
@@ -3737,7 +3738,7 @@ var mobile_renameButton = function() {
                       File Location :- $BASE_PATH$/javascript/js-ezrx.js
                       Layout        :- Desktop
                   */
-                  var zpUserType = getZPUserType();
+                  var zpUserType = window.getZPUserType();
 
                   if ( zpUserType.length > 0 ){
                       if ( zpUserType != "csteam"){
@@ -3763,7 +3764,7 @@ var mobile_renameButton = function() {
                           File Location :- $BASE_PATH$/javascript/js-ezrx.js
                           Layout        :- Desktop
                       */
-                      if (getZPUserType().length && getZPUserType() == "customer") {
+                      if (window.getZPUserType().length && window.getZPUserType() == "customer") {
                           $("#searchCustomerInput").closest(".column").hide();
                           var parentSearchCustomer = $("#searchCustomerInput").closest(".column-layout");
                           $(parentSearchCustomer).find(".last").remove();
@@ -3904,7 +3905,7 @@ var mobile_renameButton = function() {
                   */
 
                 var flag = window.sessionStorage.getItem("flag");
-                if ($("#readonly_1_status_t").text().toLowerCase() == 'order initiated' && flag == "rightnow" && getZPUserType() == "customer") {
+                if ($("#readonly_1_status_t").text().toLowerCase() == 'order initiated' && flag == "rightnow" && window.getZPUserType() == "customer") {
                     var isExist = false;
                     if( $("li.error-text").length > 0 ){
                         $("li.error-text").each(function(i, data){
@@ -5237,7 +5238,7 @@ var mobile_renameButton = function() {
               window.localStorage.setItem("orderItem_" + trans_id, isUserHaveModifySC);
           }
 
-          var zpUserType = getZPUserType();
+          var zpUserType = window.getZPUserType();
 
           if ( zpUserType != "csteam") {
               if ( $("#line-item-grid").find(".line-item-show:not(.parent-line-item)").length > 0 ){
@@ -7756,7 +7757,6 @@ var mobile_renameButton = function() {
           File Location :- $BASE_PATH$/javascript/js-ezrx.js
           Layout        :- Global
       */
-      console.log("check_nationality", check_nationality(2601) );
       if( window.check_country("SG") ){
 
           function disabled_btn_save_show_alert() {
@@ -8438,7 +8438,7 @@ var mobile_renameButton = function() {
           var countryCode = parseInt(countryEle.value);
       }
 
-      if(countryCode != 2800){
+      if( !window.check_country("TW") && !window.check_country("TH") && !window.check_country("VN") && !window.check_country("MY") ){
           //NON TW
 
           $('td.cell-promotion').attr('tooltip', function() {
@@ -8615,7 +8615,7 @@ var mobile_renameButton = function() {
       }).mouseenter(function() {
           /* get text of material desciption */
           var input_text = $(this).find(".attribute-field-container span").text();
-          if($('input[name="userSalesOrg_PL"]').val()=="2800" || (userCountry === 'TW')){
+          if( window.check_country("TW") ){
               var chineseTxt = '#chineseDescription-'+(parseInt($(this).parent().children().eq(0).html())-1);
               console.log(chineseTxt);
               input_text = $(chineseTxt).val();
