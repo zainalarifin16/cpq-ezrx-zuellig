@@ -1,8 +1,8 @@
 /* 
-        Created By    :- Created By Zainal Arifin, Date : 28 Agustus 2018
-        Task          :- Customize for ( TW / TH / VN / MY )
+        Created By    :- Created By Pratap Rudra, Date : 13 Feb 2018
+        Task          :- Customization Related to Taiwan(TW)
         Page          :- Global
-        File Location :- $BASE_PATH$/javascript/js-ezrx-global_template.js
+        File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
         Layout        :- Both (Desktop/Mobile)
 */
 $(document).ready(function(){
@@ -12,18 +12,6 @@ $(document).ready(function(){
     //window.location.host is subdomain.domain.com
     var parts = fullUrl.split('.');
     var sub = parts[0];
-
-    var currencyCountry = "";
-
-    if( window.check_country("TW") ){
-        currencyCountry = "NT$";
-    }else if( window.check_country("TH") ){
-        currencyCountry = "THD";
-    }else if( window.check_country("VN") ){
-        currencyCountry = "VND";
-    }else if( window.check_country("MY") ){
-        currencyCountry = "RM";
-    }
 
     var isLoadingDone = function () {
       return $("#jg-overlay").css("display") == "none" ? true : false;
@@ -373,10 +361,6 @@ $(document).ready(function(){
     /* TW-03 Price hover table columns to be corrected for TW - Quantity, Invoice Price, Unit Price.  */
     function tw_tooltip_modelconfiguration(){
 
-      if( window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
-        return true;
-      }
-
       if(isMobile()){
 
         setTimeout(function(){
@@ -520,7 +504,7 @@ $(document).ready(function(){
         }, 1000);
       
       }else{
-        console.log("cell-promotion");
+
         $('td.cell-promotion').off();      
         $('td.cell-promotion').prop('tooltip', function() {
             var button_helper;
@@ -597,8 +581,7 @@ $(document).ready(function(){
         }).mouseenter(function () {
           /* get text of material desciption */
           var input_text = $(this).find(".attribute-field-container span").text();
-        //   if ($('input[name="userSalesOrg_PL"]').val() == "2800" || (userCountry === 'TW')) {
-          if( window.check_country("TW") ){
+          if ($('input[name="userSalesOrg_PL"]').val() == "2800" || (userCountry === 'TW')) {
             var chineseTxt = '#additionalBonusChineseDescription-' + (parseInt($(this).parent().children().eq(0).html()) - 1);
             console.log(chineseTxt);
             input_text = $(chineseTxt).val();
@@ -645,16 +628,16 @@ $(document).ready(function(){
       
       $("td.cell-overrideInvoicePrice").find("input.form-field").each(function(index, data){
         var overrideInvoicePriceVal = $(data).val();
-        if(overrideInvoicePriceVal.indexOf(currencyCountry) != -1){
-          overrideInvoicePriceVal = overrideInvoicePriceVal.replace(currencyCountry, "");
+        if(overrideInvoicePriceVal.indexOf("NT$") != -1){
+          overrideInvoicePriceVal = overrideInvoicePriceVal.replace("NT$", "");
           $(data).val( overrideInvoicePriceVal );
         }
       });
       
       $("td.cell-overridePrice_currency").find("input.form-field").each(function(index, data){
         var overridePriceVal = $(data).val();
-        if(overridePriceVal.indexOf(currencyCountry) != -1){
-          overridePriceVal = overridePriceVal.replace(currencyCountry, "");
+        if(overridePriceVal.indexOf("NT$") != -1){
+          overridePriceVal = overridePriceVal.replace("NT$", "");
           $(data).val( overridePriceVal );
         }
       });
@@ -915,7 +898,7 @@ $(document).ready(function(){
       // console.log(id);
       // id = Math.abs(id);
       var overridePriceVal = $( currentObject ).val();
-      var overridePriceValue = (overridePriceVal != "") ? overridePriceVal.replace(currencyCountry, "") : "0.00";
+      var overridePriceValue = (overridePriceVal != "") ? overridePriceVal.replace("NT$", "") : "0.00";
       if (overridePriceValue != basic_value_price) {
         $(currentObject ).css("color", redColor);
         /* var totalPrice_currency = $(currentObject).closest("tr").find(".cell-totalPrice_currency").find("span.form-field");
@@ -928,7 +911,7 @@ $(document).ready(function(){
 
     function isOverrideInvoicePrice(currentObject){
       var overrideInvoicePriceVal = $( currentObject ).val();
-      var overrideInvoicePriceValue = (overrideInvoicePriceVal != "") ? overrideInvoicePriceVal.replace(currencyCountry, "") : "0.00";
+      var overrideInvoicePriceValue = (overrideInvoicePriceVal != "") ? overrideInvoicePriceVal.replace("NT$", "") : "0.00";
       if (overrideInvoicePriceValue != basic_value_price){
         $(currentObject).css("color", redColor);
       }else{
@@ -937,7 +920,7 @@ $(document).ready(function(){
     }
 
     function override_price(data, id) {
-      var overridePriceValue = ($(data).val() != "") ? $(data).val().replace(currencyCountry, "") : "0.00";
+      var overridePriceValue = ($(data).val() != "") ? $(data).val().replace("NT$", "") : "0.00";
       // console.log(overridePriceValue, "==", basic_value, overridePriceValue != basic_value_price);
       if (overridePriceValue != basic_value_price) {
         $(data).css("color", redColor);
@@ -948,7 +931,7 @@ $(document).ready(function(){
     }
 
     function override_invoicePrice(data){
-      var override_invoicePriceVal = ($(data).val() != "") ? $(data).val().replace(currencyCountry, "") : "0.00";
+      var override_invoicePriceVal = ($(data).val() != "") ? $(data).val().replace("NT$", "") : "0.00";
       if(override_invoicePriceVal != basic_value_price){
         $(data).css("color", redColor);        
       }
@@ -1052,8 +1035,6 @@ $(document).ready(function(){
       }
 
       $(data).on("click change", function(){
-
-        console.log("User clicked checkbox Bonus Override");
 
         if (isMobile()) {
           isChecked = $(data).val();
