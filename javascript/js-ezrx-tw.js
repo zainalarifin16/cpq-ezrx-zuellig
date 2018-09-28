@@ -384,7 +384,7 @@ $(document).ready(function(){
                 $($(this).children().children()).parent().append(button_helper); 
               }
             }
-
+            
             $(this).prop("tooltip", valueOfPromotion);
 
             $(this).on("click", function(){
@@ -1027,10 +1027,8 @@ $(document).ready(function(){
       }
 
       if(isChecked){
-        $(qty).removeAttr("readonly");
         $(qty).css("color", redColor);
       }else{
-        $(qty).attr("readonly", "readonly");
         $(qty).css("color", blackColor);
       }
 

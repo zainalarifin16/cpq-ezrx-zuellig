@@ -102,7 +102,7 @@
     
     document.documentElement.appendChild(script);    
 
-    var check_nationality = function (nationality) {
+    window.check_country = function(country){
         var countryEle = document.getElementById('userSalesOrg_t');
         if (countryEle == null) { //this is for material page.
             countryEle = $('input[name="userSalesOrg_PL"]').val();
@@ -110,24 +110,63 @@
         } else {
             var countryCode = parseInt(countryEle.value);
         }
-           
-        // console.log( "countryCode", typeof countryCode, countryCode, typeof countryCode == "undefined" );
-        if (typeof countryCode == "undefined" || countryCode == "" || isNaN(countryCode) ){        
+    
+        if (typeof countryCode == "undefined" || countryCode == "" || isNaN(countryCode) ){
             countryCode = "2601";
         }
-        if(nationality == 2600){
-            nationality = 2601;
-        }
+    
+        countryCode = parseInt(countryCode);
 
-        var valid = false;
-        if ( nationality == countryCode ) {        
-            valid = true;
+        if( typeof country == 'undefined' ){
+            return countryCode;
         }
-
+    
+        // IF Application add new country please add this array.
+        var SG = [ 2600, 2601 ];
+        var TW = [ 2800 ];
+        var PH = [ 2500 ];
+        var TH = [ 2900, 2902 ];
+        var MY = [ 2001 ];
+        var VN = [ 3000, 3001, 3050, 3070, 3072, 3090 ];
+        valid = false;
+        // console.log( "CHECK_COUNTRY", country, countryCode );
+        if( country == "SG" ){
+            if( SG.indexOf( countryCode ) != -1 ){
+                valid = true;
+            }
+        }
+        else if( country == "TW" ){
+            if( TW.indexOf( countryCode ) != -1 ){
+                valid = true;
+            }
+        }
+        else if( country == "PH" ){
+            if( PH.indexOf( countryCode ) != -1 ){
+                valid = true;
+            }
+        }
+        else if( country == "TH" ){
+            if( TH.indexOf( countryCode ) != -1 ){
+                valid = true;
+            }
+        }
+        else if( country == "MY" ){
+            console.log( "CHECK_COUNTRY", country, countryCode, MY, MY.indexOf( countryCode ) );
+            if( MY.indexOf( countryCode ) != -1 ){
+                valid = true;
+            }
+        }
+        else if( country == "VN" ){
+            if( VN.indexOf( countryCode ) != -1 ){
+                valid = true;
+            }
+        }
+    
         return valid;
-    }
+        
+      }
 
-    var getZPUserType = function() {
+    window.getZPUserType = function() {
         if ($("#zPUserType").length > 0 || $("input[name='zPUserType']").length > 0 ){
             return ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();
         }else{
@@ -421,7 +460,7 @@
 
                 var pageTitle = $('#tab-material-content #group-39792374 .group-header span').text(); //commented by suresh
                 var materialHTML = '<div class="materialSearchWrapper"> <div class="normalPopupCont flLeft" id="leftPanel"> <table id="resultsTable" style="width: 100%;"></table> </div><div class="normalPopupCont1 flRight" id="rightPanel"> <div class="popupHeader1 bigHeader">Selected Materials</div><div class="accountstable" id="selectedResultsTable"> <div class="accountstable" id="selectedMatTableDiv" style="overflow-y: auto;height: 400px;"> <table id="selectedMatTable" style="background-color: white !important;"> <thead> <tr> <th style="width:5%">Qty</th><th style="width:18%">Material Number</th> <th style="width:50%">Material Description</th><th style="width:22%">Comm. Item for Bonus</th> <th style="width:5%"></th> </tr></thead> <tbody id="selectedMatTableBody"> </tbody> </table> <a href="#" id="addMaterialBtn" name="addMaterialBtn" class="jg-btn addMat-btn" style="width: auto; margin-top: 50px; display: inline-block;">Add</a> </div></div></div></div>';
-                var userType = getZPUserType();
+                var userType = window.getZPUserType();
 
                 var searchMaterialFAID = function(materialList){
                     var fileAttachmentID = ($("input[name='fileAttachmentID']").length >0 )? $("input[name='fileAttachmentID']").val() : $("input[name='fileAttachmentBSID_t']").val();
@@ -438,7 +477,7 @@
                         }*/
                     }).done(function(materialDetails) {
                         sumResult = materialDetails;
-                        if ( check_nationality(2800) ){
+                        if ( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
 
                             var materialDetailsFlag2 = "false";
                             if ($("input[name='materialDetailsFlag2']").length > 0){
@@ -825,14 +864,14 @@
     */
     var itemCheckBonus = function(currentItem) {
 
-        countCheck = 0;
-      $("input[name='_line_item_list']").each(function(index, data){
-        var lengthCheckbox = $("input[name='_line_item_list']").length;
-        if($(data).is(":checked")){
-            countCheck++;
-        }
-        
-        if(countCheck == lengthCheckbox){
+        banyakCheck = 0;
+        $("input[name='_line_item_list']").each(function(index, data){
+            var lengthCheckbox = $("input[name='_line_item_list']").length;
+            if($(data).is(":checked")){
+                banyakCheck++;
+            }
+            
+            if(banyakCheck == lengthCheckbox){
             $("input[name='_line_item_list_all']").prop("checked", true);
         }else{
             $("input[name='_line_item_list_all']").prop("checked", false);
@@ -1003,7 +1042,7 @@
             var tableObj = document.getElementById("selectedMatTableBody"); //Selected Materials Table
             var clonedTrObj = trObj.cloneNode(true); //Clone ROW
 
-            var zPUserType = getZPUserType();
+            var zPUserType = window.getZPUserType();
             
 
             // var zPUserType = ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();                        
@@ -1017,7 +1056,8 @@
 
             // console.log('tabNum', tabNum);
             clonedTrObj.deleteCell(0); //Delete 1st column
-            if($('input[name="userSalesOrg_PL"]').val()=="2800"){
+            //   if($('input[name="userSalesOrg_PL"]').val()=="2800"){
+                if( window.check_country("TW") ){
                 console.log('taiwan only ,delete last 2 column');
                 clonedTrObj.deleteCell(2); // 
                 clonedTrObj.deleteCell(3); 
@@ -1026,7 +1066,16 @@
                 if(zPUserType=='principal'){
                     clonedTrObj.deleteCell(3);
                 }
-                
+
+            }else if( window.check_country("TH") || 
+                window.check_country("VN") || 
+                window.check_country("MY")){
+                clonedTrObj.deleteCell(2); // 
+                clonedTrObj.deleteCell(3); 
+                clonedTrObj.deleteCell(3);
+                if(zPUserType=='principal'){
+                    clonedTrObj.deleteCell(3);
+                }
             }else{
                 clonedTrObj.deleteCell(3);
             }
@@ -1325,7 +1374,7 @@
         var dataSet2 = [];
 
         var salesOrg = $('input[name="userSalesOrg_PL"]').val();
-        if ( check_nationality(2600) ) {
+        if ( window.check_country("SG") ) {
             salesOrg = (salesOrg == 2601)? salesOrg : 2601;
         }
 
@@ -1346,22 +1395,26 @@
             ajaxData = "q=\{$and:[{'masterstring':{$regex:'/".replace(/ /gi,"%20")+encodeURIComponent(searchStr.replace(/ /gi,"%")).replace(/%27/g,"%5C%27")+"/i'}},{sales_org:{$eq:"+salesOrg+"}},{dwnld_to_dss:{$eq:'Y'}}]}&orderby=material:asc".replace(/ /gi, "%20");            
         }
 
+        //console.warn('searchMaterialAjax');
+
         $.ajax({
             url: ajaxURL,
             data: ajaxData,
         }).done(function(response) {
             //console.dir(response);
             var data = response.items;
-            console.log( "Data response API : ", data.length, data );
+
             $.each(data, function(i, item) {
-                console.log(item.material, item.description, item.principal_name);
+                // console.log(item.material_number, item.material_desc, item.principal_name);
+               // console.log(item);
                 var subDataSet2 = [
                                     "", 
                                     (item.material != null)? item.material : "", 
                                     (item.description != null)? item.description : "", 
                                     (item.principal_name != null)? item.principal_name : ""
                                 ];
-                if($('input[name="userSalesOrg_PL"]').val()=="2800"){
+                //   if($('input[name="userSalesOrg_PL"]').val()=="2800"){
+                if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
                     if(item.material_group_5 == 500 && item.materialgroup != "ZGM"){
                         var promo = "P";
                     } else {
@@ -1379,16 +1432,15 @@
                 }
                 dataSet2.push(subDataSet2);
             });
-
         }).always(function() {
             console.log(dataSet2);
-            materialList.clear().draw();
+
             ajaxSearchMaterialProcess = [];
+            materialList.clear().draw();
             materialList.rows.add(dataSet2);
             if (searchStr.indexOf("%") !== -1) {
-                // searchStr = searchStr.replace(/%/g, ' ');
-                // materialList.search(searchStr).order([2, 'asc']).draw();
-                materialList.order([2, 'asc']).draw();
+                searchStr = searchStr.replace(/%/g, ' ');
+                materialList.search(searchStr).order([2, 'asc']).draw();
                 $('.dataTables_scrollBody .loader-material').hide();
                 $('.dataTables_scrollBody #resultsTable').show();
                 //var materialResult = materialList.search(searchStr).order([2, 'asc']);
@@ -1396,8 +1448,7 @@
 
             } else {
                 //materialList.columns.adjust().draw();
-                // materialList.search(searchStr).order([2, 'asc']).draw();
-                materialList.order([2, 'asc']).draw();
+                materialList.search(searchStr).order([2, 'asc']).draw();
                 $('.dataTables_scrollBody .loader-material').hide();
                 $('.dataTables_scrollBody #resultsTable').show();
                 //var materialResult = materialList.search(searchStr).order([2, 'asc']);
@@ -1417,13 +1468,22 @@
     var initMaterialList = function(dataSet){
 
         var userCountryMS = null;
-        if($('input[name="userSalesOrg_PL"]').val()=="2800"){
+        if( window.check_country("TW") ){
           var userCountryMS = null;
           userCountryMS = 'TW'; 
-          var userType = getZPUserType();
+          var userType = window.getZPUserType();
         }
 
-        if(userCountryMS === 'TW'){
+        //   if(userCountryMS === 'TW'){
+        if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+
+            var globalTemplateFlag = ($("input[name='globalTemplateFlag']").val().toLowerCase() == 'true')? true : false;
+            var labelMaterialDesc = "Material Description (ZH)";
+
+            if( globalTemplateFlag ){
+                labelMaterialDesc = "Material Description (Local)";
+            }
+
             material_column = [{
                 title: ""
             },
@@ -1431,7 +1491,7 @@
                 title: "Material Number"
             },
             {
-                title: "Material Description (ZH)"
+                title: labelMaterialDesc
             },
             {
                 title: "Material Description"
@@ -1447,6 +1507,10 @@
             }
             ];
 
+            if( window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+                delete material_column.splice(5, 1);
+            }
+    
             if(userType == 'principal'){
                 material_column.splice(4, 0, {title: "Principal Material Code"}); 
             }
@@ -1520,14 +1584,14 @@
         } */
         //$('#resultsTable').DataTable().clear().destroy();
         var userCountryMS = null;
-        if($('input[name="userSalesOrg_PL"]').val()=="2800"){
+        if( window.check_country("TW") ){
         var userCountryMS = null;
             userCountryMS = 'TW'; 
         }
         var materialDetails = dataMaterialAjax;
 		var custArr = null;
         var totalRecs = null;
-		var userType = getZPUserType();
+		var userType = window.getZPUserType();
 		if (userType !== 'csteam'){
 
             custArr = materialDetails.split("##");
@@ -1561,15 +1625,18 @@
                     }
                 }
                 var subDataSet = ["", colArr[0], colArr[1], colArr[2]];
-                if(userCountryMS === 'TW'){
-
+                if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+                    if( window.check_country("TW") ){
                     subDataSet = ["", colArr[0], colArr[6], colArr[1], colArr[2], colArr[3], colArr[4] ];
-                     //debugger;
-                    //  console.log('userType',userType);
                     if(userType == 'principal'){
                         subDataSet = ["", colArr[0], colArr[6], colArr[1], colArr[5], colArr[2], colArr[3], colArr[4]]; 
                     }
-                    // console.log(subDataSet);
+                }else{
+                    subDataSet = ["", colArr[0], colArr[6], colArr[1], colArr[2], colArr[4] ];
+                    if(userType == 'principal'){
+                        subDataSet = ["", colArr[0], colArr[6], colArr[1], colArr[5], colArr[2], colArr[4]]; 
+                    }
+                }
                 }
                 dataSet.push(subDataSet);
             }
@@ -1577,7 +1644,7 @@
 
         if (userType === 'csteam' && enableOldMaterialSearch == "false") {
             
-                if (check_nationality(2600)) {
+                if ( window.check_country("SG") ) {
                     var salesOrg = 2601;
                 } else {
                     salesOrg = $('input[name="userSalesOrg_PL"]').val();
@@ -1604,22 +1671,35 @@
                             (item.description != null) ? item.description : "",
                             (item.principal_name != null) ? item.principal_name : "",
                         ];
-                        if ($('input[name="userSalesOrg_PL"]').val() == "2800") {
+                        if ( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ) {
                             if (item.material_group_5 == 500 && item.materialgroup != "ZGM") {
                                 var promo = "P";
                             } else {
                                 var promo = "";
                             }
 
-                            subDataSet = [
-                                "",
-                                (item.material != null) ? item.material : "",
-                                (item.alt_lang_desc != null) ? item.alt_lang_desc : "",
-                                (item.description != null) ? item.description : "",
-                                (promo != null) ? promo : "",
-                                (item.principal_code != null) ? item.principal_code : "",
-                                (item.principal_name != null) ? item.principal_name : ""
-                            ];
+                            if( window.check_country("TH") || 
+                                window.check_country("VN") || 
+                                window.check_country("MY") ){
+                                subDataSet = [
+                                    "",
+                                    (item.material != null) ? item.material : "",
+                                    (item.alt_lang_desc != null) ? item.alt_lang_desc : "",
+                                    (item.description != null) ? item.description : "",
+                                    (promo != null) ? promo : "",
+                                    (item.principal_name != null) ? item.principal_name : ""
+                                ];
+                            }else{
+                                subDataSet = [
+                                    "",
+                                    (item.material != null) ? item.material : "",
+                                    (item.alt_lang_desc != null) ? item.alt_lang_desc : "",
+                                    (item.description != null) ? item.description : "",
+                                    (promo != null) ? promo : "",
+                                    (item.principal_code != null) ? item.principal_code : "",
+                                    (item.principal_name != null) ? item.principal_name : ""
+                                ];
+                            }
                         }
                         dataSet.push(subDataSet);
                         //console.log(subDataSet);
@@ -1639,16 +1719,14 @@
             materialList.columns.adjust().draw();
         }
 
-
-
         $('#resultsTable_filter').find('input').on('keyup', function() {
             //console.info('desktop ss');
             var materialSearch = $(this).val();
-
+    
             //console.log('materialSearch',materialSearch);
-
-            var rulesMaterialSearch = ( !check_nationality(2800) )? 3 : 2;
-
+    
+            var rulesMaterialSearch = ( !window.check_country("TW") )? 3 : 2;
+    
             if ((userType === 'csteam') && (materialSearch.length >= rulesMaterialSearch) && enableOldMaterialSearch == "false") {
                 console.log( materialSearch.slice(-1) );
                 if (materialSearch.slice(-1) === '%') {
@@ -1658,15 +1736,13 @@
                 } else {
                     var i = 0;
                     while (ajaxSearchMaterialProcess.length) {
-                        ajaxSearchMaterialProcess[i].aborted = true;
-                        ajaxSearchMaterialProcess[i].abort();
-                        i++;
+                        ajaxSearchMaterialProcess[i++].abort();
                     }
                     $('.dataTables_scrollBody .loader-material').show();
                     $('.dataTables_scrollBody #resultsTable').hide();
                     searchMaterialAjax(materialSearch, materialList);
                 }
-
+    
             } else {
                 /*
                     Start : 10 Nov 2017
@@ -1676,9 +1752,9 @@
                     Layout : Both
                 */
                 if (materialSearch.indexOf("%") !== -1) {
-
+    
                     materialSearch = materialSearch.replace(/%/g, ' ');
-
+    
                 }
                 /*
                     end : 12 Nov 2017
@@ -1694,7 +1770,7 @@
                     File Location : $BASE_PATH$/image/javascript/js-ezrx.js
                     Layout : Desktop
                 */
-               materialList.search(materialSearch.trim(), true, true).order([2, 'asc']).draw();               
+                materialList.search(materialSearch.trim(), true, true).order([2, 'asc']).draw();
                 // materialSearch.trim();
                 // materialList.search(materialSearch).order([2, 'asc']).draw();
                 /*
@@ -1705,25 +1781,24 @@
                     Layout : Desktop
                 */
             }
-
-
+    
+    
         });
 
-
         var searchInput = setInterval(findSearchInput, 1000);
-
+    
         function findSearchInput() {
             //console.log('findSearchInput');
-
+    
             // console.log('start searchiing');
             if ($('#resultsTable_filter .ui-input-search input').length > 0) {
                 //console.log('tablet ajax material search');
                 // console.log('found ui-input-search');
                 $('#resultsTable_filter .ui-input-search input').on('keyup', function() {
-
+    
                     var materialSearch = $(this).val() || '';
-
-
+    
+    
                     if ((userType === 'csteam') && (materialSearch.length > 2)) {
                         /*
                             Start : 10 Nov 2017
@@ -1736,8 +1811,8 @@
                             materialSearch = materialSearch.substring(0, materialSearch.length - 1);
                             materialSearch = materialSearch.replace(/%/g, ' ');
                             materialList.search(materialSearch).order([2, 'asc']).draw();
-
-                         /*
+    
+                        /*
                             End : 10 Nov 2017
                             Task  : Wildcard material search
                             Page  : Shopping Cart
@@ -1749,28 +1824,28 @@
                             $('.dataTables_scrollBody #resultsTable').hide();
                             searchMaterialAjax(materialSearch, materialList);
                         }
-
+    
                     } else {
-
+    
                         if (materialSearch.indexOf("%") !== -1) {
                             materialSearch = materialSearch.replace(/%/g, ' ');
                         }
                         // materialSearch.trim();
                         // materialList.search(materialSearch).order([2, 'asc']).draw();
                         materialList.search(materialSearch.trim(), true, true).order([2, 'asc']).draw();
-                        
+    
                     }
-
-
-
+    
+    
+    
                 });
                 clearInterval(searchInput);
             }
-
-
+    
+    
         }
 
-    };
+  };
 
 
     var updateErrorMsg = function() {
@@ -1784,58 +1859,14 @@
         $("#searchCustomerInput").click(function() {
             console.log('#searchCustomerInput click');
             var inputLength = $('#searchCustomerInput').val().length;
-            
-            clearTimeout(timer);
-            timer = setTimeout(function() { //then give it a second to see if the user is finished
-
-            var check_nationality = function (nationality) {
-                var countryEle = document.getElementById('userSalesOrg_t');
-                if (countryEle == null) { //this is for material page.
-                    countryEle = $('input[name="userSalesOrg_PL"]').val();
-                    countryCode = countryEle;
-                } else {
-                    var countryCode = parseInt(countryEle.value);
-                }
-                if (typeof countryCode == "undefined") {
-                    countryCode = "2601";
-                }
-                if (nationality == 2600) {
-                    nationality = 2601;
-                }
-
-                var valid = false;
-                if (nationality == countryCode || countryCode == 2601) {
-                    valid = true;
-                }
-
-                return valid;
+            if (inputLength === 3 || inputLength > 3) {
+                console.log('click');
+                $('.search-cust_wrapper').show();
             }
-
-            var ruleMaxChar = ( !check_nationality(2800) )? 3 : 2;				
-
-                if (inputLength === ruleMaxChar || inputLength > ruleMaxChar) {
-                    //ajax
-                    // loadAjax();
-                    setTimeout(function() {
-                        $('.search-cust_wrapper').show();
-                    }, 1000);
-                    // seachCustomer.search($(this).val()).draw();
-
-                } else {
-                    console.log('hide table');
-                    $('.search-cust_wrapper').hide();
-
-                }
-            }, 1000);
-
-          /* if (inputLength === 3 || inputLength > 3) {
-              console.log('click');
-              $('.search-cust_wrapper').show();
-          } */
         });
 
-        var zPUserType = getZPUserType();        
-        // var zPUserType = ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();                    
+        var zPUserType = window.getZPUserType();
+        // var zPUserType = ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();        
 
         if (zPUserType === 'csteam') {
             $('#searchCustomerInput').keyup(function() {
@@ -1845,33 +1876,10 @@
                 console.log('keyup', inputLength);
                 clearTimeout(timer);
                 timer = setTimeout(function() { //then give it a second to see if the user is finished
-                    
-                var check_nationality = function (nationality) {
-					var countryEle = document.getElementById('userSalesOrg_t');
-					if (countryEle == null) { //this is for material page.
-						countryEle = $('input[name="userSalesOrg_PL"]').val();
-						countryCode = countryEle;
-					} else {
-						var countryCode = parseInt(countryEle.value);
-					}
-					if (typeof countryCode == "undefined") {
-						countryCode = "2601";
-					}
-					if (nationality == 2600) {
-						nationality = 2601;
-					}
 
-					var valid = false;
-					if (nationality == countryCode || countryCode == 2601) {
-						valid = true;
-					}
+                    var ruleMaxChar = ( !window.check_country("TW") )? 3 : 2;
 
-					return valid;
-				}
-
-				var ruleMaxChar = ( !check_nationality(2800) )? 3 : 2;				
-
-                  if (inputLength === ruleMaxChar || inputLength > ruleMaxChar) {
+                    if (inputLength === ruleMaxChar || inputLength > ruleMaxChar) {
                         //ajax
                         loadAjax();
                         setTimeout(function() {
@@ -1909,25 +1917,39 @@
         var sub = parts[0];
         var dataSet = [];
 
-        if (check_nationality(2600)) {
+        var ajaxUrl = "";
+        var dataToSend = "";
+        searchKeyword = $("#searchCustomerInput").val().replace(/ /gi, "%");  
+
+      if( window.check_country("TH") || window.check_country("MY") || window.check_country("VN") ){
+
+        var customerMasterTable_t = $("input[name='customerMasterTable_t']").val();
+
+        ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/custom"+customerMasterTable_t;
+
+        dataToSend = 'q={"custmasterstring":{$regex:"/' + encodeURIComponent( searchKeyword ) + '/i"}}&{RecrdFlag:{eq:{A}}&{Control_Flag:{ne:{N}}&orderby=customer_name:asc'
+
+      }else{
+        
+        if ( window.check_country("SG") ) {
             var ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master";
-        } else if (check_nationality(2500)) {
+        } else if ( window.check_country("PH") ) {
             ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master_2500";
-        } else if (check_nationality(2800)) {
+        } else if ( window.check_country("TW") ) {
             ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master_2800";
         }
-		/*commented by suresh as it is mismatching with customerSearchHolder_HTML.js*/
-	   // searchKeyword = $("#searchCustomerInput").val().replace(/%/gi, " ").trim();   
-		searchKeyword = $("#searchCustomerInput").val().replace(/ /gi, "%");	   
+        
+        dataToSend = 'q={$and:[{"custmasterstring":{$regex:"/' + encodeURIComponent( searchKeyword ) + '/i"}},{$or:[{"recrdflag":{$eq:"A"}},{"recrdflag":{$exists:false}}]},{$or:[{"control_flag":{$eq:"Y"}},{"control_flag":{$exists:false}}]}]}&orderby=customer_name:asc';
+        
+      }
 
         $.ajax({
             //url: 'https://zuelligpharmatest1.bigmachines.com/rest/v3/customCustomer_Master?q={"contact_firstname":"Biomedical Science Institutes"}',
             url: ajaxUrl,
             //data: "q={'custmasterstring':{$regex:'/" + encodeURIComponent($('#searchCustomerInput').val()) + "/i'}}&orderby=customer_name:asc"
-            // data: 'q={"custmasterstring":{$regex:"/' + encodeURIComponent( searchKeyword ) + '/i"}}&orderby=customer_name:asc'
-            //   data:  'q={$and:[{"custmasterstring":{$regex:"/' + encodeURIComponent( $("#searchCustomerInput").val() ) + '/i"}},{"recrdflag" :{$ne: "I"}},{"control_flag" :{$ne: "N"}}]}&orderby=customer_name:asc'
-            data: 'q={$and:[{"custmasterstring":{$regex:"/' + encodeURIComponent( searchKeyword ) + '/i"}},{$or:[{"recrdflag":{$eq:"A"}},{"recrdflag":{$exists:false}}]},{$or:[{"control_flag":{$eq:"Y"}},{"control_flag":{$exists:false}}]}]}&orderby=customer_name:asc'
-
+            //data: 'q={"custmasterstring":{$regex:"/' + encodeURIComponent($("#searchCustomerInput").val()) + '/i"}}&{RecrdFlag:{eq:{A}}&{Control_Flag:{ne:{N}}&orderby=customer_name:asc'
+        //data:  'q={$and:[{"custmasterstring":{$regex:"/' + encodeURIComponent( $("#searchCustomerInput").val() ) + '/i"}},{"recrdflag" :{$ne: "I"}},{"control_flag" :{$ne: "N"}}]}&orderby=customer_name:asc'
+          data: dataToSend
         }).done(function(response) {
             console.log('jquery done');
             var data = response.items;
@@ -1943,7 +1965,8 @@
                                     item.customer_ship_phone, 
                                     item.customer_shpto_pcode
                                 ];
-                if (check_nationality(2800)) {
+                if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+                    //   if (check_nationality(2800)) {
                     subDataSet = [
                         "", //number
                         item.customer_sold_to_id, 	//1 SOLD TO ID
@@ -1958,7 +1981,8 @@
                         item.customer_bill_to_id,	//10 BILL TO ID
                         item.cust_name_billto,		//11 BILL TO NAME
                     ];
-                } else if (check_nationality(2500)) {
+                //   } else if (check_nationality(2500)) {
+                }else if( window.check_country("PH") ){
                     subDataSet = [
                         "", //number
                         item.customer_soldto_id, 	//SOLD TO ID
@@ -1990,7 +2014,7 @@
     var searchCustList = function(dataSet, seachCustomer) {
         console.log('searchCustList');
 
-        var zPUserType = getZPUserType();        
+        var zPUserType = window.getZPUserType();        
         // var zPUserType = ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();
 
         if (zPUserType !== 'csteam') {
@@ -2004,7 +2028,7 @@
             for (var i = fromIndex; i < toIndex; i++) {
                 colArr = custArr[i].split("$$");
                 var subDataSet = [];
-                if (check_nationality(2500)) {
+                if ( window.check_country("PH") ) {
                         subDataSet = [
                             '', // 1.Radio Button
                             colArr[0],  // 2.SOLD TO ID
@@ -2021,7 +2045,7 @@
                             colArr[19],  // 13.SHIP TO POSTAL CODE
                             colArr[14], //14. 
                         ];
-                }else if(check_nationality(2800)){
+                    }else if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
                     if (zPUserType.toLowerCase() == "principal") {
                         subDataSet = ['',
                             colArr[0],  //1 PRINCIPAL CUST CODE
@@ -2054,7 +2078,6 @@
                         ];
                     }
                 }else{
-
                     subDataSet = [  '', 
                                     colArr[0], 
                                     colArr[1], 
@@ -2072,32 +2095,7 @@
 
             $('#searchCustomerInput').keyup(function() {
                 var inputLength = $('#searchCustomerInput').val().length;
-                var check_nationality = function (nationality) {
-                var countryEle = document.getElementById('userSalesOrg_t');
-                if (countryEle == null) { //this is for material page.
-                    countryEle = $('input[name="userSalesOrg_PL"]').val();
-                    countryCode = countryEle;
-                } else {
-                    var countryCode = parseInt(countryEle.value);
-                }
-                if (typeof countryCode == "undefined") {
-                    countryCode = "2601";
-                }
-                if (nationality == 2600) {
-                    nationality = 2601;
-                }
-
-                var valid = false;
-                if (nationality == countryCode || countryCode == 2601) {
-                    valid = true;
-                }
-
-                return valid;
-            }
-              var ruleMaxChar = ( !check_nationality(2800) )? 3 : 2;				
-              
-              if (inputLength === ruleMaxChar || inputLength > ruleMaxChar) {
-
+                if (inputLength === 3 || inputLength > 3) {
                     seachCustomer.search($(this).val(), true, true).draw();
                     $('.search-cust_wrapper').show();
                 } else {
@@ -2108,7 +2106,7 @@
 
         var userColumn = [];
 
-        if (check_nationality(2500) || check_nationality(2800)) {
+        if ( window.check_country("PH") || window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ) {
             
             userColumn.push({ title: "" });
 
@@ -2168,22 +2166,23 @@
 
                     // console.log('full', full[2]);
                     if (type === 'display') {
-                        //data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '">';
-                        if (check_nationality(2500)) {
+                        console.log(full);
+                      //data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '">';
+                      if ( window.check_country("PH") ) {
 
                             var disabled = '';
 
                             if(full[13] == "Y"){
                                 disabled = "disabled";
                             }
-                            console.log(full);
-							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '" data-suspended="'+full[13]+'"  data-customersold="'+full[1]+'" '+disabled+' >';
-						}else if(check_nationality(2800)){
+                            data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '" data-suspended="'+full[13]+'" data-customersold="'+full[1]+'" '+disabled+' >';
+                      }else if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
                             if( zPUserType == "principal" ){
 								data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2]+ '$$' + full[4] + '$$' +full[11] +'">';
 							}else{
 								data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1]+ '$$' + full[3] + '$$' +full[10] +'">';
-							}
+                            }
+                          console.log(zPUserType, data);                            
                         }else{
 							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '">';
 						}
@@ -2215,22 +2214,28 @@
                     }));
                 }
 
+                if(window.check_country("TH")){
+                    $($("#searchCustomer").find("tbody").children("tr")).each(function(index, data){
+                        var columnShipToID = $( data ).find("td.sorting_1");
+                        $( columnShipToID ).css({"font-size": "15px","font-weight": "bold", "color": "#007077"});
+                    });
+                }
+
+                console.log("draw dt");
                 $("input[name='searchCust']").off();
                 $("input[name='searchCust']").on('click', function() {
-                    
                     var selectCustomerSoldID = function(customersold){
                         $("#selectedCustomerSoldtoID").val( customersold );					                    
                     }
         
-                    if( check_nationality(2500) ){
+                    if( window.check_country("PH") ){
                         selectCustomerSoldID( $(this).attr("data-customersold")  );
                     }
-
+                    //console.log('777.111111 ===>>> ',$(this).val());
                     mobile_delete_line_item_func($(this).val());
                     
                 });
                 
-
             },
         });
 
@@ -2397,7 +2402,7 @@
         var line_items_no = exitingDataItemsObj.children.length;
         //console.log('line_items_no',line_items_no);
         ///checking existing order items end
-        if(check_nationality(2800)){
+        if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
             selectedCustomerDetail = selectedCustShipID;
         }else{
             selectedCustomerDetail = parseInt(selectedCustShipID);
@@ -2809,7 +2814,7 @@
     */
     function order_page_stock_color() {
         console.log('order_page_stock_color');
-        if (check_nationality(2600)) {
+        if (window.check_country("SG")) {
             $('#line-item-grid .lig-side-scroller>table tr.lig-row.child').each(function () {
                 var $child = $(this).children('td');
                 var $stock = $child.find('input[name*="inStock_l"]');
@@ -2962,7 +2967,7 @@
                                                 checkbox.prop('checked', true);
 
                                                 var checkboxInterval = setInterval(function () {
-
+                                                    console.log("Checkbox interval");
                                                     var checkFirstChild = checkbox.is(':checked');
                                                     //    alert(checkbox.is(':checked'));
                                                     if (checkFirstChild === true) {
@@ -3179,7 +3184,7 @@
                                     </div>\
                                 </div>\
                             </div>';
-        var userType = getZPUserType();                            
+        var userType = window.getZPUserType();                            
         // var userType = ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();
         $('#attribute-materialSearch').append().html(materialHTML);
         $('#attribute-materialSearch').hide();        
@@ -3213,7 +3218,7 @@
             }).done(function(materialDetails){
                 sumResult = materialDetails;
                 console.log(sumResult, "long of material details", sumResult.length);
-                if( check_nationality(2800) ){
+                if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
                     
                   var materialDetailsFlag2 = ($("input[name='materialDetailsFlag2']").length > 0) ? $("input[name='materialDetailsFlag2']").val().toLowerCase() : "false";                                      
 
@@ -3277,9 +3282,9 @@
         for (var i = fromIndex; i < toIndex; i++) {
             colArr = custArr[i].split("$$");
             var subDataSet;
-            if(check_nationality(2500)){
+            if( window.check_country("PH") ){
                 subDataSet = ['', colArr[2], colArr[0], colArr[1], colArr[3]];                
-            }else if(check_nationality(2800)){
+            }else if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
                 subDataSet = ['', colArr[0], colArr[1], colArr[2], colArr[3], colArr[4]];                
             }else{
                 subDataSet = ['', colArr[2], colArr[0], colArr[1], colArr[3]];
@@ -3287,14 +3292,14 @@
             dataSet.push(subDataSet);
         }
 
-        if ( check_nationality(2500) ){
+        if ( window.check_country("PH") ){
             columnTopCustList = [
                 { title: "" },
                 { title: "Sold to ID" },
                 { title: "Ship to ID" },
                 { title: "Customer Name" }
             ];
-        }else if( check_nationality(2800)){
+        }else if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
             columnTopCustList = [
                 { title: "" },
                 { title: "Sold to ID" },
@@ -3339,9 +3344,9 @@
                     // console.log('full', full[1]);
                     if (type === 'display') {
                        // data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '">';
-                        if (check_nationality(2500) ){
-                            data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '" data-customersold="'+full[1]+'" >';
-                        }else if(check_nationality(2800)){
+                       if ( window.check_country("PH") ){
+                        data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '" data-customersold="' + full[1] +'" >';
+                    }else if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
                             console.log(full);
 							//FORMAT soldtoid$$shiptoid$$billtoid
                             data = '<input type="radio" name="topCust" id= "topCust" value="' + full[1] + '$$' + full[3] + '$$' + full[5] + '" >';
@@ -3360,12 +3365,12 @@
 
         $("input[name='topCust']").on('click', function() {
 
-            var selectCustomerSoldID = function(customersold){
-                $("#selectedCustomerSoldtoID").val( customersold );					                    
+            var selectCustomerSoldID = function (customersold) {
+                $("#selectedCustomerSoldtoID").val(customersold);					                    
             }
 
-            if( check_nationality(2500) ){
-                selectCustomerSoldID( $(this).attr("data-customersold")  );
+            if (window.check_country("PH")) {
+                selectCustomerSoldID($(this).attr("data-customersold"));
             }
             
             mobile_delete_line_item_func($(this).val());
@@ -3397,7 +3402,7 @@
 
         $("#attribute-customerSearchHolder_HTML").html(searchCustomerWrapper);
 
-        var zPUserType = getZPUserType();        
+        var zPUserType = window.getZPUserType();        
         // var zPUserType = ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();                    
 
         if (zPUserType === 'csteam') {
@@ -3446,15 +3451,14 @@
 
     var mobile_itemCheckBonus = function(currentItem) {
 
-        countCheck = 0;
-      $("input[name='_line_item_list']").each(function(index, data){
-        var lengthCheckbox = $("input[name='_line_item_list']").length;
-        if($(data).is(":checked")){
-            countCheck++;
-        }
-        console.log(lengthCheckbox, "==", countCheck, countCheck == lengthCheckbox);
-        if(countCheck == lengthCheckbox){
-            console.log("_line_item_list_all was CHECKED");
+        banyakCheck = 0;
+        $("input[name='_line_item_list']").each(function(index, data){
+            var lengthCheckbox = $("input[name='_line_item_list']").length;
+            if($(data).is(":checked")){
+                banyakCheck++;
+            }
+            
+            if(banyakCheck == lengthCheckbox){
             setTimeout(function(){
                 $("input[name='_line_item_list_all']").prop("checked", true);
             }, 1000);
@@ -3633,7 +3637,7 @@
                     $(".jg-box-topbar").append("<div style='position:absolute; right: 30px; top: 20px;font-size: 17px;' >" + window._BM_USER_LOGIN + "</div>");                    
                     
                     var hideMenuForCreditControlUser = function(){
-                        if ( $("table[onclick*='newTransaction']").length == 0 ) {
+                        if ($("table[onclick*='newTransaction']").length == 0) {
                             $(".jg-linkbtn.new_order").hide();
                             $(".jg-linkbtn.copy_order").hide();
                         }                                           
@@ -3760,6 +3764,8 @@
                             $('#readonly_1_visualWorkflow img').attr('src', rootFolder + '/image/images/vi_order_submitted_active.png');
                         }
 
+
+
                         /*
                             End   : 20 March 2017
                             Task  : Order in Submitted Status the Logo(to guide the shopping stages) is missing
@@ -3797,7 +3803,7 @@
                         File Location :- $BASE_PATH$/javascript/js-ezrx.js
                         Layout        :- Desktop
                     */
-                   var zpUserType = getZPUserType();                   
+                   var zpUserType = window.getZPUserType();                   
                     
                    if ( zpUserType.length > 0 ){
                         if ( zpUserType != "csteam"){
@@ -3815,7 +3821,7 @@
 
                     mobile_pricingChange();
 
-                    if(check_nationality(2600)){
+                    if(window.check_country("SG")){
                         /* 
                             Created By    :- Created By Zainal Arifin, Date : 17 April 2018
                             Task          :- SG-37 Hide Customer Search and Top 10 Customers if ZP User Type = Customer
@@ -3823,7 +3829,7 @@
                             File Location :- $BASE_PATH$/javascript/js-ezrx.js
                             Layout        :- Desktop
                         */
-                        if (getZPUserType().length && getZPUserType() == "customer") {
+                        if (window.getZPUserType().length && window.getZPUserType() == "customer") {
                             $("#searchCustomerInput").closest(".column").hide();
                             var parentSearchCustomer = $("#searchCustomerInput").closest(".column-layout");
                             $(parentSearchCustomer).find(".last").remove();
@@ -3966,7 +3972,7 @@
                 */
 
                 var flag = window.sessionStorage.getItem("flag");
-                if ($("#readonly_1_status_t").text().toLowerCase() == 'order initiated' && flag == "rightnow" && getZPUserType() == "customer") {
+                if ($("#readonly_1_status_t").text().toLowerCase() == 'order initiated' && flag == "rightnow" && window.getZPUserType() == "customer") {
                     var isExist = false;
                     if( $("li.error-text").length > 0 ){
                         $("li.error-text").each(function(i, data){
@@ -4540,6 +4546,7 @@
                 }
             }
         });
+
         $('#jg-tool-select').html($('select[name=new_search_id]').html());
         $('#jg-tool-select').change(function () {
             var selectval = $(this).val();
@@ -5125,7 +5132,7 @@
             Layout : Desktop
         */
         /* find column with id is bonusOverideFlag_l when the value is True then give red color on text  */
-        if(!check_nationality(2500)){        
+        if(!window.check_country("PH")){
             $("td[id*='bonusOverideFlag_l']").each(function(i, data) {
                 var refNo = $(this).attr("id").split("attr_wrapper");
                 var object_span = $("#readonly" + refNo[1]);
@@ -5862,7 +5869,7 @@
             Layout        :- Both Dekstop
         */
 
-        if(check_nationality(2600)){
+        if( window.check_country("SG") ){
             var FavRecFreqSection = $("#attribute-pastOrders").parent().parent().parent().parent().parent().parent('.column-1');
             $(FavRecFreqSection.children()[1]).hide();
         }
@@ -6020,7 +6027,7 @@
             File Location :- $BASE_PATH$/javascript/js-ezrx.js
             Layout        :- Desktop
         */
-        if(check_nationality(2600)){
+        if( window.check_country("SG") ){
 
             var redColor = "rgb(255, 0, 0)";            
             var blackColor = "#000000";            
@@ -6483,7 +6490,6 @@
             Page  : Global mobile page
             File Location : $BASE_PATH$/image/javascript/js-ezrx.js
             Layout : Mobile
-
             if pagetile not null call default function
         */
 
@@ -6509,6 +6515,7 @@
                     $(".topMenuModified").css("float", "none");
                     $(".jg-item-mainmenu").css("width", "70px");
                     $(".jg-box-topbar").append("<div style='float:right; font-size: 14px; padding: 20px;' >" + window._BM_USER_LOGIN + "</div>");
+
                     if(getQueryVariableUrl("flag") == "rightnow"){
                         window.sessionStorage.setItem("flag", "rightnow");
                     }
@@ -7848,8 +7855,7 @@
             File Location :- $BASE_PATH$/javascript/js-ezrx.js
             Layout        :- Global
         */
-console.log("check_nationality", check_nationality(2601) );
-        if(check_nationality(2601)){
+        if( window.check_country("SG") ){
 
             function disabled_btn_save_show_alert() {
                 if ($("#update-alert").length == 0) {
@@ -8521,7 +8527,6 @@ console.log("check_nationality", check_nationality(2601) );
         $("input[name = _line_item_list]").change(function() {
             console.log('mobile_itemCheckBonus');
             mobile_itemCheckBonus($(this));
-
         });
 
 
@@ -8552,7 +8557,7 @@ console.log("check_nationality", check_nationality(2601) );
             var countryCode = parseInt(countryEle.value);
         }
 
-        if(countryCode != 2800){
+        if( !window.check_country("TW") ){
             //NON TW
 
             $('td.cell-promotion').attr('tooltip', function() {
@@ -8729,7 +8734,7 @@ console.log("check_nationality", check_nationality(2601) );
         }).mouseenter(function() {
             /* get text of material desciption */
             var input_text = $(this).find(".attribute-field-container span").text();
-            if($('input[name="userSalesOrg_PL"]').val()=="2800" || (userCountry === 'TW')){
+            if( window.check_country("TW") ){
                 var chineseTxt = '#chineseDescription-'+(parseInt($(this).parent().children().eq(0).html())-1);
                 console.log(chineseTxt);
                 input_text = $(chineseTxt).val();
@@ -8785,7 +8790,7 @@ console.log("check_nationality", check_nationality(2601) );
                         if mouse hover on element material description then showing table of Material Description.
                     */
 
-                    if(check_nationality(2800)){                    
+                    if( window.check_country("TW") ){
                         // var trNo = parseInt($(this).parent().parent().parent().parent().attr('data-sequence-number-field-index'));
                         // console.log(trNo);
                         // var chineseTxt = $('span[data-varname="chineseDescription_l"]').eq(trNo).text().trim();
@@ -8815,7 +8820,7 @@ console.log("check_nationality", check_nationality(2601) );
         });
 
         
-        if(check_nationality(2600)){
+        if(window.check_country("SG")){
             $('td.cell-additionalMaterialDescription').off();
             $('td.cell-additionalMaterialDescription').prop("tooltip", function () {
                 var input_text = $(this).find(".attribute-field-container span").text();
@@ -8937,7 +8942,7 @@ console.log("check_nationality", check_nationality(2601) );
 
         });
 
-        if (check_nationality(2500) || check_nationality(2600)){
+        if (!window.check_country("TW")){
             $('td.cell-promotion').off();
             $('td.cell-promotion').attr('tooltip', function() {
                 //console.log(' mobile_adjust_tooltip cell-promotion click 222 =====>>>> ');
@@ -9029,6 +9034,7 @@ console.log("check_nationality", check_nationality(2601) );
 
             var valueOfBonus = $(this).find('input[name="contractBonus"]').val();
             // console.log('valueOfBonus', $(this).find('input[name="contractBonus"]').val());
+
             $($(this).children().children()).hide();        
             if (valueOfBonus != '') {
                 button_helper = '<i class="material-lens" aria-hidden="true" ></i>';
@@ -9177,7 +9183,7 @@ console.log("check_nationality", check_nationality(2601) );
         });
 
                 
-        if(check_nationality(2600)){
+        if( window.check_country("SG") ){
             $("td.cell-additionalMaterialDescription").off();
             $("td.cell-additionalMaterialDescription").each(function (index, data) {
                 var button_helper;
