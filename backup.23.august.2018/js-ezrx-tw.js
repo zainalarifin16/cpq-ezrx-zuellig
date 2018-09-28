@@ -368,23 +368,15 @@ $(document).ready(function(){
           $("td.cell-promotion").each(function(index, data){
             var button_helper;
             var valueOfPromotion = $(this).find('input[name="promotion"]').val();
-
-            $($(this).children().children()).hide();
-
             if (valueOfPromotion != '') {
               button_helper = '<i class="material-lens" aria-hidden="true" ></i>';
               $(this).find('input[name=promotion]').prop('type', 'text');
               $(this).find('input[name=promotion]').css('display', 'block !important');
-              if($($(this).children().children()).parent().html().indexOf("material-lens") == -1){
-                $($(this).children().children()).parent().append(button_helper); 
-              }
             } else {
               button_helper = '-';
-              if($($(this).children().children()).parent().text().indexOf("-") == -1){
-                $($(this).children().children()).parent().append(button_helper); 
-              }
             }
-            
+            $($(this).children().children()).hide();
+            $($(this).children().children()).parent().append(button_helper); 
             $(this).prop("tooltip", valueOfPromotion);
 
             $(this).on("click", function(){
@@ -448,20 +440,15 @@ $(document).ready(function(){
           $("td.cell-additionalMaterialDescription").each(function (index, data) {
             var button_helper;
             var valueOfPromotion = $(this).find('input[name="promotion"]').val();
-            $($(this).children().children()).hide();
             if (valueOfPromotion != '') {
               button_helper = '<i class="material-lens" aria-hidden="true" ></i>';
               $(this).find('input[name=promotion]').prop('type', 'text');
               $(this).find('input[name=promotion]').css('display', 'block !important');
-              if($($(this).children().children()).parent().html().indexOf("material-lens") == -1){
-                $($(this).children().children()).parent().append(button_helper); 
-              }
             } else {
               button_helper = '-';
-              if($($(this).children().children()).parent().text().indexOf("-") == -1){
-                $($(this).children().children()).parent().append(button_helper); 
-              }
             }
+            $($(this).children().children()).hide();
+            $($(this).children().children()).parent().append(button_helper);
             $(this).prop("tooltip", valueOfPromotion);
 
             $(this).on("click", function () {
@@ -479,8 +466,8 @@ $(document).ready(function(){
                   /* if mouse hover on element material description then showing table of Material Description. */
                   var table = '<table class="table-tooltip" >\
                               <thead style="padding:5px;font-weight:bold">\
-                                <tr style="background-color:#007077;">\
-                                  <th style="border: 1px solid #999;padding:5px;color:#fff;text-shadow:none;">Material Description</th>\
+                                <tr style="background-color:#EEE;">\
+                                  <th style="border: 1px solid #999;padding:5px;">Material Description</th>\
                                 </tr>\
                               </thead>';
                   table += "<tbody>";
@@ -493,8 +480,7 @@ $(document).ready(function(){
                     position: 'absolute',
                     transform: 'translate(50%, -50%)',
                     top: '50%',
-                    width: '500px',
-                    border: "1px solid !important"
+                    width: '500px'
                   });
                 }
               }
@@ -1011,8 +997,7 @@ $(document).ready(function(){
     $(var_bonusOverride).find(typeBnsOverride).map(function (index, data) {
       
       var parentTR = $(data).closest("tr");
-      // var qty = $(parentTR).find(".cell-qty").find(".form-field");
-      var qty = $(parentTR).find(".cell-qty").find(".text-field");
+      var qty = $(parentTR).find(".cell-qty").find(".form-field");
       var overridePrice = $(parentTR).find(".cell-overridePrice_currency").find(".form-field");
       
       if (isMobile()) {
@@ -1242,9 +1227,6 @@ $(document).ready(function(){
       $("input[name='_line_item_list']:checked:disabled").attr("disabled", false);
     });
 
-    $("#attribute-customerAddressLine3").css("width", "100%");
-    $("#attribute-_shipTo_t_city").css("width", "100%");
-
   }
 
   var reset_color_lineitemgrid = function () {
@@ -1267,20 +1249,20 @@ $(document).ready(function(){
               var isPriceOverride = $($child).find('input[name*="isPriceOverride"]').val();
               var isInvoiceOverridePrice = $($child).find('input[name*="invoicePriceFlag_l"]');
               var InvoiceOverridePrice = $($child).find('input[name*="invoicePrice_l"]');
-              // var isInStockMaterial = $($child).find('input[name*="inStock_l"]').val().trim().toLowerCase();
+              var isInStockMaterial = $($child).find('input[name*="inStock_l"]').val().trim().toLowerCase();
 
-              var qty_text = $($child).find('input[name*="qty_int_l"]');
-              var totalPrice_text = $($child).find('input[name*="totalPrice_currency"]');
-              var unitPrice_text = $($child).find('input[name*="unitPrice_currency"]');
+              var qty_text = $($child).find('input[name*="qty_l"]');
+              var totalPrice_text = $($child).find('input[name*="totalPrice_l"]');
+              var unitPrice_text = $($child).find('input[name*="unitPrice_l"]');
               var type_material = $($child).find('input[name*="refNO_text"]').val().trim().toLowerCase();
 
               if (isPriceOverride.toLowerCase() == "true") {
                 $($(unitPrice_text).siblings()[0]).css("color", redColor);
               }
 
-              /* if (isInStockMaterial == "no") {
+              if (isInStockMaterial == "no") {
                 $($(qty_text).siblings()[0]).css("color", redColor);
-              } */
+              }
 
               if (isInvoiceOverridePrice.val().toLowerCase() == "true") {              
                 $($(InvoiceOverridePrice).siblings()[0]).css("color", redColor);
@@ -1321,12 +1303,12 @@ $(document).ready(function(){
     }else{
       $("td[id*='qty_int_l']").each(function (i, data) {
         var parent = $(this).closest(".line-item");
-        // var isInStock = $(parent).find("span[id*='inStock_l']").text().trim().toLowerCase();
+        var isInStock = $(parent).find("span[id*='inStock_l']").text().trim().toLowerCase();
         var type_material = $(parent).find("span[id*='refNO_text']").text().trim().toLowerCase();
         if(type_material != "bonus"){
-          /* if (isInStock == "no") {
+          if (isInStock == "no") {
             $(this).find("span[id*='qty_int_l']").css("color", "rgb(255,0,0)");
-          } */
+          }
         }
       });
 
@@ -1460,9 +1442,7 @@ $(document).ready(function(){
                 /* TW-03 Price hover table columns to be corrected for TW - Quantity, Invoice Price, Unit Price.  */
                 tw_tooltip_modelconfiguration();
                 /* TW-03 Price hover table columns to be corrected for TW - Quantity, Invoice Price, Unit Price. */
-                setTimeout(function(){
-                  remove_NT_currency();
-                }, 1000);
+                remove_NT_currency();
                 
                 $("#materialArrayset").find(".pagination").find(".ui-btn").off();
                 $("#materialArrayset").find(".pagination").find(".ui-btn").on("click touchend", function () {
@@ -1473,7 +1453,7 @@ $(document).ready(function(){
                 $("#materialArrayset").find(".pagination").find("input[type='radio']").on("click touchend", function () {
                   loadShoppingCartScript();
                 });
-              }, 3000);
+              }, 2000);
 
             } else {
               loadShoppingCartScript();

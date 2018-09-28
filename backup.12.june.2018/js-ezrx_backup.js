@@ -825,20 +825,6 @@
     */
     var itemCheckBonus = function(currentItem) {
 
-        countCheck = 0;
-      $("input[name='_line_item_list']").each(function(index, data){
-        var lengthCheckbox = $("input[name='_line_item_list']").length;
-        if($(data).is(":checked")){
-            countCheck++;
-        }
-        
-        if(countCheck == lengthCheckbox){
-            $("input[name='_line_item_list_all']").prop("checked", true);
-        }else{
-            $("input[name='_line_item_list_all']").prop("checked", false);
-        }
-      });
-
         var currTr = currentItem.parent().parent();
         var checked = currentItem.is(":checked");
         //console.log('checked',checked);
@@ -1243,7 +1229,6 @@
             console.log('selectedMaterials_M_Lvl', $("input[name='selectedMaterials_M_Lvl']").val());
 
             if (matNoBonusString !== "" || maHvBonusString !== "") {
-              $("#selectedMaterialsString").val(existingValModelLevel);
                 $("form[name='configurationForm']").submit(); //auto update
                 $("#config-form").submit(); //auto update
             }
@@ -1331,7 +1316,7 @@
 
         ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customMaterial_Master";
         // console.log( encodeURIComponent(searchStr) , encodeURIComponent(searchStr).replace(/%27/g, "%5C%27").replace(/ /gi, "%") );
-        ajaxData = 'q=\{$and:[{"masterstring":{$regex:"/'+encodeURIComponent(searchStr.replace(/ /gi, "%")).replace(/%27/g,"%5C%27")+'/i"}},{sales_org:{$eq:'+salesOrg+'}},{dwnld_to_dss:{$eq:"Y"}}]}&orderby=material:asc';
+        ajaxData = 'q=\{ $and: [ { "masterstring":{$regex:"/' + encodeURIComponent( searchStr.replace(/ /gi, "%") ).replace(/%27/g, "%5C%27") + '/i"}}, { sales_org: { $eq:' + salesOrg + '} }, { dwnld_to_dss: { $eq: "Y"} } ] }&orderby=material:asc';
 
         var ms_ie = false;
         var ua = window.navigator.userAgent;
@@ -1343,7 +1328,7 @@
         }
 
         if (ms_ie) {
-            ajaxData = "q=\{$and:[{'masterstring':{$regex:'/".replace(/ /gi,"%20")+encodeURIComponent(searchStr.replace(/ /gi,"%")).replace(/%27/g,"%5C%27")+"/i'}},{sales_org:{$eq:"+salesOrg+"}},{dwnld_to_dss:{$eq:'Y'}}]}&orderby=material:asc".replace(/ /gi, "%20");            
+            ajaxData = "q=\{ $and: [ { 'masterstring':{$regex:'/".replace(/ /gi, "%20") + encodeURIComponent(searchStr.replace(/ /gi, "%")).replace(/%27/g, "%5C%27") + "/i'}}, { sales_org: { $eq:" + salesOrg + "} }, { dwnld_to_dss: { $eq: 'Y'} } ] }&orderby=material:asc".replace(/ /gi, "%20");            
         }
 
         /*ajaxURL = "https://" + instanceName + ".bigmachines.com/rest/v4/customParts_Master_SG";
@@ -1471,7 +1456,6 @@
         if($('input[name="userSalesOrg_PL"]').val()=="2800"){
           var userCountryMS = null;
           userCountryMS = 'TW'; 
-          var userType = getZPUserType();
         }
 
         if(userCountryMS === 'TW'){
@@ -1709,9 +1693,7 @@
                 } else {
                     var i = 0;
                     while (ajaxSearchMaterialProcess.length) {
-                        ajaxSearchMaterialProcess[i].aborted = true;
-                        ajaxSearchMaterialProcess[i].abort();
-                        i++;
+                        ajaxSearchMaterialProcess[i++].abort();
                     }
                     $('.dataTables_scrollBody .loader-material').show();
                     $('.dataTables_scrollBody #resultsTable').hide();
@@ -1835,54 +1817,10 @@
         $("#searchCustomerInput").click(function() {
             console.log('#searchCustomerInput click');
             var inputLength = $('#searchCustomerInput').val().length;
-            
-            clearTimeout(timer);
-            timer = setTimeout(function() { //then give it a second to see if the user is finished
-
-            var check_nationality = function (nationality) {
-                var countryEle = document.getElementById('userSalesOrg_t');
-                if (countryEle == null) { //this is for material page.
-                    countryEle = $('input[name="userSalesOrg_PL"]').val();
-                    countryCode = countryEle;
-                } else {
-                    var countryCode = parseInt(countryEle.value);
-                }
-                if (typeof countryCode == "undefined") {
-                    countryCode = "2601";
-                }
-                if (nationality == 2600) {
-                    nationality = 2601;
-                }
-
-                var valid = false;
-                if (nationality == countryCode || countryCode == 2601) {
-                    valid = true;
-                }
-
-                return valid;
+            if (inputLength === 3 || inputLength > 3) {
+                console.log('click');
+                $('.search-cust_wrapper').show();
             }
-
-            var ruleMaxChar = ( !check_nationality(2800) )? 3 : 2;				
-
-                if (inputLength === ruleMaxChar || inputLength > ruleMaxChar) {
-                    //ajax
-                    // loadAjax();
-                    setTimeout(function() {
-                        $('.search-cust_wrapper').show();
-                    }, 1000);
-                    // seachCustomer.search($(this).val()).draw();
-
-                } else {
-                    console.log('hide table');
-                    $('.search-cust_wrapper').hide();
-
-                }
-            }, 1000);
-
-          /* if (inputLength === 3 || inputLength > 3) {
-              console.log('click');
-              $('.search-cust_wrapper').show();
-          } */
         });
 
         var zPUserType = getZPUserType();        
@@ -1896,33 +1834,7 @@
                 console.log('keyup', inputLength);
                 clearTimeout(timer);
                 timer = setTimeout(function() { //then give it a second to see if the user is finished
-                    
-                var check_nationality = function (nationality) {
-					var countryEle = document.getElementById('userSalesOrg_t');
-					if (countryEle == null) { //this is for material page.
-						countryEle = $('input[name="userSalesOrg_PL"]').val();
-						countryCode = countryEle;
-					} else {
-						var countryCode = parseInt(countryEle.value);
-					}
-					if (typeof countryCode == "undefined") {
-						countryCode = "2601";
-					}
-					if (nationality == 2600) {
-						nationality = 2601;
-					}
-
-					var valid = false;
-					if (nationality == countryCode || countryCode == 2601) {
-						valid = true;
-					}
-
-					return valid;
-				}
-
-				var ruleMaxChar = ( !check_nationality(2800) )? 3 : 2;				
-
-                  if (inputLength === ruleMaxChar || inputLength > ruleMaxChar) {
+                    if (inputLength === 3 || inputLength > 3) {
                         //ajax
                         loadAjax();
                         setTimeout(function() {
@@ -1967,18 +1879,14 @@
         } else if (check_nationality(2800)) {
             ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master_2800";
         }
-		/*commented by suresh as it is mismatching with customerSearchHolder_HTML.js*/
-	   // searchKeyword = $("#searchCustomerInput").val().replace(/%/gi, " ").trim();   
-		searchKeyword = $("#searchCustomerInput").val().replace(/ /gi, "%");	   
+
+	    searchKeyword = $("#searchCustomerInput").val().replace(/%/gi, " ").trim();        
 
         $.ajax({
             //url: 'https://zuelligpharmatest1.bigmachines.com/rest/v3/customCustomer_Master?q={"contact_firstname":"Biomedical Science Institutes"}',
             url: ajaxUrl,
-            //data: "q={'custmasterstring':{$regex:'/" + encodeURIComponent($('#searchCustomerInput').val()) + "/i'}}&orderby=customer_name:asc"
-            // data: 'q={"custmasterstring":{$regex:"/' + encodeURIComponent( searchKeyword ) + '/i"}}&orderby=customer_name:asc'
-            //   data:  'q={$and:[{"custmasterstring":{$regex:"/' + encodeURIComponent( $("#searchCustomerInput").val() ) + '/i"}},{"recrdflag" :{$ne: "I"}},{"control_flag" :{$ne: "N"}}]}&orderby=customer_name:asc'
-            data: 'q={$and:[{"custmasterstring":{$regex:"/' + encodeURIComponent( searchKeyword ) + '/i"}},{$or:[{"recrdflag":{$eq:"A"}},{"recrdflag":{$exists:false}}]},{$or:[{"control_flag":{$eq:"Y"}},{"control_flag":{$exists:false}}]}]}&orderby=customer_name:asc'
-
+          //data: "q={'custmasterstring':{$regex:'/" + encodeURIComponent($('#searchCustomerInput').val()) + "/i'}}&orderby=customer_name:asc"
+            data: 'q={"custmasterstring":{$regex:"/' + encodeURIComponent( searchKeyword ) + '/i"}}&orderby=customer_name:asc'
         }).done(function(response) {
             console.log('jquery done');
             var data = response.items;
@@ -2105,7 +2013,6 @@
                         ];
                     }
                 }else{
-
                     subDataSet = [  '', 
                                     colArr[0], 
                                     colArr[1], 
@@ -2123,31 +2030,7 @@
 
             $('#searchCustomerInput').keyup(function() {
                 var inputLength = $('#searchCustomerInput').val().length;
-                var check_nationality = function (nationality) {
-                var countryEle = document.getElementById('userSalesOrg_t');
-                if (countryEle == null) { //this is for material page.
-                    countryEle = $('input[name="userSalesOrg_PL"]').val();
-                    countryCode = countryEle;
-                } else {
-                    var countryCode = parseInt(countryEle.value);
-                }
-                if (typeof countryCode == "undefined") {
-                    countryCode = "2601";
-                }
-                if (nationality == 2600) {
-                    nationality = 2601;
-                }
-
-                var valid = false;
-                if (nationality == countryCode || countryCode == 2601) {
-                    valid = true;
-                }
-
-                return valid;
-            }
-              var ruleMaxChar = ( !check_nationality(2800) )? 3 : 2;				
-              
-              if (inputLength === ruleMaxChar || inputLength > ruleMaxChar) {
+                if (inputLength === 3 || inputLength > 3) {
 
                     seachCustomer.search($(this).val(), true, true).draw();
                     $('.search-cust_wrapper').show();
@@ -2249,9 +2132,6 @@
                 console.log("fnDrawCallback : #searchCustomer 1");
 
                 $($("#searchCustomer_wrapper").find(".dataTable")[0]).css({ "width": "100%" });
-                $("#searchCustomer_wrapper").css("min-width", "650px");
-                $("#searchCustomer_wrapper").find(".dataTables_scrollHead").css("min-width", "900px");
-                $("#searchCustomer_wrapper").find(".dataTables_scrollBody").css("min-width", "900px");
 
                 if ( check_nationality(2500) ) {
                     $($("#searchCustomer").find("tbody").children("tr")).each(function (index, data) {
@@ -2338,7 +2218,7 @@
             File Location : $BASE_PATH$/image/javascript/js-ezrx.js
             Layout : Tablet
         */
-        /* var searchKeyword = $('#searchCustomerInput').val().replace(/%/gi, " ").trim();
+        var searchKeyword = $('#searchCustomerInput').val().replace(/%/gi, " ").trim();
         var searchCust99 = seachCustomer.column(3).search(searchKeyword, false, false).draw();
         var info = searchCust99.page.info();
         if (info.recordsDisplay === 0) {
@@ -2383,9 +2263,6 @@
                     console.log("fnDrawCallback : #searchCustomer 2");
 
                     $($("#searchCustomer_wrapper").find(".dataTable")[0]).css("table-layout", "fixed");
-                    $("#searchCustomer_wrapper").css("min-width", "650px");
-                  $("#searchCustomer_wrapper").find(".dataTables_scrollHead").css("min-width", "900px");
-                  $("#searchCustomer_wrapper").find(".dataTables_scrollBody").css("min-width", "900px");
 
                     if (userCountry == "PH") {
                         $($("#searchCustomer").find("tbody").children("tr")).each(function (index, data) {
@@ -2421,8 +2298,8 @@
                     $('#sticky-actions button.action-type-modify[data-properties*="36246153"]').click();
 
                 }, 500);*/
-           /*});
-        } */
+            });
+        }
     };
         /*
             End : 10 Nov 2017
@@ -2864,9 +2741,9 @@
             $('#line-item-grid .lig-side-scroller>table tr.lig-row.child').each(function () {
                 var $child = $(this).children('td');
                 var $stock = $child.find('input[name*="inStock_l"]');
-                var $invoiceOverridePrice = $child.find('input[name*="unitPrice_currency"]');
+                var $invoiceOverridePrice = $child.find('input[name*="invoicePrice_l"]');
                 var stockval = $stock.val();
-                var $qty_text = $child.find('input[name*="qty_int_l"]');
+                var $qty_text = $child.find('input[name*="qty_l"]');
     
                 if (stockval == 'No') {
                     $($qty_text.siblings()[0]).css("color", "red");
@@ -2880,7 +2757,7 @@
                     $($child.find("input[name*=_unitPrice_l]").siblings()[0]).css('color', 'red');
                 }
     
-                var textInvoiceOverridePrice = $($invoiceOverridePrice).find("span[data-varname='unitPrice_currency']");
+                var textInvoiceOverridePrice = $($invoiceOverridePrice).find("span[data-varname='invoicePrice_l']");
                 if ($(textInvoiceOverridePrice).text().trim() != "NT$0.00") {
                     $(textInvoiceOverridePrice).css("color", "red");
                 }
@@ -3000,8 +2877,7 @@
 
                                 // if have item on cart
                                 var sliderOut = setInterval(function () {
-                                    //   if ($('.sidebar-state-1').css('right').includes('right: 0px;')) {
-                                    if ($('.sidebar-state-1').attr('style').includes('right: 0px;')) {
+                                    if ($('.sidebar-state-1').css('right').includes('right: 0px;')) {
                                         clearInterval(sliderOut);
 
                                         setTimeout(function () {
@@ -3266,7 +3142,7 @@
                 console.log(sumResult, "long of material details", sumResult.length);
                 if( check_nationality(2800) ){
                     
-                  var materialDetailsFlag2 = ($("input[name='materialDetailsFlag2']").length > 0) ? $("input[name='materialDetailsFlag2']").val().toLowerCase() : "false";                                      
+                    var materialDetailsFlag2 = $("input[name='materialDetailsFlag2']").val().toLowerCase();
 
                     if(materialDetailsFlag2 == "true"){
                         $.ajax({
@@ -3391,7 +3267,7 @@
                     if (type === 'display') {
                        // data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '">';
                         if (check_nationality(2500) ){
-                            data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '" data-customersold="'+full[1]+'" >';
+                            data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '" data-customersold="' + full[1] +'" >';
                         }else if(check_nationality(2800)){
                             console.log(full);
 							//FORMAT soldtoid$$shiptoid$$billtoid
@@ -3496,25 +3372,6 @@
     }
 
     var mobile_itemCheckBonus = function(currentItem) {
-
-        countCheck = 0;
-      $("input[name='_line_item_list']").each(function(index, data){
-        var lengthCheckbox = $("input[name='_line_item_list']").length;
-        if($(data).is(":checked")){
-            countCheck++;
-        }
-        console.log(lengthCheckbox, "==", countCheck, countCheck == lengthCheckbox);
-        if(countCheck == lengthCheckbox){
-            console.log("_line_item_list_all was CHECKED");
-            setTimeout(function(){
-                $("input[name='_line_item_list_all']").prop("checked", true);
-            }, 1000);
-        }else{
-            setTimeout(function(){
-                $("input[name='_line_item_list_all']").prop("checked", false);
-            }, 1000);
-        }
-      });
 
         var currTr = currentItem.parent().parent().parent();
         var checked = currentItem.is(":checked");
@@ -3684,10 +3541,53 @@
                     $(".jg-box-topbar").append("<div style='position:absolute; right: 30px; top: 20px;font-size: 17px;' >" + window._BM_USER_LOGIN + "</div>");                    
                     
                     var hideMenuForCreditControlUser = function(){
-                        if ( $("table[onclick*='newTransaction']").length == 0 ) {
-                            $(".jg-linkbtn.new_order").hide();
-                            $(".jg-linkbtn.copy_order").hide();
-                        }                                           
+                        $('#jg-overlay').show();
+
+                        var userName = window._BM_USER_LOGIN;
+                        var fullUrl = window.location.host;
+                        var parts = fullUrl.split('.');
+                        var instanceName = parts[0];
+                        var identificationUser = "https://" + instanceName + ".bigmachines.com/rest/v4/customBU_Identification";
+                        var datauser = "q={%22login_id%22:%20%22" + userName + "%22}";
+
+                        var usernameGetCustomer = "CPQAPIUser";
+                        var passwordGetCustomer = "csC(#15^14";
+
+                        $.ajax({
+                            url: identificationUser,
+                            data: datauser,
+                            contentType: "application/json; charset=utf-8",
+				            // header: { "Authorization": "Basic " + btoa(usernameGetCustomer + ":" + passwordGetCustomer) },                            
+                            type: 'GET',
+                            /* beforeSend: function (xhr) {
+                                xhr.setRequestHeader ("Authorization", "Basic " + btoa(usernameGetCustomer + ":" + passwordGetCustomer));
+                            }, */
+                        }).done(function (resultIdentification) {
+                            if (resultIdentification.items.length > 0) {
+                                var user = resultIdentification.items[0];
+                                if (user.sales_org == "2800") {
+                                    var urlProfileUser = 'https://' + instanceName + '.bigmachines.com/rest/v4/customTW_User_Hierarchy';
+                                    var dataUser = 'q={"user":"' + userName + '"}';
+                                    $.ajax({
+                                        url: urlProfileUser,
+                                        data: dataUser,
+                                        contentType: "application/json; charset=utf-8",
+                                        type: 'GET'
+                                    }).done(function (resultProfileUser) {
+                                        if (resultProfileUser.items.length > 0) {
+                                            var detailUser = resultProfileUser.items[0];
+                                            if (detailUser.role.toLowerCase() == "credit control rep") {
+                                                $(".jg-linkbtn.new_order").hide();
+                                                $(".jg-linkbtn.copy_order").hide();
+                                            }
+                                        }
+                                        $('#jg-overlay').hide();
+                                    });
+                                }
+                            }
+                            $('#jg-overlay').hide();
+                        });
+                        $('#jg-overlay').hide();                        
                     }
                     hideMenuForCreditControlUser();
                     clearStorageOrderItem();
@@ -3699,10 +3599,6 @@
                     var flag = window.sessionStorage.getItem("flag");
                     if(flag == "rightnow"){
                         dss_view();
-                    }
-
-                    if($(".error-text").length > 0){
-                        $("#jg-overlay").hide();
                     }
 
                 } else if (pagetitle == 'transaction') {
@@ -3810,6 +3706,8 @@
                         if ($("#readonly_1_status_t").text().toLowerCase() == 'submitted') {
                             $('#readonly_1_visualWorkflow img').attr('src', rootFolder + '/image/images/vi_order_submitted_active.png');
                         }
+
+
 
                         /*
                             End   : 20 March 2017
@@ -4007,66 +3905,6 @@
                     }else{
                         $("a[name='home']").closest("table").hide();
                     }
-
-                    /* 
-                    Created By    :- Created By Ilyas / Zainal Arifin, Date : 4 Juli 2018
-                    Task          :- Automatically click save button, if order status is order initiated and fliag is right
-                    Page          :- Order Page
-                    File Location :- $BASE_PATH$/javascript/js-ezrx.js
-                    Layout        :- Desktop
-                */
-
-                var flag = window.sessionStorage.getItem("flag");
-                if ($("#readonly_1_status_t").text().toLowerCase() == 'order initiated' && flag == "rightnow" && getZPUserType() == "customer") {
-                    var isExist = false;
-                    if( $("li.error-text").length > 0 ){
-                        $("li.error-text").each(function(i, data){
-    
-                            if( $(data).text().toLowerCase().indexOf( "an order is already present") != -1 ){
-                                isExist = true;
-                            }
-                            
-                        });
-                    }
-                    
-                    if(isExist == false){
-                        $('#save').click();
-                        console.log('order initiated and flag is not null');
-                    }
-                }
-
-                /* 
-                    Created By    :- Created By Ilyas / Zainal Arifin, Date : 4 Juli 2018
-                    Task          :- Automatically click save button, if order status is order initiated and fliag is right
-                    Page          :- Order Page
-                    File Location :- $BASE_PATH$/javascript/js-ezrx.js
-                    Layout        :- Desktop
-                */
-
-                    /* 
-                        Created By    :- Created By Zainal Arifin, Date : 5 Juli 2018
-                        Task          :- Hide submit order if status order is not submitted and isATestOrder is true
-                        Page          :- Order Page
-                        File Location :- $BASE_PATH$/javascript/js-ezrx.js
-                        Layout        :- Desktop
-                    */
-                    if($("#readonly_1_status_t").length > 0 && $("input[name='isATestOrder_t']").length > 0 ){
-                        var isCompleteOrSubmitted = $("#readonly_1_status_t").html().toLowerCase();
-                        var isSaveAsTemplate = $("input[name='isATestOrder_t']").val().trim().toLowerCase();
-
-                        if(isCompleteOrSubmitted == "not submitted" && isSaveAsTemplate == "true"){
-                            $(".action.action-type-modify:contains('Submit Order'), button:contains('Submit Order')").hide();
-                            $("#submit_order").closest("table").hide();
-                        }
-                    }
-
-                    /* 
-                        Created By    :- Created By Zainal Arifin, Date : 5 Juli 2018
-                        Task          :- Hide submit order if status order is not submitted and isATestOrder is true
-                        Page          :- Order Page
-                        File Location :- $BASE_PATH$/javascript/js-ezrx.js
-                        Layout        :- Desktop
-                    */
 
                     transform_newcopypage();
                 } else if (pagetitle == 'model configuration') {
@@ -6551,7 +6389,6 @@
                 clearStorageOrderItem();
                 if (pagetitle == 'commerce management') {
                     console.log('commerce management');
-                  localStorage.removeItem("frequentlyAccessedCustomers_t");                    
                     $('html').addClass('jg-mobilelayout');
                     transform_mainlayout();
                     transform_orderspage();
@@ -6568,30 +6405,6 @@
                     if(flag == "rightnow"){
                         dss_view();
                     }
-
-                /*
-                    Start : 12 Juli 2018
-                    Task  : New Order & Copy Order action to be hidden For Credit Control Rep.
-                    Page  : Commerce Management
-                    File Location : $BASE_PATH$/image/javascript/js-ezrx.js
-                    Layout : Mobile
-                */
-
-                var hideMenuForCreditControlUser = function(){
-                    if ($("table[onclick*='newTransaction']").length == 0) {
-                        $(".jg-linkbtn.new_order").hide();
-                        $(".jg-linkbtn.copy_order").hide();
-                    }                       
-                }
-                hideMenuForCreditControlUser();
-
-                /*
-                    Start : 12 Juli 2018
-                    Task  : New Order & Copy Order action to be hidden For Credit Control Rep.
-                    Page  : Commerce Management
-                    File Location : $BASE_PATH$/image/javascript/js-ezrx.js
-                    Layout : Mobile
-                */
 
                 } else if (pagetitle == "zuellig pharma products" || pagetitle == "zuellig pharma order processData") {
                     console.log('zuellig pharma products');
@@ -6709,6 +6522,7 @@
             console.log('filterPage', filterPage);
             if ($("#line-item-grid").length > 0 && filterPage.search("copy_processing.jsp") == -1 ){
                 filterPage = "commerce";
+                localStorage.removeItem("frequentlyAccessedCustomers_t");                
 			}
 			if($("#materialArrayset").length > 0){
 				filterPage = "config";
@@ -7194,7 +7008,6 @@
             } else if (filterPage.search("commerce_manager.jsp") != -1) {
                 //Commerce Management
                 console.log("Commerce page");
-                localStorage.removeItem("frequentlyAccessedCustomers_t");
                 incompleteOrder();
 
                 /* if filterPage contains with edit_profile.jsp */
@@ -8572,7 +8385,6 @@ console.log("check_nationality", check_nationality(2601) );
         $("input[name = _line_item_list]").change(function() {
             console.log('mobile_itemCheckBonus');
             mobile_itemCheckBonus($(this));
-
         });
 
 
@@ -9080,19 +8892,15 @@ console.log("check_nationality", check_nationality(2601) );
 
             var valueOfBonus = $(this).find('input[name="contractBonus"]').val();
             // console.log('valueOfBonus', $(this).find('input[name="contractBonus"]').val());
-            $($(this).children().children()).hide();        
+
             if (valueOfBonus != '') {
                 button_helper = '<i class="material-lens" aria-hidden="true" ></i>';
-                if($($(this).children().children()).parent().html().indexOf("material-lens") == -1){
-                    $($(this).children().children()).parent().append(button_helper);
-                }
             } else {
                 button_helper = '-';
-                if($($(this).children().children()).parent().text().indexOf("-") == -1){
-                    $($(this).children().children()).parent().append(button_helper);
-                  }
             }
             // $(this).children('.attribute-field-container').children('span').html(button_helper);
+            $($(this).children().children()).hide();
+            $($(this).children().children()).parent().append(button_helper);
             return valueOfBonus;
         }).click(function() {
 
