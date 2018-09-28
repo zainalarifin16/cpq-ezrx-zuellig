@@ -30,26 +30,26 @@ $(document).ready(function(){
         
     }
 
-    var isMobile = function () {
-      return (navigator.userAgent.match(/Android/i) ||
-        navigator.userAgent.match(/webOS/i) ||
-        navigator.userAgent.match(/iPhone/i) ||
-        navigator.userAgent.match(/iPad/i) ||
-        navigator.userAgent.match(/iPod/i) ||
-        navigator.userAgent.match(/BlackBerry/i) ||
-        navigator.userAgent.match(/Windows Phone/i)) ? true : false;
+  var isMobile = function () {
+    return (navigator.userAgent.match(/Android/i) ||
+      navigator.userAgent.match(/webOS/i) ||
+      navigator.userAgent.match(/iPhone/i) ||
+      navigator.userAgent.match(/iPad/i) ||
+      navigator.userAgent.match(/iPod/i) ||
+      navigator.userAgent.match(/BlackBerry/i) ||
+      navigator.userAgent.match(/Windows Phone/i)) ? true : false;
 
-    }
+  }
 
-    var isLoadingDone = function () {
-      return $("#jg-overlay").css("display") == "none" ? true : false;
-    }
+  var isLoadingDone = function () {
+    return $("#jg-overlay").css("display") == "none" ? true : false;
+  }
 
     function hide_recommended_material(){
       var tabelFavFreqReq = $("#attribute-pastOrders").parent().parent().parent().parent().parent().parent('.column-1');
       $(tabelFavFreqReq.children()[1]).hide();
     }
-    
+
     /* 
       Created By    :- Created By Zainal Arifin, Date : 27 March 2018
       Task          :- Give Higlight red color if comment not empty
@@ -95,7 +95,7 @@ $(document).ready(function(){
       File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
       Layout        :- Desktop
     */
-    
+
     /*
         End   : -
         Task  : - Detect User
@@ -114,9 +114,9 @@ $(document).ready(function(){
         */
 
         var sold_to_address = function(){
-          $('#attr_wrapper_1__soldTo_t_address_2').parent().before('<div id="soldToAddress88"><span style="padding-right: 1px;width: 100%;">Sold To Address</span></div>');
-          $('#attr_wrapper_1__soldTo_t_address').parent().attr("style","width: 40%;");
-          $('#attr_wrapper_1__soldTo_t_zip').parent().attr("style","margin-left: 0%; width: 30%;");
+			$('#attr_wrapper_1__soldTo_t_address_2').parent().before('<div id="soldToAddress88"><span style="padding-right: 1px;width: 100%;">Sold To Address</span></div>');
+			$('#attr_wrapper_1__soldTo_t_address').parent().attr("style","width: 40%;");
+			$('#attr_wrapper_1__soldTo_t_zip').parent().attr("style","margin-left: 0%; width: 30%;");
         }
 
         /*
@@ -155,9 +155,9 @@ $(document).ready(function(){
 
                         $("#attr_wrapper_1_customerSoldToId_New").closest(".column").css("margin-left", "0px");
                         $($("#field_wrapper_1_customerShipToId_t").closest(".column-layout").children()[0]).css("display", "block"); //clone spacer to element
-
+                        
                         $("#attr_wrapper_1_soldToAddress_html_t").remove();// remove duplicate sold to address header.
-
+                        
                         /* 
                           Created By    :- Created By Zainal Arifin, Date : 19 Feb 2018
                           Task          :- TW-07 Address set layout correction.
@@ -188,17 +188,6 @@ $(document).ready(function(){
 
                         //remove duplicate of saveQuoteRequired_t
                         $($("input[name='saveQuoteRequired_t']")[1]).remove();
-
-
-                        /* 
-                          Created By    :- Created By Zainal Arifin, Date : 15 March 2018
-                          Task          :- Remove Duplicate input field
-                          Page          :- Global
-                          File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
-                          Layout        :- Desktop
-                        */
-
-                        redColorCommentOrder();
 
                     }
 
@@ -283,69 +272,70 @@ $(document).ready(function(){
         }
 
         var order_page_stock_color = function(){
-          
-          /* $("td[id*='qty_int_l']").each(function (i, data) {
-            var isQtyOverride = parseInt( $(this).find("span[id*='qty_int_l']").text().trim().toLowerCase() );
-            if (isQtyOverride > 0) {
-              // var parent = $(this).closest(".line-item");
-              // var qty_span = $(parent).find("span[id*='qty_int_l']");
-              $(this).find("span[id*='qty_int_l']").css("color", "rgb(255,0,0)");
-            }
-          }); */
-          
-          $("td[id*='bonusOverideFlag_l']").each(function (i, data) {
-            var parent = $(this).closest(".line-item");
-            var type_material = $(parent).find("span[id*='refNO_text']").text().trim().toLowerCase();
-            if (type_material == "bonus") {
-              var isBonusOverride = $(this).find("span[id*='bonusOverideFlag_l']").text().trim().toLowerCase();
-              if (isBonusOverride == "true") {
-                var typeBonus = $(parent).find("span[id*='bonusType_l']").text().trim().toLowerCase();
-                if (typeBonus == "system bonus") {
-                  var qty_span = $(parent).find("span[id*='qty_int_l']");
-                  $(qty_span).css("color", "red");
-                }
+
+        /* $("td[id*='qty_int_l']").each(function (i, data) {
+          var isQtyOverride = parseInt( $(this).find("span[id*='qty_int_l']").text().trim().toLowerCase() );
+          if (isQtyOverride > 0) {
+            // var parent = $(this).closest(".line-item");
+            // var qty_span = $(parent).find("span[id*='qty_int_l']");
+            $(this).find("span[id*='qty_int_l']").css("color", "rgb(255,0,0)");
+          }
+        }); */
+
+        $("td[id*='bonusOverideFlag_l']").each(function (i, data) {
+          var parent = $(this).closest(".line-item");
+          var type_material = $(parent).find("span[id*='refNO_text']").text().trim().toLowerCase();
+          if (type_material == "bonus") {
+            var isBonusOverride = $(this).find("span[id*='bonusOverideFlag_l']").text().trim().toLowerCase();
+            if (isBonusOverride == "true") {
+              var typeBonus = $(parent).find("span[id*='bonusType_l']").text().trim().toLowerCase();
+              if (typeBonus == "system bonus") {
+                var qty_span = $(parent).find("span[id*='qty_int_l']");
+                $(qty_span).css("color", "red");
               }
             }
-          });
+          }
+        });
 
 
-          $("td[id*='isPriceOverride']").each(function(i, data){
-            var parent = $(this).closest(".line-item");
-            var type_material = $(parent).find("span[id*='refNO_text']").text().trim().toLowerCase();
-            if(type_material != "bonus"){
-              var isPriceOverrideVal = $(this).find("span[id*='isPriceOverride']").text().trim().toLowerCase();
-              if(isPriceOverrideVal.length > 0){
-                if(isPriceOverrideVal == 'true'){
-                  var totalPriceSpan = $(parent).find("span[id*='totalPrice_currency']");
-                  $(totalPriceSpan).css("color", "red");
-                  var unitPriceSpan = $(parent).find("span[id*='unitPrice_currency']");
-                  $(unitPriceSpan).css("color", "red");
-                }
+        $("td[id*='isPriceOverride']").each(function(i, data){
+          var parent = $(this).closest(".line-item");
+          var type_material = $(parent).find("span[id*='refNO_text']").text().trim().toLowerCase();
+          if(type_material != "bonus"){
+            var isPriceOverrideVal = $(this).find("span[id*='isPriceOverride']").text().trim().toLowerCase();
+            if(isPriceOverrideVal.length > 0){
+              if(isPriceOverrideVal == 'true'){
+                var totalPriceSpan = $(parent).find("span[id*='totalPrice_currency']");
+                $(totalPriceSpan).css("color", "red");
+                var unitPriceSpan = $(parent).find("span[id*='unitPrice_currency']");
+                $(unitPriceSpan).css("color", "red");
               }
             }
-          });
+          }
+        });
 
-          $("td[id*='netPriceDiscount_t']").each(function(i, data){
-            var parent = $(this).closest(".line-item");
-            var type_material = $(parent).find("span[id*='refNO_text']").text().trim().toLowerCase();
-            if(type_material != "bonus"){
-              var priceDiscount_tVal = $(this).find("span[id*='netPriceDiscount_t']").text().trim().toLowerCase();
-              if(priceDiscount_tVal.length > 0){
-                if (priceDiscount_tVal != '0.0'){
-                  var parent = $(this).closest(".line-item");
-                  var totalPriceSpan = $(parent).find("span[id*='totalPrice_currency']");
-                  $(totalPriceSpan).css("color", "red");
-                  var unitPriceSpan = $(parent).find("span[id*='unitPrice_currency']");
-                  $(unitPriceSpan).css("color", "red");
-                }
+        $("td[id*='netPriceDiscount_t']").each(function(i, data){
+          var parent = $(this).closest(".line-item");
+          var type_material = $(parent).find("span[id*='refNO_text']").text().trim().toLowerCase();
+          if(type_material != "bonus"){
+            var priceDiscount_tVal = $(this).find("span[id*='netPriceDiscount_t']").text().trim().toLowerCase();
+            if(priceDiscount_tVal.length > 0){
+              if (priceDiscount_tVal != '0.0'){
+                var parent = $(this).closest(".line-item");
+                var totalPriceSpan = $(parent).find("span[id*='totalPrice_currency']");
+                $(totalPriceSpan).css("color", "red");
+                var unitPriceSpan = $(parent).find("span[id*='unitPrice_currency']");
+                $(unitPriceSpan).css("color", "red");
               }
             }
-          });
+          }
+        });
 
-        }
+      }
 
         var order_page_stock_color_mobile = function () {
           var redColor = "rgb(255, 0, 0)";
+          var blackColor = "rgb(0, 0, 0)";
           
           $('#line-item-grid .lig-side-scroller>table tr.lig-row.child').each(function () {
             var $child = $(this).children('td');
@@ -376,7 +366,7 @@ $(document).ready(function(){
                 }
               }
               $($(unitPrice_text).siblings()[0]).css("color", blackColor);
-              $($(totalPrice_text).siblings()[0]).css("color", blackColor);
+              $($(totalPrice_text).siblings()[0]).css("color", blackColor); 
             }
 
           });
@@ -400,9 +390,9 @@ $(document).ready(function(){
             $('#materialArrayset').after(updateMsg);
             $("#update-alert").css("padding-bottom", "30px");
             if ($("#btn-cart-save").length > 0) {
-              if(isMobile()){
-                $(".button-save").attr("disabled", true);
-              }else{
+              if (isMobile()) {
+                $(".button-save").attr("disabled");
+              } else {
                 $("#btn-cart-save").attr("disabled", true).css({ "background-color": "grey" });
               }
             } else {
@@ -414,9 +404,9 @@ $(document).ready(function(){
         function enabled_btn_save_remove_alert() {
           $("#update-alert").remove();
           if ($("#btn-cart-save").length > 0) {
-            if(isMobile()){
+            if (isMobile()) {
               $(".button-save").removeAttr("disabled");
-            }else{
+            } else {
               $("#btn-cart-save").attr("disabled", false).css({ "background-color": "#0C727A" });
             }
           } else {
@@ -440,28 +430,28 @@ $(document).ready(function(){
         var basic_value_price = "0.00";
         var listEditedField = {};
         var var_find_text = (isMobile()) ? ".form-field" : ".text-field";
-        
+
         $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_Invoiceoverrideprice + ", " + var_comments + ", " + var_qtyBonus + ", " + var_bonusOverride).off();
 
         function isOverridePrice(id) {
           id = Math.abs(id);
-          var overridePriceString = (isMobile())? "overridePrice_currency" : "overridePrice_currency-"; 
-          var overridePriceVal = $("#"+overridePriceString + id + "-display").val();
-          if(!isMobile()){
+          var overridePriceString = (isMobile()) ? "overridePrice_currency" : "overridePrice_currency-";
+          var overridePriceVal = $("#" + overridePriceString + id + "-display").val();
+          if (!isMobile()) {
             var overridePriceValue = (overridePriceVal != "") ? overridePriceVal.slice(1) : 0.0;
           }
           if (overridePriceValue != basic_value_price) {
-            $("#"+ overridePriceString + id + "-display").css("color", redColor);
-            if(!isMobile()){
+            $("#" + overridePriceString + id + "-display").css("color", redColor);
+            if (!isMobile()) {
               $("#totalPrice_currency-" + id).css("color", redColor);
-            }else{
-              console.log( "#" + var_totalPrice_Currency.replace("td.", "") + "-" + id );
-              console.log($( "#" + var_totalPrice_Currency.replace("td.", "") + "-" + id ));
+            } else {
+              console.log("#" + var_totalPrice_Currency.replace("td.", "") + "-" + id);
+              console.log($("#" + var_totalPrice_Currency.replace("td.", "") + "-" + id));
               $("#" + var_totalPrice_Currency.replace("td.", "") + "-" + id).find(".form-field").css({ "color": redColor });
             }
             // $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);                
           } else {
-            $("#"+ overridePriceValue + id + "-display").css("color", blackColor);
+            $("#" + overridePriceValue + id + "-display").css("color", blackColor);
           }
 
         }
@@ -473,11 +463,11 @@ $(document).ready(function(){
           var overrideDiscountValue = (overrideDiscountVal != "") ? overrideDiscountVal : 0.0;
           if (overrideDiscountValue != basic_value) {
             $("#netPriceDiscount-" + id).css("color", redColor);
-            if(!isMobile()){
+            if (!isMobile()) {
               $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").css("color", redColor);
-            }else{
-              console.log( "#" + var_totalPrice_Currency.replace("td.", "") + "-" + id );
-              console.log($( "#" + var_totalPrice_Currency.replace("td.", "") + "-" + id ));
+            } else {
+              console.log("#" + var_totalPrice_Currency.replace("td.", "") + "-" + id);
+              console.log($("#" + var_totalPrice_Currency.replace("td.", "") + "-" + id));
               $("#" + var_totalPrice_Currency.replace("td.", "") + "-" + id).find(".form-field").css({ "color": redColor });
             }
           } else {
@@ -485,20 +475,20 @@ $(document).ready(function(){
             isOverridePrice(id);
           }
         }
-        
+
         function override_price(data, id) {
-          if(isMobile()){
+          if (isMobile()) {
             overridePriceValue = parseFloat($("#" + var_overrideprice.replace("td.cell-", "") + id).val());
-          }else{
+          } else {
             overridePriceValue = ($(data).val() != "") ? $(data).val().slice(1) : 0.0;
           }
-          console.log(overridePriceValue, "==", basic_value_price, overridePriceValue != basic_value_price);          
+          console.log(overridePriceValue, "==", basic_value_price, overridePriceValue != basic_value_price);
           if (overridePriceValue != basic_value_price) {
             $(data).css("color", redColor);
-            if(!isMobile()){
+            if (!isMobile()) {
               $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").css("color", redColor);
-            }else{
-              console.log( "#" + var_totalPrice_Currency.replace("td.", "") + "-" + id );
+            } else {
+              console.log("#" + var_totalPrice_Currency.replace("td.", "") + "-" + id);
               $("#" + var_totalPrice_Currency.replace("td.", "") + "-" + id).find(".form-field").css({ "color": redColor });
             }
           }
@@ -509,15 +499,15 @@ $(document).ready(function(){
           console.log(var_netpricediscValue, "==", basic_value, var_netpricediscValue != basic_value);
           if (var_netpricediscValue != basic_value) {
             $(data).css("color", redColor);
-            if(!isMobile()){
+            if (!isMobile()) {
               $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").css("color", redColor);
-            }else{
+            } else {
               $("#" + var_totalPrice_Currency.replace("td.", "") + "-" + id).find(".form-field").css({ "color": redColor });
             }
           }
         }
 
-        
+
         $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_Invoiceoverrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).map(function (index, data) {
 
           if (!isMobile()) {
@@ -534,13 +524,13 @@ $(document).ready(function(){
               id = $(this).attr("id").replace(var_netpricedisc.replace("td.cell-", "") + "-", "").replace("-display", "");
               netprice_disc($(this), id);
             }
-          }else{
+          } else {
             if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
               id = $(this).attr("id").replace(var_overrideprice.replace("td.cell-", ""), "").replace("-display", "");
               override_price($(this), id);
             }
 
-            if (typeof $(this).attr("id") != 'undefine') {
+            if (typeof $(this).attr("id") != 'undefined') {
               if ($(this).closest(var_netpricedisc.replace("td", "")).length > 0) {
                 id = $(this).attr("id").replace(var_netpricedisc.replace("td.cell-", ""), "");
                 netprice_disc($(this), id);
@@ -584,9 +574,13 @@ $(document).ready(function(){
           } else {
             isChecked = $(data).is(":checked");
           }
-          console.log( $(data).id, isChecked );
+          console.log( $(data).attr("id"), isChecked );          
           if (isChecked) {
-            $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);
+            if(isMobile()){
+              $("#" + var_qty.replace("td.cell-", "") + id).css("color", redColor);
+            }else{
+              $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);
+            }
             var qty_bns_current = $("#" + var_qty.replace("td.cell-", "") + "-" + id).val();
             var qty_bns_before = $("#prevQty-" + id).val();
             if (qty_bns_before != qty_bns_current) {
@@ -633,7 +627,6 @@ $(document).ready(function(){
 
             }
           });
-        
         });
 
         $(var_netpricedisc + ", " + var_qty + ", " + var_overrideprice + ", " + var_Invoiceoverrideprice + ", " + var_comments + ", " + var_qtyBonus).find(var_find_text).on("click focus focusin", function () {
@@ -785,33 +778,33 @@ $(document).ready(function(){
 
       }
 
+        /* TW-03 Price hover table columns to be corrected for TW - Quantity, Invoice Price, Unit Price.  */
+        // tw_tooltip_modelconfiguration();
+        /* TW-03 Price hover table columns to be corrected for TW - Quantity, Invoice Price, Unit Price. */
+
         var reposition_order_mobile = function(){
           
           setTimeout(function(){
             var orderNumber = $("#attribute-transactionID_t").find("div[role='heading']")[0];
             $(orderNumber).css({"width":"18%", "float":"left", "min-width": "40%"});
             $( $(orderNumber).siblings()[0]).css("width", "50%");
-  
+
             var processingStatus = $("#attribute-status_t").find("div[role='heading']")[0];
             $(processingStatus).css("float", "left");
             $($(processingStatus).siblings()[0]).css("width", "50%");
 
             var paymentTerm = $("#attribute-defaultPaymentTerm_t").find("div[role='heading']")[0];
             $(paymentTerm).css({"width":"18%"});
-            
+
             var paymentTermDesc = $("#attribute-paymentTermDescription").find("div[role='heading']")[0];
             $(paymentTermDesc).css({"width":"18%"});
-            
+
             var orderFailureReason = $("#attribute-OrderFailMessage").find("div[role='heading']")[0];
             $(orderFailureReason).css({"width":"18%"});
 
           },1000);
 
         }
-
-        /* TW-03 Price hover table columns to be corrected for TW - Quantity, Invoice Price, Unit Price.  */
-        // tw_tooltip_modelconfiguration();
-        /* TW-03 Price hover table columns to be corrected for TW - Quantity, Invoice Price, Unit Price. */
 
         var onShoppingCartSwipe = function(){
           $("body").on("click tochend swipeleft swiperight", "#swipe-sidebar", function (e) {
@@ -840,7 +833,7 @@ $(document).ready(function(){
             }
         }
 
-        /* 
+                /* 
           Created By    :- Created By Zainal Arifin, Date : 17 April 2018
           Task          :- Order View Page: Material description to be shown on hover for  Additional Bonus Materials.
           Page          :- Model Configuration
@@ -975,9 +968,9 @@ $(document).ready(function(){
           Layout        :- Desktop
         */
         
-        var datetime_picker = function(){
-          
-          var fullUrl = window.location.host; //window.location.host is subdomain.domain.com
+      var datetime_picker = function(){
+        
+        var fullUrl = window.location.host; //window.location.host is subdomain.domain.com
         var parts = fullUrl.split('.');
         var instanceName = parts[0];
 
@@ -1008,7 +1001,7 @@ $(document).ready(function(){
           var valPoDate = $("#pODate").val();
           $.getScript('https://'+instanceName+'.bigmachines.com/bmfsweb/'+instanceName+'/image/javascript/jquery-ui.min.js', function() {
             
-            $("#pODate").prop("type", "input");
+            $("#pODate").prop("type", "input");            
             $( form_date_podate_before ).after("<input id='datepickerpodate' type='text' style='float: left;' readonly >");
             jQuery.noConflict(true);
             $( "#datepickerpodate" ).datepicker({
@@ -1047,9 +1040,6 @@ $(document).ready(function(){
             });
             
             $("#datepickerpodate").on("change", function(){
-
-              $("#pODate").prop("type", "input");
-
               var selectedDate = new Date( $(this).val() );
               var date = selectedDate.getDate();
               var month = selectedDate.getMonth() + 1;
@@ -1067,7 +1057,6 @@ $(document).ready(function(){
           var valPoDate = $("#pODate").val();
           $.getScript('https://'+instanceName+'.bigmachines.com/bmfsweb/'+instanceName+'/image/javascript/jquery-ui.min.js', function() {
             
-            $("#pODate").prop("type", "input");            
             $( form_date_podate_before ).after("<input id='datepickerpodate' type='text' style='float: left;' >");
             $.noConflict(true);
             $( "#datepickerpodate" ).datepicker({
@@ -1119,55 +1108,79 @@ $(document).ready(function(){
           desktop_datepicker();
         }
 
-        }
-        
-        /* 
-          Created By    :- Created By Zainal Arifin, Date : 02 May 2018
-          Task          :- Change View Datepicker
-          Page          :- Model Configuration
-          File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
-          Layout        :- Desktop
-        */
-        
-        /* 
-          Created By    :- Created By Zainal Arifin, Date : 02 May 2018
-          Task          :- Trigger Save after user enter value of "Customer PO Ref" and "PO Date"
-          Page          :- Model Configuration
-          File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
-          Layout        :- Desktop
-        */
-        
-        /* var trigger_save = function(){
+      }
+      
+      /* 
+        Created By    :- Created By Zainal Arifin, Date : 02 May 2018
+        Task          :- Change View Datepicker
+        Page          :- Model Configuration
+        File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
+        Layout        :- Desktop
+      */
+      
+      /* 
+        Created By    :- Created By Zainal Arifin, Date : 02 May 2018
+        Task          :- Trigger Save after user enter value of "Customer PO Ref" and "PO Date"
+        Page          :- Model Configuration
+        File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
+        Layout        :- Desktop
+      */
+      
+      /* var trigger_save = function(){
 
-          var typingTimer;                //timer identifier
-          var doneTypingInterval = 3000;  //time in ms, 5 second for example
-          var input = "#datepickerpodate, #customerPORef_t";
+        var typingTimer;                //timer identifier
+        var doneTypingInterval = 3000;  //time in ms, 5 second for example
+        var input = "#datepickerpodate, #customerPORef_t";
 
-          $( input ).on("keyup", function(){
-            clearTimeout(typingTimer);
-            typingTimer = setTimeout(doneTyping, doneTypingInterval);
-          });
-          
-          $( input ).on("keydown", function(){
-            clearTimeout(typingTimer);
-          });
+        $( input ).on("keyup", function(){
+          clearTimeout(typingTimer);
+          typingTimer = setTimeout(doneTyping, doneTypingInterval);
+        });
+        
+        $( input ).on("keydown", function(){
+          clearTimeout(typingTimer);
+        });
 
-          function doneTyping () {
-            if( $("#datepickerpodate").val().length > 0 && $("#orderingRequestNoMoreThan90Characters_t").val().length > 0 )
-            {
-              $("a[name='save']").click();
-            }
+        function doneTyping () {
+          if( $("#datepickerpodate").val().length > 0 && $("#orderingRequestNoMoreThan90Characters_t").val().length > 0 )
+          {
+            $("a[name='save']").click();
           }
+        }
 
-        } */
+      } */
+      
+      /* 
+        Created By    :- Created By Zainal Arifin, Date : 02 May 2018
+        Task          :- Trigger Save after user enter value of "Customer PO Ref" and "PO Date"
+        Page          :- Model Configuration
+        File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
+        Layout        :- Desktop
+      */
+      
+      /* 
+        Created By    :- Created By Zainal Arifin, Date : 15 May 2018
+        Task          :- set Selected Customer Sold To ID
+        Page          :- Model Configuration
+        File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
+        Layout        :- Desktop
+      */
+      
+      var set_selectedCustomerSoldToID = function(){
+
         
-        /* 
-          Created By    :- Created By Zainal Arifin, Date : 02 May 2018
-          Task          :- Trigger Save after user enter value of "Customer PO Ref" and "PO Date"
-          Page          :- Model Configuration
-          File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
-          Layout        :- Desktop
-        */
+
+      }
+      
+      /* 
+        Created By    :- Created By Zainal Arifin, Date : 15 May 2018
+        Task          :- set Selected Customer Sold To ID
+        Page          :- Model Configuration
+        File Location :- $BASE_PATH$/javascript/js-ezrx-ph.js
+        Layout        :- Desktop
+      */
+
+
 
         if (navigator.userAgent.match(/Android/i) ||
             navigator.userAgent.match(/webOS/i) ||
@@ -1177,7 +1190,7 @@ $(document).ready(function(){
             navigator.userAgent.match(/BlackBerry/i) ||
             navigator.userAgent.match(/Windows Phone/i)
         ) {
-
+          
           var pageTitle = "";
           if ($("#materialArrayset").length > 0) {
             pageTitle = "model configuration";
@@ -1187,7 +1200,7 @@ $(document).ready(function(){
           }
 
           if(pageTitle == "order page"){
-
+            
             function loadOderPageScript() {
               setTimeout(function () {
                 if (isLoadingDone) {
@@ -1195,7 +1208,21 @@ $(document).ready(function(){
                   onShoppingCartSwipe();
                   reposition_order_mobile();
                   orderPageComponent();
-                  datetime_picker();                  
+
+                  $("body").on("click touchend","#tab-draftOrder",function(e){
+                    function draftOrder(){
+                      setTimeout(function(){
+                        if( $(".ui-loader.ui-corner-all").css("display") == "none" ){
+                          datetime_picker();
+                        }else{
+                          draftOrder();
+                        }
+                      }, 1000);
+                    }
+                    draftOrder();
+                  });
+
+                  datetime_picker();
                 } else {
                   loadOderPageScript();
                 }
@@ -1210,7 +1237,7 @@ $(document).ready(function(){
                 if (isLoadingDone) {
                   // check_user_change_value(true);
                   textColorQty();
-                  ph_tooltip_modelconfiguration();        
+                  ph_tooltip_modelconfiguration();
                 } else {
                   loadShoppingCartScript();
                 }
@@ -1253,9 +1280,9 @@ $(document).ready(function(){
                         File Location : $BASE_PATH$/javascript/js-ezrx.js
                         Layout : Both
                     */
-                    orderPageComponent();
+                    orderPageComponent();        
                     datetime_picker();
-                    // trigger_save();
+                    // trigger_save();           
                   } else {
                     loadOderPageScript();
                   }
@@ -1269,7 +1296,7 @@ $(document).ready(function(){
                 setTimeout(function () {
                   if (isLoadingDone) {
                     textColorQty();
-                    ph_tooltip_modelconfiguration();
+                    ph_tooltip_modelconfiguration();                    
                   } else {
                     loadShoppingCartScript();
                   }

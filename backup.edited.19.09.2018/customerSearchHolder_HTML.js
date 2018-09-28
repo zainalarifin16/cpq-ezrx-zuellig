@@ -4,41 +4,71 @@ var pagetitle;
  
 $(document).ready(function(js2){
 
-	var check_nationality = function (nationality) {
-		var countryEle = document.getElementById('userSalesOrg_t');
-		if (countryEle == null) { //this is for material page.
-			countryEle = $('input[name="userSalesOrg_PL"]').val();
-			countryCode = countryEle;
-		} else {
-			var countryCode = parseInt(countryEle.value);
-		}
-		if (typeof countryCode == "undefined") {
-			countryCode = "2601";
-		}
-		if (nationality == 2600) {
-			nationality = 2601;
-		}
-
-		var valid = false;
-		if (nationality == countryCode || countryCode == 2601) {
-			valid = true;
-		}
-
-		return valid;
-	}
+	// window.check_country = function(country){
+	// 	var countryEle = document.getElementById('userSalesOrg_t');
+	// 	if (countryEle == null) { //this is for material page.
+	// 		countryEle = $('input[name="userSalesOrg_PL"]').val();
+	// 		countryCode = countryEle;
+	// 	} else {
+	// 		var countryCode = parseInt(countryEle.value);
+	// 	}
 	
-	var getZPUserType = function () {
+	// 	if (typeof countryCode == "undefined" || countryCode == "" || isNaN(countryCode) ){
+	// 		countryCode = "2601";
+	// 	}
+	
+	// 	// IF Application add new country please add this array.
+	// 	var SG = [ 2600, 2601 ];
+	// 	var TW = [ 2800 ];
+	// 	var PH = [ 2500 ];
+	// 	var TH = [ 2900, 2902 ];
+	// 	var MY = [ 2001 ];
+	// 	var VN = [ 3000, 3001, 3050, 3070, 3072, 3090 ];
+	// 	valid = false;
+
+
+	
+	// 	if( country == "SG" ){
+	// 		if( SG.indexOf( countryCode ) != -1 ){
+	// 			valid = true;
+	// 		}
+	// 	}
+	// 	else if( country == "TW" ){
+	// 		if( TW.indexOf( countryCode ) != -1 ){
+	// 			valid = true;
+	// 		}
+	// 	}
+	// 	else if( country == "PH" ){
+	// 		if( PH.indexOf( countryCode ) != -1 ){
+	// 			valid = true;
+	// 		}
+	// 	}
+	// 	else if( country == "TH" ){
+	// 		console.log( TH.indexOf( countryCode ) );
+	// 		if( TH.indexOf( countryCode ) != -1 ){
+	// 			valid = true;
+	// 		}
+	// 	}
+	// 	else if( country = "MY" ){
+	// 		if( MY.indexOf( countryCode ) != -1 ){
+	// 			valid = true;
+	// 		}
+	// 	}
+	// 	else if( country == "VN" ){
+	// 		if( VN.indexOf( countryCode ) != -1 ){
+	// 			valid = true;
+	// 		}
+	// 	}
+	
+	// 	return valid;
+		
+	// }
+
+	window.getZPUserType = function () {
 		if ($("#zPUserType").length > 0 || $("input[name='zPUserType']").length > 0) {
 			return ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();
 		} else {
 			return "";
-		}
-	}
-
-	var check_country = function(country){
-		var countryCode = document.getElementById("userSalesOrg_t");
-		if(countryCode == null){
-			countryCode = $('input[name="userSalesOrg_PL"]').val();
 		}
 	}
 
@@ -59,7 +89,7 @@ $(document).ready(function(js2){
 
 		setTimeout(function () {
 			if(window.location.href.indexOf("copy_processing.jsp")!= -1 && $('#edit_shopping_cart').length >0){
-				
+								
 				$('#line-item-grid tr:first-child').find('input[name="_line_item_list"]').prop("checked", true);				
 				$("#edit_shopping_cart").click();
 
@@ -112,7 +142,18 @@ $(document).ready(function(js2){
 		}
 
 		//end
+
+		var globalTemplateFlag = ($("span[id*='globalTemplateFlag']").html().toLowerCase() == 'true')? true : false;
+
 		var topCustomerWrapper = '<div class="customer-search-holder"><div class="search-input-wrapper"><p>Search all customers</p><input type="text" id="searchCustomerInput" autocomplete="off" placeholder="Please enter minimum 3 character"></div><div class="search-cust_wrapper"><table id="searchCustomer" width="100%"></table></div><div class="top-cust_wrapper"><p>Top 10 Frequent customers</p><table id="topCustomerList" class="display" width="100%"></table></div></div>';
+
+		if( globalTemplateFlag && window.getZPUserType() == "csteam" && (window.check_country("TH") || window.check_country("VN") || window.check_country("MY")) ){
+
+			if( window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+				topCustomerWrapper = '<div class="customer-search-holder"><div class="search-input-wrapper" style="float:left;    margin: 0px 50px 0px 0px;" ><p>Search all customers(Sold To/Ship To/Bill To Id/Name)</p><input type="text" id="searchCustomerInput" autocomplete="off" placeholder="Please enter minimum 3 character" style="width:90%;" ></div><div class="search-input-wrapper"><p>Search all customers(District/City/Pin Code)</p><input type="text" id="searchCustomerInputNew" autocomplete="off" placeholder="Please enter minimum 3 character" style="width:80%;" ></div><div class="search-cust_wrapper"><table id="searchCustomer" width="100%"></table></div><div class="top-cust_wrapper"><p>Top 10 Frequent customers</p><table id="topCustomerList" class="display" width="100%"></table></div></div>';
+			}
+			
+		}
 
 		$("#attr_wrapper_1_customerSearchHolder_HTML").html(topCustomerWrapper);
 
@@ -137,7 +178,7 @@ $(document).ready(function(js2){
 		var fileAttachmentBSID_t = $('#fileAttachmentBSID_t').val();
 		// localStorage.setItem("fileAttachmentBSID_t", fileAttachmentBSID_t);
 
-		if (getZPUserType() == "customer") {
+		if (window.getZPUserType() == "customer"){
 			return true;
 		}
 
@@ -154,9 +195,6 @@ $(document).ready(function(js2){
 				File Location :- $BASE_PATH$/javascript/customerSearchHolder_HTML.js
 				Layout        :- Global
 			*/
-
-			// var isPHCountry = check_nationality(2500);
-			// var isSGCountry = check_nationality(2600);
 			/* var usernameGetCustomer = "CPQAPIUser";
 			var passwordGetCustomer = "csC(#15^14"; */
 
@@ -204,8 +242,8 @@ $(document).ready(function(js2){
 				}, 5000);
 
 			}else{ */
-				/* 
-					if ($('#customerMasterString_t').length > 0) {
+				/*
+				if ($('#customerMasterString_t').length > 0) {
 					var customerDetails = $("#customerMasterString_t").val();
 					// if (customerDetails === "" && $('#fileAttachmentBSID_t').val() == "") {
 					if (customerDetails === "") {
@@ -219,7 +257,7 @@ $(document).ready(function(js2){
 						$('.search-cust_wrapper').hide();
 					}
 
-				} 
+				}
 				*/
 			// }
 
@@ -330,29 +368,7 @@ var changeCust = function(){
 		*/
 		$("#selectedCustomerDetail").val(newCustId);
 		//PH-47 : Only once to change customer 6/4/2018, Zainal Arifin
-		var check_nationality = function (nationality) {
-			var countryEle = document.getElementById('userSalesOrg_t');
-			if (countryEle == null) { //this is for material page.
-				countryEle = $('input[name="userSalesOrg_PL"]').val();
-				countryCode = countryEle;
-			} else {
-				var countryCode = parseInt(countryEle.value);
-			}
-			if (typeof countryCode == "undefined") {
-				countryCode = "2601";
-			}
-			if (nationality == 2600) {
-				nationality = 2601;
-			}
-
-			var valid = false;
-			if (nationality == countryCode || countryCode == 2601) {
-				valid = true;
-			}
-
-			return valid;
-		}
-		if(!check_nationality(2500)){
+		if(!window.check_country("PH")){
 			$("#customerMasterString_t").val("");
 		}
 		setTimeout(function(){
@@ -363,7 +379,8 @@ var changeCust = function(){
 var delete_line_item_func = function(selectedCustShipID){
 
 	//console.error('userDetectFunc',userDetectFunc());
-	if(userDetectFunc() === 'TW'){
+
+	if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
 		var selectedCustShipID_TW = selectedCustShipID;
 	}
 	
@@ -375,7 +392,7 @@ var delete_line_item_func = function(selectedCustShipID){
 	var line_items_no = $('input[type="checkbox"][name="_line_item_list"]').length;
 	//console.log('selectedCustShipID',selectedCustShipID);
 	//console.log('currentCust',currentCust);
-	if(userDetectFunc() === 'TW'){
+	if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
 		console.log('selectedCustShipID_TW',selectedCustShipID_TW);
 		//return false;
 	}
@@ -385,7 +402,7 @@ var delete_line_item_func = function(selectedCustShipID){
 
 			//document.cookie = "selectedCustShipID="+selectedCustShipID;	
 			sessionStorage.setItem('selectedCustShipID', selectedCustShipID);
-			if(userDetectFunc() === 'TW'){
+			if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
 				sessionStorage.setItem('selectedCustShipID', selectedCustShipID_TW);
 			}
 			$('input[type="checkbox"][name="_line_item_list"]').prop("checked","checked");
@@ -398,36 +415,13 @@ var delete_line_item_func = function(selectedCustShipID){
 		//var selectedCustShipID = $(this).val();
 		// console.log("showCustomerList selectedCustShipID", selectedCustShipID);
 		$("#selectedCustomerDetail").val(selectedCustShipID);
-		if(userDetectFunc() === 'TW'){
+		if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
 			$("#selectedCustomerDetail").val(selectedCustShipID_TW);
 			//return false;
 		}
 		// console.log('showCustomerList selectedCustomerDetail value', $("#selectedCustomerDetail").val());
 		//PH-47 : Only once to change customer 6/4/2018, Zainal Arifin
-		var check_nationality = function (nationality) {
-			var countryEle = document.getElementById('userSalesOrg_t');
-			if (countryEle == null) { //this is for material page.
-				countryEle = $('input[name="userSalesOrg_PL"]').val();
-				countryCode = countryEle;
-			} else {
-				var countryCode = parseInt(countryEle.value);
-			}
-
-			if (typeof countryCode == "undefined") {
-				countryCode = "2601";
-			}
-			if (nationality == 2600) {
-				nationality = 2601;
-			}
-
-			var valid = false;
-			if (nationality == countryCode || countryCode == 2601) {
-				valid = true;
-			}
-
-			return valid;
-		}
-		if(!check_nationality(2500)){
+		if(!window.check_country("PH")){
 			$("#customerMasterString_t").val("");
 		}
 		setTimeout(function(){
@@ -454,30 +448,69 @@ var loadAjax = function() {
 	//window.location.host is subdomain.domain.com
 	var parts = fullUrl.split('.');
 	var sub = parts[0];
-	var dataSet = [];
-
-	/* START AJAX URL SEARCH CUSTOMER FOR SG, TW, PH */
-
-	var ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master";
-	
-	if (userCountry === 'TW') {
-		ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master_2800";
-	} else if (userCountry == "PH") {
-		ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master_2500";
-	}
-
 	searchKeyword = $("#searchCustomerInput").val().replace(/ /gi, "%");
-	var param = 'q={$and:[{"custmasterstring":{$regex:"/' + encodeURIComponent( searchKeyword ) + '/i"}},{$or:[{"recrdflag":{$eq:"A"}},{"recrdflag":{$exists:false}}]},{$or:[{"control_flag":{$eq:"Y"}},{"control_flag":{$exists:false}}]}]}&orderby=customer_name:asc';	
 
-	var ua = window.navigator.userAgent;
-    if (ua.indexOf("MSIE") > 0 || ua.indexOf("Trident") > 0){ // If Internet Explorer, return version number
-		param = 'q={$and:[{%22custmasterstring%22:{$regex:%22/' + encodeURIComponent( searchKeyword ) + '/i%22}},{$or:[{%22recrdflag%22:{$eq:%22A%22}},{%22recrdflag%22:{$exists:false}}]},{$or:[{%22control_flag%22:{$eq:%22Y%22}},{%22control_flag%22:{$exists:false}}]}]}&orderby=customer_name:asc';			
+	var dataSet = [];
+	var param = "";
+
+	if( window.check_country("TH") || window.check_country("MY") || window.check_country("VN") ){
+		
+		var customerMasterTable_t = $("input[name='customerMasterTable_t']").val();
+
+		ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/custom"+customerMasterTable_t;
+		param = 'q={"custmasterstring":{$regex:"/' + encodeURIComponent( searchKeyword ) + '/i"}}&{RecrdFlag:{eq:{A}}&{Control_Flag:{ne:{N}}&orderby=customer_name:asc';
+
+		var globalTemplateFlag = ($("span[id*='globalTemplateFlag']").html().toLowerCase() == 'true')? true : false;
+
+		if( globalTemplateFlag ){
+
+			var oldSearchField = encodeURIComponent( searchKeyword );
+			var countryCodeURL = window.check_country();
+			if( window.check_country("TH") ){
+				countryCodeURL = "2900";
+			}else if( window.check_country("VN") ){
+				countryCodeURL = "3000";
+			}
+    
+			ajaxUrl = 'https://' + sub + '.bigmachines.com/rest/v5/customCustomer_Master_' + countryCodeURL;
+			param = 'q={$and:[{"custmasterstring":{$regex:"/'+ oldSearchField +'/i"}},{$or:[{"recrdflag":{$eq:"A"}},{"recrdflag":{$exists:false}}]},{$or:[{"control_flag":{$eq:"Y"}},{"control_flag":{$exists:false}}]}]}&orderby=customer_name:asc';
+
+			var newSearchField = encodeURIComponent( $("#searchCustomerInputNew").val().trim() );
+
+			if( newSearchField.length > 0 ){
+				param = 'q={$and:[{"ref_field_1":{$regex:"/'+ newSearchField +'/i"}},{$or:[{"recrdflag":{$eq:"A"}},{"recrdflag":{$exists:false}}]},{$or:[{"control_flag":{$eq:"Y"}},{"control_flag":{$exists:false}}]}]}&orderby=customer_name:asc';
+			}
+			
+			if( oldSearchField.length > 0 && newSearchField.length > 0 ){
+				param = 'q={$and:[{"custmasterstring":{$regex:"/'+ oldSearchField +'/i"}},{"ref_field_1":{$regex:"/'+ newSearchField +'/i"}},{$or:[{"recrdflag":{$eq:"A"}},{"recrdflag":{$exists:false}}]},{$or:[{"control_flag":{$eq:"Y"}},{"control_flag":{$exists:false}}]}]}&orderby=customer_name:asc';
+			}
+
+		}
+		
+		ua = window.navigator.userAgent;
+		if (ua.indexOf("MSIE") > 0 || ua.indexOf("Trident") > 0){ // If Internet Explorer, return version number
+			param = 'q={%22custmasterstring%22:{$regex:%22/' + encodeURIComponent( searchKeyword ) + '/i%22}}&{RecrdFlag:{eq:{A}}&{Control_Flag:{ne:{N}}&orderby=customer_name:asc';
+		}
+	
+	}else{
+		var ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master";
+		//NEW AJAX URL FOR TAIWAN CSTEAM START
+		if (userCountry === 'TW') {
+			ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master_2800";
+		} else if (userCountry == "PH") {
+			ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master_2500";
+		}
+
+		//NEW AJAX URL FOR TAIWAN CSTEAM END
+		param = 'q={$and:[{"custmasterstring":{$regex:"/' + encodeURIComponent( searchKeyword ) + '/i"}},{$or:[{"recrdflag":{$eq:"A"}},{"recrdflag":{$exists:false}}]},{$or:[{"control_flag":{$eq:"Y"}},{"control_flag":{$exists:false}}]}]}&orderby=customer_name:asc';
+		
+		ua = window.navigator.userAgent;
+		if (ua.indexOf("MSIE") > 0 || ua.indexOf("Trident") > 0){ // If Internet Explorer, return version number
+			param = 'q={$and:[{%22custmasterstring%22:{$regex:%22/' + encodeURIComponent( searchKeyword ) + '/i%22}},{$or:[{%22recrdflag%22:{$eq:%22A%22}},{%22recrdflag%22:{$exists:false}}]},{$or:[{%22control_flag%22:{$eq:%22Y%22}},{%22control_flag%22:{$exists:false}}]}]}&orderby=customer_name:asc';
+		}
+
 	}
 	
-	/* END AJAX URL SEARCH CUSTOMER FOR SG, TW, PH */
-
-	/* START AJAX URL SEARCH CUSTOMER FOR TH, MY, VN  */
-
 	$.ajax({
 		url: ajaxUrl,
 		data:param
@@ -493,11 +526,11 @@ var loadAjax = function() {
 									item.customer_corp_group, 
 									item.cust_shpto_add1, 
 									item.cust_shpto_addr2, 
-									item.customer_ship_phone,
+									item.customer_ship_phone, 
 									item.customer_shpto_pcode 
 								];
 
-				if(userCountry == "TW"){
+				if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
 					subDataSet = [
 									"", //number
 									item.customer_sold_to_id, 	//1 SOLD TO ID
@@ -512,7 +545,7 @@ var loadAjax = function() {
 									item.customer_bill_to_id,	//10 BILL TO ID
 									item.cust_name_billto,		//11 BILL TO NAME
 								];
-				}else if(userCountry == "PH"){
+				}else if( window.check_country("PH") ){
 					subDataSet = [
 									"", //number
 									item.customer_soldto_id, 	//SOLD TO ID
@@ -575,7 +608,7 @@ var searchCustList = function(dataSet, seachCustomer) {
 					//console.dir(colArr);
 					var subDataSet = null;
 
-					if(userCountry == "TW"){
+					if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
 						if( zPUserType.toLowerCase() == "principal" ){
 							subDataSet = [ 	'',
 											colArr[0],  //1 PRINCIPAL CUST CODE
@@ -607,7 +640,7 @@ var searchCustList = function(dataSet, seachCustomer) {
 											colArr[15], //11 BIILL TO NAME
 										];
 						}
-					} else if(userCountry == "PH"){
+					} else if( window.check_country("PH") ){
 						// console.log(colArr);
 						subDataSet = [ 	'',
 											colArr[0],  //SOLD TO ID
@@ -625,17 +658,16 @@ var searchCustList = function(dataSet, seachCustomer) {
 											colArr[14],
 										];
 					}else{
-
 						subDataSet = [
 										'', 
 										(colArr[0] != null)? colArr[0] : "", 
 										(colArr[1] != null)? colArr[1] : "", 
-										(colArr[2])? colArr[2] : "", 
-										(colArr[3])? colArr[3] : "", 
-										(colArr[4])? colArr[4] : "", 
-										(colArr[5])? colArr[5] : "", 
-										(colArr[6])? colArr[6] : "", 
-										(colArr[7])? colArr[7] : ""
+										(colArr[2] != null )? colArr[2] : "", 
+										(colArr[3] != null )? colArr[3] : "", 
+										(colArr[4] != null )? colArr[4] : "", 
+										(colArr[5] != null )? colArr[5] : "", 
+										(colArr[6] != null )? colArr[6] : "", 
+										(colArr[7] != null )? colArr[7] : ""
 									];
 					}
 
@@ -659,7 +691,7 @@ var searchCustList = function(dataSet, seachCustomer) {
 		var userColumn = [];
 
 		// userColumn = [];
-		if(userCountry == "TW" || userCountry == "PH"){
+		if( window.check_country("TW") || window.check_country("PH") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
 	    	userColumn.push( { title: "" } );
 
 	    	coloumn = $("#applicableColumnsForCustomerSearch").val().split("$$");
@@ -719,7 +751,8 @@ var searchCustList = function(dataSet, seachCustomer) {
 			console.log('removed ship to id');
 			userColumn.splice(2,1);
 		}*/
-		var i = 0;
+		console.log(dataSet);
+		
 		seachCustomer = js2('#searchCustomer').DataTable({
 		destroy: true,
 		scrollY: "400px",
@@ -727,6 +760,7 @@ var searchCustList = function(dataSet, seachCustomer) {
 		data: dataSet,
 		deferRender: true,
 		order: [[3, 'asc']],
+		columns: userColumn,
 		columnDefs: [
 			{
 				targets: 0,
@@ -739,7 +773,7 @@ var searchCustList = function(dataSet, seachCustomer) {
 					// console.dir(full);
 					if(full != null){
 						if(type === 'display'){
-							if(userCountry === 'PH'){
+							if( window.check_country("PH") ){
 								var disabled = '';
 								/*if(full[9]=='Y'){
 									disabled = 'disabled';
@@ -749,7 +783,7 @@ var searchCustList = function(dataSet, seachCustomer) {
 								}
 								data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '" data-suspended="' + full[13] + '" data-customersold="'+full[1]+'" '+disabled+'>';
 							} 
-							else if(userCountry === 'TW'){
+							else if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
 
 								//FORMAT soldtoid$$shiptoid$$billtoid
 								if( zPUserType == "Principal" ){
@@ -787,10 +821,16 @@ var searchCustList = function(dataSet, seachCustomer) {
 				});
 			}
 
+			/* if(window.check_country("TH")){
+				$($("#searchCustomer").find("tbody").children("tr")).each(function(index, data){
+					var columnShipToID = $( data ).find("td.sorting_1");
+					$( columnShipToID ).css({"font-size": "15px","font-weight": "bold", "color": "#007077"});
+				});
+			} */
+
 			console.log("draw dt");
 			$("input[name='searchCust']").off();
 		    $("input[name='searchCust']").on('click', function() {
-
 				var selectCustomerSoldID = function(customersold){
 					// console.log( "input[name='searchCust']", customersold);
 					$("#selectedCustomerSoldtoID").val( customersold );
@@ -800,10 +840,9 @@ var searchCustList = function(dataSet, seachCustomer) {
 				if(userCountry == "PH"){
 					selectCustomerSoldID( $(this).data("customersold") );
 				}
-				// alert("Debugger on going, please dont make an issue");
 	             //console.log('777.111111 ===>>> ',$(this).val());
 				delete_line_item_func($(this).val());
-
+				
 			});
 
 			/*if(userCountry === 'PH'){
@@ -823,66 +862,33 @@ var searchCustList = function(dataSet, seachCustomer) {
 				}
 			}*/
 		},
-		columns: userColumn
 
 		});
 
-		// seachCustomer.on( 'draw', function () {
+		seachCustomer.on( 'draw', function () {
 
-		// 	console.log("draw dt");
-		// 	$("input[name='searchCust']").off();
-		//     $("input[name='searchCust']").on('click', function() {
-		// 		 //console.log('777.111111 ===>>> ',$(this).val());
-		// 		var selectCustomerSoldID = function(){
-		// 			//FORMAT soldtoid$$shiptoid$$billtoid
-		// 			console.log( $(this) );
-		// 			console.log( "input[name='searchCust']", $(this).data("customersold"), $(this).val() );					
-		// 			$("#selectedCustomerSoldtoID").val( $(this).data("customersold") );
-		// 			console.log("#selectedCustomerSoldtoID", $("#selectedCustomerSoldtoID").val() );
-		// 		}
+			console.log("draw dt");
+			$("input[name='searchCust']").off();
+		    $("input[name='searchCust']").on('click', function() {
+				var selectCustomerSoldID = function(customersold){
+					// console.log( "input[name='searchCust']", customersold);
+					$("#selectedCustomerSoldtoID").val( customersold );
+					// console.log("#selectedCustomerSoldtoID", $("#selectedCustomerSoldtoID").val() );
+				}
 
-		// 		console.log(userCountry);
+				if(userCountry == "PH"){
+					selectCustomerSoldID( $(this).data("customersold") );
+				}
+	             //console.log('777.111111 ===>>> ',$(this).val());
+				delete_line_item_func($(this).val());
 				
-		// 		if(userCountry == "PH"){
-		// 			selectCustomerSoldID();
-		// 		}
-		// 		alert("Debugger on going, please dont make an issue");
-		// 		return true;
-		// 		delete_line_item_func($(this).val());
-				
-		// 	});
+			});
 
-		// } );
+		} );
 
 		js2('#searchCustomerInput').keyup(function(){
 			var inputLength = js2('#searchCustomerInput').val().length;
-			
-			var check_nationality = function (nationality) {
-				var countryEle = document.getElementById('userSalesOrg_t');
-				if (countryEle == null) { //this is for material page.
-					countryEle = $('input[name="userSalesOrg_PL"]').val();
-					countryCode = countryEle;
-				} else {
-					var countryCode = parseInt(countryEle.value);
-				}
-				if (typeof countryCode == "undefined") {
-					countryCode = "2601";
-				}
-				if (nationality == 2600) {
-					nationality = 2601;
-				}
-
-				var valid = false;
-				if (nationality == countryCode || countryCode == 2601) {
-					valid = true;
-				}
-
-				return valid;
-			}
-			
-			var ruleMaxChar = ( !check_nationality(2800) )? 3 : 2;
-
-			if( inputLength === ruleMaxChar || inputLength > ruleMaxChar ) {
+			if( inputLength === 3 || inputLength > 3 ) {
 				// console.log('show table');
 				/*
 				    Start : 15 Nov 2017
@@ -891,47 +897,16 @@ var searchCustList = function(dataSet, seachCustomer) {
 				    File Location : $BASE_PATH$/image/javascript/js-ezrx.js
 				    Layout : Tablet
 				*/
-				
-				var keywordCustomer = js2(this).val().replace(/%/gi, " ").trim();
-				seachCustomer.search('');
-				seachCustomer.search(keywordCustomer, true, true).order([3, 'asc']).draw();
-
-				// if (keywordCustomer.indexOf("%") != -1) {
-					// keywordCustomer = keywordCustomer.replace(/%/g, " ");
-					// seachCustomer.column(3).search(keywordCustomer, true, true).draw();					
-					// seachCustomer.search(keywordCustomer, true, true).order([3, 'asc']).draw();
-				// }else{
-					//customer logic for TW and other BUs
-					/* var check_nationality = function (nationality) {
-						var countryEle = document.getElementById('userSalesOrg_t');
-						if (countryEle == null) { //this is for material page.
-							countryEle = $('input[name="userSalesOrg_PL"]').val();
-							countryCode = countryEle;
-						} else {
-							var countryCode = parseInt(countryEle.value);
-						}
-						if (typeof countryCode == "undefined") {
-							countryCode = "2601";
-						}
-						if (nationality == 2600) {
-							nationality = 2601;
-						}
-				
-						var valid = false;
-						if (nationality == countryCode) {
-							valid = true;
-						}
-				
-						return valid;
-					} */
-
-					/* if(check_nationality(2800)){
-						seachCustomer.search(keywordCustomer, true, true).order([3, 'asc']).draw();							
-					}else{ */
-						// seachCustomer.search(keywordCustomer, false, false).order([3, 'asc']).draw();						
-					// }
-					// seachCustomer.column(3).search(keywordCustomer).draw();									
-				// }
+				var keywordCustomer = js2(this).val();
+				seachCustomer.search('');				
+				if (keywordCustomer.indexOf("%") != -1) {
+					keywordCustomer = keywordCustomer.replace(/%/g, " ");
+					// seachCustomer.column(3).search(keywordCustomer, true, true).draw();	
+					seachCustomer.search(keywordCustomer, true, true).draw();
+				}else{
+					seachCustomer.search(keywordCustomer).draw();										
+					// seachCustomer.column(3).search(keywordCustomer).draw();					
+				}
 				/*
 				    End : 15 Nov 2017
 				    Task  : Customer Type-ahead Search
@@ -952,7 +927,7 @@ var searchCustList = function(dataSet, seachCustomer) {
 				js2('.search-cust_wrapper').hide();
 			}
 		});
-		
+
 };
 
 // COMMERCE JS START
@@ -962,61 +937,24 @@ var searchCustomerList = function(seachCustomer) {
 
 	$("#searchCustomerInput").click(function() {
 		var inputLength = $('#searchCustomerInput').val().length;
-		
-		clearTimeout(timer);
-		timer = setTimeout(function() { //then give it a second to see if the user is finished
+		var ruleMaxChar = 3;
+				
+		if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+			ruleMaxChar = 2;
+		}
 
-			var check_nationality = function (nationality) {
-				var countryEle = document.getElementById('userSalesOrg_t');
-				if (countryEle == null) { //this is for material page.
-					countryEle = $('input[name="userSalesOrg_PL"]').val();
-					countryCode = countryEle;
-				} else {
-					var countryCode = parseInt(countryEle.value);
-				}
-				if (typeof countryCode == "undefined") {
-					countryCode = "2601";
-				}
-				if (nationality == 2600) {
-					nationality = 2601;
-				}
-
-				var valid = false;
-				if (nationality == countryCode || countryCode == 2601) {
-					valid = true;
-				}
-
-				return valid;
-			}
-
-			var ruleMaxChar = ( !check_nationality(2800) )? 3 : 2;
-
-			if (inputLength === ruleMaxChar || inputLength > ruleMaxChar ) {
-				//ajax
-				// if(!check_nationality(2800)){
-					// loadAjax();						
-				// }
-				setTimeout( function(){
-					$('.search-cust_wrapper').show();
-				}, 1000);
-				// seachCustomer.search($(this).val()).draw();
-
-			} else {
-				//console.log('hide table');
-				$('.search-cust_wrapper').hide();
-
-			}
-		}, 1000);
-			
-			/* if( inputLength === 3 || inputLength > 3 ) {
-				//console.log('click');
-				$('.search-cust_wrapper').show();
-			} */
+		if (inputLength === ruleMaxChar || inputLength > ruleMaxChar ) {
+			//console.log('click');
+			$('.search-cust_wrapper').show();
+		}
 	});
 
 	var zPUserType = $('#zPUserType').val();
 
 	if (zPUserType === 'CSTeam') {
+
+		var globalTemplateFlag = ($("span[id*='globalTemplateFlag']").html().toLowerCase() == 'true')? true : false;
+		
 		$('#searchCustomerInput').keyup(function(){
 
 			var inputLength = $('#searchCustomerInput').val().length;
@@ -1025,36 +963,15 @@ var searchCustomerList = function(seachCustomer) {
 			clearTimeout(timer);
 			timer = setTimeout(function() { //then give it a second to see if the user is finished
 
-				var check_nationality = function (nationality) {
-					var countryEle = document.getElementById('userSalesOrg_t');
-					if (countryEle == null) { //this is for material page.
-						countryEle = $('input[name="userSalesOrg_PL"]').val();
-						countryCode = countryEle;
-					} else {
-						var countryCode = parseInt(countryEle.value);
-					}
-					if (typeof countryCode == "undefined") {
-						countryCode = "2601";
-					}
-					if (nationality == 2600) {
-						nationality = 2601;
-					}
-
-					var valid = false;
-					if (nationality == countryCode || countryCode == 2601) {
-						valid = true;
-					}
-
-					return valid;
+				var ruleMaxChar = 3;
+				
+				if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+					ruleMaxChar = 2;
 				}
-
-				var ruleMaxChar = ( !check_nationality(2800) )? 3 : 2;				
 
 				if (inputLength === ruleMaxChar || inputLength > ruleMaxChar ) {
 					//ajax
-					// if(!check_nationality(2800)){
-						loadAjax();						
-					// }
+					loadAjax();						
 					setTimeout( function(){
 						$('.search-cust_wrapper').show();
 					}, 1000);
@@ -1066,9 +983,42 @@ var searchCustomerList = function(seachCustomer) {
 
 				}
 	    }, 1000);
-
+		
 
 		});
+		
+		if(globalTemplateFlag && (window.check_country("TH") || window.check_country("VN") || window.check_country("MY")) ){
+			$('#searchCustomerInputNew').keyup(function(){
+
+				var inputLength = $('#searchCustomerInputNew').val().length;
+	
+				// console.log('keyup', inputLength);
+				clearTimeout(timer);
+				timer = setTimeout(function() { //then give it a second to see if the user is finished
+	
+					var ruleMaxChar = 3;
+					
+					if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+						ruleMaxChar = 2;
+					}
+	
+					if (inputLength === ruleMaxChar || inputLength > ruleMaxChar ) {
+						//ajax
+						loadAjax();						
+						setTimeout( function(){
+							$('.search-cust_wrapper').show();
+						}, 1000);
+						// seachCustomer.search($(this).val()).draw();
+	
+					} else {
+						//console.log('hide table');
+						$('.search-cust_wrapper').hide();
+	
+					}
+				}, 1000);
+	
+			});
+		}
 
 	}
 
@@ -1098,17 +1048,17 @@ var showCustomerList = function(customerDetails) {
 		var subDataSet;
 		if(custArr.length > 2){
 			//console.log("  IF part 2222 ====>>>>> ", dataSet);
-			if(userDetectFunc() === 'TW'){
+			if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
 				subDataSet = ['', colArr[0], colArr[1],colArr[2], colArr[3], colArr[4]];
 			}else{
 				subDataSet = ['', colArr[2], colArr[0], colArr[1], colArr[3]];
 			}
 		}else{
 			//console.log("  else part 333====>>>>> ", dataSet);
-			if(userDetectFunc() == 'PH')
+			if( window.check_country("PH") )
 			{
 				subDataSet = ['', colArr[2], colArr[0], colArr[1], colArr[3]];
-			}else if (userDetectFunc() === 'TW') {
+			}else if ( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ) {
 				subDataSet = ['', colArr[0], colArr[1], colArr[2], colArr[3], colArr[4]];
 			}else{
 				subDataSet = ['', colArr[0], colArr[1],"",""];
@@ -1126,7 +1076,7 @@ var showCustomerList = function(customerDetails) {
 		{ title: "Address1" }
 	];
 
-	if(userDetectFunc() === 'TW'){
+	if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
 		columnTopCustList = [
 			{title: "" },
 			{ title: "Sold to ID" },
@@ -1137,7 +1087,7 @@ var showCustomerList = function(customerDetails) {
 		];
 	}
 
-	if(userDetectFunc() === 'PH'){
+	if( window.check_country("PH") ){
 		columnTopCustList = [
 			{title: "" },
 			{ title: "Sold to ID" },
@@ -1167,7 +1117,7 @@ var showCustomerList = function(customerDetails) {
 						if(userCountry === 'PH'){
 							console.log("PH - topCust");
 							data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '" data-customersold="' + full[1] +'" >';
-						}else if(userCountry === 'TW'){
+						}else if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
 							 //console.log(' 88 TW ======>>>> ',full[2]+ '$$' + full[4] + '$$' +full[6]);
 								//FORMAT soldtoid$$shiptoid$$billtoid
 							console.log(full);
@@ -1213,27 +1163,12 @@ var showCustomerList = function(customerDetails) {
 		    Layout : Both
 			*/
 
-			var countryEle = document.getElementById('userSalesOrg_t');
-
-			if (countryEle !== null) {
-				var countryCode = parseInt(countryEle.value);
-				//console.log('=== userDetectFunc countryCode =====>>>> ',countryCode);
-
-				if (countryCode === 2500) {
-					userCountry = 'PH';
-				}
-				if (countryCode === 2800) {
-					userCountry = 'TW';
-				}
-
-			}
-			
-			var selectCustomerSoldID = function(customersold){
-				$("#selectedCustomerSoldtoID").val( customersold );					                    
+			var selectCustomerSoldID = function (customersold) {
+				$("#selectedCustomerSoldtoID").val(customersold);
 			}
 
-			if( userCountry === "PH" ){
-				selectCustomerSoldID( $(this).attr("data-customersold")  );
+			if (userCountry === "PH") {
+				selectCustomerSoldID($(this).attr("data-customersold"));
 			}
 
             delete_line_item_func($(this).val());
