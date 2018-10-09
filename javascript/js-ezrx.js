@@ -1647,24 +1647,32 @@
 
             //console.log('materialSearch',materialSearch);
 
+            var i = 0;
+            while (ajaxSearchMaterialProcess.length) {
+                ajaxSearchMaterialProcess[i].aborted = true;
+                ajaxSearchMaterialProcess[i].abort();
+                i++;
+            }
+
+            materialList.clear().draw();
+            materialList.rows.add(dataSet);
+            materialList.columns.adjust().draw();
+
             var rulesMaterialSearch = ( !check_nationality(2800) )? 3 : 2;
 
             if ((userType === 'csteam') && (materialSearch.length >= rulesMaterialSearch) && enableOldMaterialSearch == "false") {
                 console.log( materialSearch.slice(-1) );
-                if (materialSearch.slice(-1) === '%') {
-                    materialSearch = materialSearch.substring(0, materialSearch.length - 1);
-                    materialSearch = materialSearch.replace(/%/g, ' ');
-                    materialList.search(materialSearch).order([2, 'asc']).draw();
-                } else {
-                    var i = 0;
-                    while (ajaxSearchMaterialProcess.length) {
-                        ajaxSearchMaterialProcess[i].aborted = true;
-                        ajaxSearchMaterialProcess[i].abort();
-                        i++;
+                
+                if(materialSearch.length > 0 ){
+                    if (materialSearch.slice(-1) === '%') {
+                        materialSearch = materialSearch.substring(0, materialSearch.length - 1);
+                        materialSearch = materialSearch.replace(/%/g, ' ');
+                        materialList.search(materialSearch).order([2, 'asc']).draw();
+                    } else {
+                        $('.dataTables_scrollBody .loader-material').show();
+                        $('.dataTables_scrollBody #resultsTable').hide();
+                        searchMaterialAjax(materialSearch, materialList);
                     }
-                    $('.dataTables_scrollBody .loader-material').show();
-                    $('.dataTables_scrollBody #resultsTable').hide();
-                    searchMaterialAjax(materialSearch, materialList);
                 }
 
             } else {
