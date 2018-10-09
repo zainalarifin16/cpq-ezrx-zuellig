@@ -1724,6 +1724,15 @@
             var materialSearch = $(this).val();
     
             //console.log('materialSearch',materialSearch);
+
+            var i = 0;
+            while (ajaxSearchMaterialProcess.length) {
+                ajaxSearchMaterialProcess[i++].abort();
+            }
+
+            materialList.clear().draw();
+            materialList.rows.add(dataSet);
+            materialList.columns.adjust().draw();
     
             var rulesMaterialSearch = ( !window.check_country("TW") )? 3 : 2;
     
@@ -1734,10 +1743,6 @@
                     materialSearch = materialSearch.replace(/%/g, ' ');
                     materialList.search(materialSearch).order([2, 'asc']).draw();
                 } else {
-                    var i = 0;
-                    while (ajaxSearchMaterialProcess.length) {
-                        ajaxSearchMaterialProcess[i++].abort();
-                    }
                     $('.dataTables_scrollBody .loader-material').show();
                     $('.dataTables_scrollBody #resultsTable').hide();
                     searchMaterialAjax(materialSearch, materialList);
