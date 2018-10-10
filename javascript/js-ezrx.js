@@ -6034,12 +6034,12 @@
             var blackColor = "#000000";            
             var listEditedField = {};
 
-            $("input[name='additionalMaterialQty']:not(input[type='hidden'])").map(function (index, data) {
+            /* $("input[name='additionalMaterialQty']:not(input[type='hidden'])").map(function (index, data) {
                 var id = $(data).attr("id").replace("additionalMaterialQty", "");
                 if ($(data).val() != 0) {
                     $("#additionalMaterialQty" + id).css("color", redColor);
                 }
-            });
+            }); */
 
             $("input[name='additionalMaterialQty']").on("click focus", function () {
 
@@ -7904,7 +7904,7 @@ console.log("check_nationality", check_nationality(2601) );
             var listEditedField = {};
             var var_find_text = (isMobile()) ? ".form-field" : ".text-field";
 
-            $(var_qty + ", " + var_overrideprice + ", " + var_qtyBonus + ", " + var_bonusOverride + ", " + var_comments).off();
+            $(var_qty + ", " + var_overrideprice + ", " + var_bonusOverride + ", " + var_comments).off();
 
             function isStockAvailable(id){
                 id = Math.abs(id);
@@ -7927,16 +7927,24 @@ console.log("check_nationality", check_nationality(2601) );
             }
 
             function isOverridePrice(id) {
+
+                if(check_nationality(2601)){
+                    currencyCountry = "S$";
+                }else{
+                    currencyCountry = "P$";                    
+                }
+
                 id = Math.abs(id);
                 var overridePriceString = (isMobile()) ? "overridePrice_currency" : "overridePrice_currency-";
                 var overridePriceVal = $("#" + overridePriceString + id + "-display").val();
                 if (!isMobile()) {
                     var overridePriceValue = (overridePriceVal != "") ? overridePriceVal.slice(1) : 0.0;
-                }else{
-                    overridePriceValue = overridePriceVal;
-                }
 
-                if (overridePriceValue != basic_value_price) {
+                }else{
+                    overridePriceValue = overridePriceVal.replace(currencyCountry, "");
+                }
+                console.log( overridePriceValue, basic_value_price );
+                if (parseFloat(overridePriceValue) != parseFloat(basic_value_price) ) {
                     $("#" + overridePriceString + id + "-display").css("color", redColor);
                     /* if (!isMobile()) {
                         $("#totalPrice_currency-" + id).css("color", redColor);
@@ -7980,12 +7988,21 @@ console.log("check_nationality", check_nationality(2601) );
 
             function override_price(data, id) {
                 if (isMobile()) {
+                    // console.log( "#" + var_overrideprice.replace("td.cell-", "") + id );
+                    if(check_nationality(2601)){
+                        currencyCountry = "S$";
+                    }else{
+                        currencyCountry = "P$";                    
+                    }
+                    console.log(" === ", "#" + var_overrideprice.replace("td.cell-", "") + id);
+                    $("#" + var_overrideprice.replace("td.cell-", "") + id).val( $("#" + var_overrideprice.replace("td.cell-", "") + id).val().replace(currencyCountry, "") );
                     overridePriceValue = parseFloat($("#" + var_overrideprice.replace("td.cell-", "") + id).val());
+
                 } else {
                     overridePriceValue = ($(data).val() != "") ? $(data).val().slice(1) : 0.0;
                 }
-                console.log(overridePriceValue, "==", basic_value_price, overridePriceValue != basic_value_price);
-                if (overridePriceValue != basic_value_price) {
+                // console.log(overridePriceValue, "==", basic_value_price, overridePriceValue != basic_value_price);
+                if (overridePriceValue != parseFloat( basic_value_price )) {
                     $(data).css("color", redColor);
                     /* if (!isMobile()) {
                         $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").css("color", redColor);
@@ -7996,7 +8013,7 @@ console.log("check_nationality", check_nationality(2601) );
                 }
             }
 
-            $( var_qty + ", " + var_overrideprice + ", " + var_qtyBonus).find(var_find_text).map(function (index, data) {
+            $( var_qty + ", " + var_overrideprice).find(var_find_text).map(function (index, data) {
                 console.log($(this));
                 if (!isMobile()) {
                     if ($(this).closest(var_qty.replace("td", "")).length > 0) {

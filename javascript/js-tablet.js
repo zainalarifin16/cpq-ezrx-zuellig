@@ -831,14 +831,14 @@ $(document).ready(function() {
 						var listenQtyAdditionalBonus = function () {
 							setTimeout(function () {
 								if (isLoadingDone()) {
-									$("input[name='additionalMaterialQty']:not(input[type='hidden'])").map(function (index, data) {
+									/* $("input[name='additionalMaterialQty']:not(input[type='hidden'])").map(function (index, data) {
 										if ($(data).length > 0) {
 											var id = $(data).attr("id").replace("additionalMaterialQty", "");
 											if ($(data).val() != 0) {
 												$("#additionalMaterialQty" + id).css("color", redColor);
 											}
 										}
-									});
+									}); */
 
 									$("input[name='additionalMaterialQty']").on("click focus starttouch", function () {
 
