@@ -2834,7 +2834,7 @@
                 var $overridePrice = $child.find('input[name*="isPriceOverride"]');
     
                 if ($overridePrice.val() == 'true') {
-                    $($child.find("input[name*=_unitPrice_l]").siblings()[0]).css('color', 'red');
+                    $($child.find("input[name*=_unitPrice_currency]").siblings()[0]).css('color', 'red');
                 }
     
                 var textInvoiceOverridePrice = $($invoiceOverridePrice).find("span[data-varname='unitPrice_currency']");
@@ -7994,8 +7994,11 @@ console.log("check_nationality", check_nationality(2601) );
                     }else{
                         currencyCountry = "P$";                    
                     }
-                    console.log(" === ", "#" + var_overrideprice.replace("td.cell-", "") + id);
-                    $("#" + var_overrideprice.replace("td.cell-", "") + id).val( $("#" + var_overrideprice.replace("td.cell-", "") + id).val().replace(currencyCountry, "") );
+                    // console.log(" === ", "#" + var_overrideprice.replace("td.cell-", "") + id);
+                    // console.log( $("#" + var_overrideprice.replace("td.cell-", "") + id).val().replace(currencyCountry, "") );
+                    var valueWithoutCurrency = $("#" + var_overrideprice.replace("td.cell-", "") + id).val().replace(currencyCountry, "");
+                    var overridePriceString = (isMobile()) ? "overridePrice_currency" : "overridePrice_currency-";
+                    $("#" + overridePriceString + id + "-display").val( parseFloat(valueWithoutCurrency) );
                     overridePriceValue = parseFloat($("#" + var_overrideprice.replace("td.cell-", "") + id).val());
 
                 } else {
