@@ -3877,7 +3877,7 @@
                                         var text_dont_close = "<p style='font-size: 26px;font-weight: bold;font-style: normal;font-stretch: normal;line-height: normal;letter-spacing: normal;text-align: center;color: #005e63;' >Do not close the browser or click back button</p>";
 
                                         var popup = $("<div style='width: 632px;height: 250px;border-radius: 8px;background-color: #ffffff;margin: 195px auto;padding:50px;' >" + text_order_submission + text_please_wait + loading_bar + text_dont_close + "</div>");
-                                        $("#jg-overlay").css({ "background-color": "rgb(255,255,255)", "opacity": "1", "background-image": "none" });
+                                        $("#jg-overlay").css({ "background-color": "transparent", "opacity": "1", "background-image": "none", "display" : "block" });
                                         $("#jg-overlay").append(popup);
 
                                         var setLoadingDialog = function(){

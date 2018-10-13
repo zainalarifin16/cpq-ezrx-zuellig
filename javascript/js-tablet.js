@@ -309,6 +309,19 @@ $(document).ready(function() {
 				$(".config-array #attribute-stockQty").css("width", "30px");
 				$(".config-array #attribute-addAdditionalMaterial").css("width", "40px");
 				*/
+
+				//SHOWING MATERIAL DESCRIPTION ON SECOND PAGE
+				console.log("Showing Material Description on second page");
+				if( $("#attribute-addToFav").is(":hidden") == false ){
+				
+					$("#attribute-materialDescription").removeClass("hidden");
+					$(".cell-materialDescription").map(function (index, data) {
+						var id = $(data).attr("id").replace("cell-materialDescription-", "");
+						$("#cell-materialDescription-" + id).removeClass("hidden");
+					});
+					
+				}
+
 				
 			}
 		
@@ -331,13 +344,13 @@ $(document).ready(function() {
 
 	var moveDescriptionBeforeAddToFav = function(){	
 		//move header after contractBonus
-		$("#attribute-materialDescription").insertBefore($("#attribute-addToFav"));
-		$("#attribute-materialDescription").addClass("hidden");
+		// $("#attribute-materialDescription").insertBefore($("#attribute-addToFav"));
+		$("#attribute-materialDescription").removeClass("hidden");
 		//move coloumn 
 		$(".cell-materialDescription").map(function (index, data) {
 			var id = $(data).attr("id").replace("cell-materialDescription-", "");
-			$("#cell-materialDescription-" + id).insertBefore($("#cell-addToFav-" + id));
-			$("#cell-materialDescription-" + id).addClass("hidden");
+			// $("#cell-materialDescription-" + id).insertBefore($("#cell-addToFav-" + id));
+			$("#cell-materialDescription-" + id).removeClass("hidden");
 		});
 
 		$("#attribute-promotion").addClass("hidden");
@@ -368,6 +381,18 @@ $(document).ready(function() {
 				$("#attribute-stockQty").show();
 				$(".cell-stockQty").show();								
 				*/
+				
+				console.log("Showing Material Description on second page");
+				if( $("#attribute-addToFav").is(":hidden") == false ){
+				
+					$("#attribute-materialDescription").removeClass("hidden");
+					$(".cell-materialDescription").map(function (index, data) {
+						var id = $(data).attr("id").replace("cell-materialDescription-", "");
+						$("#cell-materialDescription-" + id).removeClass("hidden");
+					});
+
+				}
+
 			}else{
 				/*$("#attribute-promotion").hide();
 				$(".cell-promotion").hide();
