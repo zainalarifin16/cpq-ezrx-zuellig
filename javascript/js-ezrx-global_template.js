@@ -959,7 +959,7 @@ $(document).ready(function(){
       if (!isMobile()) {
         if ($(this).closest(var_qty.replace("td", "")).length > 0) {
           id = $(this).attr("id").replace(var_qty.replace("td.cell-", "") + "-", "");
-          check_qty_and_stock(this, id);
+          //check_qty_and_stock(this, id);
         }
 
         if ($(this).closest(var_Invoiceoverrideprice.replace("td", "")).length > 0) {
@@ -974,9 +974,9 @@ $(document).ready(function(){
 
         if ($(this).closest(var_qtyBonus.replace("td", "")).length > 0) {
 
-          if ($(this).val() > 0) {
+          /* if ($(this).val() > 0) {
             $(this).css("color", redColor);
-          }
+          } */
 
         }
 
@@ -991,7 +991,7 @@ $(document).ready(function(){
       }else{
         if ($(this).closest(var_qty.replace("td", "")).length > 0) {
           id = $(this).attr("id").replace(var_qty.replace("td.cell-", "") + "-", "");
-          check_qty_and_stock(this, id);
+          //check_qty_and_stock(this, id);
         }
 
         if ($(this).closest(var_Invoiceoverrideprice.replace("td", "")).length > 0) {
@@ -1006,9 +1006,9 @@ $(document).ready(function(){
 
         if ($(this).closest(var_qtyBonus.replace("td", "")).length > 0) {
 
-          if ($(this).val() > 0) {
+          /* if ($(this).val() > 0) {
             $(this).css("color", redColor);
-          }
+          } */
 
         }
 
