@@ -1738,14 +1738,17 @@
     
             if ((userType === 'csteam') && (materialSearch.length >= rulesMaterialSearch) && enableOldMaterialSearch == "false") {
                 console.log( materialSearch.slice(-1) );
-                if (materialSearch.slice(-1) === '%') {
-                    materialSearch = materialSearch.substring(0, materialSearch.length - 1);
-                    materialSearch = materialSearch.replace(/%/g, ' ');
-                    materialList.search(materialSearch).order([2, 'asc']).draw();
-                } else {
-                    $('.dataTables_scrollBody .loader-material').show();
-                    $('.dataTables_scrollBody #resultsTable').hide();
-                    searchMaterialAjax(materialSearch, materialList);
+                
+                if(materialSearch.length > 0 ){
+                    if (materialSearch.slice(-1) === '%') {
+                        materialSearch = materialSearch.substring(0, materialSearch.length - 1);
+                        materialSearch = materialSearch.replace(/%/g, ' ');
+                        materialList.search(materialSearch).order([2, 'asc']).draw();
+                    } else {
+                        $('.dataTables_scrollBody .loader-material').show();
+                        $('.dataTables_scrollBody #resultsTable').hide();
+                        searchMaterialAjax(materialSearch, materialList);
+                    }
                 }
     
             } else {
@@ -2836,7 +2839,7 @@
                 var $overridePrice = $child.find('input[name*="isPriceOverride"]');
     
                 if ($overridePrice.val() == 'true') {
-                    $($child.find("input[name*=_unitPrice_l]").siblings()[0]).css('color', 'red');
+                    $($child.find("input[name*=_unitPrice_currency]").siblings()[0]).css('color', 'red');
                 }
     
                 var textInvoiceOverridePrice = $($invoiceOverridePrice).find("span[data-varname='unitPrice_currency']");
@@ -3880,7 +3883,7 @@
                                         var text_dont_close = "<p style='font-size: 26px;font-weight: bold;font-style: normal;font-stretch: normal;line-height: normal;letter-spacing: normal;text-align: center;color: #005e63;' >Do not close the browser or click back button</p>";
 
                                         var popup = $("<div style='width: 632px;height: 250px;border-radius: 8px;background-color: #ffffff;margin: 195px auto;padding:50px;' >" + text_order_submission + text_please_wait + loading_bar + text_dont_close + "</div>");
-                                        $("#jg-overlay").css({ "background-color": "rgb(255,255,255)", "opacity": "1", "background-image": "none" });
+                                        $("#jg-overlay").css({ "background-color": "transparent", "opacity": "1", "background-image": "none", "display" : "block" });
                                         $("#jg-overlay").append(popup);
 
                                         var setLoadingDialog = function(){
@@ -6038,12 +6041,12 @@
             var blackColor = "#000000";            
             var listEditedField = {};
 
-            $("input[name='additionalMaterialQty']:not(input[type='hidden'])").map(function (index, data) {
+            /* $("input[name='additionalMaterialQty']:not(input[type='hidden'])").map(function (index, data) {
                 var id = $(data).attr("id").replace("additionalMaterialQty", "");
                 if ($(data).val() != 0) {
                     $("#additionalMaterialQty" + id).css("color", redColor);
                 }
-            });
+            }); */
 
             $("input[name='additionalMaterialQty']").on("click focus", function () {
 
@@ -7907,7 +7910,7 @@
             var listEditedField = {};
             var var_find_text = (isMobile()) ? ".form-field" : ".text-field";
 
-            $(var_qty + ", " + var_overrideprice + ", " + var_qtyBonus + ", " + var_bonusOverride + ", " + var_comments).off();
+            $(var_qty + ", " + var_overrideprice + ", " + var_bonusOverride + ", " + var_comments).off();
 
             function isStockAvailable(id){
                 id = Math.abs(id);
@@ -7930,16 +7933,24 @@
             }
 
             function isOverridePrice(id) {
+
+                if(check_nationality(2601)){
+                    currencyCountry = "S$";
+                }else{
+                    currencyCountry = "P$";                    
+                }
+
                 id = Math.abs(id);
                 var overridePriceString = (isMobile()) ? "overridePrice_currency" : "overridePrice_currency-";
                 var overridePriceVal = $("#" + overridePriceString + id + "-display").val();
                 if (!isMobile()) {
                     var overridePriceValue = (overridePriceVal != "") ? overridePriceVal.slice(1) : 0.0;
-                }else{
-                    overridePriceValue = overridePriceVal;
-                }
 
-                if (overridePriceValue != basic_value_price) {
+                }else{
+                    overridePriceValue = overridePriceVal.replace(currencyCountry, "");
+                }
+                console.log( overridePriceValue, basic_value_price );
+                if (parseFloat(overridePriceValue) != parseFloat(basic_value_price) ) {
                     $("#" + overridePriceString + id + "-display").css("color", redColor);
                     /* if (!isMobile()) {
                         $("#totalPrice_currency-" + id).css("color", redColor);
@@ -7983,12 +7994,24 @@
 
             function override_price(data, id) {
                 if (isMobile()) {
+                    // console.log( "#" + var_overrideprice.replace("td.cell-", "") + id );
+                    if(check_nationality(2601)){
+                        currencyCountry = "S$";
+                    }else{
+                        currencyCountry = "P$";                    
+                    }
+                    // console.log(" === ", "#" + var_overrideprice.replace("td.cell-", "") + id);
+                    // console.log( $("#" + var_overrideprice.replace("td.cell-", "") + id).val().replace(currencyCountry, "") );
+                    var valueWithoutCurrency = $("#" + var_overrideprice.replace("td.cell-", "") + id).val().replace(currencyCountry, "");
+                    var overridePriceString = (isMobile()) ? "overridePrice_currency" : "overridePrice_currency-";
+                    $("#" + overridePriceString + id + "-display").val( parseFloat(valueWithoutCurrency) );
                     overridePriceValue = parseFloat($("#" + var_overrideprice.replace("td.cell-", "") + id).val());
+
                 } else {
                     overridePriceValue = ($(data).val() != "") ? $(data).val().slice(1) : 0.0;
                 }
-                console.log(overridePriceValue, "==", basic_value_price, overridePriceValue != basic_value_price);
-                if (overridePriceValue != basic_value_price) {
+                // console.log(overridePriceValue, "==", basic_value_price, overridePriceValue != basic_value_price);
+                if (overridePriceValue != parseFloat( basic_value_price )) {
                     $(data).css("color", redColor);
                     /* if (!isMobile()) {
                         $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").css("color", redColor);
@@ -7999,7 +8022,7 @@
                 }
             }
 
-            $( var_qty + ", " + var_overrideprice + ", " + var_qtyBonus).find(var_find_text).map(function (index, data) {
+            $( var_qty + ", " + var_overrideprice).find(var_find_text).map(function (index, data) {
                 console.log($(this));
                 if (!isMobile()) {
                     if ($(this).closest(var_qty.replace("td", "")).length > 0) {

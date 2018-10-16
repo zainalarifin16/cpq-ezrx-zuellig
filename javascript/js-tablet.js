@@ -309,6 +309,19 @@ $(document).ready(function() {
 				$(".config-array #attribute-stockQty").css("width", "30px");
 				$(".config-array #attribute-addAdditionalMaterial").css("width", "40px");
 				*/
+
+				//SHOWING MATERIAL DESCRIPTION ON SECOND PAGE
+				console.log("Showing Material Description on second page");
+				if( $("#attribute-addToFav").is(":hidden") == false ){
+				
+					$("#attribute-materialDescription").removeClass("hidden");
+					$(".cell-materialDescription").map(function (index, data) {
+						var id = $(data).attr("id").replace("cell-materialDescription-", "");
+						$("#cell-materialDescription-" + id).removeClass("hidden");
+					});
+					
+				}
+
 				
 			}
 		
@@ -331,13 +344,13 @@ $(document).ready(function() {
 
 	var moveDescriptionBeforeAddToFav = function(){	
 		//move header after contractBonus
-		$("#attribute-materialDescription").insertBefore($("#attribute-addToFav"));
-		$("#attribute-materialDescription").addClass("hidden");
+		// $("#attribute-materialDescription").insertBefore($("#attribute-addToFav"));
+		$("#attribute-materialDescription").removeClass("hidden");
 		//move coloumn 
 		$(".cell-materialDescription").map(function (index, data) {
 			var id = $(data).attr("id").replace("cell-materialDescription-", "");
-			$("#cell-materialDescription-" + id).insertBefore($("#cell-addToFav-" + id));
-			$("#cell-materialDescription-" + id).addClass("hidden");
+			// $("#cell-materialDescription-" + id).insertBefore($("#cell-addToFav-" + id));
+			$("#cell-materialDescription-" + id).removeClass("hidden");
 		});
 
 		$("#attribute-promotion").addClass("hidden");
@@ -368,6 +381,18 @@ $(document).ready(function() {
 				$("#attribute-stockQty").show();
 				$(".cell-stockQty").show();								
 				*/
+				
+				console.log("Showing Material Description on second page");
+				if( $("#attribute-addToFav").is(":hidden") == false ){
+				
+					$("#attribute-materialDescription").removeClass("hidden");
+					$(".cell-materialDescription").map(function (index, data) {
+						var id = $(data).attr("id").replace("cell-materialDescription-", "");
+						$("#cell-materialDescription-" + id).removeClass("hidden");
+					});
+
+				}
+
 			}else{
 				/*$("#attribute-promotion").hide();
 				$(".cell-promotion").hide();
@@ -681,7 +706,7 @@ $(document).ready(function() {
 									}, 500);
 								}
 
-								hide_recomended_material( elementToMove[2] );
+								hide_recomended_material( elementToMove[3] );
 
 								/* if (check_nationality(2600) || check_nationality(2500)) {
 									
@@ -831,14 +856,14 @@ $(document).ready(function() {
 						var listenQtyAdditionalBonus = function () {
 							setTimeout(function () {
 								if (isLoadingDone()) {
-									$("input[name='additionalMaterialQty']:not(input[type='hidden'])").map(function (index, data) {
+									/* $("input[name='additionalMaterialQty']:not(input[type='hidden'])").map(function (index, data) {
 										if ($(data).length > 0) {
 											var id = $(data).attr("id").replace("additionalMaterialQty", "");
 											if ($(data).val() != 0) {
 												$("#additionalMaterialQty" + id).css("color", redColor);
 											}
 										}
-									});
+									}); */
 
 									$("input[name='additionalMaterialQty']").on("click focus starttouch", function () {
 
@@ -1081,13 +1106,18 @@ $(document).ready(function() {
 								setTimeout(function () {
 									if (isLoadingDone()) {
 										
-										if(navigator.userAgent.match(/iPhone/i)
-										|| navigator.userAgent.match(/iPad/i)
-										|| navigator.userAgent.match(/iPod/i)){
+										if( navigator.userAgent.match(/Android/i) ||
+										navigator.userAgent.match(/webOS/i) ||
+										navigator.userAgent.match(/iPhone/i) ||
+										navigator.userAgent.match(/iPad/i) ||
+										navigator.userAgent.match(/iPod/i) ||
+										navigator.userAgent.match(/BlackBerry/i) ||
+										navigator.userAgent.match(/Windows Phone/i) ){
 											var successLoading = false;
 
 											$(".action.action-type-modify:contains('Submit Order')").on("click", function (e) {
 											$(this).attr("disabled", true);
+											
 											var text_order_submission = "<p style='font-size: 30px;font-weight: bold;font-style: normal;font-stretch: normal;line-height: 0.87;letter-spacing: normal;text-align: center;color: #005e63;' >Order submission is in progress ...</p>";
 
 											var text_please_wait = "<p style='font-size: 22px;font-weight: bold;font-style: normal;font-stretch: normal;line-height: 1.18;letter-spacing: normal;text-align: center;color: #9b9b9b; margin-bottom: 70px;' >Please wait</p>";
@@ -1097,12 +1127,12 @@ $(document).ready(function() {
 											var text_dont_close = "<p style='font-size: 26px;font-weight: bold;font-style: normal;font-stretch: normal;line-height: normal;letter-spacing: normal;text-align: center;color: #005e63;' >Do not close the browser or click back button</p>";
 
 											var popup = $("<div style='width: 632px;height: 250px;border-radius: 8px;background-color: #ffffff;margin: 195px auto;padding:50px;' >" + text_order_submission + text_please_wait + loading_bar + text_dont_close + "</div>");
-											$(".ui-loader").css({ "background-color": "transparent", "opacity": "1" });
+											$(".ui-loader").css({ "background-color": "transparent", "opacity": "1", "display" : "block" });
 											$(".ui-loader").find(".ui-icon-loading").css({"-webkit-transform": "rotateX(0)", "-webkit-transform": "translateZ(0)", "-webkit-perspective": "1000", "-webkit-backface-visibility": " hidden"});
 											$(".ui-loader").find("h1").after(popup);
 
 											var bgloading = "<div id='bgloading' style='position: fixed;top: 0;right: 0;bottom: 0;left: 0;background-color: rgb(250, 255, 189);opacity: 0.35;' ></div>";
-											$(".ui-loader").find("h1").after(bgloading);
+											$(".ui-loader").append(bgloading);
 
 
 											var base_loading_progress = 100;
