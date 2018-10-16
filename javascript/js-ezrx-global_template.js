@@ -496,7 +496,7 @@ $(document).ready(function(){
                   var table = '<table class="table-tooltip" >\
                               <thead style="padding:5px;font-weight:bold">\
                                 <tr style="background-color:#007077;">\
-                                  <th style="border: 1px solid #999;padding:5px;color:#fff;text-shadow:none;">Material Description</th>\
+                                  <th style="border: 1px solid #999;padding:5px;text-shadow:none;">Material Description</th>\
                                 </tr>\
                               </thead>';
                   table += "<tbody>";
@@ -507,7 +507,7 @@ $(document).ready(function(){
                   $('.table-tooltip').css({
                     right: '50%',
                     position: 'absolute',
-                    transform: 'translate(50%, -50%)',
+                    transform: 'translate(50%, 980%)',
                     top: '50%',
                     width: '500px',
                     border: "1px solid !important"
