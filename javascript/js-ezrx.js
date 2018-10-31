@@ -1335,7 +1335,7 @@
                 dumpSelectedRow(this);
             }
 
-            if(check_nationality(2800)){
+            if(window.check_country("TW")){
                 if (isMobile()) {
                     /* $("#materialArrayset").find("input[name='materialAndDesc']").map(function (index, data) {
                         var materialDesc = $(data).closest("tr").find("input[name='materialDescription']").val();
@@ -1477,12 +1477,15 @@
         //   if(userCountryMS === 'TW'){
         if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
 
-            var globalTemplateFlag = ($("input[name='globalTemplateFlag']").val().toLowerCase() == 'true')? true : false;
-            var labelMaterialDesc = "Material Description (ZH)";
-
-            if( globalTemplateFlag ){
-                labelMaterialDesc = "Material Description (Local)";
+            var globalTemplateFlag = false;
+        
+            if( window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+            
+                globalTemplateFlag = ($("input[name='globalTemplateFlag']").val().toLowerCase() == 'true')? true : false;
+            
             }
+
+            var labelMaterialDesc = (globalTemplateFlag)? "Material Description (Local)" : "Material Description (ZH)";
 
             material_column = [{
                 title: ""
@@ -2209,7 +2212,7 @@
                 $("#searchCustomer_wrapper").find(".dataTables_scrollHead").css("min-width", "900px");
                 $("#searchCustomer_wrapper").find(".dataTables_scrollBody").css("min-width", "900px");
 
-                if ( check_nationality(2500) ) {
+                if ( window.check_country("PH") ) {
                     $($("#searchCustomer").find("tbody").children("tr")).each(function (index, data) {
                         var isDisabled = $(data).find("input[type='radio']").attr("disabled");
                         if (isDisabled == "disabled") {
@@ -7934,7 +7937,7 @@
 
             function isOverridePrice(id) {
 
-                if(check_nationality(2601)){
+                if(window.check_country("SG")){
                     currencyCountry = "S$";
                 }else{
                     currencyCountry = "P$";                    
@@ -7995,7 +7998,7 @@
             function override_price(data, id) {
                 if (isMobile()) {
                     // console.log( "#" + var_overrideprice.replace("td.cell-", "") + id );
-                    if(check_nationality(2601)){
+                    if(window.check_country("SG")){
                         currencyCountry = "S$";
                     }else{
                         currencyCountry = "P$";                    
