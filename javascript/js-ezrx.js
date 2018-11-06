@@ -151,7 +151,7 @@
             }
         }
         else if( country == "MY" ){
-            console.log( "CHECK_COUNTRY", country, countryCode, MY, MY.indexOf( countryCode ) );
+            // console.log( "CHECK_COUNTRY", country, countryCode, MY, MY.indexOf( countryCode ) );
             if( MY.indexOf( countryCode ) != -1 ){
                 valid = true;
             }
@@ -1481,7 +1481,11 @@
         
             if( window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
             
-                globalTemplateFlag = ($("input[name='globalTemplateFlag']").val().toLowerCase() == 'true')? true : false;
+                if(isMobile()){
+                    globalTemplateFlag = ($("select[name='globalTemplateFlag']").val().toLowerCase() == 'true')? true : false;
+                }else{
+                    globalTemplateFlag = ($("input[name='globalTemplateFlag']").val().toLowerCase() == 'true')? true : false;
+                }
             
             }
 
@@ -3358,7 +3362,7 @@
                        if ( window.check_country("PH") ){
                         data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '" data-customersold="' + full[1] +'" >';
                     }else if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
-                            console.log(full);
+                            // console.log(full);
 							//FORMAT soldtoid$$shiptoid$$billtoid
                             data = '<input type="radio" name="topCust" id= "topCust" value="' + full[1] + '$$' + full[3] + '$$' + full[5] + '" >';
                         }
@@ -3859,6 +3863,34 @@
                             File Location :- $BASE_PATH$/javascript/js-ezrx.js
                             Layout        :- Desktop
                         */
+
+                    }
+
+                    if( window.getZPUserType() == "customer" ){
+
+                        $("label[for='owner_t'] > span").html("Customer Name:");
+                        $("label[for='salesRepPhone_t'] > span").html("Customer Email Id:");
+                        $("label[for='salesEmailId_t'] > span").html("Customer Phone:");
+
+                        $("#searchCustomerInput").closest(".column").hide();
+                        var parentSearchCustomer = $("#attr_wrapper_1_transactionID_t").closest(".column-layout");
+                        $(parentSearchCustomer).find(".last").remove();
+                        $("#attr_wrapper_1_customerSelection_t").closest(".column").hide();
+
+                        setTimeout(function(){
+
+                            var parentCustomerSelection = $("#attr_wrapper_1_customerSelection_t").closest(".column-layout");
+                            $($("#attr_wrapper_1_shipToAddress_html_t").closest(".column")).appendTo(parentCustomerSelection);
+                            $("#attr_wrapper_1_shipToAddress_html_t").css("margin-top", "0px");
+                            $($("#attr_wrapper_1_customerShipToId_t").closest(".column")).appendTo(parentSearchCustomer);
+                            $($("#attr_wrapper_1_customerSoldToId_t").closest(".column")).appendTo(parentSearchCustomer);
+
+                            $("#zPUserType").closest(".form-item").removeClass("rule-hide");
+                            $("#zPUserType").closest(".text-wrapper-inner").css({"background": "transparent", "border": "0px" });
+                            $("#zPUserType").css({"padding": "0px!important"});
+                            $("#zPUserType").attr("readonly", "true");
+
+                        }, 1000);
 
                     }
 
@@ -7969,7 +8001,7 @@
 
             function inStock(data, id) {
                 var parent = $(data).closest("tr");
-                console.log( parent, id );                
+                // console.log( parent, id );                
                 if( $(parent).find("input[id='inStock-" + id + "']").length > 0 ){
                     var isInStock = $(parent).find("input[id='inStock-" + id + "']").val().trim().toLowerCase();
                     var typeMaterial = $(parent).find("input[id='type-"+ id +"']").val().trim().toLowerCase();
@@ -7982,7 +8014,7 @@
                             $(data).css("color", redColor);
                         }
                     }
-                }else{
+                }else if($( parent ).find("td#cell-inStock-"+id.replace("qty", "")).length > 0) {
                     isInStock = $( parent ).find("td#cell-inStock-"+id.replace("qty", "")).find("input[name='inStock']").val().trim().toLowerCase();
                     // var typeMaterial = $(parent).find("input[id='type-"+ id +"']").val().trim().toLowerCase();
                     if (isInStock == "yes") {
@@ -8026,7 +8058,7 @@
             }
 
             $( var_qty + ", " + var_overrideprice).find(var_find_text).map(function (index, data) {
-                console.log($(this));
+                // console.log($(this));
                 if (!isMobile()) {
                     if ($(this).closest(var_qty.replace("td", "")).length > 0) {
                         id = $(this).attr("id").replace(var_qty.replace("td.cell-", "") + "-", "");
@@ -8086,7 +8118,7 @@
                 } else {
                     isChecked = $(data).is(":checked");
                 }
-                console.log($(data).id, isChecked);
+                // console.log($(data).id, isChecked);
                 if (isChecked) {
                     $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);
                     var qty_bns_current = $("#" + var_qty.replace("td.cell-", "") + "-" + id).val();
