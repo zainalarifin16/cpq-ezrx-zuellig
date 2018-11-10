@@ -309,6 +309,16 @@ $(document).ready(function() {
 				$(".config-array #attribute-stockQty").css("width", "30px");
 				$(".config-array #attribute-addAdditionalMaterial").css("width", "40px");
 				*/
+
+				// if( $("#attribute-addToFav").is(":hidden") == false ){
+				
+				// 	$("#attribute-materialDescription").removeClass("hidden");
+				// 	$(".cell-materialDescription").map(function (index, data) {
+				// 		var id = $(data).attr("id").replace("cell-materialDescription-", "");
+				// 		$("#cell-materialDescription-" + id).removeClass("hidden");
+				// 	});
+
+				// }
 				
 			}
 		
@@ -368,6 +378,17 @@ $(document).ready(function() {
 				$("#attribute-stockQty").show();
 				$(".cell-stockQty").show();								
 				*/
+
+				// if( $("#attribute-addToFav").is(":hidden") == false ){
+				
+				// 	$("#attribute-materialDescription").removeClass("hidden");
+				// 	$(".cell-materialDescription").map(function (index, data) {
+				// 		var id = $(data).attr("id").replace("cell-materialDescription-", "");
+				// 		$("#cell-materialDescription-" + id).removeClass("hidden");
+				// 	});
+
+				// }
+
 			}else{
 				/*$("#attribute-promotion").hide();
 				$(".cell-promotion").hide();

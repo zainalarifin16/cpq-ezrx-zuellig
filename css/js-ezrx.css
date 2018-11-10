@@ -747,6 +747,7 @@ and (orientation: portrait){
   display: none;
 }
 /*VMLSINOZP-34 SKU START*/
+
 @media only screen 
 and (min-width: 28em)
 and (orientation: landscape) {
@@ -760,25 +761,25 @@ and (min-device-width : 768px)
 and (max-device-width : 1024px)
 and (orientation : portrait) {
 
-   .jg-mobilelayout form#commerce-form fieldset .group-content [role="heading"]{
+   .jg-mobilelayout form#commerce-form fieldset [role="heading"]{
 		width: 25%;
 		min-width: 203px;
 	}
-	.jg-mobilelayout form#commerce-form fieldset .group-content .ui-field-contain>label{
+	.jg-mobilelayout form#commerce-form fieldset .ui-field-contain>label{
 		width: 28%;
 	}
-	.jg-mobilelayout form#commerce-formfieldset .group-content .ui-field-contain>label ~ [class*=ui-]:not(.ui-flipswitch){
+	.jg-mobilelayout form#commerce-formfieldset .ui-field-contain>label ~ [class*=ui-]:not(.ui-flipswitch){
 		width: 70%;
 	}
 }
 
-.jg-mobilelayout form#commerce-form fieldset .group-content #attribute-transactionID_t{
+.jg-mobilelayout form#commerce-form fieldset #attribute-transactionID_t{
 	width: 47%;
 	display: inline-block;
 	margin-bottom: 0;
 	margin-bottom: 0;
 }
-.jg-mobilelayout form#commerce-form fieldset .group-content #attribute-transactionID_t [role="heading"]{
+.jg-mobilelayout form#commerce-form fieldset #attribute-transactionID_t [role="heading"]{
 	width: 60%;
     min-width: 150px;
 }
@@ -786,24 +787,24 @@ and (orientation : portrait) {
 and (min-device-width : 768px)
 and (max-device-width : 1024px)
 and (orientation : landscape) {
-	.jg-mobilelayout form#commerce-form fieldset .group-content #attribute-transactionID_t [role="heading"]{
+	.jg-mobilelayout form#commerce-form fieldset #attribute-transactionID_t [role="heading"]{
 		width: 43%;
 		min-width: 203px;
 	}
 }
 
 
-.jg-mobilelayout form#commerce-form fieldset .group-content #attribute-status_t{
+.jg-mobilelayout form#commerce-form fieldset #attribute-status_t{
 	width: 47%;
 	display: inline-block;
 	float: right;
 }
-.jg-mobilelayout form#commerce-form fieldset .group-content #attribute-status_t [role="heading"]{
+.jg-mobilelayout form#commerce-form fieldset #attribute-status_t [role="heading"]{
 	width: 45%;
 	min-width: 150px;
 }
 
-.jg-mobilelayout form#commerce-form fieldset .group-content #attribute-status_t [role="heading"] + div{
+.jg-mobilelayout form#commerce-form fieldset #attribute-status_t [role="heading"] + div{
 	margin-top: 0;
 }
 
@@ -856,7 +857,7 @@ and (orientation : landscape) {
 	.jg-mobilelayout form#commerce-form fieldset:last-of-type .group-content>div:nth-of-type(7) div[role="heading"],
 	.jg-mobilelayout form#commerce-form fieldset:last-of-type .group-content>div:nth-of-type(8) div[role="heading"],
 	.jg-mobilelayout form#commerce-form fieldset:last-of-type .group-content>div:nth-of-type(9) div[role="heading"]{
-        width: 170px;
+	    width: 200px;
         margin-right: 13px;
 	    /* min-width: 193px; */
 	}
@@ -1079,4 +1080,10 @@ html .ui-field-contain>label+.ui-flipswitch, html .ui-popup .ui-field-contain>la
 }
 #jg-tool-select option[value="36282633"] {
     display: none;
+}
+
+.attr-type-date .ui-input-text:after {
+    
+    display: none!important;
+
 }
