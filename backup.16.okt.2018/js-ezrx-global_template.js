@@ -496,7 +496,7 @@ $(document).ready(function(){
                   var table = '<table class="table-tooltip" >\
                               <thead style="padding:5px;font-weight:bold">\
                                 <tr style="background-color:#007077;">\
-                                  <th style="border: 1px solid #999;padding:5px;text-shadow:none;">Material Description</th>\
+                                  <th style="border: 1px solid #999;padding:5px;color:#fff;text-shadow:none;">Material Description</th>\
                                 </tr>\
                               </thead>';
                   table += "<tbody>";
@@ -507,7 +507,7 @@ $(document).ready(function(){
                   $('.table-tooltip').css({
                     right: '50%',
                     position: 'absolute',
-                    transform: 'translate(50%, 980%)',
+                    transform: 'translate(50%, -50%)',
                     top: '50%',
                     width: '500px',
                     border: "1px solid !important"
@@ -904,62 +904,12 @@ $(document).ready(function(){
       $(data).css("color", blackColor);
     });
 
-    function isStockAvailable(id){
-      id = Math.abs(id);
-      var qty_l = $("#"+var_qty.replace("td.cell-", "")+"-"+id);
-      var parent = $(qty_l).closest("tr");
-      var isInStock = $(parent).find("input[id='inStock-" + id + "']").val().trim().toLowerCase();
-      var typeMaterial = $(parent).find("input[id='type-" + id + "']").val().trim().toLowerCase();
-
-      if(typeMaterial != "bonus"){
-          console.log(qty_l, "isInStock", isInStock);                
-          if (isInStock == "yes") {
-              console.log($(qty_l).val(), ">", $("input[id='stockQty-" + id + "']").val());
-              if (parseInt($(qty_l).val()) > parseInt($("input[id='stockQty-" + id + "']").val()) ) {
-                  $(qty_l).css("color", redColor);
-              }
-          } else {
-              $(qty_l).css("color", redColor);
-          }
+    function check_qty_and_stock(data, id) {
+      if ($(data).val() > $("#stockQty-" + id).val()) {
+        // qty color become red highlight if val is greater than stock
+        $(data).css("color", redColor);
       }
     }
-
-    function inStock(data, id) {
-      var parent = $(data).closest("tr");
-      console.log( "instock", parent, id );                
-      if( $(parent).find("input[id='inStock-" + id + "']").length > 0 ){
-          var isInStock = $(parent).find("input[id='inStock-" + id + "']").val().trim().toLowerCase();
-          var typeMaterial = $(parent).find("input[id='type-"+ id +"']").val().trim().toLowerCase();
-          if(typeMaterial != "bonus"){
-              if (isInStock == "yes") {
-                  if (parseInt($(data).val()) > parseInt($("input[id='stockQty-" + id + "']").val())) {
-                      $(data).css("color", redColor);
-                  }
-              } else {
-                  $(data).css("color", redColor);
-              }
-          }
-      }else if( $( parent ).find("td#cell-inStock-"+id.replace("qty", "")).length > 0 ) {
-          isInStock = $( parent ).find("td#cell-inStock-"+id.replace("qty", "")).find("input[name='inStock']").val().trim().toLowerCase();
-          // var typeMaterial = $(parent).find("input[id='type-"+ id +"']").val().trim().toLowerCase();
-          if (isInStock == "yes") {
-              $(data).css("color", blackColor);                           
-          } else {
-              $(data).css("color", redColor);
-          }                 
-
-      }else if( $(parent).find("#inStockAdditional-"+id.replace("additionalMaterialQty", "")).length > 0 ){
-          isInStock = $( parent ).find("#inStockAdditional-"+id.replace("additionalMaterialQty", "")).val().trim().toLowerCase();
-
-          if( isInStock == "yes" ){
-            $(data).css("color", blackColor);
-          } else {
-            $(data).css("color", redColor);
-          }
-
-      }
-
-  }
 
     function isOverridePrice(currentObject) {
       // console.log(id);
@@ -1009,7 +959,6 @@ $(document).ready(function(){
       if (!isMobile()) {
         if ($(this).closest(var_qty.replace("td", "")).length > 0) {
           id = $(this).attr("id").replace(var_qty.replace("td.cell-", "") + "-", "");
-          inStock($(this), id);          
           //check_qty_and_stock(this, id);
         }
 
@@ -1025,8 +974,9 @@ $(document).ready(function(){
 
         if ($(this).closest(var_qtyBonus.replace("td", "")).length > 0) {
 
-          id = $(this).attr("id").replace(var_qtyBonus.replace("td.cell-", "") + "-", "");
-          inStock($(this), id);
+          /* if ($(this).val() > 0) {
+            $(this).css("color", redColor);
+          } */
 
         }
 
@@ -1041,7 +991,6 @@ $(document).ready(function(){
       }else{
         if ($(this).closest(var_qty.replace("td", "")).length > 0) {
           id = $(this).attr("id").replace(var_qty.replace("td.cell-", "") + "-", "");
-          inStock($(this), id);
           //check_qty_and_stock(this, id);
         }
 
@@ -1224,11 +1173,6 @@ $(document).ready(function(){
               isOverridePrice(currentObject);
             }
 
-            if (id.indexOf("qty_") != -1) {
-              current_id = parseInt(id.replace("qty_", ""));
-              isStockAvailable(current_id);
-            }
-
           } else {
             $(currentObject).css("color", redColor);
           }
@@ -1340,19 +1284,11 @@ $(document).ready(function(){
           if ($('.ui-loader').css("display") == "none" ){
             $('#line-item-grid .lig-side-scroller>table tr.lig-row.child').each(function () {
               var $child = $(this).children('td');
-              var $stock = $child.find('input[name*="inStock_l"]');
               var isBonusOverride = $($child).find('input[name*="bonusOverideFlag_l"]').val().trim().toLowerCase();
               var isPriceOverride = $($child).find('input[name*="isPriceOverride"]').val();
               var isInvoiceOverridePrice = $($child).find('input[name*="invoicePriceFlag_l"]');
               var InvoiceOverridePrice = $($child).find('input[name*="invoicePrice_l"]');
-              var stockval = $stock.val().trim().toLowerCase();
               // var isInStockMaterial = $($child).find('input[name*="inStock_l"]').val().trim().toLowerCase();
-
-              if (stockval == 'no') {
-                $($qty_text.siblings()[0]).css("color", "red");
-                $stock.parent().parent().parent().css('color', 'red');
-                $qty_text.parent().parent().parent().css('color', 'red');
-              }
 
               var qty_text = $($child).find('input[name*="qty_int_l"]');
               var totalPrice_text = $($child).find('input[name*="totalPrice_currency"]');
@@ -1406,13 +1342,13 @@ $(document).ready(function(){
     }else{
       $("td[id*='qty_int_l']").each(function (i, data) {
         var parent = $(this).closest(".line-item");
-        var isInStock = $(parent).find("span[id*='inStock_l']").text().trim().toLowerCase();
+        // var isInStock = $(parent).find("span[id*='inStock_l']").text().trim().toLowerCase();
         var type_material = $(parent).find("span[id*='refNO_text']").text().trim().toLowerCase();
-        // if(type_material != "bonus"){
-          if (isInStock == "no") {
+        if(type_material != "bonus"){
+          /* if (isInStock == "no") {
             $(this).find("span[id*='qty_int_l']").css("color", "rgb(255,0,0)");
-          }
-        // }
+          } */
+        }
       });
 
       $("td[id*='bonusOverideFlag_l']").each(function (i, data) {

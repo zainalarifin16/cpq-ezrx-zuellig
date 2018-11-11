@@ -832,8 +832,7 @@ and (orientation : landscape) {
 .jg-mobilelayout form#commerce-form fieldset:last-of-type .group-content>div:nth-of-type(7) div,
 .jg-mobilelayout form#commerce-form fieldset:last-of-type .group-content>div:nth-of-type(8) div,
 .jg-mobilelayout form#commerce-form fieldset:last-of-type .group-content>div:nth-of-type(9) div{
-    font-size: 16px;
-    min-width: 202px;
+	font-size: 16px;
 }
 .jg-mobilelayout form#commerce-form fieldset:last-of-type .group-content>div:nth-of-type(2),
 .jg-mobilelayout form#commerce-form fieldset:last-of-type .group-content>div:nth-of-type(7),

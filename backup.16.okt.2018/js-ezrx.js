@@ -151,7 +151,7 @@
             }
         }
         else if( country == "MY" ){
-            // console.log( "CHECK_COUNTRY", country, countryCode, MY, MY.indexOf( countryCode ) );
+            console.log( "CHECK_COUNTRY", country, countryCode, MY, MY.indexOf( countryCode ) );
             if( MY.indexOf( countryCode ) != -1 ){
                 valid = true;
             }
@@ -1057,7 +1057,7 @@
             // console.log('tabNum', tabNum);
             clonedTrObj.deleteCell(0); //Delete 1st column
             //   if($('input[name="userSalesOrg_PL"]').val()=="2800"){
-            if( window.check_country("TW") ){
+                if( window.check_country("TW") ){
                 console.log('taiwan only ,delete last 2 column');
                 clonedTrObj.deleteCell(2); // 
                 clonedTrObj.deleteCell(3); 
@@ -1335,7 +1335,7 @@
                 dumpSelectedRow(this);
             }
 
-            if(window.check_country("TW")){
+            if(check_nationality(2800)){
                 if (isMobile()) {
                     /* $("#materialArrayset").find("input[name='materialAndDesc']").map(function (index, data) {
                         var materialDesc = $(data).closest("tr").find("input[name='materialDescription']").val();
@@ -1477,19 +1477,12 @@
         //   if(userCountryMS === 'TW'){
         if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
 
-            var globalTemplateFlag = false;
-        
-            if( window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
-            
-                if(isMobile()){
-                    globalTemplateFlag = ($("select[name='globalTemplateFlag']").val().toLowerCase() == 'true')? true : false;
-                }else{
-                    globalTemplateFlag = ($("input[name='globalTemplateFlag']").val().toLowerCase() == 'true')? true : false;
-                }
-            
-            }
+            var globalTemplateFlag = ($("input[name='globalTemplateFlag']").val().toLowerCase() == 'true')? true : false;
+            var labelMaterialDesc = "Material Description (ZH)";
 
-            var labelMaterialDesc = (globalTemplateFlag)? "Material Description (Local)" : "Material Description (ZH)";
+            if( globalTemplateFlag ){
+                labelMaterialDesc = "Material Description (Local)";
+            }
 
             material_column = [{
                 title: ""
@@ -1745,17 +1738,14 @@
     
             if ((userType === 'csteam') && (materialSearch.length >= rulesMaterialSearch) && enableOldMaterialSearch == "false") {
                 console.log( materialSearch.slice(-1) );
-                
-                if(materialSearch.length > 0 ){
-                    if (materialSearch.slice(-1) === '%') {
-                        materialSearch = materialSearch.substring(0, materialSearch.length - 1);
-                        materialSearch = materialSearch.replace(/%/g, ' ');
-                        materialList.search(materialSearch).order([2, 'asc']).draw();
-                    } else {
-                        $('.dataTables_scrollBody .loader-material').show();
-                        $('.dataTables_scrollBody #resultsTable').hide();
-                        searchMaterialAjax(materialSearch, materialList);
-                    }
+                if (materialSearch.slice(-1) === '%') {
+                    materialSearch = materialSearch.substring(0, materialSearch.length - 1);
+                    materialSearch = materialSearch.replace(/%/g, ' ');
+                    materialList.search(materialSearch).order([2, 'asc']).draw();
+                } else {
+                    $('.dataTables_scrollBody .loader-material').show();
+                    $('.dataTables_scrollBody #resultsTable').hide();
+                    searchMaterialAjax(materialSearch, materialList);
                 }
     
             } else {
@@ -2216,7 +2206,7 @@
                 $("#searchCustomer_wrapper").find(".dataTables_scrollHead").css("min-width", "900px");
                 $("#searchCustomer_wrapper").find(".dataTables_scrollBody").css("min-width", "900px");
 
-                if ( window.check_country("PH") ) {
+                if ( check_nationality(2500) ) {
                     $($("#searchCustomer").find("tbody").children("tr")).each(function (index, data) {
                         var isDisabled = $(data).find("input[type='radio']").attr("disabled");
                         if (isDisabled == "disabled") {
@@ -2846,7 +2836,7 @@
                 var $overridePrice = $child.find('input[name*="isPriceOverride"]');
     
                 if ($overridePrice.val() == 'true') {
-                    $($child.find("input[name*=_unitPrice_currency]").siblings()[0]).css('color', 'red');
+                    $($child.find("input[name*=_unitPrice_l]").siblings()[0]).css('color', 'red');
                 }
     
                 var textInvoiceOverridePrice = $($invoiceOverridePrice).find("span[data-varname='unitPrice_currency']");
@@ -3362,7 +3352,7 @@
                        if ( window.check_country("PH") ){
                         data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '" data-customersold="' + full[1] +'" >';
                     }else if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
-                            // console.log(full);
+                            console.log(full);
 							//FORMAT soldtoid$$shiptoid$$billtoid
                             data = '<input type="radio" name="topCust" id= "topCust" value="' + full[1] + '$$' + full[3] + '$$' + full[5] + '" >';
                         }
@@ -3866,34 +3856,6 @@
 
                     }
 
-                    if( window.getZPUserType() == "customer" ){
-
-                        $("label[for='owner_t'] > span").html("Customer Name:");
-                        $("label[for='salesRepPhone_t'] > span").html("Customer Email Id:");
-                        $("label[for='salesEmailId_t'] > span").html("Customer Phone:");
-
-                        $("#searchCustomerInput").closest(".column").hide();
-                        var parentSearchCustomer = $("#attr_wrapper_1_transactionID_t").closest(".column-layout");
-                        $(parentSearchCustomer).find(".last").remove();
-                        $("#attr_wrapper_1_customerSelection_t").closest(".column").hide();
-
-                        setTimeout(function(){
-
-                            var parentCustomerSelection = $("#attr_wrapper_1_customerSelection_t").closest(".column-layout");
-                            $($("#attr_wrapper_1_shipToAddress_html_t").closest(".column")).appendTo(parentCustomerSelection);
-                            $("#attr_wrapper_1_shipToAddress_html_t").css("margin-top", "0px");
-                            $($("#attr_wrapper_1_customerShipToId_t").closest(".column")).appendTo(parentSearchCustomer);
-                            $($("#attr_wrapper_1_customerSoldToId_t").closest(".column")).appendTo(parentSearchCustomer);
-
-                            $("#zPUserType").closest(".form-item").removeClass("rule-hide");
-                            $("#zPUserType").closest(".text-wrapper-inner").css({"background": "transparent", "border": "0px" });
-                            $("#zPUserType").css({"padding": "0px!important"});
-                            $("#zPUserType").attr("readonly", "true");
-
-                        }, 1000);
-
-                    }
-
                     /* 
                         Created By    :- Created By Zainal Arifin, Date : 17 April 2018
                         Task          :- row#39 Disable user submit order repeatly
@@ -3918,7 +3880,7 @@
                                         var text_dont_close = "<p style='font-size: 26px;font-weight: bold;font-style: normal;font-stretch: normal;line-height: normal;letter-spacing: normal;text-align: center;color: #005e63;' >Do not close the browser or click back button</p>";
 
                                         var popup = $("<div style='width: 632px;height: 250px;border-radius: 8px;background-color: #ffffff;margin: 195px auto;padding:50px;' >" + text_order_submission + text_please_wait + loading_bar + text_dont_close + "</div>");
-                                        $("#jg-overlay").css({ "background-color": "transparent", "opacity": "1", "background-image": "none", "display" : "block" });
+                                        $("#jg-overlay").css({ "background-color": "rgb(255,255,255)", "opacity": "1", "background-image": "none" });
                                         $("#jg-overlay").append(popup);
 
                                         var setLoadingDialog = function(){
@@ -6076,12 +6038,12 @@
             var blackColor = "#000000";            
             var listEditedField = {};
 
-            /* $("input[name='additionalMaterialQty']:not(input[type='hidden'])").map(function (index, data) {
+            $("input[name='additionalMaterialQty']:not(input[type='hidden'])").map(function (index, data) {
                 var id = $(data).attr("id").replace("additionalMaterialQty", "");
                 if ($(data).val() != 0) {
                     $("#additionalMaterialQty" + id).css("color", redColor);
                 }
-            }); */
+            });
 
             $("input[name='additionalMaterialQty']").on("click focus", function () {
 
@@ -7945,7 +7907,7 @@
             var listEditedField = {};
             var var_find_text = (isMobile()) ? ".form-field" : ".text-field";
 
-            $(var_qty + ", " + var_overrideprice + ", " + var_bonusOverride + ", " + var_comments).off();
+            $(var_qty + ", " + var_overrideprice + ", " + var_qtyBonus + ", " + var_bonusOverride + ", " + var_comments).off();
 
             function isStockAvailable(id){
                 id = Math.abs(id);
@@ -7968,24 +7930,16 @@
             }
 
             function isOverridePrice(id) {
-
-                if(window.check_country("SG")){
-                    currencyCountry = "S$";
-                }else{
-                    currencyCountry = "P$";                    
-                }
-
                 id = Math.abs(id);
                 var overridePriceString = (isMobile()) ? "overridePrice_currency" : "overridePrice_currency-";
                 var overridePriceVal = $("#" + overridePriceString + id + "-display").val();
                 if (!isMobile()) {
                     var overridePriceValue = (overridePriceVal != "") ? overridePriceVal.slice(1) : 0.0;
-
                 }else{
-                    overridePriceValue = overridePriceVal.replace(currencyCountry, "");
+                    overridePriceValue = overridePriceVal;
                 }
-                console.log( overridePriceValue, basic_value_price );
-                if (parseFloat(overridePriceValue) != parseFloat(basic_value_price) ) {
+
+                if (overridePriceValue != basic_value_price) {
                     $("#" + overridePriceString + id + "-display").css("color", redColor);
                     /* if (!isMobile()) {
                         $("#totalPrice_currency-" + id).css("color", redColor);
@@ -8014,7 +7968,7 @@
                             $(data).css("color", redColor);
                         }
                     }
-                }else if($( parent ).find("td#cell-inStock-"+id.replace("qty", "")).length > 0) {
+                }else{
                     isInStock = $( parent ).find("td#cell-inStock-"+id.replace("qty", "")).find("input[name='inStock']").val().trim().toLowerCase();
                     // var typeMaterial = $(parent).find("input[id='type-"+ id +"']").val().trim().toLowerCase();
                     if (isInStock == "yes") {
@@ -8023,60 +7977,18 @@
                         $(data).css("color", redColor);
                     }                 
 
-                }else if( $(parent).find("#inStockAdditional-"+id.replace("additionalMaterialQty", "")).length > 0 ){
-                    isInStock = $( parent ).find("#inStockAdditional-"+id.replace("additionalMaterialQty", "")).val().trim().toLowerCase();
-          
-                    if( isInStock == "yes" ){
-                      $(data).css("color", blackColor);
-
-                      if( parseInt( $(data).val() ) > parseInt( $("input[id='stockQty_Additional-"+id+"']").val() ) ){
-                        $(data).css("color", redColor);
-                      }
-
-                    } else {
-                      $(data).css("color", redColor);
-                    }
-          
-                }else if( $(parent).find("#cell-inStockAdditional-"+id.replace("additionalMaterialQty", "")).length > 0 ){
-
-                    isInStock = $(parent).find("#cell-inStockAdditional-"+id.replace("additionalMaterialQty", "")).find("input[name='inStockAdditional']").val().trim().toLowerCase();
-
-                    if( isInStock == "yes" ){
-                      $(data).css("color", blackColor);
-
-                      if( parseInt( $(data).val() ) > parseInt( $("#cell-stockQty_Additional-"+id.replace("additionalMaterialQty", "")).find("input[name='stockQty_Additional']").val() ) ){
-                        $(data).css("color", redColor);
-                      }
-
-                    } else {
-                      $(data).css("color", redColor);
-                    }
-
                 }
 
             }
 
             function override_price(data, id) {
                 if (isMobile()) {
-                    // console.log( "#" + var_overrideprice.replace("td.cell-", "") + id );
-                    if(window.check_country("SG")){
-                        currencyCountry = "S$";
-                    }else{
-                        currencyCountry = "P$";                    
-                    }
-                    // console.log(" === ", "#" + var_overrideprice.replace("td.cell-", "") + id);
-                    // console.log( $("#" + var_overrideprice.replace("td.cell-", "") + id).val().replace(currencyCountry, "") );
-                    var valueWithoutCurrency = $("#" + var_overrideprice.replace("td.cell-", "") + id).val().replace(currencyCountry, "");
-                    var overridePriceString = (isMobile()) ? "overridePrice_currency" : "overridePrice_currency-";
-                    $("#" + overridePriceString + id + "-display").val( parseFloat(valueWithoutCurrency) );
                     overridePriceValue = parseFloat($("#" + var_overrideprice.replace("td.cell-", "") + id).val());
-
                 } else {
                     overridePriceValue = ($(data).val() != "") ? $(data).val().slice(1) : 0.0;
                 }
-                // console.log(overridePriceValue, "==", basic_value_price, overridePriceValue != basic_value_price);
-                console.log( overridePriceValue, basic_value_price );
-                if (parseFloat(overridePriceValue) != parseFloat( basic_value_price )) {
+                console.log(overridePriceValue, "==", basic_value_price, overridePriceValue != basic_value_price);
+                if (overridePriceValue != basic_value_price) {
                     $(data).css("color", redColor);
                     /* if (!isMobile()) {
                         $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").css("color", redColor);
@@ -8088,7 +8000,7 @@
             }
 
             $( var_qty + ", " + var_overrideprice + ", " + var_qtyBonus).find(var_find_text).map(function (index, data) {
-                // console.log($(this));
+                console.log($(this));
                 if (!isMobile()) {
                     if ($(this).closest(var_qty.replace("td", "")).length > 0) {
                         id = $(this).attr("id").replace(var_qty.replace("td.cell-", "") + "-", "");
@@ -8098,13 +8010,6 @@
                     if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
                         id = $(this).attr("id").replace(var_overrideprice.replace("td.cell-", "") + "-", "").replace("-display", "");
                         override_price($(this), id);
-                    }
-
-                    if ($(this).closest(var_qtyBonus.replace("td", "")).length > 0) {
-
-                        id = $(this).attr("id").replace(var_qtyBonus.replace("td.cell-", "") + "-", "");
-                        inStock($(this), id);
-              
                     }
 
                 } else {
@@ -8117,13 +8022,6 @@
                     if ($(this).closest(var_overrideprice.replace("td", "")).length > 0) {
                         id = $(this).attr("id").replace(var_overrideprice.replace("td.cell-", ""), "").replace("-display", "");
                         override_price($(this), id);
-                    }
-
-                    if ($(this).closest(var_qtyBonus.replace("td", "")).length > 0) {
-
-                        id = $(this).attr("id").replace(var_qtyBonus.replace("td.cell-", "") + "-", "");
-                        inStock($(this), id);
-              
                     }
 
                 }
@@ -8162,7 +8060,7 @@
                 } else {
                     isChecked = $(data).is(":checked");
                 }
-                // console.log($(data).id, isChecked);
+                console.log($(data).id, isChecked);
                 if (isChecked) {
                     $("#" + var_qty.replace("td.cell-", "") + "-" + id).css("color", redColor);
                     var qty_bns_current = $("#" + var_qty.replace("td.cell-", "") + "-" + id).val();

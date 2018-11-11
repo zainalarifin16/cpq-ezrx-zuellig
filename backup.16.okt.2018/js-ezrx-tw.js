@@ -1,8 +1,8 @@
 /* 
-        Created By    :- Created By Zainal Arifin, Date : 28 Agustus 2018
-        Task          :- Customize for ( TW / TH / VN / MY )
+        Created By    :- Created By Pratap Rudra, Date : 13 Feb 2018
+        Task          :- Customization Related to Taiwan(TW)
         Page          :- Global
-        File Location :- $BASE_PATH$/javascript/js-ezrx-global_template.js
+        File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
         Layout        :- Both (Desktop/Mobile)
 */
 $(document).ready(function(){
@@ -12,18 +12,6 @@ $(document).ready(function(){
     //window.location.host is subdomain.domain.com
     var parts = fullUrl.split('.');
     var sub = parts[0];
-
-    var currencyCountry = "";
-
-    if( window.check_country("TW") ){
-        currencyCountry = "NT$";
-    }else if( window.check_country("TH") ){
-        currencyCountry = "THD";
-    }else if( window.check_country("VN") ){
-        currencyCountry = "VND";
-    }else if( window.check_country("MY") ){
-        currencyCountry = "RM";
-    }
 
     var isLoadingDone = function () {
       return $("#jg-overlay").css("display") == "none" ? true : false;
@@ -373,10 +361,6 @@ $(document).ready(function(){
     /* TW-03 Price hover table columns to be corrected for TW - Quantity, Invoice Price, Unit Price.  */
     function tw_tooltip_modelconfiguration(){
 
-      if( window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
-        return true;
-      }
-
       if(isMobile()){
 
         setTimeout(function(){
@@ -400,7 +384,7 @@ $(document).ready(function(){
                 $($(this).children().children()).parent().append(button_helper); 
               }
             }
-
+            
             $(this).prop("tooltip", valueOfPromotion);
 
             $(this).on("click", function(){
@@ -496,7 +480,7 @@ $(document).ready(function(){
                   var table = '<table class="table-tooltip" >\
                               <thead style="padding:5px;font-weight:bold">\
                                 <tr style="background-color:#007077;">\
-                                  <th style="border: 1px solid #999;padding:5px;text-shadow:none;">Material Description</th>\
+                                  <th style="border: 1px solid #999;padding:5px;color:#fff;text-shadow:none;">Material Description</th>\
                                 </tr>\
                               </thead>';
                   table += "<tbody>";
@@ -507,7 +491,7 @@ $(document).ready(function(){
                   $('.table-tooltip').css({
                     right: '50%',
                     position: 'absolute',
-                    transform: 'translate(50%, 980%)',
+                    transform: 'translate(50%, -50%)',
                     top: '50%',
                     width: '500px',
                     border: "1px solid !important"
@@ -520,7 +504,7 @@ $(document).ready(function(){
         }, 1000);
       
       }else{
-        console.log("cell-promotion");
+
         $('td.cell-promotion').off();      
         $('td.cell-promotion').prop('tooltip', function() {
             var button_helper;
@@ -597,8 +581,7 @@ $(document).ready(function(){
         }).mouseenter(function () {
           /* get text of material desciption */
           var input_text = $(this).find(".attribute-field-container span").text();
-        //   if ($('input[name="userSalesOrg_PL"]').val() == "2800" || (userCountry === 'TW')) {
-          if( window.check_country("TW") ){
+          if ($('input[name="userSalesOrg_PL"]').val() == "2800" || (userCountry === 'TW')) {
             var chineseTxt = '#additionalBonusChineseDescription-' + (parseInt($(this).parent().children().eq(0).html()) - 1);
             console.log(chineseTxt);
             input_text = $(chineseTxt).val();
@@ -645,16 +628,16 @@ $(document).ready(function(){
       
       $("td.cell-overrideInvoicePrice").find("input.form-field").each(function(index, data){
         var overrideInvoicePriceVal = $(data).val();
-        if(overrideInvoicePriceVal.indexOf(currencyCountry) != -1){
-          overrideInvoicePriceVal = overrideInvoicePriceVal.replace(currencyCountry, "");
+        if(overrideInvoicePriceVal.indexOf("NT$") != -1){
+          overrideInvoicePriceVal = overrideInvoicePriceVal.replace("NT$", "");
           $(data).val( overrideInvoicePriceVal );
         }
       });
       
       $("td.cell-overridePrice_currency").find("input.form-field").each(function(index, data){
         var overridePriceVal = $(data).val();
-        if(overridePriceVal.indexOf(currencyCountry) != -1){
-          overridePriceVal = overridePriceVal.replace(currencyCountry, "");
+        if(overridePriceVal.indexOf("NT$") != -1){
+          overridePriceVal = overridePriceVal.replace("NT$", "");
           $(data).val( overridePriceVal );
         }
       });
@@ -904,68 +887,18 @@ $(document).ready(function(){
       $(data).css("color", blackColor);
     });
 
-    function isStockAvailable(id){
-      id = Math.abs(id);
-      var qty_l = $("#"+var_qty.replace("td.cell-", "")+"-"+id);
-      var parent = $(qty_l).closest("tr");
-      var isInStock = $(parent).find("input[id='inStock-" + id + "']").val().trim().toLowerCase();
-      var typeMaterial = $(parent).find("input[id='type-" + id + "']").val().trim().toLowerCase();
-
-      if(typeMaterial != "bonus"){
-          console.log(qty_l, "isInStock", isInStock);                
-          if (isInStock == "yes") {
-              console.log($(qty_l).val(), ">", $("input[id='stockQty-" + id + "']").val());
-              if (parseInt($(qty_l).val()) > parseInt($("input[id='stockQty-" + id + "']").val()) ) {
-                  $(qty_l).css("color", redColor);
-              }
-          } else {
-              $(qty_l).css("color", redColor);
-          }
+    function check_qty_and_stock(data, id) {
+      if ($(data).val() > $("#stockQty-" + id).val()) {
+        // qty color become red highlight if val is greater than stock
+        $(data).css("color", redColor);
       }
     }
-
-    function inStock(data, id) {
-      var parent = $(data).closest("tr");
-      console.log( "instock", parent, id );                
-      if( $(parent).find("input[id='inStock-" + id + "']").length > 0 ){
-          var isInStock = $(parent).find("input[id='inStock-" + id + "']").val().trim().toLowerCase();
-          var typeMaterial = $(parent).find("input[id='type-"+ id +"']").val().trim().toLowerCase();
-          if(typeMaterial != "bonus"){
-              if (isInStock == "yes") {
-                  if (parseInt($(data).val()) > parseInt($("input[id='stockQty-" + id + "']").val())) {
-                      $(data).css("color", redColor);
-                  }
-              } else {
-                  $(data).css("color", redColor);
-              }
-          }
-      }else if( $( parent ).find("td#cell-inStock-"+id.replace("qty", "")).length > 0 ) {
-          isInStock = $( parent ).find("td#cell-inStock-"+id.replace("qty", "")).find("input[name='inStock']").val().trim().toLowerCase();
-          // var typeMaterial = $(parent).find("input[id='type-"+ id +"']").val().trim().toLowerCase();
-          if (isInStock == "yes") {
-              $(data).css("color", blackColor);                           
-          } else {
-              $(data).css("color", redColor);
-          }                 
-
-      }else if( $(parent).find("#inStockAdditional-"+id.replace("additionalMaterialQty", "")).length > 0 ){
-          isInStock = $( parent ).find("#inStockAdditional-"+id.replace("additionalMaterialQty", "")).val().trim().toLowerCase();
-
-          if( isInStock == "yes" ){
-            $(data).css("color", blackColor);
-          } else {
-            $(data).css("color", redColor);
-          }
-
-      }
-
-  }
 
     function isOverridePrice(currentObject) {
       // console.log(id);
       // id = Math.abs(id);
       var overridePriceVal = $( currentObject ).val();
-      var overridePriceValue = (overridePriceVal != "") ? overridePriceVal.replace(currencyCountry, "") : "0.00";
+      var overridePriceValue = (overridePriceVal != "") ? overridePriceVal.replace("NT$", "") : "0.00";
       if (overridePriceValue != basic_value_price) {
         $(currentObject ).css("color", redColor);
         /* var totalPrice_currency = $(currentObject).closest("tr").find(".cell-totalPrice_currency").find("span.form-field");
@@ -978,7 +911,7 @@ $(document).ready(function(){
 
     function isOverrideInvoicePrice(currentObject){
       var overrideInvoicePriceVal = $( currentObject ).val();
-      var overrideInvoicePriceValue = (overrideInvoicePriceVal != "") ? overrideInvoicePriceVal.replace(currencyCountry, "") : "0.00";
+      var overrideInvoicePriceValue = (overrideInvoicePriceVal != "") ? overrideInvoicePriceVal.replace("NT$", "") : "0.00";
       if (overrideInvoicePriceValue != basic_value_price){
         $(currentObject).css("color", redColor);
       }else{
@@ -987,7 +920,7 @@ $(document).ready(function(){
     }
 
     function override_price(data, id) {
-      var overridePriceValue = ($(data).val() != "") ? $(data).val().replace(currencyCountry, "") : "0.00";
+      var overridePriceValue = ($(data).val() != "") ? $(data).val().replace("NT$", "") : "0.00";
       // console.log(overridePriceValue, "==", basic_value, overridePriceValue != basic_value_price);
       if (overridePriceValue != basic_value_price) {
         $(data).css("color", redColor);
@@ -998,7 +931,7 @@ $(document).ready(function(){
     }
 
     function override_invoicePrice(data){
-      var override_invoicePriceVal = ($(data).val() != "") ? $(data).val().replace(currencyCountry, "") : "0.00";
+      var override_invoicePriceVal = ($(data).val() != "") ? $(data).val().replace("NT$", "") : "0.00";
       if(override_invoicePriceVal != basic_value_price){
         $(data).css("color", redColor);        
       }
@@ -1009,8 +942,7 @@ $(document).ready(function(){
       if (!isMobile()) {
         if ($(this).closest(var_qty.replace("td", "")).length > 0) {
           id = $(this).attr("id").replace(var_qty.replace("td.cell-", "") + "-", "");
-          inStock($(this), id);          
-          //check_qty_and_stock(this, id);
+          check_qty_and_stock(this, id);
         }
 
         if ($(this).closest(var_Invoiceoverrideprice.replace("td", "")).length > 0) {
@@ -1025,8 +957,9 @@ $(document).ready(function(){
 
         if ($(this).closest(var_qtyBonus.replace("td", "")).length > 0) {
 
-          id = $(this).attr("id").replace(var_qtyBonus.replace("td.cell-", "") + "-", "");
-          inStock($(this), id);
+          if ($(this).val() > 0) {
+            $(this).css("color", redColor);
+          }
 
         }
 
@@ -1041,8 +974,7 @@ $(document).ready(function(){
       }else{
         if ($(this).closest(var_qty.replace("td", "")).length > 0) {
           id = $(this).attr("id").replace(var_qty.replace("td.cell-", "") + "-", "");
-          inStock($(this), id);
-          //check_qty_and_stock(this, id);
+          check_qty_and_stock(this, id);
         }
 
         if ($(this).closest(var_Invoiceoverrideprice.replace("td", "")).length > 0) {
@@ -1057,9 +989,9 @@ $(document).ready(function(){
 
         if ($(this).closest(var_qtyBonus.replace("td", "")).length > 0) {
 
-          /* if ($(this).val() > 0) {
+          if ($(this).val() > 0) {
             $(this).css("color", redColor);
-          } */
+          }
 
         }
 
@@ -1095,16 +1027,12 @@ $(document).ready(function(){
       }
 
       if(isChecked){
-        $(qty).removeAttr("readonly");
         $(qty).css("color", redColor);
       }else{
-        $(qty).attr("readonly", "readonly");
         $(qty).css("color", blackColor);
       }
 
       $(data).on("click change", function(){
-
-        console.log("User clicked checkbox Bonus Override");
 
         if (isMobile()) {
           isChecked = $(data).val();
@@ -1224,11 +1152,6 @@ $(document).ready(function(){
               isOverridePrice(currentObject);
             }
 
-            if (id.indexOf("qty_") != -1) {
-              current_id = parseInt(id.replace("qty_", ""));
-              isStockAvailable(current_id);
-            }
-
           } else {
             $(currentObject).css("color", redColor);
           }
@@ -1340,19 +1263,11 @@ $(document).ready(function(){
           if ($('.ui-loader').css("display") == "none" ){
             $('#line-item-grid .lig-side-scroller>table tr.lig-row.child').each(function () {
               var $child = $(this).children('td');
-              var $stock = $child.find('input[name*="inStock_l"]');
               var isBonusOverride = $($child).find('input[name*="bonusOverideFlag_l"]').val().trim().toLowerCase();
               var isPriceOverride = $($child).find('input[name*="isPriceOverride"]').val();
               var isInvoiceOverridePrice = $($child).find('input[name*="invoicePriceFlag_l"]');
               var InvoiceOverridePrice = $($child).find('input[name*="invoicePrice_l"]');
-              var stockval = $stock.val().trim().toLowerCase();
               // var isInStockMaterial = $($child).find('input[name*="inStock_l"]').val().trim().toLowerCase();
-
-              if (stockval == 'no') {
-                $($qty_text.siblings()[0]).css("color", "red");
-                $stock.parent().parent().parent().css('color', 'red');
-                $qty_text.parent().parent().parent().css('color', 'red');
-              }
 
               var qty_text = $($child).find('input[name*="qty_int_l"]');
               var totalPrice_text = $($child).find('input[name*="totalPrice_currency"]');
@@ -1406,13 +1321,13 @@ $(document).ready(function(){
     }else{
       $("td[id*='qty_int_l']").each(function (i, data) {
         var parent = $(this).closest(".line-item");
-        var isInStock = $(parent).find("span[id*='inStock_l']").text().trim().toLowerCase();
+        // var isInStock = $(parent).find("span[id*='inStock_l']").text().trim().toLowerCase();
         var type_material = $(parent).find("span[id*='refNO_text']").text().trim().toLowerCase();
-        // if(type_material != "bonus"){
-          if (isInStock == "no") {
+        if(type_material != "bonus"){
+          /* if (isInStock == "no") {
             $(this).find("span[id*='qty_int_l']").css("color", "rgb(255,0,0)");
-          }
-        // }
+          } */
+        }
       });
 
       $("td[id*='bonusOverideFlag_l']").each(function (i, data) {

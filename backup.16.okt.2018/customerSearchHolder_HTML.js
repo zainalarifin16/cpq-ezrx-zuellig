@@ -142,10 +142,8 @@ $(document).ready(function(js2){
 		}
 
 		//end
-		var globalTemplateFlag = false;
-		if( $("span[id*='globalTemplateFlag']").length > 0 ){
-			globalTemplateFlag = ($("span[id*='globalTemplateFlag']").html().toLowerCase() == 'true')? true : false;
-		}
+
+		var globalTemplateFlag = ($("span[id*='globalTemplateFlag']").html().toLowerCase() == 'true')? true : false;
 
 		var topCustomerWrapper = '<div class="customer-search-holder"><div class="search-input-wrapper"><p>Search all customers</p><input type="text" id="searchCustomerInput" autocomplete="off" placeholder="Please enter minimum 3 character"></div><div class="search-cust_wrapper"><table id="searchCustomer" width="100%"></table></div><div class="top-cust_wrapper"><p>Top 10 Frequent customers</p><table id="topCustomerList" class="display" width="100%"></table></div></div>';
 
@@ -471,10 +469,7 @@ var loadAjax = function() {
         ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/custom"+customerMasterTable_t;
 		param = 'q={"custmasterstring":{$regex:"/' + encodeURIComponent( searchKeyword ) + '/i"}}&{RecrdFlag:{eq:{A}}&{Control_Flag:{ne:{N}}&orderby=customer_name:asc';
 
-		var globalTemplateFlag = false;
-		if( $("span[id*='globalTemplateFlag']").length > 0 ){
-			globalTemplateFlag = ($("span[id*='globalTemplateFlag']").html().toLowerCase() == 'true')? true : false;
-		}
+		var globalTemplateFlag = ($("span[id*='globalTemplateFlag']").html().toLowerCase() == 'true')? true : false;
 
 		if( globalTemplateFlag ){
 
@@ -985,11 +980,7 @@ var searchCustomerList = function(seachCustomer) {
 
 	if (zPUserType === 'CSTeam') {
 
-		var globalTemplateFlag = false;
-		
-		if( $("span[id*='globalTemplateFlag']").length > 0 ){
-			globalTemplateFlag = ($("span[id*='globalTemplateFlag']").html().toLowerCase() == 'true')? true : false;
-		}
+		var globalTemplateFlag = ($("span[id*='globalTemplateFlag']").html().toLowerCase() == 'true')? true : false;
 		
 		$('#searchCustomerInput').keyup(function(){
 
