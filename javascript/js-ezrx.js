@@ -2180,27 +2180,29 @@
                 render: function(data, type, full, meta) {
 
                     // console.log('full', full[2]);
-                    if (type === 'display') {
-                        console.log(full);
-                      //data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '">';
-                      if ( window.check_country("PH") ) {
+                    if( full != null ){
+                        if (type === 'display') {
+                          if ( window.check_country("PH") ) {
+    
+                                var disabled = '';
+    
+                                if(full[13] == "Y"){
+                                    disabled = "disabled";
+                                }
+                                data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '" data-suspended="'+full[13]+'" data-customersold="'+full[1]+'" '+disabled+' >';
 
-                            var disabled = '';
+                          }else if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
 
-                            if(full[13] == "Y"){
-                                disabled = "disabled";
+                                if( zPUserType == "principal" ){
+                                    data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2]+ '$$' + full[4] + '$$' +full[11] +'">';
+                                }else{
+                                    data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1]+ '$$' + full[3] + '$$' +full[10] +'">';
+                                }
+
+                            }else{
+                                data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '">';
                             }
-                            data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '" data-suspended="'+full[13]+'" data-customersold="'+full[1]+'" '+disabled+' >';
-                      }else if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
-                            if( zPUserType == "principal" ){
-								data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2]+ '$$' + full[4] + '$$' +full[11] +'">';
-							}else{
-								data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1]+ '$$' + full[3] + '$$' +full[10] +'">';
-                            }
-                          console.log(zPUserType, data);                            
-                        }else{
-							data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '">';
-						}
+                        }
                     }
 
                     return data;

@@ -788,11 +788,9 @@ var searchCustList = function(dataSet, seachCustomer) {
 						if(type === 'display'){
 							if( window.check_country("PH") ){
 								
-								if( full[2] != null && full[13] != null ){
+								if( typeof(full[2]) != 'undefined' && typeof(full[13]) != 'undefined' ){
+									
 									var disabled = '';
-									/*if(full[9]=='Y'){
-										disabled = 'disabled';
-									}*/
 									if(full[13] == "Y"){
 										disabled = "disabled";
 									}
@@ -803,23 +801,20 @@ var searchCustList = function(dataSet, seachCustomer) {
 							} 
 							else if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
 
-								//FORMAT soldtoid$$shiptoid$$billtoid
 								if( zPUserType == "Principal" ){
-									if( full[2] != null && full[4] != null && full[11] != null ){
+									if( typeof(full[2]) != 'undefined' && typeof(full[4]) != 'undefined' && typeof(full[11]) != 'undefined' ){
 										data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2]+ '$$' + full[4] + '$$' +full[11] +'">';
 									}
 								}else{
-									if( full[1] != null && full[3] != null && full[10] != null ){
+									if( typeof(full[1]) != 'undefined' && typeof(full[3]) != 'undefined' && typeof(full[10]) != 'undefined' ){
 										data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1]+ '$$' + full[3] + '$$' +full[10] +'">';
 									}
 								}
-								//data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1]+ '$$' + full[2] + '$$' +full[15] +'">';
-								// if (zPUserType !== 'Principal') {
-								// 	data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1]+ '$$' + full[8] + '$$' +full[10] +'">';
-								// }
 								
 							}else{
-								data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '">';
+								if( typeof(full[2]) != 'undefined' ){
+									data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '">';
+								}
 							}
 						}
 
