@@ -706,7 +706,7 @@ $(document).ready(function() {
 									}, 500);
 								}
 
-								hide_recomended_material( elementToMove[3] );
+								hide_recomended_material( elementToMove[2] );
 
 								/* if (check_nationality(2600) || check_nationality(2500)) {
 									

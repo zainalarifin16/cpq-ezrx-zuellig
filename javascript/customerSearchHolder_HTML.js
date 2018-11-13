@@ -787,22 +787,31 @@ var searchCustList = function(dataSet, seachCustomer) {
 					if(full != null){
 						if(type === 'display'){
 							if( window.check_country("PH") ){
-								var disabled = '';
-								/*if(full[9]=='Y'){
-									disabled = 'disabled';
-								}*/
-								if(full[13] == "Y"){
-									disabled = "disabled";
+								
+								if( full[2] != null && full[13] != null ){
+									var disabled = '';
+									/*if(full[9]=='Y'){
+										disabled = 'disabled';
+									}*/
+									if(full[13] == "Y"){
+										disabled = "disabled";
+									}
+									
+									data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '" data-suspended="' + full[13] + '" data-customersold="'+full[1]+'" '+disabled+'>';
 								}
-								data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '" data-suspended="' + full[13] + '" data-customersold="'+full[1]+'" '+disabled+'>';
+
 							} 
 							else if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
 
 								//FORMAT soldtoid$$shiptoid$$billtoid
 								if( zPUserType == "Principal" ){
-									data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2]+ '$$' + full[4] + '$$' +full[11] +'">';
+									if( full[2] != null && full[4] != null && full[11] != null ){
+										data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2]+ '$$' + full[4] + '$$' +full[11] +'">';
+									}
 								}else{
-									data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1]+ '$$' + full[3] + '$$' +full[10] +'">';
+									if( full[1] != null && full[3] != null && full[10] != null ){
+										data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1]+ '$$' + full[3] + '$$' +full[10] +'">';
+									}
 								}
 								//data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1]+ '$$' + full[2] + '$$' +full[15] +'">';
 								// if (zPUserType !== 'Principal') {

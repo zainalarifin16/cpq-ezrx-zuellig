@@ -54,7 +54,7 @@ tfoot .jg-btn { margin:10px; }
 .jg-box-mainlayout .text-wrapper-inner input { box-sizing:border-box; }
 .jg-box-mainlayout .panel.collapsible span.panel-heading { background:none; padding-left:0; }
 .jg-box-mainlayout .panel.collapsible .panel-tc { background:url('../images/dk-panel-arrow-down.png') 100% 50% no-repeat; }
-.jg-box-mainlayout #document-form { background:none; border:0; }
+.jg-box-mainlayout #document-form { background:none; border:0; width: auto; }
 .jg-box-mainlayout .inlinevalue { float:left; padding-left:0 !important; margin-left:10px; }
 .jg-box-mainlayout .form-element ul { margin:0; padding:2px 0; }
 .jg-box-mainlayout .panel .panel-bc, .jg-box-mainlayout .panel .panel-bl, .jg-box-mainlayout .panel .panel-br { background:none; }
@@ -1087,4 +1087,12 @@ html .ui-field-contain>label+.ui-flipswitch, html .ui-popup .ui-field-contain>la
     
     display: none!important;
 
+}
+
+#line-item-grid th:nth-child(2){
+	display: none;
+}
+
+#line-item-grid td:nth-child(2){
+	display: none;
 }
