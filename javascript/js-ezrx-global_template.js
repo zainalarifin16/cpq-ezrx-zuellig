@@ -1027,6 +1027,9 @@ $(document).ready(function(){
 
           id = $(this).attr("id").replace(var_qtyBonus.replace("td.cell-", "") + "-", "");
           inStock($(this), id);
+          /* if ($(this).val() > 0) {
+            $(this).css("color", redColor);
+          } */
 
         }
 
@@ -1347,14 +1350,14 @@ $(document).ready(function(){
               var InvoiceOverridePrice = $($child).find('input[name*="invoicePrice_l"]');
               var stockval = $stock.val().trim().toLowerCase();
               // var isInStockMaterial = $($child).find('input[name*="inStock_l"]').val().trim().toLowerCase();
+              var qty_text = $($child).find('input[name*="qty_int_l"]');
 
               if (stockval == 'no') {
-                $($qty_text.siblings()[0]).css("color", "red");
+                $($(qty_text).siblings()[0]).css("color", "red");
                 $stock.parent().parent().parent().css('color', 'red');
-                $qty_text.parent().parent().parent().css('color', 'red');
+                $(qty_text).parent().parent().parent().css('color', 'red');
               }
 
-              var qty_text = $($child).find('input[name*="qty_int_l"]');
               var totalPrice_text = $($child).find('input[name*="totalPrice_currency"]');
               var unitPrice_text = $($child).find('input[name*="unitPrice_currency"]');
               var type_material = $($child).find('input[name*="refNO_text"]').val().trim().toLowerCase();
@@ -1373,9 +1376,11 @@ $(document).ready(function(){
 
               if (type_material == "bonus") {
                 if (isBonusOverride == "true") {
-                  var typeBonus = $($child).find('input[name*="bonusType_l"]').val().trim().toLowerCase();
-                  if (typeBonus == "system bonus") {
-                    $($(qty_text).siblings()[0]).css("color", redColor);
+                  if( $($child).find('input[name*="bonusType_l"]').length > 0 ){
+                    var typeBonus = $($child).find('input[name*="bonusType_l"]').val().trim().toLowerCase();
+                    if (typeBonus == "system bonus") {
+                      $($(qty_text).siblings()[0]).css("color", redColor);
+                    }
                   }
                 }
                 $($(unitPrice_text).siblings()[0]).css("color", blackColor);

@@ -10,11 +10,11 @@ $(document).ready(function() {
     if( !window.check_country("SG") ){
         
         var url_script = "";
-        // console.log( "TH ?", window.check_country("TH") );
-        // console.log( "VN ?", window.check_country("VN") );
-        // console.log( "MY ?", window.check_country("MY") );
+        console.log( "TH ?", window.check_country("TH") );
+        console.log( "VN ?", window.check_country("VN") );
+        console.log( "MY ?", window.check_country("MY") );
         if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
-            // console.log( "SPESIFIC GLOBAL TEMPLATE", window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") );
+            console.log( "SPESIFIC GLOBAL TEMPLATE", window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") );
             url_script = script_global_template;
         }
         if( window.check_country("PH") ){

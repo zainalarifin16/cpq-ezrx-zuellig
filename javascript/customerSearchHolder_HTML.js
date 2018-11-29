@@ -142,10 +142,8 @@ $(document).ready(function(js2){
 		}
 
 		//end
-		var globalTemplateFlag = false;
-		if( $("span[id*='globalTemplateFlag']").length > 0 ){
-			globalTemplateFlag = ($("span[id*='globalTemplateFlag']").html().toLowerCase() == 'true')? true : false;
-		}
+
+		var globalTemplateFlag = ($("span[id*='globalTemplateFlag']").html().toLowerCase() == 'true')? true : false;
 
 		var topCustomerWrapper = '<div class="customer-search-holder"><div class="search-input-wrapper"><p>Search all customers</p><input type="text" id="searchCustomerInput" autocomplete="off" placeholder="Please enter minimum 3 character"></div><div class="search-cust_wrapper"><table id="searchCustomer" width="100%"></table></div><div class="top-cust_wrapper"><p>Top 10 Frequent customers</p><table id="topCustomerList" class="display" width="100%"></table></div></div>';
 
@@ -471,10 +469,7 @@ var loadAjax = function() {
         ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/custom"+customerMasterTable_t;
 		param = 'q={"custmasterstring":{$regex:"/' + encodeURIComponent( searchKeyword ) + '/i"}}&{RecrdFlag:{eq:{A}}&{Control_Flag:{ne:{N}}&orderby=customer_name:asc';
 
-		var globalTemplateFlag = false;
-		if( $("span[id*='globalTemplateFlag']").length > 0 ){
-			globalTemplateFlag = ($("span[id*='globalTemplateFlag']").html().toLowerCase() == 'true')? true : false;
-		}
+		var globalTemplateFlag = ($("span[id*='globalTemplateFlag']").html().toLowerCase() == 'true')? true : false;
 
 		if( globalTemplateFlag ){
 
@@ -625,63 +620,63 @@ var searchCustList = function(dataSet, seachCustomer) {
 					if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
 						if( zPUserType.toLowerCase() == "principal" ){
 							subDataSet = [ 	'',
-											(colArr[0] != null)? colArr[0] : "",  //1 PRINCIPAL CUST CODE
-											(colArr[1] != null)? colArr[1] : "",  //2 SOLD TO ID
-											(colArr[3] != null)? colArr[3] : "",  //3 SOLD TO NAME
-											(colArr[2] != null)? colArr[2] : "",  //4 SHIP TO ID
-											(colArr[14] != null)? colArr[14] : "", //5 SHIP TO NAME
-											(colArr[18] != null)? colArr[18] : "", //6 SHIP TO ADDRESS 1
-											(colArr[19] != null)? colArr[19] : "", //7 SHIP TO ADDRESS 2
-											(colArr[21] != null)? colArr[21] : "", //8 SHIP TO DISTRICT
-											(colArr[23] != null)? colArr[23] : "", //9 SHIP TO CITY
-											(colArr[22] != null)? colArr[22] : "", //10 SHIP TO POSTAL CODE
-											(colArr[15] != null)? colArr[15] : "", //11 BILL TO ID
-											(colArr[16] != null)? colArr[16] : "", //12 BIILL TO NAME
+											colArr[0],  //1 PRINCIPAL CUST CODE
+											colArr[1],  //2 SOLD TO ID
+											colArr[3],  //3 SOLD TO NAME
+											colArr[2],  //4 SHIP TO ID
+											colArr[14], //5 SHIP TO NAME
+											colArr[18], //6 SHIP TO ADDRESS 1
+											colArr[19], //7 SHIP TO ADDRESS 2
+											colArr[21], //8 SHIP TO DISTRICT
+											colArr[23], //9 SHIP TO CITY
+											colArr[22], //10 SHIP TO POSTAL CODE
+											colArr[15], //11 BILL TO ID
+											colArr[16], //12 BIILL TO NAME
 										];
 						}
 						if( zPUserType.toLowerCase() == "salesrep" ){
 							subDataSet = [ 	'',
-											(colArr[0] != null)? colArr[0] : "",  //1 SOLD TO ID
-											(colArr[2] != null)? colArr[2] : "",  //2 SOLD TO NAME
-											(colArr[1] != null)? colArr[1] : "",  //3 SHIP TO ID
-											(colArr[13] != null)? colArr[13] : "", //4 SHIP TO NAME
-											(colArr[17] != null)? colArr[17] : "", //5 SHIP TO ADDRESS 1
-											(colArr[18] != null)? colArr[18] : "", //6 SHIP TO ADDRESS 2
-											(colArr[20] != null)? colArr[20] : "", //7 SHIP TO DISTRICT
-											(colArr[22] != null)? colArr[22] : "", //8 SHIP TO CITY
-											(colArr[21] != null)? colArr[21] : "", //9 SHIP TO POSTAL CODE
-											(colArr[14] != null)? colArr[14] : "", //10 BILL TO ID
-											(colArr[15] != null)? colArr[15] : "", //11 BIILL TO NAME
+											colArr[0],  //1 SOLD TO ID
+											colArr[2],  //2 SOLD TO NAME
+											colArr[1],  //3 SHIP TO ID
+											colArr[13], //4 SHIP TO NAME
+											colArr[17], //5 SHIP TO ADDRESS 1
+											colArr[18], //6 SHIP TO ADDRESS 2
+											colArr[20], //7 SHIP TO DISTRICT
+											colArr[22], //8 SHIP TO CITY
+											colArr[21], //9 SHIP TO POSTAL CODE
+											colArr[14], //10 BILL TO ID
+											colArr[15], //11 BIILL TO NAME
 										];
 						}
 					} else if( window.check_country("PH") ){
 						// console.log(colArr);
 						subDataSet = [ 	'',
-											(colArr[0] != null)? colArr[0] : "",  //SOLD TO ID
-											(colArr[1] != null)? colArr[1] : "",  //SHIP TO ID
-											(colArr[2] != null)? colArr[2] : "",  //CUSTOMER NAME
-											(colArr[3] != null)? colArr[3] : "",  //CORP.NAME
-											(colArr[4] != null)? colArr[4] : "",  //SOLD TO ADDRESS1
-											(colArr[5] != null)? colArr[5] : "",  //SOLD TO ADDRESS2
-											(colArr[6] != null)? colArr[6] : "",  //SOLD TO PHONE
-											(colArr[7] != null)? colArr[7] : "",  //SOLD TO POSTAL CODE
-											(colArr[15] != null)? colArr[15] : "", //SHIP TO ADDRESS1
-											(colArr[16] != null)? colArr[16] : "", //SHIP TO ADDRESS2
+											colArr[0],  //SOLD TO ID
+											colArr[1],  //SHIP TO ID
+											colArr[2],  //CUSTOMER NAME
+											colArr[3],  //CORP.NAME
+											colArr[4],  //SOLD TO ADDRESS1
+											colArr[5],  //SOLD TO ADDRESS2
+											colArr[6],  //SOLD TO PHONE
+											colArr[7],  //SOLD TO POSTAL CODE
+											colArr[15], //SHIP TO ADDRESS1
+											colArr[16], //SHIP TO ADDRESS2
 											'', //SHIP TO PHONE
-											(colArr[19] != null)? colArr[19] : "",  //SHIP TO POSTAL CODE
-											(colArr[14] != null)? colArr[14] : "",
+											colArr[19],  //SHIP TO POSTAL CODE
+											colArr[14],
 										];
 					}else{
 						subDataSet = [
 										'', 
 										(colArr[0] != null)? colArr[0] : "", 
 										(colArr[1] != null)? colArr[1] : "", 
-										(colArr[2] != null)? colArr[2] : "", 
-										(colArr[3] != null)? colArr[3] : "", 
-										(colArr[4] != null)? colArr[4] : "", 
-										(colArr[5] != null)? colArr[5] : "", 
-										(colArr[6] != null)? colArr[6] : "", 
-										(colArr[7] != null)? colArr[7] : ""
+										(colArr[2])? colArr[2] : "", 
+										(colArr[3])? colArr[3] : "", 
+										(colArr[4])? colArr[4] : "", 
+										(colArr[5])? colArr[5] : "", 
+										(colArr[6])? colArr[6] : "", 
+										(colArr[7])? colArr[7] : ""
 									];
 					}
 
@@ -787,34 +782,30 @@ var searchCustList = function(dataSet, seachCustomer) {
 					if(full != null){
 						if(type === 'display'){
 							if( window.check_country("PH") ){
-								
-								if( typeof(full[2]) != 'undefined' && typeof(full[13]) != 'undefined' ){
-									
-									var disabled = '';
-									if(full[13] == "Y"){
-										disabled = "disabled";
-									}
-									
-									data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '" data-suspended="' + full[13] + '" data-customersold="'+full[1]+'" '+disabled+'>';
+								var disabled = '';
+								/*if(full[9]=='Y'){
+									disabled = 'disabled';
+								}*/
+								if(full[13] == "Y"){
+									disabled = "disabled";
 								}
-
+								data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '" data-suspended="' + full[13] + '" data-customersold="'+full[1]+'" '+disabled+'>';
 							} 
 							else if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
 
+								//FORMAT soldtoid$$shiptoid$$billtoid
 								if( zPUserType == "Principal" ){
-									if( typeof(full[2]) != 'undefined' && typeof(full[4]) != 'undefined' && typeof(full[11]) != 'undefined' ){
-										data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2]+ '$$' + full[4] + '$$' +full[11] +'">';
-									}
+									data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2]+ '$$' + full[4] + '$$' +full[11] +'">';
 								}else{
-									if( typeof(full[1]) != 'undefined' && typeof(full[3]) != 'undefined' && typeof(full[10]) != 'undefined' ){
-										data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1]+ '$$' + full[3] + '$$' +full[10] +'">';
-									}
+									data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1]+ '$$' + full[3] + '$$' +full[10] +'">';
 								}
+								//data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1]+ '$$' + full[2] + '$$' +full[15] +'">';
+								// if (zPUserType !== 'Principal') {
+								// 	data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[1]+ '$$' + full[8] + '$$' +full[10] +'">';
+								// }
 								
 							}else{
-								if( typeof(full[2]) != 'undefined' ){
-									data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '">';
-								}
+								data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '">';
 							}
 						}
 
@@ -989,11 +980,7 @@ var searchCustomerList = function(seachCustomer) {
 
 	if (zPUserType === 'CSTeam') {
 
-		var globalTemplateFlag = false;
-		
-		if( $("span[id*='globalTemplateFlag']").length > 0 ){
-			globalTemplateFlag = ($("span[id*='globalTemplateFlag']").html().toLowerCase() == 'true')? true : false;
-		}
+		var globalTemplateFlag = ($("span[id*='globalTemplateFlag']").html().toLowerCase() == 'true')? true : false;
 		
 		$('#searchCustomerInput').keyup(function(){
 

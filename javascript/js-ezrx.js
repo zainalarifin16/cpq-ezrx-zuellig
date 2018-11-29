@@ -23,6 +23,14 @@
 
     var parts = fullUrl.split('.');
     var instanceName = parts[0];
+    // var divLoading = document.createElement("div");
+    // divLoading.id = "loading-zp";
+    // var jg_overlay = document.getElementById("jg-overlay");
+    // jg_overlay.appendChild( divLoading );
+    // HaikuComponentEmbed_dickyjiang_ZPLogoRotate(
+    //     document.getElementById('loading-zp'),
+    //     {loop: true}
+    // );
     /* 
         Start : -
         Task  : - Detect User
@@ -982,7 +990,23 @@
                             }
                         }
 
-                    }
+                    }else{
+						if ($($(cartRow[j]).find('td.cell-type input[name="type"]')).length > 0) {
+							if ($($(cartRow[j]).find('td.cell-type input[name="type"]')).val().toLowerCase() == "comm") {
+								var cartId = $($(cartRow[j]).find('td.cell-material input[name="material"]')).val();
+								var matDesc = $($(cartRow[j]).find('td.cell-materialDescription input[name="materialDescription"]')).val();
+								cartID.push(cartId);
+								currentCart.push({
+									'cartId': cartId,
+									'matDesc': matDesc
+								});
+								if (currentId === cartId) {
+									showError();
+									return;
+								}
+							}
+						}
+					}
 
                 }else{
                     if ($($(cartRow[j]).find('td.cell-type input[name="type"]')).length > 0) {
@@ -1295,6 +1319,8 @@
               $("#selectedMaterialsString").val(existingValModelLevel);
                 $("form[name='configurationForm']").submit(); //auto update
                 $("#config-form").submit(); //auto update
+            }else{
+                $("#jg-overlay").hide();
             }
 
 
@@ -1482,7 +1508,11 @@
             if( window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
             
                 if(isMobile()){
-                    globalTemplateFlag = ($("select[name='globalTemplateFlag']").val().toLowerCase() == 'true')? true : false;
+					if($("select[name='globalTemplateFlag']").length > 0){						
+						globalTemplateFlag = ($("select[name='globalTemplateFlag']").val().toLowerCase() == 'true')? true : false;
+					}else{
+						globalTemplateFlag = ($("input[name='globalTemplateFlag']").val().toLowerCase() == 'true')? true : false;
+					}
                 }else{
                     globalTemplateFlag = ($("input[name='globalTemplateFlag']").val().toLowerCase() == 'true')? true : false;
                 }
@@ -1870,6 +1900,7 @@
     var searchCustomerList = function(seachCustomer) {
         console.log('searchCustomerList func');
         var timer;
+        var tempKeyword = "";
 
         $("#searchCustomerInput").click(function() {
             console.log('#searchCustomerInput click');
@@ -1896,11 +1927,14 @@
 
                     if (inputLength === ruleMaxChar || inputLength > ruleMaxChar) {
                         //ajax
-                        loadAjax();
-                        setTimeout(function() {
-                            $('.search-cust_wrapper').show();
-                        }, 1000);
-                        // seachCustomer.search($(this).val()).draw();
+                        if( tempKeyword != $("#searchCustomerInput").val() ){
+                            tempKeyword = $("#searchCustomerInput").val();
+                            loadAjax();
+                            setTimeout(function() {
+                                $('.search-cust_wrapper').show();
+                            }, 1000);
+                            // seachCustomer.search($(this).val()).draw();
+                        }
 
                     } else {
                         console.log('hide table');
@@ -2108,12 +2142,16 @@
                 
                 dataSet.push(subDataSet);
             }
-
+            var tempKeyword = "";
             $('#searchCustomerInput').keyup(function() {
                 var inputLength = $('#searchCustomerInput').val().length;
                 if (inputLength === 3 || inputLength > 3) {
-                    seachCustomer.search($(this).val(), true, true).draw();
-                    $('.search-cust_wrapper').show();
+                    if( tempKeyword != $("#searchCustomerInput").val() ){
+                        tempKeyword = $("#searchCustomerInput").val();
+                        seachCustomer.search($(this).val(), true, true).draw();
+                        $('.search-cust_wrapper').show();
+                    }
+                    
                 } else {
                     $('.search-cust_wrapper').hide();
                 }
@@ -3225,6 +3263,7 @@
         if ( userType === 'csteam') {
             /* 4 April 2018, Zainal : Add localstorage for scroll to shopping cart */
             $("#addMaterialBtn").on("click", function () {
+                $("#jg-overlay").show();
                 window.localStorage.setItem("scrollToShoppingCart", "true");
                 console.log("status isScrollToShoppingCart : ", window.localStorage.getItem("scrollToShoppingCart"));
             });
@@ -3434,6 +3473,14 @@
 
         $("#attribute-customerSearchHolder_HTML").html(searchCustomerWrapper);
 
+        if( window.getZPUserType() == "customer" ){
+            
+            setTimeout(function(){
+                $("#attribute-customerSearchHolder_HTML").closest("fieldset").css("display", "none");
+            }, 3000);
+
+        }
+
         var zPUserType = window.getZPUserType();        
         // var zPUserType = ($("#zPUserType").length > 0) ? $("#zPUserType").val().toLowerCase() : $("input[name='zPUserType']").val().toLowerCase();                    
 
@@ -3511,8 +3558,11 @@
             console.log('comm clicked');
             var childTr = currTr.nextUntil("tr.comm").find('td:nth-child(2)').find('input[name*=_line_item_list]');
             if (checked === true) {
+                childTr.prop("disabled", true);
+                childTr.prop("style", "height: 22px;width: 22px;position: inherit!important;");
                 childTr.prop('checked', true);
             } else {
+                childTr.prop("disabled", false);
                 childTr.prop('checked', false);
             }
         } else if (type2 == 'Bonus') {
@@ -4592,16 +4642,17 @@
         }
 
         var flag = window.sessionStorage.getItem("flag");
-        var dss_showing_menu = [ "[past orders]", "[template orders]" ];
+         var dss_showing_menu = ["[pastÂ orders]", "[templateÂ orders]","[Template Orders]","[Past Orders]","[past orders]","[template orders]","[template orders]","[past orders]"];
         // dropdown
         // console.log( $('select[name=new_search_id]').find("option") );
         $('select[name=new_search_id]').find("option").each(function (index, data) {
             console.log( $(data).text().trim().toLowerCase() );
-            if ($(data).text().trim().toLowerCase() == "my approval search") {
+            if ($(data).text().trim().toLowerCase() == "myÂ approvalÂ search") {
                 $(data).remove();
             }
             if(flag == "rightnow"){
                 if( dss_showing_menu.indexOf( $(data).text().trim().toLowerCase() ) == -1 ){
+					console.log("==============================");
                     $(data).remove();                    
                 }
             }
@@ -4627,7 +4678,7 @@
             setTimeout(function () {
                 if (isLoadingDone()) {
                     var selectedNewSearchId = $('select[name=new_search_id] option:selected').text().trim().toLowerCase();
-                    if (selectedNewSearchId == "search by date ranges" || selectedNewSearchId == "search by customer and status") {                    
+                    if (selectedNewSearchId == "searchÂ byÂ dateÂ ranges" || selectedNewSearchId == "searchÂ byÂ customerÂ andÂ status") {                    
                         window.localStorage.setItem("new_search_id", "false");                        
                         eval($(".jg-linkbtn.refine").attr("href"));
                     }
@@ -6772,6 +6823,40 @@
                     });
                     
                     customer_selection();
+
+                    
+                    var automatic_save = function(){
+
+                        setTimeout(function(){
+                            if(document.readyState == "complete"){
+                                var flag = window.sessionStorage.getItem("flag");
+                                if ($("input[name='status_t']").val().toLowerCase() == 'order initiated' && flag == "rightnow" && window.getZPUserType() == "customer") {
+                                    var isExist = false;
+                                    if( $("li.error-text").length > 0 ){
+                                        $("li.error-text").each(function(i, data){
+
+                                            if( $(data).text().toLowerCase().indexOf( "an order is already present") != -1 ){
+                                                isExist = true;
+                                            }
+                                            
+                                        });
+                                    }
+                                    
+                                    if(isExist == false){
+                                        // console.log( $("button:contains('Save')") );
+                                        setTimeout( $("button:contains('Save')").click(), 3000 );
+                                        console.log('order initiated and flag is not null');
+                                    }
+                                }
+                            }else{
+                                automatic_save();
+                            }
+                        }, 1000);
+
+                    }
+
+                    automatic_save();
+                    // setTimeout(automatic_save(), 1000);
 
                     //VMLSINOZP-61 start
                     //console.log('VMLSINOZP-61',1);

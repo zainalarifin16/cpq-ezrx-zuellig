@@ -343,9 +343,9 @@ $(document).ready(function(){
             var isPriceOverride = $($child).find('input[name*="isPriceOverride"]').val();
             var isNetPriceDisc = $($child).find('input[name*="netPriceDiscount_t"]').val();
             
-            var qty_text = $($child).find('input[name*="qty_int_l"]');
-            var totalPrice_text = $($child).find('input[name*="totalPrice_currency"]');
-            var unitPrice_text = $($child).find('input[name*="unitPrice_currency"]');
+            var qty_text = $($child).find('input[name*="qty_l"]');
+            var totalPrice_text = $($child).find('input[name*="totalPrice_l"]');
+            var unitPrice_text = $($child).find('input[name*="unitPrice_l"]');
             var type_material = $($child).find('input[name*="refNO_text"]').val().trim().toLowerCase();
 
             if (isPriceOverride.toLowerCase() == "true"){

@@ -17,9 +17,18 @@ tfoot .jg-btn { margin:10px; }
 .jg-btn-icon.cart-cancelshopping { background-image:url('../images/dk-icon-cart-cancelshopping.png'); }
 .jg-btn-icon.cart-save { background-image:url('../images/dk-icon-cart-save.png'); }
 
-#jg-overlay { position:fixed; top:0; right:0; bottom:0; left:0; z-index:99999; background:white; background-image: url("../images/loading-icon.gif");
+#jg-overlay { position:fixed; top:0; right:0; bottom:0; left:0; z-index:99999; background:white; 
+    background-image: url("../images/loading-icon.gif");
     background-repeat: no-repeat;
     background-position: center center;}
+
+#loading-zp {
+    position: relative;
+    top: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 .jg-box-mainlayout { position:relative; }
 .jg-box-mainlayout, .jg-box-mainlayout .tab-strip .tab-text, .jg-box-mainlayout .error-text
@@ -756,14 +765,27 @@ and (orientation: landscape) {
     }
 }
 
+@media only screen 
+and (min-width: 28em)
+and (orientation: portrait) {
+
+    .ui-field-contain>label ~ [class*=ui-] :not(.ui-flipswitch) :not(.ui-flipswitch-off), .ui-field-contain .ui-controlgroup-controls{
+        width: 70%!important;
+    }
+
+    .ui-field-contain>label, .ui-field-contain .ui-controlgroup-label, .ui-field-contain>.ui-rangeslider>label {
+        margin: 0.5em 0% 0 0!important;
+    }
+}
+
 @media only screen
 and (min-device-width : 768px)
 and (max-device-width : 1024px)
 and (orientation : portrait) {
 
    .jg-mobilelayout form#commerce-form fieldset [role="heading"]{
-		width: 25%;
-		min-width: 203px;
+		width: 20%;
+		min-width: 150px;
 	}
 	.jg-mobilelayout form#commerce-form fieldset .ui-field-contain>label{
 		width: 28%;
@@ -780,9 +802,23 @@ and (orientation : portrait) {
 	margin-bottom: 0;
 }
 .jg-mobilelayout form#commerce-form fieldset #attribute-transactionID_t [role="heading"]{
-	width: 60%;
-    min-width: 150px;
+	width: 43%!important;
+    min-width: 100px!important;
 }
+
+.jg-mobilelayout form#commerce-form fieldset #attribute-transactionID_t .ui-controlgroup-controls{
+    width: 50%!important;
+}
+
+.jg-mobilelayout form#commerce-form fieldset #attribute-defaultPaymentTerm_t [role="heading"]{
+    min-width: 100px!important;
+    width: 20%!important;
+}
+
+.jg-mobilelayout form#commerce-form fieldset #attribute-status_t .ui-controlgroup-controls{
+    width: 50%!important;
+}
+
 @media only screen
 and (min-device-width : 768px)
 and (max-device-width : 1024px)
@@ -822,7 +858,7 @@ and (orientation : landscape) {
 .jg-mobilelayout form#commerce-form fieldset:last-of-type .group-content>div:nth-of-type(6),
 .jg-mobilelayout form#commerce-form fieldset:last-of-type .group-content>div:nth-of-type(8){
 	float: left;
-    width: 47%;
+    width: 100%;
     display: inline-block;
     font-size: 0;
 }
@@ -833,7 +869,7 @@ and (orientation : landscape) {
 .jg-mobilelayout form#commerce-form fieldset:last-of-type .group-content>div:nth-of-type(8) div,
 .jg-mobilelayout form#commerce-form fieldset:last-of-type .group-content>div:nth-of-type(9) div{
     font-size: 16px;
-    min-width: 202px;
+    /* min-width: 170px; */
 }
 .jg-mobilelayout form#commerce-form fieldset:last-of-type .group-content>div:nth-of-type(2),
 .jg-mobilelayout form#commerce-form fieldset:last-of-type .group-content>div:nth-of-type(7),
@@ -858,9 +894,10 @@ and (orientation : landscape) {
 	.jg-mobilelayout form#commerce-form fieldset:last-of-type .group-content>div:nth-of-type(7) div[role="heading"],
 	.jg-mobilelayout form#commerce-form fieldset:last-of-type .group-content>div:nth-of-type(8) div[role="heading"],
 	.jg-mobilelayout form#commerce-form fieldset:last-of-type .group-content>div:nth-of-type(9) div[role="heading"]{
-	    width: 200px;
+	    width: 20%;
         margin-right: 13px;
-	    /* min-width: 193px; */
+        max-width: 145px;
+	    min-width: 191px;
 	}
 }
 /*VMLSINOZP-34 SKU END*/
@@ -1089,10 +1126,23 @@ html .ui-field-contain>label+.ui-flipswitch, html .ui-popup .ui-field-contain>la
 
 }
 
-#line-item-grid th:nth-child(2){
+#line-item-grid .line-item-grid-header th:nth-child(2){
 	display: none;
 }
 
-#line-item-grid td:nth-child(2){
+#line-item-grid .line-item-show td:nth-child(2){
 	display: none;
+}
+
+.jg-mobilelayout .sidebar-container #swipe-sidebar-header{
+    text-shadow: none;
+}
+
+.line-item-grid{
+    border-left: 0px;
+}
+
+.line-item-grid table{
+    left: 0px;
+    width: 100%;
 }

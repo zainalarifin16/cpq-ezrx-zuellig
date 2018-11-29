@@ -664,12 +664,16 @@ $(document).ready(function() {
 								$("#price-section").hide();
 								$("#recommended-parts").hide();
 								
-								var elementToMove = $(".ui-collapsible-inset");
+								/*commented by suresh on 24/11/2018 - my fav section is not showing
+									var elementToMove = $(".ui-collapsible-inset");
 								
-								$(elementToMove[1]).show();								
-								$( $(elementToMove[1]) ).appendTo("#swipe-sidebar-content");
+								$(elementToMove[1]).show();		
+								*/
+								//added by suresh on 24/11/2018
+								$( $("#attribute-pastOrders").closest(".ui-collapsible-inset") ).appendTo("#swipe-sidebar-content");
 
-
+								$("#attribute-pastOrders").closest(".ui-collapsible-inset").show();
+								
 								if(!isPOTableCreated){
 									
 									js2("#PastOrders").DataTable({
@@ -706,7 +710,9 @@ $(document).ready(function() {
 									}, 500);
 								}
 
-								hide_recomended_material( elementToMove[2] );
+								//hide_recomended_material( elementToMove[3] ); commented by suresh on 24/11/2018
+								hide_recomended_material( $("#attribute-showPrincipalFavorites").closest(".ui-collapsible-inset") );
+								
 
 								/* if (check_nationality(2600) || check_nationality(2500)) {
 									
@@ -730,9 +736,15 @@ $(document).ready(function() {
 									Layout        :- Desktop
 								*/
 
-								$(elementToMove[3]).show();
-								$( $(elementToMove[3]) ).appendTo("#swipe-sidebar-content");
+								/*commented by suresh on 24/11/2018 - my fav section is not showing
+									$(elementToMove[3]).show();
+									$( $(elementToMove[3]) ).appendTo("#swipe-sidebar-content");
+								*/
+								//added by suresh on 24/11/2018
+								$( $("#attribute-currentCustFav").closest(".ui-collapsible-inset") ).appendTo("#swipe-sidebar-content");
 
+								$("#attribute-currentCustFav").closest(".ui-collapsible-inset").show();
+								
 								if(!isFavTableCreated){
 									
 									js2("#CurrentCustFav").DataTable({
@@ -818,6 +830,25 @@ $(document).ready(function() {
 									File Location :- $BASE_PATH$/javascript/js-ezrx.js
 									Layout        :- Desktop
 								*/
+
+								// Zainal Arifin : 26-11-2018
+								// Move description for Search Material
+								
+								setTimeout(function(){
+									var parent = $("#attribute-materialSearch")
+												.closest(".ui-collapsible-inset");
+
+									var labelFieldSearchMaterial = $( parent ).find(".ui-collapsible-heading > a");
+									console.log(labelFieldSearchMaterial);
+									var textSearchMaterial = $(labelFieldSearchMaterial)
+																		.text()
+																		.replace("click to collapse contents", "")
+																		.split(" - ");
+
+									$( labelFieldSearchMaterial ).html( $( labelFieldSearchMaterial ).html().replace( " - " + textSearchMaterial[1].replace(/&/g, '&amp;').trim(), "") );
+									var bodySearchMaterial = $( parent ).find(".ui-collapsible-content");
+									$( bodySearchMaterial ).prepend(`<div style='background-color: #ffff2d9e; padding:10px;' > ${ textSearchMaterial[1] }</div>`);
+								}, 2000);
 								
 								if ($("#swipe-sidebar-content").children(":not('.sidebar-content-inner')").length == 0){
 									reposition_content();
@@ -1090,6 +1121,12 @@ $(document).ready(function() {
 						});
 					}
 				   /* Reset State */
+
+				   //Zainal 27-11-2018
+				   //CPQ-UI-082 : remove "delete" icon in aditional bonus section
+
+				   $(".array-button").hide();
+
 
 				}else if(pageTitle == "order page"){
 
