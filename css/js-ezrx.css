@@ -1144,10 +1144,10 @@ html .ui-field-contain>label+.ui-flipswitch, html .ui-popup .ui-field-contain>la
 }
 
 .line-item-grid{
-    border-left: 0px;
+    border-left: 0px!important;
 }
 
 .line-item-grid table{
-    left: 0px;
-    width: 100%;
+    left: 0px!important;
+    width: 100%!important;
 }
