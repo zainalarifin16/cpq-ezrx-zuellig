@@ -997,7 +997,8 @@ and (orientation : landscape) {
 }
 
 html .ui-field-contain>label+.ui-flipswitch, html .ui-popup .ui-field-contain>label+.ui-flipswitch{
-	padding-top: 3px;
+    border-radius: 100px;
+    height: 2.3em;
 }
 
 .ui-field-contain .ui-flipswitch.ui-flipswitch-active, .ui-popup .ui-field-contain .ui-flipswitch.ui-flipswitch-active{
@@ -1024,7 +1025,11 @@ html .ui-field-contain>label+.ui-flipswitch, html .ui-popup .ui-field-contain>la
 }
 
 .ui-flipswitch .ui-btn.ui-flipswitch-on{
-	font-size: 13px!important;
+    font-size: 13px!important;
+    width: 2.5em!important;
+    height: 2.5em!important;
+    text-indent: -3em!important;
+    line-height: 2.25em!important;
 }
 
 #attribute-currentCustFav{
