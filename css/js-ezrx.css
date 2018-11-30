@@ -1021,7 +1021,8 @@ html .ui-field-contain>label+.ui-flipswitch, html .ui-popup .ui-field-contain>la
     font-size: 13px !important;
     padding-bottom: 2px;
     padding-top: 2px;
-    height: 25px;
+    height: 35px;
+    border-radius: 100px;
 }
 
 .ui-flipswitch .ui-btn.ui-flipswitch-on{
@@ -1150,4 +1151,20 @@ html .ui-field-contain>label+.ui-flipswitch, html .ui-popup .ui-field-contain>la
 .line-item-grid table{
     left: 0px!important;
     width: 100%!important;
+}
+
+.config-array thead th:last-child, .config-array thead th.last-top-right{
+    width: 65px;
+}
+
+.config-array.show_after thead th:last-child{
+    width: 30px;
+}
+
+#materialArrayset .array-resizable tbody.after {
+    right: 35px!important;
+}
+
+#additionalMaterialArrayset .array-resizable tbody.after {
+    right: 0px!important;
 }

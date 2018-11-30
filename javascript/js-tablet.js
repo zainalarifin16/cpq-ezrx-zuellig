@@ -944,6 +944,24 @@ $(document).ready(function() {
 									File Location :- $BASE_PATH$/javascript/js-ezrx.js
 									Layout        :- Desktop
 								*/
+
+								//all section will be expand in first time
+								//ui-collapsible-collapsed
+								$(".ui-collapsible").removeClass("ui-collapsible-collapsed");
+								$(".ui-collapsible .ui-collapsible-heading").removeClass("ui-collapsible-heading-collapsed");
+								$(".ui-collapsible .ui-collapsible-heading-toggle").removeClass("ui-icon-plus").addClass("ui-icon-minus");
+								$(".ui-collapsible .ui-collapsible-content").removeClass("ui-collapsible-content-collapsed").attr("aria-hidden", "false");
+								$(".ui-collapsible input[name*='collapsed-group']").val("false");
+
+								//controlling collapse for materialsearch
+								var isUserUpdateShoppingCart = window.localStorage.getItem("isUserUpdateShoppingCart");
+								if( isUserUpdateShoppingCart != "false" ){
+									$("#attribute-materialSearch").closest(".ui-collapsible").addClass("ui-collapsible-collapsed");
+									$("#attribute-materialSearch").closest(".ui-collapsible").find(".ui-collapsible-heading").addClass("ui-collapsible-heading-collapsed");
+									$("#attribute-materialSearch").closest(".ui-collapsible").find(".ui-collapsible-heading-toggle").addClass("ui-icon-plus").removeClass("ui-icon-minus");
+									$("#attribute-materialSearch").closest(".ui-collapsible").find(".ui-collapsible-content").addClass("ui-collapsible-content-collapsed").attr("aria-hidden", "true");
+									$("#attribute-materialSearch").closest(".ui-collapsible").find("input[name*='collapsed-group']").val("true");
+								}
 								
 								if ($("#swipe-sidebar-content").children(":not('.sidebar-content-inner')").length == 0){
 									reposition_content();
@@ -970,7 +988,7 @@ $(document).ready(function() {
 							$( labelFieldSearchMaterial ).html( $( labelFieldSearchMaterial ).html().replace( " - " + textSearchMaterial[1].replace(/&/g, '&amp;').trim(), "") );
 							var bodySearchMaterial = $( parent ).find(".ui-collapsible-content");
 							$( bodySearchMaterial ).prepend(`<div style='background-color: #ffff2d9e; padding:10px;' > ${ textSearchMaterial[1] }</div>`);
-						}, 2000);
+						}, 3000);
 
 						//set align center for text input in coloumn QTY
 						$("input[name='qty_text']").css({"text-align": "center", "font-size":"14px"});
@@ -1239,7 +1257,14 @@ $(document).ready(function() {
 				   //Zainal 27-11-2018
 				   //CPQ-UI-082 : remove "delete" icon in aditional bonus section
 
-				   $(".array-button").hide();
+				   $("#additionalMaterialArrayset .array-button").hide();
+
+				   //Zainal 30-11-2018
+				   //CPQ-UI-073 : controlling expand Section
+				   	$("#button-bar .button-update").on("click touchend", function(){
+						window.localStorage.setItem("isUserUpdateShoppingCart", "true");
+						console.log("diklik");
+					});
 
 
 				}else if(pageTitle == "order page"){
@@ -1329,6 +1354,8 @@ $(document).ready(function() {
 							File Location :- $BASE_PATH$/javascript/js-ezrx.js
 							Layout        :- Desktop
 						*/
+
+						window.localStorage.setItem("isUserUpdateShoppingCart", "false");
 
 						var isPageError = false;
 						var exitingDataItems = $("#line-item-grid").attr('data-properties');
