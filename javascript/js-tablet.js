@@ -312,15 +312,15 @@ $(document).ready(function() {
 
 				//SHOWING MATERIAL DESCRIPTION ON SECOND PAGE
 				// console.log("Showing Material Description on second page");
-				// if( $("#attribute-addToFav").is(":hidden") == false ){
+				if( $("#attribute-addToFav").is(":hidden") == false ){
 				
-				// 	$("#attribute-materialDescription").removeClass("hidden");
-				// 	$(".cell-materialDescription").map(function (index, data) {
-				// 		var id = $(data).attr("id").replace("cell-materialDescription-", "");
-				// 		$("#cell-materialDescription-" + id).removeClass("hidden");
-				// 	});
+					$("#attribute-materialDescription").removeClass("hidden");
+					$(".cell-materialDescription").map(function (index, data) {
+						var id = $(data).attr("id").replace("cell-materialDescription-", "");
+						$("#cell-materialDescription-" + id).removeClass("hidden");
+					});
 					
-				// }
+				}
 
 				
 			}
@@ -348,8 +348,7 @@ $(document).ready(function() {
 		//  console.log(" portrait "+ isSecondPage +"=="+ isThirdPage);
 
 		console.log(` SHOWING DETAIL IS ${ $("#showDetailedView").val().toLowerCase() } ON PAGE ${ page } `);
-
-		$("#materialArrayset").bind("DOMSubtreeModified", function() {
+		/* $("#materialArrayset").bind("DOMSubtreeModified", function() {
 			$("#materialArrayset .array-attribute").addClass("hidden");
 			$("#materialArrayset .array-attribute-data").addClass("hidden");
 
@@ -439,23 +438,23 @@ $(document).ready(function() {
 					$("#attribute-addAdditionalMaterial").removeClass("hidden");
 					$(".cell-addAdditionalMaterial").removeClass("hidden");
 			}
-		});
+		}); */
 
 	}
 
 	var moveDescriptionBeforeAddToFav = function(){	
 		//move header after contractBonus
-		// $("#attribute-materialDescription").insertBefore($("#attribute-addToFav"));
-		// $("#attribute-materialDescription").removeClass("hidden");
-		// //move coloumn 
-		// $(".cell-materialDescription").map(function (index, data) {
-		// 	var id = $(data).attr("id").replace("cell-materialDescription-", "");
-		// 	// $("#cell-materialDescription-" + id).insertBefore($("#cell-addToFav-" + id));
-		// 	$("#cell-materialDescription-" + id).removeClass("hidden");
-		// });
+		$("#attribute-materialDescription").insertBefore($("#attribute-addToFav"));
+		$("#attribute-materialDescription").removeClass("hidden");
+		//move coloumn 
+		$(".cell-materialDescription").map(function (index, data) {
+			var id = $(data).attr("id").replace("cell-materialDescription-", "");
+			// $("#cell-materialDescription-" + id).insertBefore($("#cell-addToFav-" + id));
+			$("#cell-materialDescription-" + id).removeClass("hidden");
+		});
 
-		// $("#attribute-promotion").addClass("hidden");
-		// $(".cell-promotion").addClass("hidden");
+		$("#attribute-promotion").addClass("hidden");
+		$(".cell-promotion").addClass("hidden");
 
 	}
 
@@ -1802,6 +1801,17 @@ $(document).ready(function() {
 												File Location :- $BASE_PATH$/javascript/js-ezrx.js
 												Layout        :- Desktop
 											*/
+
+											//hide first section if there's dont have information to show
+											var isSuspendCustMsgShow = ($("#attribute-suspendedCustomerMessage").find(".form-field").text().trim().length > 0);
+											var isOrderSubmitMsgShow = !($("#attribute-orderSubmittedMesssage").hasClass("hidden"));
+											var isInsufficientStockMsgShow = ($("#attribute-insufficientStockMessageHTML_t").find(".form-field").text().trim().length > 0);
+
+											if( isSuspendCustMsgShow || isOrderSubmitMsgShow || isInsufficientStockMsgShow ){
+												$("#attribute-suspendedCustomerMessage").closest(".ui-collapsible").show();
+											}else{
+												$("#attribute-suspendedCustomerMessage").closest(".ui-collapsible").hide();
+											}
 
 										}, 2000);
 

@@ -796,7 +796,7 @@ and (orientation : portrait) {
 }
 
 .jg-mobilelayout form#commerce-form fieldset #attribute-transactionID_t{
-	width: 47%;
+	width: 45%;
 	display: inline-block;
 	margin-bottom: 0;
 	margin-bottom: 0;
@@ -831,9 +831,10 @@ and (orientation : landscape) {
 
 
 .jg-mobilelayout form#commerce-form fieldset #attribute-status_t{
-	width: 47%;
+	width: 50%;
 	display: inline-block;
-	float: right;
+    float: right;
+    padding-left: 0px;
 }
 .jg-mobilelayout form#commerce-form fieldset #attribute-status_t [role="heading"]{
 	width: 45%;
@@ -1167,4 +1168,8 @@ html .ui-field-contain>label+.ui-flipswitch, html .ui-popup .ui-field-contain>la
 
 #additionalMaterialArrayset .array-resizable tbody.after {
     right: 0px!important;
+}
+
+#commerce .sidebar-handle{
+    display: none;
 }

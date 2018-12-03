@@ -249,7 +249,7 @@ table.array .cell-contractBonus .attribute-field-container .material-lens {
 }
 .jg-mobilelayout .customer-search-holder .search-cust_wrapper #searchCustomer_wrapper .dataTables_scroll {
     border-bottom: 1px solid #ddd;
-    width: 85%;
+    width: auto;
 }
 .jg-mobilelayout .dataTables_wrapper.no-footer .dataTables_scrollBody {
     border-bottom: 0 !important;

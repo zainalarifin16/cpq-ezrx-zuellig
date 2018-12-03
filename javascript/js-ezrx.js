@@ -7588,7 +7588,7 @@
         $(".jg-box-mainarea").css("padding-left", "0px");
         $(".jg-box-topbar").prepend("<a href='#' id='menu_mobile' ><img src='" + rootFolder + "/image/images/bars-icon.png' style='width:40px;float:left;padding:5px;' ></a");
         $("#menu_mobile").click(function() {
-            var timeAnimation = 1000;
+            var timeAnimation = 300;
             if ($(".jg-box-sidenav").css("display") == "none") {
                 $(".jg-box-sidenav").show(timeAnimation);
                 $(".jg-box-mainarea").animate({
