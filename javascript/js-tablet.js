@@ -1617,6 +1617,9 @@ $(document).ready(function() {
 											"border-top": "solid 2px #ddd"
 										}); */
 
+										//remove target for order existing
+										$("#actionErrorMessagesBox .error-text a").attr("target", "_parent");
+
 										setTimeout(function () {
 
 											/* 
