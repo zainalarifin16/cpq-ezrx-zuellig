@@ -3914,7 +3914,7 @@
                         if (window.getZPUserType().length && window.getZPUserType() == "customer") {
                             $("#searchCustomerInput").closest(".column").hide();
                             var parentSearchCustomer = $("#searchCustomerInput").closest(".column-layout");
-                            $(parentSearchCustomer).find(".last").remove();
+                            // $(parentSearchCustomer).find(".last").remove();
                             $("label[for*='customerSelection_t']").closest(".column").hide();
                             var parentCustomerSelection = $("label[for*='customerSelection_t']").closest(".column-layout");
                             $($("#attr_wrapper_1_shipToAddress_html_t").closest(".column")).appendTo(parentCustomerSelection);
