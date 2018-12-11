@@ -6625,7 +6625,7 @@
                     mobile_modifyMenu();
                     $(".topMenuModified").css("float", "none");
                     $(".jg-item-mainmenu").css("width", "70px");
-                    $(".jg-box-topbar").append("<div style='float:right; font-size: 14px; padding: 20px;' >" + window._BM_USER_LOGIN + "</div>");
+                    $(".jg-box-topbar").append("<div style='float:right; font-size: 14px; padding: 20px;word-break: break-word;max-width: 150px;' >" + window._BM_USER_LOGIN + "</div>");
 
                     if(getQueryVariableUrl("flag") == "rightnow"){
                         window.sessionStorage.setItem("flag", "rightnow");
