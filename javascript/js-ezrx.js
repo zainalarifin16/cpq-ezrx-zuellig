@@ -3946,11 +3946,11 @@
 
                         setTimeout(function(){
 
-                        //     var parentCustomerSelection = $("#attr_wrapper_1_customerSelection_t").closest(".column-layout");
-                        //     $($("#attr_wrapper_1_shipToAddress_html_t").closest(".column")).appendTo(parentCustomerSelection);
-                        //     $("#attr_wrapper_1_shipToAddress_html_t").css("margin-top", "0px");
-                        //     $($("#attr_wrapper_1_customerShipToId_t").closest(".column")).appendTo(parentSearchCustomer);
-                        //     $($("#attr_wrapper_1_customerSoldToId_t").closest(".column")).appendTo(parentSearchCustomer);
+                            var parentCustomerSelection = $("#attr_wrapper_1_customerSelection_t").closest(".column-layout");
+                            $($("#attr_wrapper_1_shipToAddress_html_t").closest(".column")).appendTo(parentCustomerSelection);
+                            $("#attr_wrapper_1_shipToAddress_html_t").css("margin-top", "0px");
+                            $($("#attr_wrapper_1_customerShipToId_t").closest(".column")).appendTo(parentSearchCustomer);
+                            $($("#attr_wrapper_1_customerSoldToId_t").closest(".column")).appendTo(parentSearchCustomer);
 
                             $("#zPUserType").closest(".form-item").removeClass("rule-hide");
                             $("#zPUserType").closest(".text-wrapper-inner").css({"background": "transparent", "border": "0px" });
