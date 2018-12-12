@@ -311,7 +311,7 @@ $(document).ready(function() {
 				*/
 
 				//SHOWING MATERIAL DESCRIPTION ON SECOND PAGE
-				console.log("Showing Material Description on second page");
+				// console.log("Showing Material Description on second page");
 				if( $("#attribute-addToFav").is(":hidden") == false ){
 				
 					$("#attribute-materialDescription").removeClass("hidden");
@@ -342,9 +342,109 @@ $(document).ready(function() {
 		},500);
 	};
 
+	var reArrangeViewColumn = function(page){
+		// var isSecondPage = $("#attribute-promotion").hasClass("hidden");
+		// var isThirdPage = $("#attribute-addAdditionalMaterial").hasClass("hidden");
+		//  console.log(" portrait "+ isSecondPage +"=="+ isThirdPage);
+
+		console.log(` SHOWING DETAIL IS ${ $("#showDetailedView").val().toLowerCase() } ON PAGE ${ page } `);
+		/* $("#materialArrayset").bind("DOMSubtreeModified", function() {
+			$("#materialArrayset .array-attribute").addClass("hidden");
+			$("#materialArrayset .array-attribute-data").addClass("hidden");
+
+			if($("#showDetailedView").val().toLowerCase() == "true" ){
+				if(page == 1){
+					//showing column TYPE
+					$("#attribute-type").removeClass("hidden");
+					$(".cell-type").removeClass("hidden");
+					//showing column MATERIAL
+					$("#attribute-material").removeClass("hidden");
+					$(".cell-material").removeClass("hidden");
+					//showing column Description
+					$("#attribute-materialDescription").removeClass("hidden");
+					$(".cell-materialDescription").removeClass("hidden");
+					//showing column qty
+					$("#attribute-qty").removeClass("hidden");
+					$(".cell-qty").removeClass("hidden");
+					//showing column unit price
+					$("#attribute-price_Currency").removeClass("hidden");
+					$(".cell-price_Currency").removeClass("hidden");
+				}else if(page == 2){								
+					//showing column Description
+					$("#attribute-materialDescription").removeClass("hidden");
+					$(".cell-materialDescription").removeClass("hidden");
+	
+					//showing column override unit price
+					$("#attribute-overridePrice_currency").removeClass("hidden");
+					$(".cell-overridePrice_currency").removeClass("hidden");
+					//showing column total price
+					$("#attribute-totalPrice_currency").removeClass("hidden");
+					$(".cell-totalPrice_currency").removeClass("hidden");
+					//showing column contract price
+					$("#attribute-promotion").removeClass("hidden");
+					$(".cell-promotion").removeClass("hidden");
+					//showing column contract bonus
+					$("#attribute-contractBonus").removeClass("hidden");
+					$(".cell-contractBonus").removeClass("hidden");
+					//showing column PPA Approval No
+					$("#attribute-pPAApprovalNo").removeClass("hidden");
+					$(".cell-pPAApprovalNo").removeClass("hidden");
+		
+				}else if(page == 3){
+					
+					//showing column Description
+					$("#attribute-materialDescription").removeClass("hidden");
+					$(".cell-materialDescription").removeClass("hidden");
+					
+					//showing column comment
+					$("#attribute-comments").removeClass("hidden");
+					$(".cell-comments").removeClass("hidden");
+					//showing column inStock
+					$("#attribute-inStock").removeClass("hidden");
+					$(".cell-inStock").removeClass("hidden");
+					//showing column addl. bonus
+					$("#attribute-addAdditionalMaterial").removeClass("hidden");
+					$(".cell-addAdditionalMaterial").removeClass("hidden");
+					//showing column add to fav
+					$("#attribute-addToFav").removeClass("hidden");
+					$(".cell-addToFav").removeClass("hidden");
+		
+				}
+			}else{
+				//show detailed view == NO
+				
+					//showing column material & desc
+					$("#attribute-materialAndDesc").removeClass("hidden");
+					$(".cell-materialAndDesc").removeClass("hidden");
+					//showing column qty
+					$("#attribute-qty").removeClass("hidden");
+					$(".cell-qty").removeClass("hidden");
+					//showing column unity price
+					$("#attribute-price_Currency").removeClass("hidden");
+					$(".cell-price_Currency").removeClass("hidden");
+					//showing column override unit price
+					$("#attribute-overridePrice_currency").removeClass("hidden");
+					$(".cell-overridePrice_currency").removeClass("hidden");
+					//showing column total price
+					$("#attribute-totalPrice_currency").removeClass("hidden");
+					$(".cell-totalPrice_currency").removeClass("hidden");
+					//showing column PPA approval No
+					$("#attribute-pPAApprovalNo").removeClass("hidden");
+					$(".cell-pPAApprovalNo").removeClass("hidden");
+					//showing column inStock
+					$("#attribute-inStock").removeClass("hidden");
+					$(".cell-inStock").removeClass("hidden");
+					//showing column addl. bonus
+					$("#attribute-addAdditionalMaterial").removeClass("hidden");
+					$(".cell-addAdditionalMaterial").removeClass("hidden");
+			}
+		}); */
+
+	}
+
 	var moveDescriptionBeforeAddToFav = function(){	
 		//move header after contractBonus
-		// $("#attribute-materialDescription").insertBefore($("#attribute-addToFav"));
+		$("#attribute-materialDescription").insertBefore($("#attribute-addToFav"));
 		$("#attribute-materialDescription").removeClass("hidden");
 		//move coloumn 
 		$(".cell-materialDescription").map(function (index, data) {
@@ -601,18 +701,31 @@ $(document).ready(function() {
 						 $("body").on("click touchend",".table-tooltip",function(){//close message box on click of message box							 
 							 $(".table-tooltip").remove();
 						 });
-						 
 						setTimeout(function() {
 							alignMatArraySet();
 							showDetailedView();						
 							alignAddtnlArraySet();
+							reArrangeViewColumn(1);
 						},500);
+						var currentPage = 1;
 						$("body").on("click tochend swipeleft swiperight","#materialArrayset",function(e){
 							 console.log("=======+++++=============2");
 							//if($("#showDetailedView").val() == "false"){
 								 console.log("=======+++++=============3");
 								alignMatArraySet();
 								showDetailedView();
+								if(e.type == "swipeleft"){
+									currentPage++;
+									if(currentPage > 2){
+										currentPage = 3;
+									}
+								}else if(e.type == "swiperight"){
+									currentPage--;
+									if(currentPage < 2){
+										currentPage = 1;
+									}
+								}
+								reArrangeViewColumn(currentPage);
 							//}
 						});
 						$("body").on("click touchend",".pagination .ui-radio",function(e){
@@ -695,23 +808,23 @@ $(document).ready(function() {
 									File Location :- $BASE_PATH$/javascript/js-tablet.js
 									Layout        :- Desktop
 								*/
-
-								var maxLimitAttemp = 100;
-								var hide_recomended_material = function( elementRecomendMaterial ){
-									setTimeout(function(){
-										$($( elementRecomendMaterial )).hide();
-										console.log( "Recomend Material", $( elementRecomendMaterial ).css("display") );
-										if( $( elementRecomendMaterial ).css("display") != "none" || 
-												typeof $( elementRecomendMaterial ).css("display") == "undefined" && 
-												maxLimitAttemp > 0){											
-											maxLimitAttemp--;
-											hide_recomended_material( elementRecomendMaterial );
-										}
-									}, 500);
-								}
+								$("#attribute-showPrincipalFavorites").closest(".ui-collapsible-inset").hide();
+								// var maxLimitAttemp = 100;
+								// var hide_recomended_material = function( elementRecomendMaterial ){
+								// 	setTimeout(function(){
+								// 		$($( elementRecomendMaterial )).hide();
+								// 		console.log( "Recomend Material", $( elementRecomendMaterial ).css("display") );
+								// 		if( $( elementRecomendMaterial ).css("display") != "none" || 
+								// 				typeof $( elementRecomendMaterial ).css("display") == "undefined" && 
+								// 				maxLimitAttemp > 0){											
+								// 			maxLimitAttemp--;
+								// 			hide_recomended_material( elementRecomendMaterial );
+								// 		}
+								// 	}, 500);
+								// }
 
 								//hide_recomended_material( elementToMove[3] ); commented by suresh on 24/11/2018
-								hide_recomended_material( $("#attribute-showPrincipalFavorites").closest(".ui-collapsible-inset") );
+								// hide_recomended_material(  );
 								
 
 								/* if (check_nationality(2600) || check_nationality(2500)) {
@@ -831,24 +944,23 @@ $(document).ready(function() {
 									Layout        :- Desktop
 								*/
 
-								// Zainal Arifin : 26-11-2018
-								// Move description for Search Material
-								
-								setTimeout(function(){
-									var parent = $("#attribute-materialSearch")
-												.closest(".ui-collapsible-inset");
+								//all section will be expand in first time
+								//ui-collapsible-collapsed
+								$(".ui-collapsible").removeClass("ui-collapsible-collapsed");
+								$(".ui-collapsible .ui-collapsible-heading").removeClass("ui-collapsible-heading-collapsed");
+								$(".ui-collapsible .ui-collapsible-heading-toggle").removeClass("ui-icon-plus").addClass("ui-icon-minus");
+								$(".ui-collapsible .ui-collapsible-content").removeClass("ui-collapsible-content-collapsed").attr("aria-hidden", "false");
+								$(".ui-collapsible input[name*='collapsed-group']").val("false");
 
-									var labelFieldSearchMaterial = $( parent ).find(".ui-collapsible-heading > a");
-									console.log(labelFieldSearchMaterial);
-									var textSearchMaterial = $(labelFieldSearchMaterial)
-																		.text()
-																		.replace("click to collapse contents", "")
-																		.split(" - ");
-
-									$( labelFieldSearchMaterial ).html( $( labelFieldSearchMaterial ).html().replace( " - " + textSearchMaterial[1].replace(/&/g, '&amp;').trim(), "") );
-									var bodySearchMaterial = $( parent ).find(".ui-collapsible-content");
-									$( bodySearchMaterial ).prepend(`<div style='background-color: #ffff2d9e; padding:10px;' > ${ textSearchMaterial[1] }</div>`);
-								}, 2000);
+								//controlling collapse for materialsearch
+								var isUserUpdateShoppingCart = window.localStorage.getItem("isUserUpdateShoppingCart");
+								if( isUserUpdateShoppingCart != "false" ){
+									$("#attribute-materialSearch").closest(".ui-collapsible").addClass("ui-collapsible-collapsed");
+									$("#attribute-materialSearch").closest(".ui-collapsible").find(".ui-collapsible-heading").addClass("ui-collapsible-heading-collapsed");
+									$("#attribute-materialSearch").closest(".ui-collapsible").find(".ui-collapsible-heading-toggle").addClass("ui-icon-plus").removeClass("ui-icon-minus");
+									$("#attribute-materialSearch").closest(".ui-collapsible").find(".ui-collapsible-content").addClass("ui-collapsible-content-collapsed").attr("aria-hidden", "true");
+									$("#attribute-materialSearch").closest(".ui-collapsible").find("input[name*='collapsed-group']").val("true");
+								}
 								
 								if ($("#swipe-sidebar-content").children(":not('.sidebar-content-inner')").length == 0){
 									reposition_content();
@@ -857,6 +969,25 @@ $(document).ready(function() {
 						}
 						
 						reposition_content();
+
+						// Zainal Arifin : 26-11-2018
+						// Move description for Search Material
+						
+						setTimeout(function(){
+							var parent = $("#attribute-materialSearch")
+										.closest(".ui-collapsible-inset");
+
+							var labelFieldSearchMaterial = $( parent ).find(".ui-collapsible-heading > a");
+							console.log(labelFieldSearchMaterial);
+							var textSearchMaterial = $(labelFieldSearchMaterial)
+																.text()
+																.replace("click to collapse contents", "")
+																.split(" - ");
+
+							$( labelFieldSearchMaterial ).html( $( labelFieldSearchMaterial ).html().replace( " - " + textSearchMaterial[1].replace(/&/g, '&amp;').trim(), "") );
+							var bodySearchMaterial = $( parent ).find(".ui-collapsible-content");
+							$( bodySearchMaterial ).prepend(`<div style='background-color: #ffff2d9e; padding:10px;' > ${ textSearchMaterial[1] }</div>`);
+						}, 3000);
 
 						//set align center for text input in coloumn QTY
 						$("input[name='qty_text']").css({"text-align": "center", "font-size":"14px"});
@@ -1125,7 +1256,18 @@ $(document).ready(function() {
 				   //Zainal 27-11-2018
 				   //CPQ-UI-082 : remove "delete" icon in aditional bonus section
 
-				   $(".array-button").hide();
+				   $("#additionalMaterialArrayset .array-button").hide();
+
+				   //Zainal 30-11-2018
+				   //CPQ-UI-073 : controlling expand Section
+				   	$("#button-bar .button-update").on("click touchend", function(){
+						window.localStorage.setItem("isUserUpdateShoppingCart", "true");
+						console.log("diklik");
+					});
+
+					$("#addMaterialBtn").on("click touchend", function(){
+						window.localStorage.setItem("isUserUpdateShoppingCart", "true");
+					});
 
 
 				}else if(pageTitle == "order page"){
@@ -1215,6 +1357,8 @@ $(document).ready(function() {
 							File Location :- $BASE_PATH$/javascript/js-ezrx.js
 							Layout        :- Desktop
 						*/
+
+						window.localStorage.setItem("isUserUpdateShoppingCart", "false");
 
 						var isPageError = false;
 						var exitingDataItems = $("#line-item-grid").attr('data-properties');
@@ -1477,6 +1621,9 @@ $(document).ready(function() {
 											"border-top": "solid 2px #ddd"
 										}); */
 
+										//remove target for order existing
+										$("#actionErrorMessagesBox .error-text a").attr("target", "_parent");
+
 										setTimeout(function () {
 
 											/* 
@@ -1661,6 +1808,17 @@ $(document).ready(function() {
 												File Location :- $BASE_PATH$/javascript/js-ezrx.js
 												Layout        :- Desktop
 											*/
+
+											//hide first section if there's dont have information to show
+											var isSuspendCustMsgShow = ($("#attribute-suspendedCustomerMessage").find(".form-field").text().trim().length > 0);
+											var isOrderSubmitMsgShow = !($("#attribute-orderSubmittedMesssage").hasClass("hidden"));
+											var isInsufficientStockMsgShow = ($("#attribute-insufficientStockMessageHTML_t").find(".form-field").text().trim().length > 0);
+
+											if( isSuspendCustMsgShow || isOrderSubmitMsgShow || isInsufficientStockMsgShow ){
+												$("#attribute-suspendedCustomerMessage").closest(".ui-collapsible").show();
+											}else{
+												$("#attribute-suspendedCustomerMessage").closest(".ui-collapsible").hide();
+											}
 
 										}, 2000);
 
