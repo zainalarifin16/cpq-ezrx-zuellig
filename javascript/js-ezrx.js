@@ -3941,7 +3941,7 @@
 
                         $("#searchCustomerInput").closest(".column").hide();
                         var parentSearchCustomer = $("#attr_wrapper_1_transactionID_t").closest(".column-layout");
-                        $(parentSearchCustomer).find(".last").remove();
+                        // $(parentSearchCustomer).find(".last").remove();
                         $("#attr_wrapper_1_customerSelection_t").closest(".column").hide();
 
                         setTimeout(function(){
