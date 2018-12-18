@@ -4087,7 +4087,7 @@
                     if( $("li.error-text").length > 0 ){
                         $("li.error-text").each(function(i, data){
     
-                            if( $(data).text().toLowerCase().indexOf( "an order is already present") != -1 ){
+                            if( $(data).text().toLowerCase().indexOf( "could not perform action: save") != -1 ){
                                 isExist = true;
                             }
                             
@@ -8766,7 +8766,7 @@
             var countryCode = parseInt(countryEle.value);
         }
 
-        if( !window.check_country("TW") ){
+        if( window.check_country("SG") || window.check_country("PH") ){
             //NON TW
 
             $('td.cell-promotion').attr('tooltip', function() {
