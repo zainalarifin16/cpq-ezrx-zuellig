@@ -3259,6 +3259,10 @@
         $('#attribute-materialSearch').append().html(materialHTML);
         $('#attribute-materialSearch').hide();        
         var materialList = initMaterialList([]);        
+
+        setTimeout(function(){
+            window.localStorage.setItem("isUserUpdateShoppingCart", "true");
+        }, 2000);
         
         if ( userType === 'csteam') {
             /* 4 April 2018, Zainal : Add localstorage for scroll to shopping cart */

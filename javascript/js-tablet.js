@@ -218,6 +218,12 @@ $(document).ready(function() {
 				$(".config-array #attribute-addAdditionalMaterial").css("width", "initial");
 				*/
 
+				setTimeout(function(){
+					console.info("remove class hidden for view detail = no");
+					$("#attribute-addAdditionalMaterial").removeClass("hidden");
+					$(".cell-addAdditionalMaterial").removeClass("hidden");
+				}, 2000);
+
 				if(check_nationality(2800)){
 					$("#attribute-pPAApprovalNo").addClass("hidden");
 					$(".cell-pPAApprovalNo").addClass("hidden");
@@ -312,15 +318,15 @@ $(document).ready(function() {
 
 				//SHOWING MATERIAL DESCRIPTION ON SECOND PAGE
 				// console.log("Showing Material Description on second page");
-				if( $("#attribute-addToFav").is(":hidden") == false ){
+				// if( $("#attribute-addToFav").is(":hidden") == false ){
 				
-					$("#attribute-materialDescription").removeClass("hidden");
-					$(".cell-materialDescription").map(function (index, data) {
-						var id = $(data).attr("id").replace("cell-materialDescription-", "");
-						$("#cell-materialDescription-" + id).removeClass("hidden");
-					});
+				// 	$("#attribute-materialDescription").removeClass("hidden");
+				// 	$(".cell-materialDescription").map(function (index, data) {
+				// 		var id = $(data).attr("id").replace("cell-materialDescription-", "");
+				// 		$("#cell-materialDescription-" + id).removeClass("hidden");
+				// 	});
 					
-				}
+				// }
 
 				
 			}
@@ -339,7 +345,7 @@ $(document).ready(function() {
 			$("#materialArrayset table").css("width","auto");*/
 			
 		
-		},500);
+		},1000);
 	};
 
 	var reArrangeViewColumn = function(page){
@@ -348,6 +354,9 @@ $(document).ready(function() {
 		//  console.log(" portrait "+ isSecondPage +"=="+ isThirdPage);
 
 		console.log(` SHOWING DETAIL IS ${ $("#showDetailedView").val().toLowerCase() } ON PAGE ${ page } `);
+		// if(page == 2){
+		// 	// moveDescriptionBeforeAddToFav
+		// }
 		/* $("#materialArrayset").bind("DOMSubtreeModified", function() {
 			$("#materialArrayset .array-attribute").addClass("hidden");
 			$("#materialArrayset .array-attribute-data").addClass("hidden");
@@ -444,17 +453,18 @@ $(document).ready(function() {
 
 	var moveDescriptionBeforeAddToFav = function(){	
 		//move header after contractBonus
-		$("#attribute-materialDescription").insertBefore($("#attribute-addToFav"));
-		$("#attribute-materialDescription").removeClass("hidden");
-		//move coloumn 
-		$(".cell-materialDescription").map(function (index, data) {
-			var id = $(data).attr("id").replace("cell-materialDescription-", "");
-			// $("#cell-materialDescription-" + id).insertBefore($("#cell-addToFav-" + id));
-			$("#cell-materialDescription-" + id).removeClass("hidden");
-		});
+		// $("#attribute-materialDescription").css("width", "180px");
+		// $("#attribute-materialDescription").insertBefore($("#attribute-overridePrice_currency"));
+		// $("#attribute-materialDescription").removeClass("hidden");
+		// //move coloumn 
+		// $(".cell-materialDescription").map(function (index, data) {
+		// 	var id = $(data).attr("id").replace("cell-materialDescription-", "");
+		// 	$("#cell-materialDescription-" + id).insertBefore($("#cell-overridePrice_currency-" + id));
+		// 	$("#cell-materialDescription-" + id).removeClass("hidden");
+		// });
 
-		$("#attribute-promotion").addClass("hidden");
-		$(".cell-promotion").addClass("hidden");
+		// $("#attribute-promotion").addClass("hidden");
+		// $(".cell-promotion").addClass("hidden");
 
 	}
 
@@ -483,15 +493,15 @@ $(document).ready(function() {
 				*/
 				
 				console.log("Showing Material Description on second page");
-				if( $("#attribute-addToFav").is(":hidden") == false ){
+				// if( $("#attribute-addToFav").is(":hidden") == false ){
 				
-					$("#attribute-materialDescription").removeClass("hidden");
-					$(".cell-materialDescription").map(function (index, data) {
-						var id = $(data).attr("id").replace("cell-materialDescription-", "");
-						$("#cell-materialDescription-" + id).removeClass("hidden");
-					});
+				// 	$("#attribute-materialDescription").removeClass("hidden");
+				// 	$(".cell-materialDescription").map(function (index, data) {
+				// 		var id = $(data).attr("id").replace("cell-materialDescription-", "");
+				// 		$("#cell-materialDescription-" + id).removeClass("hidden");
+				// 	});
 
-				}
+				// }
 
 			}else{
 				/*$("#attribute-promotion").hide();
@@ -714,6 +724,11 @@ $(document).ready(function() {
 								 console.log("=======+++++=============3");
 								alignMatArraySet();
 								showDetailedView();
+
+								// if(!$("#attribute-promotion").hasClass("hidden")){
+								// 	moveDescriptionBeforeAddToFav();
+								// }
+
 								if(e.type == "swipeleft"){
 									currentPage++;
 									if(currentPage > 2){
@@ -757,9 +772,9 @@ $(document).ready(function() {
 							
 						});
 
-					 	if (sg_nationalty) {
-							moveDescriptionBeforeAddToFav();							
-						}						
+					 	// if (sg_nationalty) {
+						// 	moveDescriptionBeforeAddToFav();							
+						// }						
 						
 						// START UPDATE 19-01-2018
 						// START SLIDER CONTENT
