@@ -6629,7 +6629,7 @@
                     mobile_modifyMenu();
                     $(".topMenuModified").css("float", "none");
                     $(".jg-item-mainmenu").css("width", "70px");
-                    $(".jg-box-topbar").append("<div style='float:right; font-size: 14px; padding: 20px;word-break: break-word;max-width: 150px;' >" + window._BM_USER_LOGIN + "</div>");
+                    $(".jg-box-topbar").append("<div style='float:right; font-size: 14px; padding: 10px;word-break: break-word;max-width: 150px;' >" + window._BM_USER_LOGIN + "</div>");
 
                     if(getQueryVariableUrl("flag") == "rightnow"){
                         window.sessionStorage.setItem("flag", "rightnow");
@@ -6784,11 +6784,11 @@
 			if($("#materialArrayset").length > 0){
 				filterPage = "config";
 			}
-
+            console.log('filterPage', filterPage);
             if (filterPage.search("commerce") != -1) {
                 //[new] order & material page
                 // var checkVariable = filterPage.split("?");
-                if ($("#tab-draftOrder").exists()) {
+                if ($("#tab-draftOrder").length > 0) {
                     //[new] order
                     console.log("New order");
                     
@@ -7248,9 +7248,9 @@
             /* if filterPage contains with copy_processing.jsp */
             else if (filterPage.search("copy_processing.jsp") != -1) {
                 //[copy] order
-                mobile_orderpage();
-                mobile_materialSearch();
-                mobile_actionButtonFavItem();
+                // mobile_orderpage();
+                // mobile_materialSearch();
+                // mobile_actionButtonFavItem();
                 mobile_redirect_materialpage();
 
                 /* if filterPage contains with document.jsp */
@@ -7647,7 +7647,7 @@
 
     function mobile_orderpage() {
 
-        /*
+        /*  
             Start : 5 Mei 2017
             Task  : Create script for handle view on Order Page
             Page  : Order Page
