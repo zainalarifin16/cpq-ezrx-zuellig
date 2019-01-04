@@ -13,8 +13,9 @@ $(document).ready(function() {
         console.log( "TH ?", window.check_country("TH") );
         console.log( "VN ?", window.check_country("VN") );
         console.log( "MY ?", window.check_country("MY") );
-        if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
-            console.log( "SPESIFIC GLOBAL TEMPLATE", window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") );
+	    var isGlobalCountry = ( window.check_country("TH") || window.check_country("MY") || window.check_country("VN") || window.check_country("CB") );        
+        if( window.check_country("TW") || isGlobalCountry ){
+            console.log( "SPESIFIC GLOBAL TEMPLATE", window.check_country("TW") || isGlobalCountry );
             url_script = script_global_template;
         }
         if( window.check_country("PH") ){

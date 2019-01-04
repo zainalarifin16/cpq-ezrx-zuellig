@@ -72,6 +72,8 @@ $(document).ready(function(js2){
 		}
 	}
 
+	window.window.isGlobalCountry = ( window.check_country("TH") || window.check_country("MY") || window.check_country("VN") || window.check_country("CB") );
+
 	// debugger;
 	// $.noConflict();
 	// console.log('inside', $.noConflict() );
@@ -147,9 +149,9 @@ $(document).ready(function(js2){
 
 		var topCustomerWrapper = '<div class="customer-search-holder"><div class="search-input-wrapper"><p>Search all customers</p><input type="text" id="searchCustomerInput" autocomplete="off" placeholder="Please enter minimum 3 character"></div><div class="search-cust_wrapper"><table id="searchCustomer" width="100%"></table></div><div class="top-cust_wrapper"><p>Top 10 Frequent customers</p><table id="topCustomerList" class="display" width="100%"></table></div></div>';
 
-		if( globalTemplateFlag && window.getZPUserType() == "csteam" && (window.check_country("TH") || window.check_country("VN") || window.check_country("MY")) ){
+		if( globalTemplateFlag && window.getZPUserType() == "csteam" && window.isGlobalCountry ){
 
-			if( window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+			if( window.isGlobalCountry ){
 				topCustomerWrapper = '<div class="customer-search-holder"><div class="search-input-wrapper" style="float:left;    margin: 0px 50px 0px 0px;" ><p>Search all customers(Sold To/Ship To/Bill To Id/Name)</p><input type="text" id="searchCustomerInput" autocomplete="off" placeholder="Please enter minimum 3 character" style="width:90%;" ></div><div class="search-input-wrapper"><p>Search all customers(District/City/Pin Code)</p><input type="text" id="searchCustomerInputNew" autocomplete="off" placeholder="Please enter minimum 3 character" style="width:80%;" ></div><div class="search-cust_wrapper"><table id="searchCustomer" width="100%"></table></div><div class="top-cust_wrapper"><p>Top 10 Frequent customers</p><table id="topCustomerList" class="display" width="100%"></table></div></div>';
 			}
 			
@@ -389,7 +391,7 @@ var delete_line_item_func = function(selectedCustShipID){
 
 	//console.error('userDetectFunc',userDetectFunc());
 	
-	if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+	if( window.check_country("TW") || window.isGlobalCountry ){
 		var selectedCustShipID_TW = selectedCustShipID;
 	}
 	
@@ -401,7 +403,7 @@ var delete_line_item_func = function(selectedCustShipID){
 	var line_items_no = $('input[type="checkbox"][name="_line_item_list"]').length;
 	//console.log('selectedCustShipID',selectedCustShipID);
 	//console.log('currentCust',currentCust);
-	if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+	if( window.check_country("TW") || window.isGlobalCountry ){
 		console.log('selectedCustShipID_TW',selectedCustShipID_TW);
 		//return false;
 	}
@@ -411,7 +413,7 @@ var delete_line_item_func = function(selectedCustShipID){
 
 			//document.cookie = "selectedCustShipID="+selectedCustShipID;	
 			sessionStorage.setItem('selectedCustShipID', selectedCustShipID);
-			if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+			if( window.check_country("TW") || window.isGlobalCountry ){
 				sessionStorage.setItem('selectedCustShipID', selectedCustShipID_TW);
 			}
 			$('input[type="checkbox"][name="_line_item_list"]').prop("checked","checked");
@@ -424,7 +426,7 @@ var delete_line_item_func = function(selectedCustShipID){
 		//var selectedCustShipID = $(this).val();
 		// console.log("showCustomerList selectedCustShipID", selectedCustShipID);
 		$("#selectedCustomerDetail").val(selectedCustShipID);
-		if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+		if( window.check_country("TW") || window.isGlobalCountry ){
 			$("#selectedCustomerDetail").val(selectedCustShipID_TW);
 			//return false;
 		}
@@ -462,7 +464,7 @@ var loadAjax = function() {
 	var dataSet = [];
 	var param = "";
 
-	if( window.check_country("TH") || window.check_country("MY") || window.check_country("VN") ){
+	if( window.isGlobalCountry ){
 		
 		var customerMasterTable_t = $("input[name='customerMasterTable_t']").val();
 
@@ -539,7 +541,7 @@ var loadAjax = function() {
 									item.customer_shpto_pcode 
 								];
 
-								if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+				if( window.check_country("TW") || window.isGlobalCountry ){
 					subDataSet = [
 									"", //number
 									item.customer_sold_to_id, 	//1 SOLD TO ID
@@ -617,7 +619,7 @@ var searchCustList = function(dataSet, seachCustomer) {
 					//console.dir(colArr);
 					var subDataSet = null;
 
-					if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+					if( window.check_country("TW") || window.isGlobalCountry ){
 						if( zPUserType.toLowerCase() == "principal" ){
 							subDataSet = [ 	'',
 											colArr[0],  //1 PRINCIPAL CUST CODE
@@ -700,7 +702,7 @@ var searchCustList = function(dataSet, seachCustomer) {
 		var userColumn = [];
 
 		// userColumn = [];
-		if( window.check_country("TW") || window.check_country("PH") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+		if( window.check_country("TW") || window.check_country("PH") || window.isGlobalCountry ){
 	    	userColumn.push( { title: "" } );
 
 	    	coloumn = $("#applicableColumnsForCustomerSearch").val().split("$$");
@@ -791,7 +793,7 @@ var searchCustList = function(dataSet, seachCustomer) {
 								}
 								data = '<input type="radio" name="searchCust" id= "searchCust" value="' + full[2] + '" data-suspended="' + full[13] + '" data-customersold="'+full[1]+'" '+disabled+'>';
 							} 
-							else if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+							else if( window.check_country("TW") || window.isGlobalCountry ){
 
 								//FORMAT soldtoid$$shiptoid$$billtoid
 								if( zPUserType == "Principal" ){
@@ -818,7 +820,8 @@ var searchCustList = function(dataSet, seachCustomer) {
 		
 		"fnDrawCallback": function (oSettings) {
 
-			$( $("#searchCustomer_wrapper").find(".dataTable")[0] ).css("table-layout", "fixed");
+			// $( $("#searchCustomer_wrapper").find(".dataTable")[0] ).css("table-layout", "fixed");
+			seachCustomer.columns.adjust();
 
 			if(userCountry == "PH"){
 				$($("#searchCustomer").find("tbody").children("tr")).each(function(index, data){
@@ -949,7 +952,7 @@ var searchCustomerList = function(seachCustomer) {
 
 			var ruleMaxChar = 3;
 				
-				if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+				if( window.check_country("TW") || window.isGlobalCountry ){
 					ruleMaxChar = 2;
 				}
 
@@ -992,7 +995,7 @@ var searchCustomerList = function(seachCustomer) {
 
 				var ruleMaxChar = 3;
 				
-				if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+				if( window.check_country("TW") || window.isGlobalCountry ){
 					ruleMaxChar = 2;
 				}
 
@@ -1014,7 +1017,7 @@ var searchCustomerList = function(seachCustomer) {
 			
 		});
 
-		if(globalTemplateFlag && (window.check_country("TH") || window.check_country("VN") || window.check_country("MY")) ){
+		if(globalTemplateFlag && (window.isGlobalCountry) ){
 			$('#searchCustomerInputNew').keyup(function(){
 
 				var inputLength = $('#searchCustomerInputNew').val().length;
@@ -1025,7 +1028,7 @@ var searchCustomerList = function(seachCustomer) {
 	
 					var ruleMaxChar = 3;
 					
-					if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+					if( window.check_country("TW") || window.isGlobalCountry ){
 						ruleMaxChar = 2;
 					}
 	
@@ -1077,7 +1080,7 @@ var showCustomerList = function(customerDetails) {
 		if( window.check_country("PH") )
 		{
 			subDataSet = ['', colArr[2], colArr[0], colArr[1], colArr[3]];
-		}else if ( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ) {
+		}else if ( window.check_country("TW") || window.isGlobalCountry ) {
 			subDataSet = ['', colArr[0], colArr[1], colArr[2], colArr[3], colArr[4]];
 		}else{
 			subDataSet = ['', colArr[2], colArr[0], colArr[1], colArr[3]];
@@ -1094,7 +1097,7 @@ var showCustomerList = function(customerDetails) {
 		{ title: "Address1" }
 	];
 
-	if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+	if( window.check_country("TW") || window.isGlobalCountry ){
 		columnTopCustList = [
 			{title: "" },
 			{ title: "Sold to ID" },
@@ -1135,10 +1138,10 @@ var showCustomerList = function(customerDetails) {
 						if(userCountry === 'PH'){
 							console.log("PH - topCust");
 							data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '" data-customersold="' + full[1] +'" >';
-						}else if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+						}else if( window.check_country("TW") || window.isGlobalCountry ){
 							 //console.log(' 88 TW ======>>>> ',full[2]+ '$$' + full[4] + '$$' +full[6]);
 								//FORMAT soldtoid$$shiptoid$$billtoid
-							console.log(full);
+							// 	);
 							data = '<input type="radio" name="topCust" id= "topCust" value="' + full[1]+ '$$' + full[3] + '$$' +full[5] +'" >';			
 														
 						}else{

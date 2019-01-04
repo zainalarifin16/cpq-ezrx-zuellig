@@ -136,6 +136,7 @@
         var TH = [ 2900, 2902 ];
         var MY = [ 2001 ];
         var VN = [ 3000, 3001, 3050, 3070, 3072, 3090 ];
+        var CB = [ 1500 ];
         valid = false;
         // console.log( "CHECK_COUNTRY", country, countryCode );
         if( country == "SG" ){
@@ -169,6 +170,11 @@
                 valid = true;
             }
         }
+        else if( country == "CB" ){
+            if( CB.indexOf( countryCode ) != -1 ){
+                valid = true;
+            }
+        }
     
         return valid;
         
@@ -181,6 +187,8 @@
             return "";
         }
     }
+
+    window.isGlobalCountry = (window.check_country("TH") || window.check_country("MY") || window.check_country("VN") || window.check_country("CB") );
 
     var isLoadingDone = function () {
         return $("#jg-overlay").css("display") == "none" ? true : false;
@@ -485,7 +493,7 @@
                         }*/
                     }).done(function(materialDetails) {
                         sumResult = materialDetails;
-                        if ( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+                        if ( window.check_country("TW") || window.isGlobalCountry ){
 
                             var materialDetailsFlag2 = "false";
                             if ($("input[name='materialDetailsFlag2']").length > 0){
@@ -938,7 +946,7 @@
         console.log("I am here====");
         var trObj = obj.parentNode.parentNode; //selected row
         var currentId = $($(trObj).find('td')[1]).text(); //selected value
-
+        var comm_bonus = $( obj ).data("bonus");
         function hideError() {
             $('.error-msg').hide();
         }
@@ -1049,7 +1057,9 @@
             }
 
             console.log("optionHTML", optionHtml);            
-
+            if(comm_bonus == "N"){
+                optionHtml = [];
+            }
             addItem = true;
             if (addItem) {
                 hideError();
@@ -1091,9 +1101,7 @@
                     clonedTrObj.deleteCell(3);
                 }
 
-            }else if( window.check_country("TH") || 
-                window.check_country("VN") || 
-                window.check_country("MY")){
+            }else if( window.isGlobalCountry ){
                 clonedTrObj.deleteCell(2); // 
                 clonedTrObj.deleteCell(3); 
                 clonedTrObj.deleteCell(3);
@@ -1105,7 +1113,11 @@
             }
             tableObj.appendChild(clonedTrObj);
             console.log("optionHTML", optionHtml, optionHtml.join());            
-            itemBonusObj.innerHTML = '<select name="itemBonus" id="itemBonus" style="width:100%"><option value=""></option>' + optionHtml.join() + '</select>';
+            showDropDown = "none";
+            if(optionHtml.length > 0){
+                showDropDown = "block";
+            }
+            itemBonusObj.innerHTML = '<select name="itemBonus" id="itemBonus" style="width:100%;display:'+showDropDown+'!important;"><option value=""></option>' + optionHtml.join() + '</select>';
             removeObj.innerHTML = "<a href='#' class = 'selected-remove'><a>";
             quantityObj.innerHTML = '<input style="width: 40px;" class="text-field attribute-field" name="selectedQty" tabindex=" ' + tabNum + ' " value="" type="text">';
 
@@ -1440,7 +1452,7 @@
                                     (item.principal_name != null)? item.principal_name : ""
                                 ];
                 //   if($('input[name="userSalesOrg_PL"]').val()=="2800"){
-                if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+                if( window.check_country("TW") || window.isGlobalCountry ){
                     if(item.material_group_5 == 500 && item.materialgroup != "ZGM"){
                         var promo = "P";
                     } else {
@@ -1501,11 +1513,11 @@
         }
 
         //   if(userCountryMS === 'TW'){
-        if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+        if( window.check_country("TW") || window.isGlobalCountry ){
 
             var globalTemplateFlag = false;
         
-            if( window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+            if( window.isGlobalCountry ){
             
                 if(isMobile()){
 					if($("select[name='globalTemplateFlag']").length > 0){						
@@ -1544,7 +1556,7 @@
             }
             ];
 
-            if( window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+            if( window.isGlobalCountry ){
                 delete material_column.splice(5, 1);
             }
     
@@ -1593,7 +1605,11 @@
           orderable: false,
           render: function(data, type, full, meta) {
               if (type === 'display') {
-                  data = '<input type="radio" name="selectMat" id= "selectMat">';
+                if( window.isGlobalCountry && window.getZPUserType() != "csteam" ){
+                    data = '<input type="radio" name="selectMat" id= "selectMat" data-bonus="'+full[6]+'" >';
+                }else{
+                    data = '<input type="radio" name="selectMat" id= "selectMat">';
+                }
               }
 
               return data;
@@ -1655,25 +1671,26 @@
         if (userType !== 'csteam' ||  enableOldMaterialSearch == "true") {
             for (var i = fromIndex; i < toIndex; i++) {
                 colArr = custArr[i].split("$$");
-                // console.dir(colArr);
                 for (var t = 0; t < 3; t++) {
                     if (typeof colArr[t] === 'undefined') {
                         colArr[t] = '';
                     }
                 }
+                // console.table(colArr);
                 var subDataSet = ["", colArr[0], colArr[1], colArr[2]];
-                if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+                if( window.check_country("TW") || window.isGlobalCountry ){
                     if( window.check_country("TW") ){
-                    subDataSet = ["", colArr[0], colArr[6], colArr[1], colArr[2], colArr[3], colArr[4] ];
-                    if(userType == 'principal'){
-                        subDataSet = ["", colArr[0], colArr[6], colArr[1], colArr[5], colArr[2], colArr[3], colArr[4]]; 
+                        subDataSet = ["", colArr[0], colArr[6], colArr[1], colArr[2], colArr[3], colArr[4] ];
+                        if(userType == 'principal'){
+                            subDataSet = ["", colArr[0], colArr[6], colArr[1], colArr[5], colArr[2], colArr[3], colArr[4]]; 
+                        }
+                    }else{
+                        //add comm bonus flag for global templates
+                        subDataSet = ["", colArr[0], colArr[6], colArr[1], colArr[2], colArr[4], colArr[7] ];
+                        if(userType == 'principal'){
+                            subDataSet = ["", colArr[0], colArr[6], colArr[1], colArr[5], colArr[2], colArr[4], colArr[7]]; 
+                        }
                     }
-                }else{
-                    subDataSet = ["", colArr[0], colArr[6], colArr[1], colArr[2], colArr[4] ];
-                    if(userType == 'principal'){
-                        subDataSet = ["", colArr[0], colArr[6], colArr[1], colArr[5], colArr[2], colArr[4]]; 
-                    }
-                }
                 }
                 dataSet.push(subDataSet);
             }
@@ -1708,7 +1725,7 @@
                             (item.description != null) ? item.description : "",
                             (item.principal_name != null) ? item.principal_name : "",
                         ];
-                        if ( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ) {
+                        if ( window.check_country("TW") || window.isGlobalCountry ) {
                             if (item.material_group_5 == 500 && item.materialgroup != "ZGM") {
                                 var promo = "P";
                             } else {
@@ -2014,7 +2031,7 @@
                                     item.customer_ship_phone, 
                                     item.customer_shpto_pcode
                                 ];
-                if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+                if( window.check_country("TW") || window.isGlobalCountry ){
                     //   if (check_nationality(2800)) {
                     subDataSet = [
                         "", //number
@@ -2094,7 +2111,7 @@
                             (colArr[19] != null)? colArr[19] : "",  // 13.SHIP TO POSTAL CODE
                             (colArr[14] != null)? colArr[14] : "", //14. 
                         ];
-                    }else if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+                    }else if( window.check_country("TW") || window.isGlobalCountry ){
                     if (zPUserType.toLowerCase() == "principal") {
                         subDataSet = ['',
                             (colArr[0] != null)? colArr[0] : "",  //1 PRINCIPAL CUST CODE
@@ -2160,7 +2177,7 @@
 
         var userColumn = [];
 
-        if ( window.check_country("PH") || window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ) {
+        if ( window.check_country("PH") || window.check_country("TW") || window.isGlobalCountry ) {
             
             userColumn.push({ title: "" });
 
@@ -2234,7 +2251,7 @@
                             
                             }
 
-                          }else if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+                          }else if( window.check_country("TW") || window.isGlobalCountry ){
 
                                 if( zPUserType == "principal" ){
                                     
@@ -2472,7 +2489,7 @@
         var line_items_no = exitingDataItemsObj.children.length;
         //console.log('line_items_no',line_items_no);
         ///checking existing order items end
-        if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+        if( window.check_country("TW") || window.isGlobalCountry ){
             selectedCustomerDetail = selectedCustShipID;
         }else{
             selectedCustomerDetail = parseInt(selectedCustShipID);
@@ -3293,7 +3310,7 @@
             }).done(function(materialDetails){
                 sumResult = materialDetails;
                 console.log(sumResult, "long of material details", sumResult.length);
-                if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+                if( window.check_country("TW") || window.isGlobalCountry ){
                     
                   var materialDetailsFlag2 = ($("input[name='materialDetailsFlag2']").length > 0) ? $("input[name='materialDetailsFlag2']").val().toLowerCase() : "false";                                      
 
@@ -3359,7 +3376,7 @@
             var subDataSet;
             if( window.check_country("PH") ){
                 subDataSet = ['', colArr[2], colArr[0], colArr[1], colArr[3]];                
-            }else if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+            }else if( window.check_country("TW") || window.isGlobalCountry ){
                 subDataSet = ['', colArr[0], colArr[1], colArr[2], colArr[3], colArr[4]];                
             }else{
                 subDataSet = ['', colArr[2], colArr[0], colArr[1], colArr[3]];
@@ -3374,7 +3391,7 @@
                 { title: "Ship to ID" },
                 { title: "Customer Name" }
             ];
-        }else if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+        }else if( window.check_country("TW") || window.isGlobalCountry ){
             columnTopCustList = [
                 { title: "" },
                 { title: "Sold to ID" },
@@ -3421,7 +3438,7 @@
                        // data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '">';
                        if ( window.check_country("PH") ){
                         data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '" data-customersold="' + full[1] +'" >';
-                    }else if( window.check_country("TW") || window.check_country("TH") || window.check_country("VN") || window.check_country("MY") ){
+                    }else if( window.check_country("TW") || window.isGlobalCountry ){
                             // console.log(full);
 							//FORMAT soldtoid$$shiptoid$$billtoid
                             data = '<input type="radio" name="topCust" id= "topCust" value="' + full[1] + '$$' + full[3] + '$$' + full[5] + '" >';
@@ -5436,6 +5453,39 @@
             Layout        :- Desktop
         */
 
+        /* 
+            Created By    :- Created By Zainal Arifin, Date : 4 January 2019
+            Task          :- set max length for the field
+            Page          :- Order Page
+            File Location :- $BASE_PATH$/javascript/js-ezrx.js
+            Layout        :- Desktop
+        */
+
+        $order_request = $("textarea[name='orderingRequestNoMoreThan90Characters_t']");
+        var maxLength = 150;
+        $order_request.prop("maxLength", maxLength);
+        $order_request.parent().append("<div id='remainingchar' >150 characters left</div>");
+        $("#remainingchar").css({
+            "float": "right",
+            "margin-right": "15px",
+            "margin-top": "-15px",
+            "color": "#a9a9a9",
+            "font-size": "11px",
+        });
+        $order_request.on("keyup", function(){
+            var remainingChar = 150 - $(this).val().length;
+            // console.log( remainingChar + "characters left" );
+            $("#remainingchar").text( remainingChar + " characters left");
+        });
+
+        /* 
+            Created By    :- Created By Zainal Arifin, Date : 4 January 2019
+            Task          :- set max length for the field
+            Page          :- Order Page
+            File Location :- $BASE_PATH$/javascript/js-ezrx.js
+            Layout        :- Desktop
+        */
+
     }
 
     function transform_modelconfig() {
@@ -6197,6 +6247,38 @@
         $('.cart-addtoorder, .cart-save, .cart-cancelshopping').on("click", function(){        
             localStorage.setItem("orderItem_" + trans_id, true);
         }); */
+
+        /* 
+            Created By    :- Created By Zainal Arifin, Date : 2 January 2019
+            Task          :- CPQ-UI-092 | Disable the "Qty" field for material Type = Bonus if "Override Bonus Qty" field is hidden for the material
+            Page          :- Model Configuration
+            File Location :- $BASE_PATH$/javascript/js-ezrx.js
+            Layout        :- Desktop
+        */
+
+        if(window.check_country("TH") || window.check_country("MY") || window.check_country("VN"))
+        {
+            if($(".cell-overrideBonusQty").length == 0){
+                var listMaterial = $("#materialArrayset").find("tbody > tr");
+                for( var i = 0; i < listMaterial.length; i++ ){
+                    var typeMaterial = $(listMaterial[i]).find("input[name='type']").val().toLowerCase();
+                    if( typeMaterial == "bonus"){
+                        $(listMaterial[i]).find("input[name='qty']")
+                                .prop("disabled", true)
+                                .css({"border": "0px","background": "transparent"})
+                    }
+                }
+                
+            }
+        }
+
+        /* 
+            Created By    :- Created By Zainal Arifin, Date : 2 January 2019
+            Task          :- CPQ-UI-092 | Disable the "Qty" field for material Type = Bonus if "Override Bonus Qty" field is hidden for the material
+            Page          :- Model Configuration
+            File Location :- $BASE_PATH$/javascript/js-ezrx.js
+            Layout        :- Desktop
+        */
 
         //END OF transfrom_config
     }

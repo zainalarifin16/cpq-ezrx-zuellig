@@ -23,6 +23,8 @@ $(document).ready(function(){
         currencyCountry = "VND";
     }else if( window.check_country("MY") ){
         currencyCountry = "RM";
+    }else if( window.check_country("CB") ){
+        currencyCountry = "KHR";
     }
 
     var isLoadingDone = function () {

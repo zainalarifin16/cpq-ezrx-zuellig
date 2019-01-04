@@ -38,7 +38,9 @@ $(document).ready(function() {
         }else{
             return "";
         }
-    }
+	}
+	
+	window.isGlobalCountry = ( window.check_country("TH") || window.check_country("MY") || window.check_country("VN") || window.check_country("CB") );
 
 	function getQueryVariableUrl(variable) {
 		var query = window.location.search.substring(1);
@@ -976,6 +978,46 @@ $(document).ready(function() {
 									$("#attribute-materialSearch").closest(".ui-collapsible").find(".ui-collapsible-content").addClass("ui-collapsible-content-collapsed").attr("aria-hidden", "true");
 									$("#attribute-materialSearch").closest(".ui-collapsible").find("input[name*='collapsed-group']").val("true");
 								}
+
+								/* 
+									Created By    :- Created By Zainal Arifin, Date : 2 January 2019
+									Task          :- CPQ-UI-092 | Disable the "Qty" field for material Type = Bonus if "Override Bonus Qty" field is hidden for the material
+									Page          :- Model Configuration
+									File Location :- $BASE_PATH$/javascript/js-tablet.js
+									Layout        :- Mobile
+								*/
+
+								if( window.isGlobalCountry )
+								{
+									if($(".cell-overrideBonusQty").length == 0){
+										
+										var listMaterial = $("#materialArrayset").find("tbody > tr");
+										for( var i = 0; i < listMaterial.length; i++ ){
+											if( $(listMaterial[i]).hasClass("array-attribute-row") ){
+												// console.log(listMaterial[i]);
+												var typeMaterial = $( listMaterial[i] ).find("input[name='materialAndDesc']").val().toLowerCase();
+												typeMaterial = typeMaterial.split("-");
+												typeMaterial = typeMaterial[0];
+												if( typeMaterial == "bonus"){
+													$(listMaterial[i]).find("input[name='qty']")
+															.prop("disabled", true)
+															.css({"border": "0px","background": "transparent"})
+															.parent()
+															.css({"border": "0px","background": "transparent"});
+												}	
+											}
+										}
+										
+									}
+								}
+
+								/* 
+									Created By    :- Created By Zainal Arifin, Date : 2 January 2019
+									Task          :- CPQ-UI-092 | Disable the "Qty" field for material Type = Bonus if "Override Bonus Qty" field is hidden for the material
+									Page          :- Model Configuration
+									File Location :- $BASE_PATH$/javascript/js-tablet.js
+									Layout        :- Mobile
+								*/
 								
 								if ($("#swipe-sidebar-content").children(":not('.sidebar-content-inner')").length == 0){
 									reposition_content();

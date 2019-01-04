@@ -31,6 +31,10 @@ if(fullUrl.indexOf("display_company_profile.jsp") == -1 && fullUrl.toLowerCase()
 }
 window.onload = function(){
 	
+	var urlHost = window.location.host;
+	var parts = urlHost.split(".");
+	var sub = parts[0];
+
 	var PL = document.getElementById("product-nav-zuelligPharmaProducts");
 	if(PL != null){
 		PL.style.display = 'none';		
@@ -69,6 +73,80 @@ window.onload = function(){
 			document.getElementById('home').click();
 		}
 	}*/
+
+	if(fullUrl.indexOf("edit_tables.jsp") != -1){
+
+		setTimeout( function(){
+			var aTags = document.querySelectorAll("span.x-tree3-node-text");
+			for(var i=0;i<aTags.length;i++){
+				aTags[i].closest(".x-tree3-node").style.display = "none";
+			}
+
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+
+					var itemsRes = JSON.parse(this.responseText);
+					var items = itemsRes.items;
+					var listedTables = [];
+					for (var i=0;i<items.length;i++){                                 
+						var tableName = items[i].foldername;
+						listedTables.push(tableName);
+
+					}
+					for(var i=0;i<aTags.length;i++){
+						if(listedTables.indexOf(aTags[i].textContent) != -1){
+							aTags[i].closest(".x-tree3-node").style.display = "block";
+						}
+					}
+				}
+			};
+			xhttp.open("GET", "https://"+sub+".bigmachines.com/rest/v6/customBU_Table_Access?q={$or:[{'currency':{$eq:'"+_BM_USER_CURRENCY+"'}},{'applicableforallbus':{$eq:'Yes'}}]}", true);
+			//xhttp.setRequestHeader("Authorization", "Basic c3VyZXNoLnlhZ25hbUBvcmFjbGUuY29tOlN1cmVzaDcxMTY1JA==");
+			xhttp.send();
+		}, 2000 )
+	}
+
+	if( fullUrl.indexOf("admin/index.jsp") != -1 ){
+
+		var listedSections = [];
+		var sections = document.querySelectorAll("h2");
+		[].forEach.call(sections, (e)=>{
+			listedSections.push(e.innerText);
+			e.parentNode.parentNode.style.display = "none"; 
+		});
+
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+						var itemsRes = JSON.parse(this.responseText);
+						var items = itemsRes.items;
+						//var listedSections = ["Commerce and Documents","Developer Tools","Integration Platform","General","Products","Style and Templates","Users"];
+						for (var i=0;i<items.length;i++){                                 
+								var sectionName = items[i].accessiblesection;
+								// console.log(sectionName);
+								// console.log(listedSections.indexOf(sectionName) );
+								console.log(items[i].allowfullaccess);
+								if(items[i].allowfullaccess != "Yes"){
+										if(listedSections.indexOf(sectionName) !=-1){
+											var headings = document.evaluate("//h2[contains(., '"+sectionName+"')]", document, null, XPathResult.ANY_TYPE, null );
+											var thisHeading = headings.iterateNext();
+											thisHeading.parentNode.parentNode.style.display = "block"; ;
+										}
+								}else{
+									sections.forEach( (e)=>{
+										e.parentNode.parentNode.style.display = "block"; 
+									});
+								}
+						}
+										
+						// console.log(itemsRes.items.length);
+				}
+		};
+		xhttp.open("GET", "https://"+sub+".bigmachines.com/rest/v6/customAdmin_Links_Access?q={$or:[{'username':{$eq:'"+_BM_USER_LOGIN+"'}},{'username':{$eq:'All'}}]}", true);
+		//xhttp.setRequestHeader("Authorization", "Basic c3VyZXNoLnlhZ25hbUBvcmFjbGUuY29tOlN1cmVzaDcxMTY1JA==");
+		xhttp.send();
+	}
 	
 }
 /*if (navigator.userAgent.match(/Android/i) ||
