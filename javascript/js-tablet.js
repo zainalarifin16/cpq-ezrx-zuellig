@@ -40,7 +40,7 @@ $(document).ready(function() {
         }
 	}
 	
-	window.isGlobalCountry = ( window.check_country("TH") || window.check_country("MY") || window.check_country("VN") || window.check_country("CB") );
+	window.isGlobalCountry = ( window.check_country("TH") || window.check_country("MY") || window.check_country("VN") || window.check_country("CB") || window.check_country("MDI") );
 
 	function getQueryVariableUrl(variable) {
 		var query = window.location.search.substring(1);
@@ -355,7 +355,7 @@ $(document).ready(function() {
 		// var isThirdPage = $("#attribute-addAdditionalMaterial").hasClass("hidden");
 		//  console.log(" portrait "+ isSecondPage +"=="+ isThirdPage);
 
-		console.log(` SHOWING DETAIL IS ${ $("#showDetailedView").val().toLowerCase() } ON PAGE ${ page } `);
+		// console.log(` SHOWING DETAIL IS ${ $("#showDetailedView").val().toLowerCase() } ON PAGE ${ page } `);
 		// if(page == 2){
 		// 	// moveDescriptionBeforeAddToFav
 		// }
@@ -914,6 +914,7 @@ $(document).ready(function() {
 								if ($(parent).hasClass("ui-collapsible-collapsed")) {
 									$(buttonAddDelete).hide();
 								}
+								$("#AddCustFav").closest("span").css("display", "block");
 								var buttonHeadingFav = $("#AddCustFav").closest(".ui-collapsible-inset").find(".ui-collapsible-heading-toggle");
 								$(buttonHeadingFav).on("click", function () {
 									if ($(parent).hasClass("ui-collapsible-collapsed")) {
@@ -1043,7 +1044,7 @@ $(document).ready(function() {
 
 							$( labelFieldSearchMaterial ).html( $( labelFieldSearchMaterial ).html().replace( " - " + textSearchMaterial[1].replace(/&/g, '&amp;').trim(), "") );
 							var bodySearchMaterial = $( parent ).find(".ui-collapsible-content");
-							$( bodySearchMaterial ).prepend(`<div style='background-color: #ffff2d9e; padding:10px;' > ${ textSearchMaterial[1] }</div>`);
+							$( bodySearchMaterial ).prepend("<div style='background-color: #ffff2d9e; padding:10px;' >" + textSearchMaterial[1] +"</div>");
 						}, 3000);
 
 						//set align center for text input in coloumn QTY
@@ -1407,6 +1408,10 @@ $(document).ready(function() {
 							console.log(error);
 						}
 
+						if(window.isGlobalCountry){
+							$("#commerce").find(".sidebar-handle").hide();
+						}
+
 						/* 
 							Created By    :- Created By Zainal Arifin, Date : 17 April 2018
 							Task          :- Disable user submit order repeatly
@@ -1470,13 +1475,81 @@ $(document).ready(function() {
 							$("button:contains('Pipeline Viewer')").hide();
 						}
 						
-						if(isPageError){
-							$("#duplicatefooter").append("<button class='ui-btn ui-btn-inline' id='order-allorders'>All Orders</button><button class='ui-btn ui-btn-inline' id='order-showshoppingcart'>Show Shopping Cart</button><button class='ui-btn ui-btn-inline' id='order-neworder'>New Order</button>");
+						// $("a.ui-btn:contains('Delete Order')").hide();
+						// $("a.ui-btn:contains('Home')").hide();
 
+						// if(isPageError){
+						// 	$("#duplicatefooter").append("<button class='ui-btn ui-btn-inline' id='home'>Home</button><button class='ui-btn ui-btn-inline' id='order-allorders'>All Orders</button><button class='ui-btn ui-btn-inline' id='order-showshoppingcart'>Show Shopping Cart</button><button class='ui-btn ui-btn-inline' id='order-neworder'>New Order</button><button class='ui-btn ui-btn-inline' id='order-delete'>Delete Order</button>");
+
+						// }else{
+							
+						// 	$("#sticky-actions").append("<button class='ui-btn ui-btn-inline' id='home'>Home</button><button class='ui-btn ui-btn-inline' id='order-allorders'>All Orders</button><button class='ui-btn ui-btn-inline' id='order-showshoppingcart'>Show Shopping Cart</button><button class='ui-btn ui-btn-inline' id='order-neworder'>New Order</button><button class='ui-btn ui-btn-inline' id='order-delete'>Delete Order</button>");
+						// }
+
+						var flag = window.sessionStorage.getItem("flag");
+						
+						console.log("rightnow", (flag == "rightnow"));
+						var isHomeButtonHidden = $("#popup-moreBtns-popup a.ui-btn:contains('Home')").length > 0? true:false;
+						if(isPageError){
+							$("#duplicatefooter").append("<button class='ui-btn ui-btn-inline' id='order-allorders'>All Orders</button><button class='ui-btn ui-btn-inline' id='order-showshoppingcart'>Show Shopping Cart</button><button class='ui-btn ui-btn-inline' id='order-neworder'>New Order</button><button class='ui-btn ui-btn-inline' id='order-delete'>Delete Order</button>");
+							if(flag == "rightnow" && isHomeButtonHidden){
+								$("#duplicatefooter").append("<button class='ui-btn ui-btn-inline' id='order-home'>Home</button>");
+							}
 						}else{
 							
-							$("#sticky-actions").append("<button class='ui-btn ui-btn-inline' id='order-allorders'>All Orders</button><button class='ui-btn ui-btn-inline' id='order-showshoppingcart'>Show Shopping Cart</button><button class='ui-btn ui-btn-inline' id='order-neworder'>New Order</button>");
-						}						
+							$("#sticky-actions").append("<button class='ui-btn ui-btn-inline' id='order-allorders'>All Orders</button><button class='ui-btn ui-btn-inline' id='order-showshoppingcart'>Show Shopping Cart</button><button class='ui-btn ui-btn-inline' id='order-neworder'>New Order</button><button class='ui-btn ui-btn-inline' id='order-delete'>Delete Order</button>");
+							var checkCond = (flag == "rightnow" &&isHomeButtonHidden);
+							//alert(flag +"==="+isHomeButtonHidden+"====="+checkCond);						
+							if(flag == "rightnow" && isHomeButtonHidden){
+								$("#sticky-actions").append("<button class='ui-btn ui-btn-inline' id='order-home'>Home</button>");
+								//alert(flag +"==="+isHomeButtonHidden);			
+							}
+						}		
+						// if(isPageError){
+						// 	$("#duplicatefooter").append("<button class='ui-btn ui-btn-inline' id='order-allorders'>All Orders</button><button class='ui-btn ui-btn-inline' id='order-showshoppingcart'>Show Shopping Cart</button><button class='ui-btn ui-btn-inline' id='order-neworder'>New Order</button><button class='ui-btn ui-btn-inline' id='order-delete'>Delete Order</button>");
+
+						// }else{
+							
+						// 	$("#sticky-actions").append("<button class='ui-btn ui-btn-inline' id='order-allorders'>All Orders</button><button class='ui-btn ui-btn-inline' id='order-showshoppingcart'>Show Shopping Cart</button><button class='ui-btn ui-btn-inline' id='order-neworder'>New Order</button><button class='ui-btn ui-btn-inline' id='order-delete'>Delete Order</button>");
+						// }		
+
+						$("body").on("click touchend","#order-delete",function(e){
+							e.preventDefault();
+							if(confirm('Are you sure you wish to delete this order?.')){
+								window.localStorage.setItem("delete_transaction", true);
+								if($("a.ui-btn:contains('Delete Order')").length > 0){
+									$("a.ui-btn:contains('Delete Order')")[0].click();
+								}
+							}
+						});
+
+						$("body").off("click touchend","#order-home");
+						$("body").on("click touchend","#order-home",function(e){
+							e.preventDefault();
+							if($("a.ui-btn:contains('Home')").length > 0){
+								window.close();
+								// $("a.ui-btn:contains('Home')")[0].click();
+							}
+						
+						});
+						$("a.ui-btn:contains('Refresh')").on("click touchend", function(){
+							window.localStorage.setItem("delete_transaction", true);
+						});
+
+						var isOrderInitated = $("input[name='status_t']").val().toLowerCase() == "order initiated";
+						var isFailed = $("input[name='status_t']").val().toLowerCase() == "failed";
+						var isTransmisionFailed = $("input[name='status_t']").val().toLowerCase() == "transmission failed";
+						var isCOmpleted = $("input[name='status_t']").val().toLowerCase() == "completed";
+						var isInProcess = $("input[name='status_t']").val().toLowerCase() == "in process";
+						var isCSReview = $("input[name='status_t']").val().toLowerCase() == "cs team review";
+						var isTemplateOrder = ($("select[name='isATestOrder_t']").length > 0) ? ($("select[name='isATestOrder_t']").val().trim().toLowerCase() == "yes") : false;
+						var isButtonDeleteExist = $("a.ui-btn:contains('Delete Order')").length == 1;
+						if( isOrderInitated || isFailed || isTransmisionFailed || !isButtonDeleteExist || isCOmpleted || isInProcess || isCSReview ){
+							$("#order-delete").hide();
+						}
+						if(isTemplateOrder){
+							$("#order-delete").show();
+						}
 
 						$("body").on("click touchend","#order-allorders",function(e){
 								e.preventDefault();
@@ -1693,7 +1766,7 @@ $(document).ready(function() {
 											
 											$("#sticky-actions").find(".action-type-modify:contains('Home')").appendTo("#sticky-actions");
 
-											var flag = window.sessionStorage.getItem("flag", "rightnow");											
+											var flag = window.sessionStorage.getItem("flag");											
 
 											if (flag == "rightnow") {
 												$("#sticky-actions").find(".action-type-modify:contains('Home')").show();
@@ -1877,6 +1950,83 @@ $(document).ready(function() {
 												$("#attribute-suspendedCustomerMessage").closest(".ui-collapsible").hide();
 											}
 
+											/* 
+													Created By    :- Created By Zainal Arifin, Date : 21 February 2019
+													Task          :- set max length for the field
+													Page          :- Order Page
+													File Location :- $BASE_PATH$/javascript/js-tablet.js
+													Layout        :- Mobile
+											*/
+
+											$order_request = $("textarea[name='orderingRequestNoMoreThan90Characters_t']");
+        							if( $order_request.length > 0 ){
+												var ruleMaxLength = 132;
+												var maxLength = ruleMaxLength - $order_request.val().length;
+												$order_request.prop("maxLength", ruleMaxLength);
+												$order_request.parent().append("<div id='remainingchar' >"+maxLength+" characters left</div>");
+												$("#remainingchar").css({
+														"position": "absolute",
+														"margin-right": "15px",
+														"margin-top": "-15px",
+														"color": "#a9a9a9",
+														"font-size": "11px",
+												});
+											}
+
+											/* 
+													Created By    :- Created By Zainal Arifin, Date : 8 March 2019
+													Task          :- set flag for delete transaction button
+													Page          :- Order Page
+													File Location :- $BASE_PATH$/javascript/js-ezrx.js
+													Layout        :- Desktop
+											*/
+
+        							setTimeout(function(){
+												$(".action.action-type-modify:contains('Delete Order'), button:contains('Delete Order'), a.ui-btn:contains('Delete Order')").on("click tap touchend", function(){											
+													window.localStorage.setItem("delete_transaction", true);
+												});
+											}, 1000);
+											
+											/* 
+													Created By    :- Created By Zainal Arifin, Date : 8 March 2019
+													Task          :- set flag for delete transaction button
+													Page          :- Order Page
+													File Location :- $BASE_PATH$/javascript/js-ezrx.js
+													Layout        :- Desktop
+											*/
+
+											if(window.innerWidth <= 1024 || window.innerWidth <= 425 ){
+												$("#remainingchar").css({
+													"right": "0",
+												});
+											}
+											
+											if(window.innerWidth <= 768){
+												$("#remainingchar").css({
+													"right": "22%",
+												});
+											}
+
+											if(window.innerWidth <= 768){
+												$("#remainingchar").css({
+													"right": "22%",
+												});
+											}
+
+											$order_request.on("keyup", function () {
+													var remainingChar = ruleMaxLength - $(this).val().length;
+													// console.log( remainingChar + "characters left" );
+													$("#remainingchar").text(remainingChar + " characters left");
+											});
+
+											/* 
+													Created By    :- Created By Zainal Arifin, Date : 21 February 2019
+													Task          :- set max length for the field
+													Page          :- Order Page
+													File Location :- $BASE_PATH$/javascript/js-tablet.js
+													Layout        :- Mobile
+											*/
+
 										}, 2000);
 
 									} else {
@@ -1959,7 +2109,10 @@ $(document).ready(function() {
 
 
 
-						select_customer();						
+						select_customer();					
+						
+
+						
 
 				 }
 				

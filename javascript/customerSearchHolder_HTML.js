@@ -72,7 +72,7 @@ $(document).ready(function(js2){
 		}
 	}
 
-	window.window.isGlobalCountry = ( window.check_country("TH") || window.check_country("MY") || window.check_country("VN") || window.check_country("CB") );
+	window.isGlobalCountry = ( window.check_country("TH") || window.check_country("MY") || window.check_country("VN") || window.check_country("CB") || window.check_country("MDI") );
 
 	// debugger;
 	// $.noConflict();
@@ -80,26 +80,23 @@ $(document).ready(function(js2){
 	/*$("#edit_shopping_cart").on('click', function(){
 		console.log('click and load');
 	});commented by suresh*/
-	//if($('title')){
+	if($('title')){
 		pagetitle = $('title').text().toLowerCase();
-	//}
+	}
 	var fullUrl = window.location.host;
 	//window.location.host is subdomain.domain.com
 	var parts = fullUrl.split('.');
 	var sub = parts[0];
-	$(window).load(function () {
-
-		setTimeout(function () {
-			if(window.location.href.indexOf("copy_processing.jsp")!= -1 && $('#edit_shopping_cart').length >0){
-				
-				$('#line-item-grid tr:first-child').find('input[name="_line_item_list"]').prop("checked", true);				
-				$("#edit_shopping_cart").click();
-
-			}
+	
+	setTimeout(function () {
+		if(window.location.href.indexOf("copy_processing.jsp")!= -1 && $('#edit_shopping_cart').length >0){
 			
-		}, 1000);
+			$('#line-item-grid tr:first-child').find('input[name="_line_item_list"]').prop("checked", true);				
+			$("#edit_shopping_cart").click();
 
-	});
+		}
+		
+	}, 1000);
 
 	// $("#orderingRequestNoMoreThan90Characters_t").off();
 	// $('input[name="customerPORef_t"], textarea[name="orderingRequestNoMoreThan90Characters_t"], input[name*="comment_l"]').bind('change', function(){
@@ -144,8 +141,10 @@ $(document).ready(function(js2){
 		}
 
 		//end
-
-		var globalTemplateFlag = ($("span[id*='globalTemplateFlag']").html().toLowerCase() == 'true')? true : false;
+		var globalTemplateFlag = false;
+		if( $("span[id*='globalTemplateFlag']").length > 0 ){
+			globalTemplateFlag = ($("span[id*='globalTemplateFlag']").html().toLowerCase() == 'true')? true : false;
+		}
 
 		var topCustomerWrapper = '<div class="customer-search-holder"><div class="search-input-wrapper"><p>Search all customers</p><input type="text" id="searchCustomerInput" autocomplete="off" placeholder="Please enter minimum 3 character"></div><div class="search-cust_wrapper"><table id="searchCustomer" width="100%"></table></div><div class="top-cust_wrapper"><p>Top 10 Frequent customers</p><table id="topCustomerList" class="display" width="100%"></table></div></div>';
 
@@ -471,7 +470,10 @@ var loadAjax = function() {
         ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/custom"+customerMasterTable_t;
 		param = 'q={"custmasterstring":{$regex:"/' + encodeURIComponent( searchKeyword ) + '/i"}}&{RecrdFlag:{eq:{A}}&{Control_Flag:{ne:{N}}&orderby=customer_name:asc';
 
-		var globalTemplateFlag = ($("span[id*='globalTemplateFlag']").html().toLowerCase() == 'true')? true : false;
+		var globalTemplateFlag = false;
+		if( $("span[id*='globalTemplateFlag']").length > 0 ){
+			globalTemplateFlag = ($("span[id*='globalTemplateFlag']").html().toLowerCase() == 'true')? true : false;
+		}
 
 		if( globalTemplateFlag ){
 
@@ -506,9 +508,9 @@ var loadAjax = function() {
 	}else{
 		var ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master";
 		//NEW AJAX URL FOR TAIWAN CSTEAM START
-		if (userCountry === 'TW') {
+		if ( window.check_country("TW") ) {
 			ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master_2800";
-		} else if (userCountry == "PH") {
+		} else if ( window.check_country("PH") ) {
 			ajaxUrl = "https://" + sub + ".bigmachines.com/rest/v3/customCustomer_Master_2500";
 		}
 
@@ -821,9 +823,8 @@ var searchCustList = function(dataSet, seachCustomer) {
 		"fnDrawCallback": function (oSettings) {
 
 			// $( $("#searchCustomer_wrapper").find(".dataTable")[0] ).css("table-layout", "fixed");
-			seachCustomer.columns.adjust();
 
-			if(userCountry == "PH"){
+			if( window.check_country("PH") ){
 				$($("#searchCustomer").find("tbody").children("tr")).each(function(index, data){
 				  var isDisabled = $(data).find("input[type='radio']").attr("disabled");
 				  if(isDisabled == "disabled"){
@@ -842,7 +843,7 @@ var searchCustList = function(dataSet, seachCustomer) {
 					// console.log("#selectedCustomerSoldtoID", $("#selectedCustomerSoldtoID").val() );
 				}
 
-				if(userCountry == "PH"){
+				if( window.check_country("PH") ){
 					selectCustomerSoldID( $(this).data("customersold") );
 				}
 				// alert("Debugger on going, please dont make an issue");
@@ -932,6 +933,10 @@ var searchCustList = function(dataSet, seachCustomer) {
 					firstDrawData = false;
 				}
 
+				setTimeout(function(){
+					seachCustomer.columns.adjust();
+				}, 500);
+
 			} else {
 				js2('.search-cust_wrapper').hide();
 			}
@@ -983,7 +988,10 @@ var searchCustomerList = function(seachCustomer) {
 
 	if (zPUserType === 'CSTeam') {
 
-		var globalTemplateFlag = ($("span[id*='globalTemplateFlag']").html().toLowerCase() == 'true')? true : false;
+		var globalTemplateFlag = false;
+		if( $("span[id*='globalTemplateFlag']").length > 0 ){
+			globalTemplateFlag = ($("span[id*='globalTemplateFlag']").html().toLowerCase() == 'true')? true : false;
+		}
 		
 		$('#searchCustomerInput').keyup(function(){
 
@@ -1135,7 +1143,7 @@ var showCustomerList = function(customerDetails) {
 						var userCountry =  userDetectFunc();
 
 						////////////
-						if(userCountry === 'PH'){
+						if(window.check_country("PH")){
 							console.log("PH - topCust");
 							data = '<input type="radio" name="topCust" id= "topCust" value="' + full[2] + '" data-customersold="' + full[1] +'" >';
 						}else if( window.check_country("TW") || window.isGlobalCountry ){
@@ -1184,15 +1192,25 @@ var showCustomerList = function(customerDetails) {
 		    Layout : Both
 			*/
 
-			var selectCustomerSoldID = function (customersold) {
-				$("#selectedCustomerSoldtoID").val(customersold);
+			var selectCustomerSoldID = function (customersold, selectedCustShipID) {
+				
+				setTimeout(function(){
+					if( $("#selectedCustomerSoldtoID").val() != customersold ){
+						$("#selectedCustomerSoldtoID").val(customersold);
+						selectCustomerSoldID(customersold, selectedCustShipID);
+					}else{
+						delete_line_item_func( selectedCustShipID );
+					}
+				}, 500);
+				
 			}
 
-			if (userCountry === "PH") {
-				selectCustomerSoldID($(this).attr("data-customersold"));
+			if (window.check_country("PH")) {
+				selectCustomerSoldID($(this).attr("data-customersold"), $(this).val() );
+			}else{
+				delete_line_item_func($(this).val());
 			}
 
-            delete_line_item_func($(this).val());
             /*
 			    End : 11 Dec 2017
 			    Task  : Delete line items if customer is changed.

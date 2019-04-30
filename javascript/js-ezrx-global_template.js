@@ -25,6 +25,8 @@ $(document).ready(function(){
         currencyCountry = "RM";
     }else if( window.check_country("CB") ){
         currencyCountry = "KHR";
+    }else if( window.check_country("MDI") ){
+        currencyCountry = "PHP";
     }
 
     var isLoadingDone = function () {
@@ -828,6 +830,27 @@ $(document).ready(function(){
             */
 
             /* OFFSET ALIGNMENT submitted order detail */
+
+            /*
+              Created By    :- Created By Zainal Arifin, Date : 29 January 2019
+              Task          :- Fixed align item on Order Page
+              Page          :- Orde page
+              File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
+              Layout        :- Desktop
+            */
+            var flag = window.sessionStorage.getItem("flag");
+            if (flag == "rightnow") {
+              $(".spacer-column.last").hide();
+            }
+
+            /*
+              Created By    :- Created By Zainal Arifin, Date : 29 January 2019
+              Task          :- Fixed align item on Order Page
+              Page          :- Orde page
+              File Location :- $BASE_PATH$/javascript/js-ezrx-tw.js
+              Layout        :- Desktop
+            */
+
           }
 
           if($('title').text().toLowerCase() == "model configuration"){
@@ -1385,7 +1408,7 @@ $(document).ready(function(){
               var stockval = $stock.val().trim().toLowerCase();
               // var isInStockMaterial = $($child).find('input[name*="inStock_l"]').val().trim().toLowerCase();
               var qty_text = $($child).find('input[name*="qty_int_l"]');
-
+              
               if (stockval == 'no') {
                 $($(qty_text).siblings()[0]).css("color", "red");
                 $stock.parent().parent().parent().css('color', 'red');

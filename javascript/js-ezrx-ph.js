@@ -189,6 +189,14 @@ $(document).ready(function(){
                         //remove duplicate of saveQuoteRequired_t
                         $($("input[name='saveQuoteRequired_t']")[1]).remove();
 
+                        var flag = window.sessionStorage.getItem("flag");
+                        if(flag == "rightnow"){
+                          console.log("PH EXECUTE COLUMN");
+                          setTimeout(function(){
+                            $($("#attr_wrapper_1_customerShipToId_t").closest('.column-layout').find(".last")[0]).hide();
+                          }, 1000)
+                        }
+
                     }
 
                     if($('title').text().toLowerCase() == "model configuration"){
@@ -341,7 +349,7 @@ $(document).ready(function(){
             var $child = $(this).children('td');
             var isBonusOverride = $($child).find('input[name*="bonusOverideFlag_l"]').val().trim().toLowerCase();
             var isPriceOverride = $($child).find('input[name*="isPriceOverride"]').val();
-            var isNetPriceDisc = $($child).find('input[name*="netPriceDiscount_t"]').val();
+            var isNetPriceDisc = ( $($child).find('input[name*="netPriceDiscount_t"]').length > 0 )? $($child).find('input[name*="netPriceDiscount_t"]').val() : "0.0" ;
             
             var qty_text = $($child).find('input[name*="qty_l"]');
             var totalPrice_text = $($child).find('input[name*="totalPrice_l"]');

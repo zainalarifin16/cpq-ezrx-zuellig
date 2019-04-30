@@ -65,6 +65,7 @@
                 var tr = trList[i];
                 // addDelete(tr);
                 if(tr.classList.contains("messages") == false){
+                    console.log(tr);
                     var inStock = tr.querySelector(".cell-inStock").querySelector('input[name="inStock"]');
                     var qty = tr.querySelector(".cell-qty_text").querySelector('input[name="qty_text"]');
                     var inStockSpan = tr.querySelector(".cell-inStock").querySelector('span');
