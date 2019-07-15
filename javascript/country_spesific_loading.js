@@ -13,7 +13,19 @@ $(document).ready(function () {
         console.log("TH ?", window.check_country("TH"));
         console.log("VN ?", window.check_country("VN"));
         console.log("MY ?", window.check_country("MY"));
-        var isGlobalCountry = (window.check_country("TH") || window.check_country("MY") || window.check_country("VN") || window.check_country("CB") || window.check_country("MDI") );
+        // var isGlobalCountry = (window.check_country("TH") || window.check_country("MY") || window.check_country("VN") || window.check_country("CB") || window.check_country("MDI") );
+
+        var checkGlobalCountry = function(){
+            var globalTemplateFlag = false;
+            if( $("span[id*='globalTemplateFlag']").length > 0 ){
+                globalTemplateFlag = ($("span[id*='globalTemplateFlag']").html().toLowerCase() == 'true')? true : false;
+            }
+            return globalTemplateFlag;
+        }
+
+        isGlobalCountry = checkGlobalCountry();
+
+
         if (window.check_country("TW") || isGlobalCountry) {
             console.log("SPESIFIC GLOBAL TEMPLATE", window.check_country("TW") || isGlobalCountry);
             url_script = script_global_template;

@@ -297,10 +297,10 @@ $(document).ready(function(){
             var isBonusOverride = $(this).find("span[id*='bonusOverideFlag_l']").text().trim().toLowerCase();
             if (isBonusOverride == "true") {
               var typeBonus = $(parent).find("span[id*='bonusType_l']").text().trim().toLowerCase();
-              if (typeBonus == "system bonus") {
+              // if (typeBonus == "system bonus") {
                 var qty_span = $(parent).find("span[id*='qty_int_l']");
                 $(qty_span).css("color", "red");
-              }
+              // }
             }
           }
         });

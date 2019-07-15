@@ -40,7 +40,16 @@ $(document).ready(function() {
         }
 	}
 	
-	window.isGlobalCountry = ( window.check_country("TH") || window.check_country("MY") || window.check_country("VN") || window.check_country("CB") || window.check_country("MDI") );
+	// window.isGlobalCountry = ( window.check_country("TH") || window.check_country("MY") || window.check_country("VN") || window.check_country("CB") || window.check_country("MDI") );
+	var checkGlobalCountry = function(){
+		var globalTemplateFlag = false;
+		if( $("span[id*='globalTemplateFlag']").length > 0 ){
+				globalTemplateFlag = ($("span[id*='globalTemplateFlag']").html().toLowerCase() == 'true')? true : false;
+		}
+		return globalTemplateFlag;
+	}
+
+	window.isGlobalCountry = checkGlobalCountry();
 
 	function getQueryVariableUrl(variable) {
 		var query = window.location.search.substring(1);
@@ -724,8 +733,10 @@ $(document).ready(function() {
 							 console.log("=======+++++=============2");
 							//if($("#showDetailedView").val() == "false"){
 								 console.log("=======+++++=============3");
-								alignMatArraySet();
-								showDetailedView();
+								// if($("#showDetailedView").val() == "true" && e.type != "touchend"){
+									alignMatArraySet();
+									showDetailedView();
+								// }
 
 								// if(!$("#attribute-promotion").hasClass("hidden")){
 								// 	moveDescriptionBeforeAddToFav();
@@ -1019,6 +1030,63 @@ $(document).ready(function() {
 									File Location :- $BASE_PATH$/javascript/js-tablet.js
 									Layout        :- Mobile
 								*/
+
+								/* 
+									Zainal 08 July 2019
+									Table Bundle
+								*/
+								
+								var addBundleAction = function(){
+
+									var valueAddBundle = $("select[name='addBundleFlag']").val();
+									var rootBundleValues = $("textarea[name='bundleValues']").closest(".group-content");
+									$(rootBundleValues).children().hide();
+									console.log("valueAddBundle", valueAddBundle);
+									if(valueAddBundle == "true"){
+										console.log("valueAddBundle", valueAddBundle);
+										//material search
+										$("#attribute-materialSearch").closest("fieldset").hide();
+										//fav freq material
+										$("#showFavdetails").hide();
+										$(".sidebar-handle").hide();
+							
+										var bundleValues = $("textarea[name='bundleValues']").val();
+										// var bundleValues = "Junivia1$$12/03/2022##Junivia2$$12/03/2023##Junivia2$$12/03/2032##";
+										$(rootBundleValues).prepend($("<table id='table_bundle' class='config-array array-resizable show_after' style='width: 80%;text-align:center;margin: 0px auto;' ><thead><tr><th style='padding: 10px;' >Select</th><th style='padding: 10px;' >Promotion Deal</th><th style='padding: 10px;' >Expiry Date</th></tr></thead><tbody></tbody></table>"))
+										$("#table_bundle").css("text-align", "center");
+										$("#table_bundle").find("th").css("text-align", "center");
+										if( $("input[name='selectedBundle']").val().length > 0 ){
+											window.sessionStorage.setItem("selectBundle", $("input[name='selectedBundle']").val() );
+										}
+										bundleValues.split("##").forEach(function(data){
+											if(data.length > 0){
+												var rowValues = data.split("$$");
+												var selectedBundle = (window.sessionStorage.getItem("selectBundle") === rowValues[0])? "checked" : "";
+												$("#table_bundle").find("tbody").append("<tr><td><input type='radio' name='selectBundle' value='"+rowValues[0]+"' "+selectedBundle+"  ></td><td>"+rowValues[0]+"</td><td>"+rowValues[1]+"</td></tr>");
+												$("input[name='selectBundle']").on("click", function(){
+													window.sessionStorage.setItem("selectBundle", $(this).val());
+													$("input[name='selectedBundle']").val($(this).val());
+													$(".button-update").click();
+												});
+												return rowValues;
+											}
+										});
+							
+										$(".array-remove").hide();
+										$("input[name='overridePrice_currency-display']").attr("disabled", true).css({"background" : "transparent", "border": "0px"});
+							
+									}
+
+								}
+
+								addBundleAction();
+								
+								/* 
+									Zainal 08 July 2019
+									Table Bundle
+								*/
+
+								
 								
 								if ($("#swipe-sidebar-content").children(":not('.sidebar-content-inner')").length == 0){
 									reposition_content();
@@ -1303,7 +1371,7 @@ $(document).ready(function() {
 					 */
 					
 					 /* Reset State */
-					 if(check_nationality(2600)){
+					if(check_nationality(2600)){
 						var trans_id = $("input[name='orderNumber_ML']").val().replace(" ", "");
 						$(".button-save, .button-cancel").on("click", function(){
 							window.localStorage.setItem("orderItem_" + trans_id, true);							
@@ -1475,6 +1543,7 @@ $(document).ready(function() {
 							$("button:contains('Pipeline Viewer')").hide();
 						}
 						
+						// $("button.ui-btn:contains('Delete Order')").hide();
 						// $("a.ui-btn:contains('Delete Order')").hide();
 						// $("a.ui-btn:contains('Home')").hide();
 

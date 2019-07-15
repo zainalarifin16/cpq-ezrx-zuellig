@@ -385,101 +385,83 @@ $(document).ready(function(){
 
         setTimeout(function(){
          
-          $("td.cell-promotion").off();
-            $("td.cell-promotion").each(function(index, data){
+          $('td.cell-promotion').off();      
+          $('td.cell-promotion').prop('tooltip', function() {
               var button_helper;
               var valueOfPromotion = $(this).find('input[name="promotion"]').val();
-  
-              $($(this).children().children()).hide();
-  
+    
               if (valueOfPromotion != '') {
-                button_helper = '<i class="material-lens" aria-hidden="true" ></i>';
-                $(this).find('input[name=promotion]').prop('type', 'text');
-                $(this).find('input[name=promotion]').css('display', 'block !important');
-                if($($(this).children().children()).parent().html().indexOf("material-lens") == -1){
-                  $($(this).children().children()).parent().append(button_helper); 
-                }
+                  button_helper = '<i class="material-lens" aria-hidden="true" ></i>';
+                  $(this).find('input[name="promotion"]').prop('type', 'text');
+                  $(this).find('input[name="promotion"]').css('display', 'block !important');
               } else {
-                button_helper = '-';
-                if($($(this).children().children()).parent().text().indexOf("-") == -1){
-                  $($(this).children().children()).parent().append(button_helper); 
-                }
+                  button_helper = '-';
               }
-  
-              $(this).prop("tooltip", valueOfPromotion);
-  
-              $(this).on("click", function(){
-                var valueOfPromotion = $(this).find('input[name="promotion"]').val();
-                if(valueOfPromotion.trim() != '') {
-                  if ($(this).hasClass('open')) {
-  
-                    $(this).removeClass('open');
-                    $('.table-tooltip').remove();
-  
-                  } else {
-                    $(this).addClass('open');
-                    $('.table-tooltip').remove();
-  
-                    if( window.check_country("TW") ){
-                      var table = '<table class="table-tooltip" >\
-                                <thead style="padding:5px;font-weight:bold">\
-                                  <tr style="background-color:#EEE;">\
-                                    <th style="border: 1px solid #999;padding:5px;">Quantity</th>\
-                                    <th style="border: 1px solid #999;padding:5px;">Invoice Price</th>\
-                                    <th style="border: 1px solid #999;padding:5px;">Unit Price</th>\
-                                  </tr>\
-                                </thead>';
-                    }else{
-                      var table = '<table class="table-tooltip" >\
-                                <thead style="padding:5px;font-weight:bold">\
-                                  <tr style="background-color:#EEE;">\
-                                    <th style="border: 1px solid #999;padding:5px;">Quantity</th>\
-                                    <th style="border: 1px solid #999;padding:5px;">Unit Price</th>\
-                                  </tr>\
-                                </thead>';
-                    }
-
-                    var x = $(this).prop('tooltip').trim();
-                    if (x != "") {
-                      //console.log(' mobile_adjust_tooltip 444 =====>>>> ');
-                      if( window.check_country("TW") ){
-                        var col = x.trim().split(",");
-
-                      }else{
-                        var col = x.trim().split("&&");
-                      }
-
-                      if (col.length > 0) {
-                        table += "<tbody>";
-                        col.forEach(function (row) {
+              // $(this).children('.attribute-field-container').children('span').html(button_helper);
+              $($(this).children().children()).hide();
+              $($(this).children().children()).parent().append(button_helper);
+              return valueOfPromotion;
+          }).mouseenter(function() {
+              /*
+                  if mouse hover on element promotion (lens icon) then showing table of Ordered Quantity and contract price
+              */
+              var valueOfPromotion = $(this).find('input[name="promotion"]').val();    
+              if(window.check_country("TW")){
+                var table = '<table style="text-align:center;width:100%;border-collapse: collapse;">\
+                              <thead style="padding:5px;font-weight:bold">\
+                                <tr style="background-color:#EEE;">\
+                                  <th style="border: 1px solid #999;padding:5px;">Quantity</th>\
+                                  <th style="border: 1px solid #999;padding:5px;">Invoice Price</th>\
+                                  <th style="border: 1px solid #999;padding:5px;">Unit Price</th>\
+                                </tr>\
+                              </thead>';
+              }else{
+                var table = '<table style="text-align:center;width:100%;border-collapse: collapse;">\
+                              <thead style="padding:5px;font-weight:bold">\
+                                <tr style="background-color:#EEE;">\
+                                  <th style="border: 1px solid #999;padding:5px;">Quantity</th>\
+                                  <th style="border: 1px solid #999;padding:5px;">Unit Price</th>\
+                                </tr>\
+                              </thead>';
+              }       
+    
+              var x = valueOfPromotion.trim();
+              if (x != "") {
+                  if( window.check_country("TW") ){
+                    var col = x.trim().split(",");
+                  }else{
+                    var col = x.trim().split("&&");
+                  }
+                  if (col.length > 0) {
+                      table += "<tbody>";
+                      col.forEach(function(row) {
                           table += '<tr>';
                           //row = row.trim().split('#@#');
                           row = row.trim().split('**');
                           if (row.length > 0) {
-                            row.forEach(function (item) {
-                              table = table + '<td style="border: 1px solid #999;padding:5px;">' + item + '</td>';
-                            });
+                              row.forEach(function(item) {
+                                  table = table + '<td style="border: 1px solid #999;padding:5px;">' + item + '</td>';
+                              });
                           }
                           table += '</tr>';
-                        });
-                        table += '</tbody>';
-  
-                      }
-                    }
-                    table += '</table>';
-                    
-                    $(this).parent().parent().parent().parent().append(table);
-                    $('.table-tooltip').css({
-                      right: '50%',
-                      position: 'absolute',
-                      transform: 'translate(50%, -50%)',
-                      top: '50%',
-                      width: '500px'
-                    });
+                      });
+                      table += '</tbody>';
+    
                   }
-                }
+              }
+              table += '</table>';
+              /*
+                  showing element if the content is not null
+              */
+    
+              if (valueOfPromotion.trim() != '') {
+                  $('#myModal').addClass('hover-modal-content').html(table);
+                  $('#myModal').css("display", "block");
+              }
+              $('.cell-promotion').mouseleave(function() {
+                  $('#myModal').css("display", "none");
               });
-            });
+          });
           
           $("td.cell-additionalMaterialDescription").off();
           $("td.cell-additionalMaterialDescription").each(function (index, data) {
@@ -528,8 +510,12 @@ $(document).ready(function(){
                   $('.table-tooltip').css({
                     right: '50%',
                     position: 'absolute',
-                    transform: 'translate(50%, 980%)',
-                    top: '50%',
+                    // transform: 'translate(50%, 980%)',
+                    // top: '50%',
+                    left: '0',
+                    right: '0',
+                    margin: '0px auto',
+                    bottom: '19%',
                     width: '500px',
                     border: "1px solid !important"
                   });

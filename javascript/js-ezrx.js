@@ -187,7 +187,17 @@
         }
     }
 
-    window.isGlobalCountry = (window.check_country("TH") || window.check_country("MY") || window.check_country("VN") || window.check_country("CB") || window.check_country("MDI"));
+    // window.isGlobalCountry = (window.check_country("TH") || window.check_country("MY") || window.check_country("VN") || window.check_country("CB") || window.check_country("MDI"));
+    var checkGlobalCountry = function(){
+        var globalTemplateFlag = false;
+		if( $("span[id*='globalTemplateFlag']").length > 0 ){
+			globalTemplateFlag = ($("span[id*='globalTemplateFlag']").html().toLowerCase() == 'true')? true : false;
+        }
+        return globalTemplateFlag;
+    }
+    
+    window.isGlobalCountry = checkGlobalCountry();
+    
 
     var isLoadingDone = function () {
         return $("#jg-overlay").css("display") == "none" ? true : false;
@@ -4288,6 +4298,9 @@
                     /* SG-19  Pipeline viewer link on top right corner in shopping cart, by Zainal Arifin */
                     $("#pipeline-viewer-opener").hide(); //hide pipeline-viewer-opener
                     transform_modelconfig();
+
+                    addBundleAction();
+
                 } else if (pagetitle == "report manager") {
                     /*
                         if user access report manager page, add class jg-page-orders to body element.
@@ -5707,6 +5720,58 @@
             File Location :- $BASE_PATH$/javascript/js-ezrx.js
             Layout        :- Desktop
         */
+
+
+    }
+
+    /* 
+        Created By    :- Created By Zainal Arifin, Date : 18 June 2019
+        Task          :- hide add material, top 10 frequent material and my favorite section.
+        Page          :- Shopping Cart
+        File Location :- $BASE_PATH$/javascript/js-ezrx.js
+        Layout        :- Desktop
+    */
+
+    function addBundleAction(){
+
+        var valueAddBundle = $("input[name='addBundleFlag']").is(":checked");
+        var rootBundleValues = $("textarea[name='bundleValues']").closest(".column");
+        $(rootBundleValues).children().hide();
+
+        if(valueAddBundle){
+            //material search
+            $("#attribute-materialSearch").closest(".grid.clearfix").hide();
+            //fav freq material
+            $("#attribute-pastOrders").closest('.column-1').hide();
+
+            var bundleValues = $("textarea[name='bundleValues']").val();
+            // var bundleValues = "Junivia1$$12/03/2022##Junivia2$$12/03/2023##Junivia2$$12/03/2032##";
+            $(rootBundleValues).prepend($("<table id='table_bundle' class='array vertical-array' style='width: 50%;' ><thead><tr><th>Select</th><th>Promotion Deal</th><th>Expiry Date</th></tr></thead><tbody></tbody></table>"))
+            $("#table_bundle").css("text-align", "center");
+            $("#table_bundle").find("th").css("text-align", "center");
+            if( $("input[name='selectedBundle']").val().length > 0 ){
+                window.sessionStorage.setItem("selectBundle", $("input[name='selectedBundle']").val() );
+            }
+            var eachValues = bundleValues.split("##").map(function(data){
+                if(data.length > 0){
+                    var rowValues = data.split("$$");
+                    var selectedBundle = (window.sessionStorage.getItem("selectBundle") === rowValues[0])? "checked" : "";
+                    $("#table_bundle").find("tbody").append("<tr><td><input type='radio' name='selectBundle' value='"+rowValues[0]+"' "+selectedBundle+"  ></td><td>"+rowValues[0]+"</td><td>"+rowValues[1]+"</td></tr>");
+                    $("input[name='selectBundle']").on("click", function(){
+                        window.sessionStorage.setItem("selectBundle", $(this).val());
+                        $("input[name='selectedBundle']").val($(this).val());
+                        $("#btn-cart-update").click();
+                    });
+                    return rowValues;
+                }
+            });
+
+            $(".array-remove").hide();
+            $("input[name='overridePrice_currency-display']").attr("disabled", true).css({"background" : "transparent", "border": "0px"});
+
+
+
+        }
 
 
     }
