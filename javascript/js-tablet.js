@@ -39,6 +39,35 @@ $(document).ready(function() {
             return "";
         }
 	}
+
+	function showLoadingDialog() {
+		if ($('#jg-overlay').length > 1) {
+			$('#jg-overlay').show();		
+		}
+	}
+
+	function hideLoadingDialog() {
+		if ($('#jg-overlay').length > 1) {
+			$('#jg-overlay').hide();
+		}
+	}
+
+/*
+		Start : 04 Nov 2017
+		Task  : Hide check box in line item grid in order page
+		Page  : Global
+		File Location : $BASE_PATH$/image/javascript/js-ezrx.js
+		Layout : Desktop
+*/
+function desktop_checkItemOnCart() {
+
+		$('#edit_shopping_cart').on('click', function () {
+				if ($('#line-item-grid tr').length > 0) {
+						$('#line-item-grid tr:first-child').find('input[name="_line_item_list"]').prop("checked", true);
+				}
+		});
+
+}
 	
 	// window.isGlobalCountry = ( window.check_country("TH") || window.check_country("MY") || window.check_country("VN") || window.check_country("CB") || window.check_country("MDI") );
 	var checkGlobalCountry = function(){
@@ -799,8 +828,9 @@ $(document).ready(function() {
 						var isFavTableCreated = false;
 						function reposition_content(){
 							// $('#jg-overlay').show();
+							var rootBundleValues = $("textarea[name='bundleValues']").closest(".group-content");
+							$(rootBundleValues).children().hide();
 							setTimeout(function() {
-								
 								$("#tab-content").css({"margin-bottom":"30px"});								
 								$("#price-section").hide();
 								$("#recommended-parts").hide();
@@ -1037,13 +1067,11 @@ $(document).ready(function() {
 								*/
 								
 								var addBundleAction = function(){
-
+									showLoadingDialog();
 									var valueAddBundle = $("select[name='addBundleFlag']").val();
 									var rootBundleValues = $("textarea[name='bundleValues']").closest(".group-content");
 									$(rootBundleValues).children().hide();
-									console.log("valueAddBundle", valueAddBundle);
 									if(valueAddBundle == "true"){
-										console.log("valueAddBundle", valueAddBundle);
 										//material search
 										$("#attribute-materialSearch").closest("fieldset").hide();
 										//fav freq material
@@ -1052,21 +1080,30 @@ $(document).ready(function() {
 							
 										var bundleValues = $("textarea[name='bundleValues']").val();
 										// var bundleValues = "Junivia1$$12/03/2022##Junivia2$$12/03/2023##Junivia2$$12/03/2032##";
-										$(rootBundleValues).prepend($("<table id='table_bundle' class='config-array array-resizable show_after' style='width: 80%;text-align:center;margin: 0px auto;' ><thead><tr><th style='padding: 10px;' >Select</th><th style='padding: 10px;' >Promotion Deal</th><th style='padding: 10px;' >Expiry Date</th></tr></thead><tbody></tbody></table>"))
+										$(rootBundleValues).prepend($("<table id='table_bundle' class='config-array array-resizable show_after' style='width: 100%;text-align:center;margin: 0px auto;' ><thead><tr><th style='padding: 10px;width: 5%;' >Select</th><th style='padding: 10px' >Promotion Deal</th><th style='padding: 10px;' >Promotion Expiry Date</th></tr></thead><tbody></tbody></table>"))
 										$("#table_bundle").css("text-align", "center");
 										$("#table_bundle").find("th").css("text-align", "center");
-										if( $("input[name='selectedBundle']").val().length > 0 ){
-											window.sessionStorage.setItem("selectBundle", $("input[name='selectedBundle']").val() );
-										}
+										// if( $("input[name='selectedBundle']").val().length > 0 ){
+										// 	window.sessionStorage.setItem("selectBundle", $("input[name='selectedBundle']").val() );
+										// }
 										bundleValues.split("##").forEach(function(data){
 											if(data.length > 0){
 												var rowValues = data.split("$$");
-												var selectedBundle = (window.sessionStorage.getItem("selectBundle") === rowValues[0])? "checked" : "";
+												var selectedBundle = ($("input[name='selectedBundle']").val() === rowValues[0])? "checked" : "";
 												$("#table_bundle").find("tbody").append("<tr><td><input type='radio' name='selectBundle' value='"+rowValues[0]+"' "+selectedBundle+"  ></td><td>"+rowValues[0]+"</td><td>"+rowValues[1]+"</td></tr>");
 												$("input[name='selectBundle']").on("click", function(){
-													window.sessionStorage.setItem("selectBundle", $(this).val());
+													// window.sessionStorage.setItem("selectBundle", $(this).val());
 													$("input[name='selectedBundle']").val($(this).val());
-													$(".button-update").click();
+													var prevBundle = window.sessionStorage.getItem("selectBundle");
+													var currentBundle = $(this).val();
+													if(prevBundle != currentBundle){
+														window.sessionStorage.setItem("selectBundle",currentBundle);
+														var noOfRows = parseInt($("input[name='materialArraySize']").val());
+														for(var row = 0; row < noOfRows; row++){
+															$("#qty-"+row).val("0");
+														}
+													}
+													$(".button-update, .updateButton").click();
 												});
 												return rowValues;
 											}
@@ -1074,12 +1111,23 @@ $(document).ready(function() {
 							
 										$(".array-remove").hide();
 										$("input[name='overridePrice_currency-display']").attr("disabled", true).css({"background" : "transparent", "border": "0px"});
-							
-									}
+										
+										js2("#table_bundle").DataTable({
+											"searching": false,
+											"ordering": false,
+											"pageLength": 5,
+											"lengthChange": false,
+										});
 
+										$($($('#table_bundle > thead')[0]).find('th')[0]).css('width', '50px');
+										$($($('#table_bundle > thead')[0]).find('th')[1]).css('width', '400px');
+										$($($('#table_bundle > thead')[0]).find('th')[2]).css('width', '100px');
+
+									}
 								}
 
-								addBundleAction();
+								setTimeout(addBundleAction, 2000);
+								hideLoadingDialog();
 								
 								/* 
 									Zainal 08 July 2019
@@ -2095,6 +2143,8 @@ $(document).ready(function() {
 													File Location :- $BASE_PATH$/javascript/js-tablet.js
 													Layout        :- Mobile
 											*/
+
+											$('select[name="addBundleFlag"]').closest('.ui-field-contain').hide();
 
 										}, 2000);
 

@@ -1173,3 +1173,14 @@ html .ui-field-contain>label+.ui-flipswitch, html .ui-popup .ui-field-contain>la
 /* #commerce .sidebar-handle{
     display: none;
 } */
+
+/* Hide Bundle Element */
+.jg-mobilelayout #attribute-bundleHeader, 
+.jg-mobilelayout #attribute-bundleValues, 
+.jg-mobilelayout #attribute-bundleMaterials, 
+.jg-mobilelayout #attribute-selectedBundle, 
+.jg-mobilelayout #attribute-bundleCode, 
+.jg-mobilelayout #attribute-addBundleFlag, 
+.jg-mobilelayout #attribute-addBundleFlag_PL {
+    display: none;
+}

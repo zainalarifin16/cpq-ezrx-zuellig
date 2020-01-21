@@ -2927,13 +2927,15 @@
     function order_page_stock_color() {
         console.log('order_page_stock_color');
         if (window.check_country("SG")) {
+            var isBundle = $("input[name='addBundleFlag']:checked").val() === 'true';
             $('#line-item-grid .lig-side-scroller>table tr.lig-row.child').each(function () {
                 var $child = $(this).children('td');
                 var $stock = $child.find('input[name*="inStock_l"]');
                 var $invoiceOverridePrice = $child.find('input[name*="unitPrice_currency"]');
+                // var pPAApprovalNo_l = $child.find('input[name*="pPAApprovalNo_l"]').val().toLowerCase().includes('bundle');
                 var stockval = $stock.val();
                 var $qty_text = $child.find('input[name*="qty_int_l"]');
-
+                console.log(pPAApprovalNo_l);
                 if (stockval == 'No') {
                     $($qty_text.siblings()[0]).css("color", "red");
                     $stock.parent().parent().parent().css('color', 'red');
@@ -2942,12 +2944,13 @@
 
                 var $overridePrice = $child.find('input[name*="isPriceOverride"]');
 
-                if ($overridePrice.val() == 'true') {
+                if ($overridePrice.val() == 'true' && !isBundle) {
                     $($child.find("input[name*=_unitPrice_currency]").siblings()[0]).css('color', 'red');
                 }
 
                 var textInvoiceOverridePrice = $($invoiceOverridePrice).find("span[data-varname='unitPrice_currency']");
-                if ($(textInvoiceOverridePrice).text().trim() != "NT$0.00") {
+                if ($(textInvoiceOverridePrice).text().trim() != "NT$0.00" && !isBundle ) {
+                    console.log('ovveride red', $(textInvoiceOverridePrice).text().trim() != "NT$0.00", !isBundle);
                     $(textInvoiceOverridePrice).css("color", "red");
                 }
 
@@ -3742,6 +3745,16 @@
         // }
 
     }
+
+    function hideLoadingDialog() {
+        if ($('#loading-dialog').length > 1) {
+            $('#loading-dialog').hide();            
+        }
+        if ($('#overlay').length > 1) {
+            $('#overlay').hide();
+        }
+    }
+
     /*
         Start : 04 Nov 2017
         Task  : Hide check box in line item grid in order page
@@ -4077,6 +4090,7 @@
                             $("#attr_wrapper_1_shipToAddress_html_t").css("margin-top", "0px");
                             $($("#attr_wrapper_1_customerShipToId_t").closest(".column")).appendTo(parentSearchCustomer);
                             $($("#attr_wrapper_1_customerSoldToId_t").closest(".column")).appendTo(parentSearchCustomer);
+                            $("#attr_wrapper_1_customerShipToId_t").closest(".column-layout").find(".spacer-column").hide();
 
                             $("#zPUserType").closest(".form-item").removeClass("rule-hide");
                             $("#zPUserType").closest(".text-wrapper-inner").css({
@@ -5176,6 +5190,7 @@
     }
 
     function transform_newcopypage() {
+        $("div[id*='addBundleFlag']").hide();
         // toolbar
         // $('.jg-box-toolbar').addClass('invert');
         /*
@@ -5359,13 +5374,16 @@
         */
         // data with color red
         // find column with id is isPriceOverride when the value is True then give red color
+        var isBundle = $("input[name='addBundleFlag']:checked").val() === 'true';
         $("td[id*='isPriceOverride']").each(function (i, data) {
             if ($(data).text() !== "False") {
                 var line = $(data).parent();
                 var unitPrice = $(line).find("td[id*='unitPrice']")
                 var remove_attr = $(unitPrice).attr("id").split("attr_wrapper");
                 var object_span = $("#readonly" + remove_attr[1]);
-                object_span.css("color", "red");
+                if(!isBundle){
+                    object_span.css("color", "red");      
+                }
             }
         });
         /*
@@ -5746,20 +5764,29 @@
 
             var bundleValues = $("textarea[name='bundleValues']").val();
             // var bundleValues = "Junivia1$$12/03/2022##Junivia2$$12/03/2023##Junivia2$$12/03/2032##";
-            $(rootBundleValues).prepend($("<table id='table_bundle' class='array vertical-array' style='width: 50%;' ><thead><tr><th>Select</th><th>Promotion Deal</th><th>Expiry Date</th></tr></thead><tbody></tbody></table>"))
+            $(rootBundleValues).prepend($("<table id='table_bundle' class='array vertical-array' ><thead><tr><th style='width: 70px;' >Select</th><th>Promotion Deal</th><th>Promotion Expiry Date</th></tr></thead><tbody></tbody></table>"))
             $("#table_bundle").css("text-align", "center");
             $("#table_bundle").find("th").css("text-align", "center");
-            if( $("input[name='selectedBundle']").val().length > 0 ){
-                window.sessionStorage.setItem("selectBundle", $("input[name='selectedBundle']").val() );
-            }
+            // if( $("input[name='selectedBundle']").val().length > 0 ){
+            //     window.sessionStorage.setItem("selectBundle", $("input[name='selectedBundle']").val() );
+            // }
             var eachValues = bundleValues.split("##").map(function(data){
                 if(data.length > 0){
                     var rowValues = data.split("$$");
-                    var selectedBundle = (window.sessionStorage.getItem("selectBundle") === rowValues[0])? "checked" : "";
+                    var selectedBundle = ($("input[name='selectedBundle']").val() === rowValues[0])? "checked" : "";
                     $("#table_bundle").find("tbody").append("<tr><td><input type='radio' name='selectBundle' value='"+rowValues[0]+"' "+selectedBundle+"  ></td><td>"+rowValues[0]+"</td><td>"+rowValues[1]+"</td></tr>");
                     $("input[name='selectBundle']").on("click", function(){
-                        window.sessionStorage.setItem("selectBundle", $(this).val());
+                        // window.sessionStorage.setItem("selectBundle", $(this).val());
                         $("input[name='selectedBundle']").val($(this).val());
+                        var prevBundle = window.sessionStorage.getItem("selectBundle");
+						var currentBundle = $(this).val();
+						if(prevBundle != currentBundle){
+							window.sessionStorage.setItem("selectBundle",currentBundle);
+							var noOfRows = parseInt($("input[name='materialArraySize']").val());
+							for(var row = 0; row < noOfRows; row++){
+								$("#qty-"+row).val("0");
+							}
+						}
                         $("#btn-cart-update").click();
                     });
                     return rowValues;
@@ -5767,9 +5794,16 @@
             });
 
             $(".array-remove").hide();
-            $("input[name='overridePrice_currency-display']").attr("disabled", true).css({"background" : "transparent", "border": "0px"});
+            $("input[name='overridePrice_currency-display']").attr("disabled", true).css({"background" : "transparent", "border": "0px", "color": "black!important"});
 
+            $("#table_bundle").DataTable({
+                "searching": false,
+                "ordering": false,
+                "pageLength": 5,
+                "lengthChange": false,
+            });
 
+            $("#table_bundle").closest(".dataTables_wrapper").css("width", "700px");
 
         }
 
@@ -7071,6 +7105,7 @@
 
                 } else if (pagetitle == "zuellig pharma products" || pagetitle == "zuellig pharma order processData") {
                     console.log('zuellig pharma products');
+                    $("div[id*='addBundleFlag']").hide();
                 } else if (pagetitle == 'zuellig pharma order process') {
                     console.log('zuellig pharma order process');
                 } else if (pagetitle == "my profile") {
@@ -8464,6 +8499,8 @@
             var var_bonusOverride = ($("td.cell-overrideBonusQty").length > 0) ? "td.cell-overrideBonusQty" : "td.cell-overrideBonusQty";
             var var_totalPrice_Currency = "td.cell-totalPrice_currency";
             var var_comments = ($("td.cell-comments").length > 0) ? "td.cell-comments" : "td.cell-comments";
+            var valueAddBundle = $("input[name='addBundleFlag']").length > 0 ? $("input[name='addBundleFlag']").is(":checked") : !!$("select[name='addBundleFlag']").val();
+
 
             var redColor = "rgb(255, 0, 0)";
             var blackColor = "rgb(0, 0, 0)";
@@ -8513,7 +8550,7 @@
                     overridePriceValue = overridePriceVal.replace(currencyCountry, "");
                 }
                 console.log(overridePriceValue, basic_value_price);
-                if (parseFloat(overridePriceValue) != parseFloat(basic_value_price)) {
+                if (parseFloat(overridePriceValue) != parseFloat(basic_value_price) && !valueAddBundle) {
                     $("#" + overridePriceString + id + "-display").css("color", redColor);
                     /* if (!isMobile()) {
                         $("#totalPrice_currency-" + id).css("color", redColor);
@@ -8614,7 +8651,7 @@
                 }
                 // console.log(overridePriceValue, "==", basic_value_price, overridePriceValue != basic_value_price);
                 console.log(overridePriceValue, basic_value_price);
-                if (parseFloat(overridePriceValue) != parseFloat(basic_value_price)) {
+                if (parseFloat(overridePriceValue) != parseFloat(basic_value_price) && !valueAddBundle) {
                     $(data).css("color", redColor);
                     /* if (!isMobile()) {
                         $("#totalPrice_currency-" + id).parent().find(".attribute-field.read-only").css("color", redColor);
